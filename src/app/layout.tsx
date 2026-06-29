@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { fontSans, fontMono } from "@/lib/fonts";
 import { Providers } from "@/providers";
+import { Navbar, GradientBackground } from "@/components/shared";
 import { siteConfig } from "@/config/site";
 import "./globals.css";
 
@@ -46,8 +47,15 @@ export default function RootLayout({
       className={`${fontSans.variable} ${fontMono.variable}`}
       suppressHydrationWarning
     >
-      <body className="min-h-dvh antialiased" suppressHydrationWarning>
-        <Providers>{children}</Providers>
+      <body
+        className="min-h-dvh overflow-x-hidden antialiased"
+        suppressHydrationWarning
+      >
+        <Providers>
+          <GradientBackground />
+          <Navbar />
+          {children}
+        </Providers>
       </body>
     </html>
   );
