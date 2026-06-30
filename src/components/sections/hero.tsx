@@ -122,76 +122,9 @@ export function Hero() {
       <div className="pointer-events-none absolute inset-x-0 bottom-0 -z-10 h-64 bg-gradient-to-t from-background to-transparent" />
 
       {/* Hero copy */}
-      <div className="mx-auto flex min-h-[100svh] max-w-5xl flex-col items-center justify-center px-6 pt-32 pb-20 text-center sm:pt-36">
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-          className="mb-8 inline-flex items-center gap-2 rounded-full border border-brand-500/15 bg-brand-500/5 px-4.5 py-1.5 text-xs font-semibold uppercase tracking-wider text-brand-700 dark:text-brand-300 sm:text-sm"
-        >
-          <Sparkles className="h-4 w-4 text-brand-500" />
-          The modern hiring platform — for talent &amp; teams
-        </motion.div>
+      <div className="mx-auto flex min-h-[7svh] max-w-5xl flex-col items-center justify-center px-6 pt-32 pb-20 text-center sm:pt-36">
+       
 
-        <h1 className="max-w-4xl text-balance text-5xl font-bold leading-[0.98] tracking-tight sm:text-7xl lg:text-[5.75rem]">
-          {headlineWords.map((word, i) => (
-            <motion.span
-              key={word}
-              initial={{ opacity: 0, y: 40, rotateX: -40 }}
-              animate={{ opacity: 1, y: 0, rotateX: 0 }}
-              transition={{
-                duration: 0.8,
-                delay: 0.2 + i * 0.09,
-                ease: [0.16, 1, 0.3, 1],
-              }}
-              className={
-                i >= 3
-                  ? "text-gradient mr-[0.25em] inline-block"
-                  : "mr-[0.25em] inline-block"
-              }
-            >
-              {word}
-            </motion.span>
-          ))}
-        </h1>
-
-        <motion.p
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.7 }}
-          className="mx-auto mt-7 max-w-2xl text-pretty text-lg font-medium text-muted-foreground/90 sm:text-xl"
-        >
-          {siteConfig.name} connects exceptional people with the companies
-          shaping tomorrow. Smarter matches, faster hires, and zero noise — all
-          in one beautifully simple place.
-        </motion.p>
-
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.85 }}
-          className="mt-10 flex flex-col items-center gap-4 sm:flex-row"
-        >
-          <Link
-            href={siteConfig.links.employer}
-            className="group inline-flex items-center gap-2 rounded-full bg-brand-600 px-7 py-3.5 text-sm font-semibold text-white hover:bg-brand-700 shadow-md shadow-brand-600/15"
-          >
-            Start hiring today
-            <ArrowRight className="h-4 w-4" />
-          </Link>
-          <GooglePlayButton animate={false} />
-        </motion.div>
-
-        {/* Scroll cue */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 1.4 }}
-          className="mt-16 flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-muted-foreground/70"
-        >
-          <MousePointerClick className="h-4 w-4 text-brand-500/80" />
-          Scroll to explore
-        </motion.div>
       </div>
 
       {/* Full-screen video that pops / bounces into view on scroll */}
