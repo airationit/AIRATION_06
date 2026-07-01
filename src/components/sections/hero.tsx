@@ -12,7 +12,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ArrowRight, Sparkles, MousePointerClick } from "lucide-react";
 import Link from "next/link";
 import { siteConfig } from "@/config/site";
-import { GooglePlayButton, InteractiveDots, Magnetic } from "@/components/shared";
+import { GooglePlayButton, Magnetic } from "@/components/shared";
 
 const headlineWords = ["Where", "ambition", "finds", "its", "match."];
 
@@ -68,21 +68,29 @@ export function Hero() {
       const wrap = videoWrapRef.current;
       if (!wrap) return;
 
-      // Pop / bounce the video into view as it's scrolled to.
+      // Smooth 3D tilt, zoom, and rise triggered by scroll scrub
       gsap.fromTo(
         wrap,
-        { scale: 0.78, yPercent: 14, opacity: 0, filter: "blur(6px)" },
+        {
+          scale: 0.82,
+          rotateX: 10,
+          y: 60,
+          opacity: 0.8,
+          filter: "blur(4px)",
+          transformPerspective: 1200,
+        },
         {
           scale: 1,
-          yPercent: 0,
+          rotateX: 0,
+          y: 0,
           opacity: 1,
           filter: "blur(0px)",
-          ease: "elastic.out(1, 0.65)",
-          duration: 1.6,
+          ease: "power2.out",
           scrollTrigger: {
             trigger: wrap,
-            start: "top 82%",
-            toggleActions: "play none none reverse",
+            start: "top 95%",
+            end: "top 50%",
+            scrub: 1.2,
           },
         }
       );
@@ -111,15 +119,11 @@ export function Hero() {
       {/* Ambient background */}
       <div className="pointer-events-none absolute inset-0 -z-10">
         <div className="animate-aurora absolute -left-32 top-[-10%] h-[42rem] w-[42rem] rounded-full bg-brand-400/30 blur-[130px]" />
-        <div className="animate-aurora absolute right-[-15%] top-[6%] h-[38rem] w-[38rem] rounded-full bg-violet-400/25 blur-[130px] [animation-delay:-6s]" />
+        <div className="animate-aurora absolute right-[-15%] top-[6%] h-[38rem] w-[38rem] rounded-full bg-sky-300/30 blur-[130px] [animation-delay:-6s]" />
       </div>
-      {/* Subtle dot grid backdrop */}
-      <div className="pointer-events-none absolute inset-0 -z-10 bg-grid opacity-30" />
-      {/* Reactive dot field — lights up and ripples around the pointer */}
-      <div className="pointer-events-none absolute inset-0 -z-10">
-        <InteractiveDots />
-      </div>
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 -z-10 h-64 bg-gradient-to-t from-background to-transparent" />
+
+      {/* Soft gradient bottom blend */}
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 -z-10 h-32 bg-gradient-to-t from-background/40 to-transparent" />
 
       {/* Hero copy */}
       <div className="mx-auto flex min-h-[100svh] max-w-5xl flex-col items-center justify-center px-6 pt-32 pb-20 text-center sm:pt-36">
@@ -194,8 +198,8 @@ export function Hero() {
         </motion.div>
       </div>
 
-      {/* Full-screen video that pops / bounces into view on scroll */}
-      <div className="px-3 pb-24 sm:px-6">
+      {/* Full-screen video that transitions into view on scroll */}
+      <div className="px-3 pb-16 sm:px-6">
         {/* Outer wrapper is the GSAP target (scale / bounce); inner handles tilt */}
         <div
           ref={videoWrapRef}

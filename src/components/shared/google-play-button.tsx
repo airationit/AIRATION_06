@@ -34,7 +34,7 @@ export function GooglePlayButton({
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Get Hirance on Google Play"
-      {...(motionProps as any)}
+      {...(motionProps as Record<string, unknown>)}
       className={cn(
         "group inline-flex items-center gap-2.5 rounded-full border border-foreground/10 bg-foreground px-4 py-2.5 text-left text-background shadow-sm",
         animate && "glow-hover",
