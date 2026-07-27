@@ -126,8 +126,8 @@ export function Hero() {
       <div className="pointer-events-none absolute inset-x-0 bottom-0 -z-10 h-32 bg-gradient-to-t from-background/40 to-transparent" />
 
       {/* Hero copy */}
-      <div className="mx-auto flex min-h-[100svh] max-w-5xl flex-col items-center justify-center px-6 pt-32 pb-20 text-center sm:pt-36">
-        <motion.div
+      <div className="mx-auto flex min-h-[10svh] max-w-5xl flex-col items-center justify-center px-6 pt-32 pb-20 text-center sm:pt-36">
+        {/* <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1 }}
@@ -135,9 +135,9 @@ export function Hero() {
         >
           <Sparkles className="h-4 w-4 text-brand-500" />
           The modern hiring platform — for talent &amp; teams
-        </motion.div>
+        </motion.div> */}
 
-        <h1 className="max-w-4xl text-balance text-5xl font-bold leading-[0.98] tracking-tight sm:text-7xl lg:text-[5.75rem]">
+        {/* <h1 className="max-w-4xl text-balance text-5xl font-bold leading-[0.98] tracking-tight sm:text-7xl lg:text-[5.75rem]">
           {headlineWords.map((word, i) => (
             <motion.span
               key={word}
@@ -157,9 +157,9 @@ export function Hero() {
               {word}
             </motion.span>
           ))}
-        </h1>
+        </h1> */}
 
-        <motion.p
+        {/* <motion.p
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.7 }}
@@ -168,9 +168,9 @@ export function Hero() {
           {siteConfig.name} connects exceptional people with the companies
           shaping tomorrow. Smarter matches, faster hires, and zero noise — all
           in one beautifully simple place.
-        </motion.p>
+        </motion.p> */}
 
-        <motion.div
+        {/* <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.85 }}
@@ -184,10 +184,10 @@ export function Hero() {
             <ArrowRight className="h-4 w-4" />
           </Link>
           <GooglePlayButton animate={false} />
-        </motion.div>
+        </motion.div> */}
 
         {/* Scroll cue */}
-        <motion.div
+        {/* <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 1, delay: 1.4 }}
@@ -195,9 +195,9 @@ export function Hero() {
         >
           <MousePointerClick className="h-4 w-4 text-brand-500/80" />
           Scroll to explore
-        </motion.div>
+        </motion.div> */}
       </div>
-
+      
       {/* Full-screen video that transitions into view on scroll */}
       <div className="px-3 pb-16 sm:px-6">
         {/* Outer wrapper is the GSAP target (scale / bounce); inner handles tilt */}
