@@ -31,9 +31,9 @@ const orbs: Orb[] = [
     duration: 24,
   },
   {
-    // Accent violet — top right
+    // Soft white glow — top right
     className:
-      "right-[-15%] top-[-8%] h-[48vw] w-[48vw] bg-violet-400/40 dark:bg-violet-600/35",
+      "right-[-15%] top-[-8%] h-[48vw] w-[48vw] bg-white/60 dark:bg-brand-500/20",
     animate: { x: [0, -80, 40, 0], y: [0, 90, -20, 0], scale: [1, 0.92, 1.2, 1] },
     duration: 28,
   },
@@ -45,16 +45,16 @@ const orbs: Orb[] = [
     duration: 26,
   },
   {
-    // Indigo depth — bottom right
+    // Blue depth — bottom right
     className:
-      "right-[5%] bottom-[-25%] h-[44vw] w-[44vw] bg-indigo-400/35 dark:bg-indigo-600/30",
+      "right-[5%] bottom-[-25%] h-[44vw] w-[44vw] bg-brand-300/40 dark:bg-brand-800/25",
     animate: { x: [0, -50, 30, 0], y: [0, 30, -60, 0], scale: [1, 1.15, 1, 1] },
     duration: 30,
   },
   {
-    // Soft fuchsia spark — mid left, subtle
+    // Soft white spark — mid left, subtle
     className:
-      "left-[-8%] top-[38%] h-[34vw] w-[34vw] bg-fuchsia-300/25 dark:bg-fuchsia-500/20",
+      "left-[-8%] top-[38%] h-[34vw] w-[34vw] bg-white/40 dark:bg-white/10",
     animate: { x: [0, 70, 0, 0], y: [0, -40, 50, 0], scale: [1, 1.2, 0.95, 1] },
     duration: 32,
   },
@@ -67,7 +67,7 @@ export function GradientBackground() {
       className="pointer-events-none fixed inset-0 -z-10 overflow-hidden"
     >
       {/* Base theme wash */}
-      <div className="absolute inset-0 bg-gradient-to-br from-brand-50 via-background to-violet-100 dark:from-[#070A14] dark:via-[#0B0F1A] dark:to-[#121a30]" />
+      <div className="absolute inset-0 bg-gradient-to-br from-brand-50 via-white to-brand-100 dark:from-[#070A14] dark:via-[#0B0F1A] dark:to-[#0F1D3A]" />
 
       {/* Drifting mesh orbs */}
       <div className="absolute inset-0 mix-blend-multiply dark:mix-blend-screen">
@@ -86,8 +86,7 @@ export function GradientBackground() {
         ))}
       </div>
 
-      {/* Fine dotted grid for texture */}
-      <div className="bg-grid absolute inset-0 opacity-50 dark:opacity-25" />
+
 
       {/* Top + bottom vignette so content edges stay legible */}
       <div className="absolute inset-0 bg-gradient-to-b from-background/70 via-transparent to-background/60" />

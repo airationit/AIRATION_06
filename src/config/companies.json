@@ -1,0 +1,122 @@
+[
+  {
+    "name": "Apple",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=apple.com"
+  },
+  {
+    "name": "Microsoft",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=microsoft.com"
+  },
+  {
+    "name": "Alphabet (Google)",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=google.com"
+  },
+  {
+    "name": "Amazon",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=amazon.com"
+  },
+  {
+    "name": "NVIDIA",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=nvidia.com"
+  },
+  {
+    "name": "Meta",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=meta.com"
+  },
+  {
+    "name": "Tesla",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=tesla.com"
+  },
+  {
+    "name": "Berkshire Hathaway",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=berkshirehathaway.com"
+  },
+  {
+    "name": "Eli Lilly",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=lilly.com"
+  },
+  {
+    "name": "TSMC",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=tsmc.com"
+  },
+  {
+    "name": "Broadcom",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=broadcom.com"
+  },
+  {
+    "name": "Novo Nordisk",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=novonordisk.com"
+  },
+  {
+    "name": "JPMorgan Chase",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=jpmorganchase.com"
+  },
+  {
+    "name": "Visa",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=visa.com"
+  },
+  {
+    "name": "Walmart",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=walmart.com"
+  },
+  {
+    "name": "ExxonMobil",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=exxonmobil.com"
+  },
+  {
+    "name": "Mastercard",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=mastercard.com"
+  },
+  {
+    "name": "UnitedHealth Group",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=unitedhealthgroup.com"
+  },
+  {
+    "name": "ASML",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=asml.com"
+  },
+  {
+    "name": "Procter & Gamble",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=pg.com"
+  },
+  {
+    "name": "Oracle",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=oracle.com"
+  },
+  {
+    "name": "Costco",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=costco.com"
+  },
+  {
+    "name": "Home Depot",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=homedepot.com"
+  },
+  {
+    "name": "Bank of America",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=bankofamerica.com"
+  },
+  {
+    "name": "Netflix",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=netflix.com"
+  },
+  {
+    "name": "Coca-Cola",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=coca-cola.com"
+  },
+  {
+    "name": "PepsiCo",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=pepsico.com"
+  },
+  {
+    "name": "Adobe",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=adobe.com"
+  },
+  {
+    "name": "Salesforce",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=salesforce.com"
+  },
+  {
+    "name": "Cisco",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=cisco.com"
+  }
+]

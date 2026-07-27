@@ -118,9 +118,13 @@ export function InteractiveDots({
           }
         }
 
+        if (!interactive || influence <= 0) {
+          continue;
+        }
+
         const eased = influence * influence;
         const size = 1 + eased * 2.4;
-        const alpha = 0.28 + eased * 0.62;
+        const alpha = eased * 0.9;
         const cr = Math.round(br + (ar - br) * eased);
         const cg = Math.round(bg + (ag - bg) * eased);
         const cb = Math.round(bb + (ab - bb) * eased);

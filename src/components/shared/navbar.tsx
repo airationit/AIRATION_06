@@ -45,10 +45,10 @@ export function Navbar({ className }: NavbarProps) {
     >
       <nav
         className={cn(
-          "relative mx-auto flex items-center justify-between transition-all duration-500 ease-in-out px-6",
+          "relative mx-auto flex items-center justify-between transition-all duration-500 ease-in-out px-6 bg-white",
           scrolled
-            ? "h-16 max-w-4xl rounded-full glass shadow-[0_10px_40px_-16px_rgba(37,99,235,0.25)]"
-            : "h-20 max-w-6xl rounded-2xl border border-transparent bg-transparent"
+            ? "h-16 max-w-4xl rounded-full shadow-[0_10px_40px_-16px_rgba(37,99,235,0.25)]"
+            : "h-20 max-w-6xl rounded-full border border-transparent shadow"
         )}
       >
         {/* Logo */}
@@ -123,7 +123,7 @@ export function Navbar({ className }: NavbarProps) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -12 }}
             transition={{ duration: 0.25, ease: "easeOut" }}
-            className="glass mx-auto mt-2 max-w-7xl overflow-hidden rounded-2xl p-4 md:hidden"
+            className="mx-auto mt-2 max-w-7xl overflow-hidden rounded-2xl bg-white p-4 shadow-[0_10px_40px_-16px_rgba(37,99,235,0.25)] md:hidden"
           >
             <div className="flex flex-col gap-1">
               {siteConfig.nav.map((item) => (
