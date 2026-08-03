@@ -39,7 +39,7 @@ export function Navbar({ className }: NavbarProps) {
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.7, ease: [0.25, 0.1, 0.25, 1] }}
       className={cn(
-        "fixed inset-x-0 top-0 z-50 transition-all duration-500 ease-in-out pt-3 px-3 sm:px-5 sm:pt-4",
+        "absolute inset-x-0 top-0 z-50 transition-all duration-500 ease-in-out pt-3 px-3 sm:px-5 sm:pt-4",
         className
       )}
     >

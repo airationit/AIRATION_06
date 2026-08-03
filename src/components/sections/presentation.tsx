@@ -2,53 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
-import { Briefcase, RefreshCw, Star, Quote, Sparkles, UserCheck, Check, MapPin, Clock, Wallet } from "lucide-react";
+import { Briefcase, RefreshCw, Sparkles, UserCheck, Check, MapPin, Clock, Wallet, Users } from "lucide-react";
 import { cn } from "@/lib/utils";
-
-// Review structure & data
-interface Review {
-  id: number;
-  author: string;
-  role: string;
-  company: string;
-  avatarInitials: string;
-  avatarUrl: string;
-  rating: number;
-  text: string;
-}
-
-const reviews: Review[] = [
-  {
-    id: 1,
-    author: "Priya Sharma",
-    role: "VP of People",
-    company: "DevFlow",
-    avatarInitials: "PS",
-    avatarUrl: "https://randomuser.me/api/portraits/women/65.jpg",
-    rating: 5,
-    text: "The swipe mechanism is a game-changer. We connected with our lead engineer in just two days.",
-  },
-  {
-    id: 2,
-    author: "Arjun Mehta",
-    role: "Co-Founder",
-    company: "LinearQ",
-    avatarInitials: "AM",
-    avatarUrl: "https://randomuser.me/api/portraits/men/43.jpg",
-    rating: 5,
-    text: "No more scanning hundreds of resumes. Hirance filters out the noise so we only talk to the best matches.",
-  },
-  {
-    id: 3,
-    author: "Ananya Reddy",
-    role: "Head of Talent",
-    company: "Aether AI",
-    avatarInitials: "AR",
-    avatarUrl: "https://randomuser.me/api/portraits/women/26.jpg",
-    rating: 5,
-    text: "Matches are spot-on. Candidates are actually responsive, and the process is incredibly smooth.",
-  },
-];
 
 // Helper Counter component for animating stats
 function Counter({ value, duration = 1.5 }: { value: number; duration?: number }) {
@@ -346,6 +301,42 @@ function HiredVisual() {
   );
 }
 
+// Candidate pool visual
+function CandidateVisual() {
+  return (
+    <div className="relative flex h-48 w-full items-center justify-center overflow-hidden rounded-2xl border border-border/40 bg-secondary/30 p-4">
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(59,130,246,0.1)_0%,transparent_70%)]" />
+      <div className="relative flex h-16 w-16 items-center justify-center rounded-full border border-brand-500/20 bg-brand-500/10 shadow-[0_0_20px_rgba(59,130,246,0.15)]">
+        <Users className="h-7 w-7 text-brand-500" />
+        
+        {/* Orbiting dots */}
+        <motion.div 
+          animate={{ rotate: 360 }} 
+          transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+          className="absolute -inset-6 rounded-full border border-dashed border-brand-500/30"
+        >
+           <div className="absolute -top-1.5 left-1/2 h-3 w-3 -translate-x-1/2 rounded-full bg-brand-400 shadow-[0_0_10px_rgba(59,130,246,0.8)]" />
+           <div className="absolute -bottom-1.5 left-1/2 h-2 w-2 -translate-x-1/2 rounded-full bg-sky-400 shadow-[0_0_10px_rgba(56,189,248,0.8)]" />
+        </motion.div>
+        
+        <motion.div 
+          animate={{ rotate: -360 }} 
+          transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
+          className="absolute -inset-12 rounded-full border border-brand-500/10"
+        >
+           <div className="absolute top-1/4 -left-1.5 h-2.5 w-2.5 -translate-y-1/2 rounded-full bg-violet-400 shadow-[0_0_10px_rgba(139,92,246,0.8)]" />
+           <div className="absolute bottom-1/4 -right-1.5 h-2 w-2 -translate-y-1/2 rounded-full bg-brand-300 shadow-[0_0_10px_rgba(96,165,250,0.8)]" />
+        </motion.div>
+      </div>
+      
+      <div className="absolute bottom-3 flex items-center gap-1.5 rounded-full border border-border/50 bg-background/50 px-2.5 py-1 backdrop-blur-md">
+        <span className="flex h-1.5 w-1.5 rounded-full bg-success-500 animate-pulse" />
+        <span className="text-[9px] font-medium uppercase tracking-wider text-muted-foreground">Live Talent Pool</span>
+      </div>
+    </div>
+  );
+}
+
 // A single high-impact stat / showcase card
 function ShowcaseCard({
   icon: Icon,
@@ -354,7 +345,6 @@ function ShowcaseCard({
   suffix,
   title,
   description,
-  children,
   index,
   inView,
 }: {
@@ -364,7 +354,6 @@ function ShowcaseCard({
   suffix: string;
   title: string;
   description: string;
-  children: React.ReactNode;
   index: number;
   inView: boolean;
 }) {
@@ -375,14 +364,14 @@ function ShowcaseCard({
       transition={{ duration: 0.7, delay: index * 0.12, ease: [0.16, 1, 0.3, 1] }}
       className="group relative flex h-full flex-col gap-5 rounded-3xl border border-border/60 bg-card/45 p-6 shadow-sm backdrop-blur-md transition-all duration-300 hover:border-brand-500/25 hover:shadow-[0_16px_36px_-6px_rgba(59,130,246,0.08)] sm:p-7"
     >
-      <div className="flex items-center justify-between">
+      {/* <div className="flex items-center justify-between">
         <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-brand-500/10 text-brand-600 shadow-[inset_0_1px_2px_rgba(0,0,0,0.05)]">
           <Icon className="h-5 w-5" />
         </div>
         <span className="rounded-full border border-brand-500/10 bg-brand-500/5 px-2.5 py-1 text-xs font-semibold uppercase tracking-widest text-brand-500">
           {label}
         </span>
-      </div>
+      </div> */}
 
       <div>
         <h3 className="text-4xl font-extrabold tracking-tight text-foreground sm:text-5xl">
@@ -393,78 +382,19 @@ function ShowcaseCard({
         <p className="mt-2 text-xs leading-relaxed text-muted-foreground">{description}</p>
       </div>
 
-      {/* Visual demo pinned to the bottom so both cards align */}
-      <div className="mt-auto pt-1">{children}</div>
     </motion.div>
   );
 }
 
-function ReviewCard({ review, index, inView }: { review: Review; index: number; inView: boolean }) {
-  const [imgFailed, setImgFailed] = useState(false);
 
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
-      transition={{ duration: 0.6, delay: index * 0.12, ease: "easeOut" }}
-      whileHover={{ y: -4 }}
-      className={cn(
-        "group relative flex h-full flex-col gap-4 rounded-3xl border border-border/60 bg-card/45 p-6 shadow-[0_2px_8px_rgba(15,23,42,0.02)] backdrop-blur-md transition-all duration-400 ease-[cubic-bezier(0.16,1,0.3,1)]",
-        "hover:border-brand-500/25 hover:bg-card/75 hover:shadow-[0_16px_36px_-6px_rgba(59,130,246,0.12)]"
-      )}
-    >
-      {/* Top row with stars and quote icon */}
-      <div className="flex items-start justify-between">
-        <div className="flex gap-0.5">
-          {[...Array(review.rating)].map((_, i) => (
-            <Star key={i} className="h-4 w-4 fill-brand-500 text-brand-500" />
-          ))}
-        </div>
-        <Quote className="h-7 w-7 fill-brand-500/15 text-brand-500/50 transition-colors group-hover:text-brand-500/70" />
-      </div>
-
-      {/* Review body */}
-      <p className="text-sm font-medium italic leading-relaxed text-foreground/80 md:text-base">
-        &ldquo;{review.text}&rdquo;
-      </p>
-
-      {/* Reviewer Details — pinned to the bottom so all cards align */}
-      <div className="mt-auto flex items-center gap-3 border-t border-border/30 pt-4">
-        {imgFailed ? (
-          <div className="flex h-9 w-9 shrink-0 place-items-center justify-center rounded-full bg-gradient-to-br from-brand-400 to-brand-600 text-xs font-bold text-white shadow-inner">
-            {review.avatarInitials}
-          </div>
-        ) : (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={review.avatarUrl}
-            alt={`${review.author} portrait`}
-            loading="lazy"
-            decoding="async"
-            onError={() => setImgFailed(true)}
-            className="h-9 w-9 shrink-0 rounded-full object-cover shadow-inner ring-1 ring-border/50"
-          />
-        )}
-        <div className="overflow-hidden">
-          <h4 className="truncate text-xs font-bold text-foreground">{review.author}</h4>
-          <p className="text-[10px] font-semibold text-muted-foreground">
-            {review.role} at <span className="font-semibold text-brand-600 dark:text-brand-400">{review.company}</span>
-          </p>
-        </div>
-      </div>
-    </motion.div>
-  );
-}
 
 export function Presentation() {
   const sectionRef = useRef<HTMLElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
   const statsRef = useRef<HTMLDivElement>(null);
-  const reviewsRef = useRef<HTMLDivElement>(null);
 
   const isHeaderInView = useInView(headerRef, { once: true, amount: 0.3 });
   const isStatsInView = useInView(statsRef, { once: true, amount: 0.2 });
-  const isReviewsInView = useInView(reviewsRef, { once: true, amount: 0.15 });
 
   return (
     <section
@@ -513,7 +443,7 @@ export function Presentation() {
         {/* Showcase stat cards — equal height, evenly aligned */}
         <div
           ref={statsRef}
-          className="grid grid-cols-1 items-stretch gap-6 lg:grid-cols-3"
+          className="grid grid-cols-1 md:grid-cols-2 items-stretch gap-6 lg:grid-cols-4"
         >
           <ShowcaseCard
             icon={Briefcase}
@@ -524,9 +454,7 @@ export function Presentation() {
             description="Opportunities across technology, design, operations, marketing, and leadership fields."
             index={0}
             inView={isStatsInView}
-          >
-            <DriftingBadges />
-          </ShowcaseCard>
+          />
 
           <ShowcaseCard
             icon={RefreshCw}
@@ -537,9 +465,7 @@ export function Presentation() {
             description="High-intent decisions made daily by quality employers and active job seekers."
             index={1}
             inView={isStatsInView}
-          >
-            <SwipeSimulator />
-          </ShowcaseCard>
+          />
 
           <ShowcaseCard
             icon={UserCheck}
@@ -550,33 +476,21 @@ export function Presentation() {
             description="Candidates matched, interviewed, and hired into roles they love through Hirance."
             index={2}
             inView={isStatsInView}
-          >
-            <HiredVisual />
-          </ShowcaseCard>
+          />
+
+          <ShowcaseCard
+            icon={Users}
+            label="Growing Network"
+            value={500}
+            suffix="K+"
+            title="Total Candidates"
+            description="A rapidly growing talent pool of verified professionals actively seeking opportunities."
+            index={3}
+            inView={isStatsInView}
+          />
         </div>
 
-        {/* Testimonials */}
-        <div ref={reviewsRef} className="mt-20">
-          <motion.div
-            initial={{ opacity: 0, y: 15 }}
-            animate={isReviewsInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.5 }}
-            className="mx-auto mb-10 max-w-2xl text-center"
-          >
-            <h3 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
-              Employer Testimonials
-            </h3>
-            <p className="mt-3 text-sm text-muted-foreground sm:text-base">
-              What scaling companies are saying about our match mechanism.
-            </p>
-          </motion.div>
 
-          <div className="grid grid-cols-1 items-stretch gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {reviews.map((review, idx) => (
-              <ReviewCard key={review.id} review={review} index={idx} inView={isReviewsInView} />
-            ))}
-          </div>
-        </div>
       </div>
     </section>
   );

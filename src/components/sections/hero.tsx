@@ -21,40 +21,6 @@ export function Hero() {
   const videoWrapRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  // Pointer-driven 3D tilt + spotlight for the video card.
-  const rotX = useSpring(useMotionValue(0), {
-    stiffness: 150,
-    damping: 18,
-  });
-  const rotY = useSpring(useMotionValue(0), {
-    stiffness: 150,
-    damping: 18,
-  });
-  const spotX = useMotionValue(50);
-  const spotY = useMotionValue(50);
-  const spotOpacity = useSpring(useMotionValue(0), {
-    stiffness: 120,
-    damping: 20,
-  });
-  const spotlight = useMotionTemplate`radial-gradient(420px circle at ${spotX}% ${spotY}%, rgba(255,255,255,0.22), transparent 60%)`;
-
-  const handleCardMove = (e: React.PointerEvent<HTMLDivElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const px = (e.clientX - rect.left) / rect.width;
-    const py = (e.clientY - rect.top) / rect.height;
-    rotY.set((px - 0.5) * 9);
-    rotX.set(-(py - 0.5) * 9);
-    spotX.set(px * 100);
-    spotY.set(py * 100);
-    spotOpacity.set(1);
-  };
-
-  const handleCardLeave = () => {
-    rotX.set(0);
-    rotY.set(0);
-    spotOpacity.set(0);
-  };
-
   useEffect(() => {
     if (typeof window === "undefined") return;
     gsap.registerPlugin(ScrollTrigger);
@@ -126,7 +92,7 @@ export function Hero() {
       <div className="pointer-events-none absolute inset-x-0 bottom-0 -z-10 h-32 bg-gradient-to-t from-background/40 to-transparent" />
 
       {/* Hero copy */}
-      <div className="mx-auto flex min-h-[10svh] max-w-5xl flex-col items-center justify-center px-6 pt-32 pb-20 text-center sm:pt-36">
+      <div className="mx-auto flex min-h-[10svh] max-w-5xl flex-col items-center justify-center px-6 pt-32  text-center sm:pt-36">
         {/* <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
@@ -203,17 +169,10 @@ export function Hero() {
         {/* Outer wrapper is the GSAP target (scale / bounce); inner handles tilt */}
         <div
           ref={videoWrapRef}
-          className="mx-auto w-full max-w-[110rem] will-change-transform"
+          className="mx-auto w-full max-w-7xl will-change-transform"
           style={{ perspective: 1200 }}
         >
           <motion.div
-            onPointerMove={handleCardMove}
-            onPointerLeave={handleCardLeave}
-            style={{
-              rotateX: rotX,
-              rotateY: rotY,
-              transformStyle: "preserve-3d",
-            }}
             className="glow-hover relative aspect-video w-full overflow-hidden rounded-3xl border border-border shadow-[0_50px_120px_-40px_rgba(37,99,235,0.4)]"
           >
             <video
@@ -228,11 +187,7 @@ export function Hero() {
             />
             {/* Cinematic overlays */}
             <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent" />
-            {/* Cursor-following spotlight */}
-            <motion.div
-              className="pointer-events-none absolute inset-0"
-              style={{ background: spotlight, opacity: spotOpacity }}
-            />
+
             <div className="pointer-events-none absolute inset-0 rounded-3xl ring-1 ring-inset ring-black/5" />
 
             <div className="absolute inset-x-0 bottom-0 flex flex-col items-start gap-1 p-6 text-left sm:p-10">

@@ -309,27 +309,31 @@ const logos: { id: string; name: string; component: React.ComponentType<{ classN
 
 export function TrustedBy() {
   return (
-    <section className="relative w-full overflow-hidden bg-background py-20 px-6 sm:py-24">
+    <section className="relative w-full overflow-hidden bg-slate-50/50 dark:bg-background py-16 px-6 sm:py-20">
       <div className="mx-auto max-w-7xl">
         
-        {/* Dynamic Highlighted Heading */}
-        <h2 className="mx-auto mb-16 max-w-4xl text-center text-lg font-medium leading-relaxed tracking-tight text-foreground/80 md:text-xl md:leading-loose">
-          Trusted by{" "}
-          <span className="relative mx-1 inline-block rounded-md bg-brand-100 px-2 py-0.5 font-bold text-brand-600 dark:bg-brand-950/60 dark:text-brand-400">
-            500+ employers
-          </span>{" "}
-          from{" "}
-          <span className="relative mx-1 inline-block rounded-md bg-violet-50 px-2 py-0.5 font-bold text-violet-600 dark:bg-violet-950/40 dark:text-violet-400">
-            leading companies
-          </span>{" "}
-          across{" "}
-          <span className="relative mx-1 inline-block rounded-md bg-warning-50 px-2 py-0.5 font-bold text-warning-600 dark:bg-amber-950/40 dark:text-amber-400">
-            India
+        {/* Header */}
+        <div className="mx-auto mb-16 max-w-6xl px-6 text-center">
+          <span className="mb-6 inline-flex items-center gap-2 rounded-full border border-border bg-card/80 backdrop-blur-sm px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground shadow-sm">
+            <span className="relative flex h-1.5 w-1.5">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand-500/60" />
+              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-brand-500" />
+            </span>
+            Trusted by top teams
           </span>
-          .
-        </h2>
 
-        {/* Centered Flex Grid of Logos */}
+          <h2 className="text-balance text-4xl font-extrabold leading-[1.1] tracking-tight sm:text-5xl md:text-6xl text-foreground">
+            Trusted by <span className="text-brand-600 dark:text-brand-400">100+ leading companies</span>
+          </h2>
+
+          <p className="mx-auto mt-6 max-w-xl text-pretty text-base text-muted-foreground/90 sm:text-lg">
+            From fast-growing startups to established giants, we help build and scale high-performing teams.
+          </p>
+        </div>
+
+
+
+        {/* Centered Grid of Logos */}
         <div className="flex flex-wrap justify-center gap-4">
           {logos.map((logo, index) => {
             const LogoComp = logo.component;
@@ -340,9 +344,9 @@ export function TrustedBy() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-40px" }}
                 transition={{ duration: 0.35, delay: (index % 6) * 0.04 }}
-                className="glow-hover group flex h-24 w-[calc(50%-8px)] sm:w-[calc(33.333%-11px)] md:w-[calc(25%-12px)] lg:w-[calc(16.666%-14px)] items-center justify-center rounded-2xl border border-border bg-card p-6 shadow-sm transition-all duration-300 hover:border-brand-500/20 dark:bg-card/40"
+                className="group flex h-[104px] w-[calc(50%-8px)] sm:w-[calc(33.333%-11px)] md:w-[calc(25%-12px)] lg:w-[calc(16.666%-14px)] items-center justify-center rounded-xl border border-border/50 bg-card p-4 shadow-sm transition-all duration-300 hover:scale-[1.02] hover:border-foreground/30 hover:shadow-md"
               >
-                <LogoComp className="opacity-75 transition-opacity duration-300 group-hover:opacity-100" />
+                <LogoComp className="transition-transform duration-300" />
               </motion.div>
             );
           })}

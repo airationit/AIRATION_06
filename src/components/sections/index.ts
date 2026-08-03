@@ -1,4 +1,4 @@
 // Barrel export for landing page sections
 export { Hero } from "./hero";
-export { Partners } from "./partners";
+export { TrustedBy } from "./trusted-by";
 export { Presentation } from "./presentation";

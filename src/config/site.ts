@@ -13,7 +13,6 @@ export const siteConfig = {
     github: "#",
   },
   nav: [
-    { label: "Why Hirance", href: "#features" },
     { label: "For Employers", href: "#employers" },
   ],
 };
