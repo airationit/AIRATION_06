@@ -44,9 +44,6 @@ export function GooglePlayButton({
       <PlayIcon className="h-6 w-6 shrink-0" />
       {!compact && (
         <span className="flex flex-col leading-none">
-          <span className="text-[10px] font-medium uppercase tracking-wider text-background/70">
-            Get it on
-          </span>
           <span className="text-sm font-semibold text-background">
             Google Play
           </span>
