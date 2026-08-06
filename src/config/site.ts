@@ -12,7 +12,29 @@ export const siteConfig = {
     twitter: "#",
     github: "#",
   },
+  /** Dual audience: employers use the web; candidates use the mobile app */
+  audiences: [
+    {
+      id: "employers",
+      label: "Employers",
+      href: "#employers",
+      hint: "Web platform",
+      cta: "Start hiring",
+      external: false,
+    },
+    {
+      id: "candidates",
+      label: "Candidates",
+      href: "https://play.google.com/store/apps",
+      hint: "Mobile app",
+      cta: "Get the app",
+      external: true,
+    },
+  ],
   nav: [
-    { label: "For Employers", href: "#employers" },
+    { label: "Employers", href: "#employers" },
+    { label: "Candidates", href: "https://play.google.com/store/apps", external: true },
+    { label: "About", href: "/about" },
+    { label: "Contact", href: "/contact" },
   ],
 };

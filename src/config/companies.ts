@@ -1,5 +1,5 @@
-// Partnering companies shown in the marquee.
-// Data comes straight from companies.json (name + real logo URL).
+// Partnering companies shown in the Trusted By section.
+// Data comes from companies.json (name + website URL + logo).
 // A generated monogram is used as a graceful fallback if a logo fails to load.
 
 import companiesData from "./companies.json";
@@ -7,11 +7,13 @@ import companiesData from "./companies.json";
 export interface Company {
   name: string;
   logoUrl: string;
+  url: string;
 }
 
-export const companies: Company[] = companiesData.map((c) => ({
+export const companies: Company[] = companiesData.slice(0, 30).map((c) => ({
   name: c.name,
   logoUrl: c.logo_url,
+  url: c.url,
 }));
 
 /** Deterministic hue (0–360) derived from a company name, for the fallback. */
