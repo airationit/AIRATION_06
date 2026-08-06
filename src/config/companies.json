@@ -1,122 +1,587 @@
 [
   {
-    "name": "Apple",
-    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=apple.com"
+    "name": "1ANSAH Technologies",
+    "url": "https://1ansah.in",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=1ansah.in"
   },
   {
-    "name": "Microsoft",
-    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=microsoft.com"
+    "name": "Absolute ERP Pvt Ltd",
+    "url": "https://erpabsolute.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=erpabsolute.com"
   },
   {
-    "name": "Alphabet (Google)",
-    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=google.com"
+    "name": "AbyM Technology",
+    "url": "https://abym.in",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=abym.in"
   },
   {
-    "name": "Amazon",
-    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=amazon.com"
+    "name": "Acore IT Hub",
+    "url": "https://acoreithub.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=acoreithub.com"
   },
   {
-    "name": "NVIDIA",
-    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=nvidia.com"
+    "name": "Afluex Multiservices",
+    "url": "https://afluex.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=afluex.com"
   },
   {
-    "name": "Meta",
-    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=meta.com"
+    "name": "AI Tech Gen Technologies",
+    "url": "https://aitechgentechnologies.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=aitechgentechnologies.com"
   },
   {
-    "name": "Tesla",
-    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=tesla.com"
+    "name": "Aipxperts",
+    "url": "https://aipxperts.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=aipxperts.com"
   },
   {
-    "name": "Berkshire Hathaway",
-    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=berkshirehathaway.com"
+    "name": "Airvision Solutions",
+    "url": "https://airvisionsolutions.in",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=airvisionsolutions.in"
   },
   {
-    "name": "Eli Lilly",
-    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=lilly.com"
+    "name": "AKKODIS",
+    "url": "https://akkodisgroup.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=akkodisgroup.com"
   },
   {
-    "name": "TSMC",
-    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=tsmc.com"
+    "name": "AMPL Technology",
+    "url": "https://theampltech.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=theampltech.com"
   },
   {
-    "name": "Broadcom",
-    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=broadcom.com"
+    "name": "AppsTek Corp",
+    "url": "https://appstekcorp.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=appstekcorp.com"
   },
   {
-    "name": "Novo Nordisk",
-    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=novonordisk.com"
+    "name": "AppTechCore",
+    "url": "https://apptechcore.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=apptechcore.com"
   },
   {
-    "name": "JPMorgan Chase",
-    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=jpmorganchase.com"
+    "name": "Aron Web Solutions",
+    "url": "https://aronwebsolutions.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=aronwebsolutions.com"
   },
   {
-    "name": "Visa",
-    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=visa.com"
+    "name": "Arya Consulting Services",
+    "url": "https://aryaconsultingservices.in",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=aryaconsultingservices.in"
   },
   {
-    "name": "Walmart",
-    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=walmart.com"
+    "name": "ATQ Information Technology",
+    "url": "https://atqits.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=atqits.com"
   },
   {
-    "name": "ExxonMobil",
-    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=exxonmobil.com"
+    "name": "Augurs Technologies",
+    "url": "https://augurs.in",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=augurs.in"
   },
   {
-    "name": "Mastercard",
-    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=mastercard.com"
+    "name": "Axsem Softwares",
+    "url": "https://axsemsoftwares.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=axsemsoftwares.com"
   },
   {
-    "name": "UnitedHealth Group",
-    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=unitedhealthgroup.com"
+    "name": "Bigbasket",
+    "url": "https://bigbasket.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=bigbasket.com"
   },
   {
-    "name": "ASML",
-    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=asml.com"
+    "name": "Biz-tech Analytics",
+    "url": "https://biztechanalytics.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=biztechanalytics.com"
   },
   {
-    "name": "Procter & Gamble",
-    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=pg.com"
+    "name": "Cloudemy Digital Technologies Pvt. Ltd.",
+    "url": "https://cloudemy.in",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=cloudemy.in"
   },
   {
-    "name": "Oracle",
-    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=oracle.com"
+    "name": "Codinwalk Software",
+    "url": "https://codinwalk.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=codinwalk.com"
   },
   {
-    "name": "Costco",
-    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=costco.com"
+    "name": "Cognizant",
+    "url": "https://cognizant.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=cognizant.com"
   },
   {
-    "name": "Home Depot",
-    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=homedepot.com"
+    "name": "Creative Buffer",
+    "url": "https://creativebuffer.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=creativebuffer.com"
   },
   {
-    "name": "Bank of America",
-    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=bankofamerica.com"
+    "name": "Criterion Tech Pvt Ltd",
+    "url": "https://criteriontechnologies.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=criteriontechnologies.com"
   },
   {
-    "name": "Netflix",
-    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=netflix.com"
+    "name": "Croma",
+    "url": "https://croma.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=croma.com"
   },
   {
-    "name": "Coca-Cola",
-    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=coca-cola.com"
+    "name": "DBS",
+    "url": "https://dbs.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=dbs.com"
   },
   {
-    "name": "PepsiCo",
-    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=pepsico.com"
+    "name": "Deloitte",
+    "url": "https://deloitte.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=deloitte.com"
   },
   {
-    "name": "Adobe",
-    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=adobe.com"
+    "name": "Deskcode Solution Pvt. Ltd.",
+    "url": "https://deskcodesolution.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=deskcodesolution.com"
   },
   {
-    "name": "Salesforce",
-    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=salesforce.com"
+    "name": "DHL",
+    "url": "https://dhl.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=dhl.com"
   },
   {
-    "name": "Cisco",
-    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=cisco.com"
+    "name": "Digifootprints",
+    "url": "https://digifootprints.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=digifootprints.com"
+  },
+  {
+    "name": "Digital Hype",
+    "url": "https://digitallhype.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=digitallhype.com"
+  },
+  {
+    "name": "Digital Jugglers",
+    "url": "https://digitaljugglers.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=digitaljugglers.com"
+  },
+  {
+    "name": "Digital Search Technologies Pvt. Ltd.",
+    "url": "https://digitalsearchtech.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=digitalsearchtech.com"
+  },
+  {
+    "name": "eDelta Corporation",
+    "url": "https://edeltacorp.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=edeltacorp.com"
+  },
+  {
+    "name": "ElyriaSoft",
+    "url": "https://elyriasoft.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=elyriasoft.com"
+  },
+  {
+    "name": "Esteem Auto Limited",
+    "url": "https://esteemauto.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=esteemauto.com"
+  },
+  {
+    "name": "EY",
+    "url": "https://ey.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=ey.com"
+  },
+  {
+    "name": "Ferry Infotech",
+    "url": "https://ferryinfotech.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=ferryinfotech.com"
+  },
+  {
+    "name": "Finesoft Technologies",
+    "url": "https://finesofttechnologies.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=finesofttechnologies.com"
+  },
+  {
+    "name": "FlairUp Digital Marketing",
+    "url": "https://fairup.in",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=fairup.in"
+  },
+  {
+    "name": "Fliparrow Technologies Pvt. Ltd.",
+    "url": "https://fliparrow.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=fliparrow.com"
+  },
+  {
+    "name": "Flipkart",
+    "url": "https://flipkart.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=flipkart.com"
+  },
+  {
+    "name": "Franciscan Solutions",
+    "url": "https://franciscansolutions.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=franciscansolutions.com"
+  },
+  {
+    "name": "Glocal Assist",
+    "url": "https://glocalassist.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=glocalassist.com"
+  },
+  {
+    "name": "Goomi Technology",
+    "url": "https://goomitechnology.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=goomitechnology.com"
+  },
+  {
+    "name": "Graygraph Technologies Pvt Ltd",
+    "url": "https://graygraph.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=graygraph.com"
+  },
+  {
+    "name": "Grewon Technologies",
+    "url": "https://grewon.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=grewon.com"
+  },
+  {
+    "name": "HCLTech",
+    "url": "https://hcltech.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=hcltech.com"
+  },
+  {
+    "name": "HVR SOLAR LTD",
+    "url": "https://hvrsolar.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=hvrsolar.com"
+  },
+  {
+    "name": "iCreatives Solutions",
+    "url": "https://icspl.in",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=icspl.in"
+  },
+  {
+    "name": "Ienergizer",
+    "url": "https://ienergizer.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=ienergizer.com"
+  },
+  {
+    "name": "IMCH Patna",
+    "url": "https://imchpatna.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=imchpatna.com"
+  },
+  {
+    "name": "Infibrain Technologies LLP",
+    "url": "https://infibrain.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=infibrain.com"
+  },
+  {
+    "name": "Innovaneers Technologies",
+    "url": "https://innovaneers.in",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=innovaneers.in"
+  },
+  {
+    "name": "IPH Technologies",
+    "url": "https://iphtechnologies.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=iphtechnologies.com"
+  },
+  {
+    "name": "Jamtech Technologies Pvt. Ltd.",
+    "url": "https://jamtechtechnologies.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=jamtechtechnologies.com"
+  },
+  {
+    "name": "Jobgenix",
+    "url": "https://jobgenix.co.in",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=jobgenix.co.in"
+  },
+  {
+    "name": "Keylogic Infotech Private Limited",
+    "url": "https://keylogicinfotech.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=keylogicinfotech.com"
+  },
+  {
+    "name": "KL Sons Steel",
+    "url": "https://klsons.in",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=klsons.in"
+  },
+  {
+    "name": "Kriprimaa HR Services",
+    "url": "https://kriprimaa.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=kriprimaa.com"
+  },
+  {
+    "name": "Lateral Pro Staff",
+    "url": "https://lateralprostaff.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=lateralprostaff.com"
+  },
+  {
+    "name": "LogicGo Infotech",
+    "url": "https://logicgoinfotech.in",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=logicgoinfotech.in"
+  },
+  {
+    "name": "Lumoslogic",
+    "url": "https://lumoslogic.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=lumoslogic.com"
+  },
+  {
+    "name": "Matrix Marketers",
+    "url": "https://matrixmarketers.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=matrixmarketers.com"
+  },
+  {
+    "name": "McKinsey & Company",
+    "url": "https://mckinsey.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=mckinsey.com"
+  },
+  {
+    "name": "Mingrow",
+    "url": "https://mingrow.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=mingrow.com"
+  },
+  {
+    "name": "Netzent Technologies",
+    "url": "https://netzent.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=netzent.com"
+  },
+  {
+    "name": "Nexus Link Services",
+    "url": "https://nexuslinkservices.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=nexuslinkservices.com"
+  },
+  {
+    "name": "Nowgray IT Services Pvt Ltd",
+    "url": "https://nowgray.live",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=nowgray.live"
+  },
+  {
+    "name": "NV Contractor",
+    "url": "https://nvcontractor.in",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=nvcontractor.in"
+  },
+  {
+    "name": "Olbuz Pvt. Ltd.",
+    "url": "https://olbuz.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=olbuz.com"
+  },
+  {
+    "name": "Om Logistics Supply Chain Pvt Ltd",
+    "url": "https://olsc.in",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=olsc.in"
+  },
+  {
+    "name": "Omni Tech Integrators",
+    "url": "https://omnichat.in",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=omnichat.in"
+  },
+  {
+    "name": "Orbish Infotech",
+    "url": "https://orbishinfotech.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=orbishinfotech.com"
+  },
+  {
+    "name": "Pitch Pine Media Pvt. Ltd.",
+    "url": "https://pitchpinemedia.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=pitchpinemedia.com"
+  },
+  {
+    "name": "Prits IT Solutions",
+    "url": "https://pritsitsolutions.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=pritsitsolutions.com"
+  },
+  {
+    "name": "Quokka Labs LLP",
+    "url": "https://quokkalabs.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=quokkalabs.com"
+  },
+  {
+    "name": "Recruitment Nexus",
+    "url": "https://recruitmentnexus.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=recruitmentnexus.com"
+  },
+  {
+    "name": "RedTech Software",
+    "url": "https://redtechsoftware.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=redtechsoftware.com"
+  },
+  {
+    "name": "Robospecies Technologies",
+    "url": "https://robospecies.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=robospecies.com"
+  },
+  {
+    "name": "Samosys Technologies Pvt. Ltd.",
+    "url": "https://samosys.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=samosys.com"
+  },
+  {
+    "name": "Shreel Marketing",
+    "url": "https://shreel.marketing",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=shreel.marketing"
+  },
+  {
+    "name": "SigmaIT Software Designers Pvt Ltd.",
+    "url": "https://sigmasoftwares.in",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=sigmasoftwares.in"
+  },
+  {
+    "name": "Square Yards",
+    "url": "https://squareyards.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=squareyards.com"
+  },
+  {
+    "name": "Squareit Solutions",
+    "url": "https://squareit.in",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=squareit.in"
+  },
+  {
+    "name": "Stand In Crowd Technologies",
+    "url": "https://standincrowd.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=standincrowd.com"
+  },
+  {
+    "name": "Steadfast Limited",
+    "url": "https://steadfastmedishield.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=steadfastmedishield.com"
+  },
+  {
+    "name": "Steelax Interio",
+    "url": "https://steelaxinterio.co.in",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=steelaxinterio.co.in"
+  },
+  {
+    "name": "Suffescom Solutions",
+    "url": "https://suffescom.in",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=suffescom.in"
+  },
+  {
+    "name": "Synapsweb",
+    "url": "https://synapsweb.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=synapsweb.com"
+  },
+  {
+    "name": "Takyon Networks Ltd.",
+    "url": "https://takyon.co.in",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=takyon.co.in"
+  },
+  {
+    "name": "TCS",
+    "url": "https://tcs.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=tcs.com"
+  },
+  {
+    "name": "Tech Glock",
+    "url": "https://techglock.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=techglock.com"
+  },
+  {
+    "name": "Techno Toil",
+    "url": "https://technotoil.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=technotoil.com"
+  },
+  {
+    "name": "Teleperformance",
+    "url": "https://teleperformance.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=teleperformance.com"
+  },
+  {
+    "name": "TELUS Digital",
+    "url": "https://telusinternational.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=telusinternational.com"
+  },
+  {
+    "name": "Tripathi Digital",
+    "url": "https://tripathidigital.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=tripathidigital.com"
+  },
+  {
+    "name": "Triserv 360 Business Solution Pvt Ltd",
+    "url": "https://triserv360.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=triserv360.com"
+  },
+  {
+    "name": "Tulip Fintech",
+    "url": "https://tulipfin.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=tulipfin.com"
+  },
+  {
+    "name": "Unified Management Consulting",
+    "url": "https://unifiedmanagementconsulting.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=unifiedmanagementconsulting.com"
+  },
+  {
+    "name": "Urbanfeat Technologies",
+    "url": "https://urbanfeatgroup.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=urbanfeatgroup.com"
+  },
+  {
+    "name": "Vexil Infotech Pvt Ltd",
+    "url": "https://vexilinfotech.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=vexilinfotech.com"
+  },
+  {
+    "name": "Webcreta Technologies Pvt. Ltd.",
+    "url": "https://webcreta.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=webcreta.com"
+  },
+  {
+    "name": "Webguard Info Solutions",
+    "url": "https://webguard.in",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=webguard.in"
+  },
+  {
+    "name": "Websofy Software Pvt. Ltd.",
+    "url": "https://websofy.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=websofy.com"
+  },
+  {
+    "name": "WebSpero Solutions",
+    "url": "https://webspero.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=webspero.com"
+  },
+  {
+    "name": "Webspirt Technology Pvt. Ltd.",
+    "url": "https://webspirt.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=webspirt.com"
+  },
+  {
+    "name": "Websultanate Software Technologies",
+    "url": "https://websultanate.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=websultanate.com"
+  },
+  {
+    "name": "WeDo Web Apps",
+    "url": "https://wedowebapps.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=wedowebapps.com"
+  },
+  {
+    "name": "Weknow Technologies",
+    "url": "https://weknowtech.in",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=weknowtech.in"
+  },
+  {
+    "name": "Whirlpool",
+    "url": "https://whirlpool.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=whirlpool.com"
+  },
+  {
+    "name": "White Orange Software",
+    "url": "https://whiteorangesoftware.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=whiteorangesoftware.com"
+  },
+  {
+    "name": "Wishfin",
+    "url": "https://wishfin.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=wishfin.com"
+  },
+  {
+    "name": "WISMAD",
+    "url": "https://wismad.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=wismad.com"
+  },
+  {
+    "name": "Xtec Global",
+    "url": "https://xtecglobal.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=xtecglobal.com"
+  },
+  {
+    "name": "Zen Digital",
+    "url": "https://zendigitalzd.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=zendigitalzd.com"
+  },
+  {
+    "name": "Zonvoir Technologies",
+    "url": "https://zonvoir.com",
+    "logo_url": "https://www.google.com/s2/favicons?sz=128&domain=zonvoir.com"
   }
 ]

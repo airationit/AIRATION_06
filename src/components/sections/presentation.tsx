@@ -1,497 +1,161 @@
-"use client";
+"use client"
 
-import { useEffect, useRef, useState } from "react";
-import { motion, useInView } from "framer-motion";
-import { Briefcase, RefreshCw, Sparkles, UserCheck, Check, MapPin, Clock, Wallet, Users } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { useEffect, useRef, useState } from "react"
+import { motion, useInView, useReducedMotion } from "framer-motion"
 
-// Helper Counter component for animating stats
-function Counter({ value, duration = 1.5 }: { value: number; duration?: number }) {
-  const ref = useRef<HTMLSpanElement>(null);
-  const inView = useInView(ref, { once: true, amount: 0.3 });
-  const [count, setCount] = useState(0);
+const METRICS = [
+  {
+    value: 80,
+    suffix: "+",
+    title: "Job categories",
+    description:
+      "Roles across technology, design, operations, marketing, and leadership.",
+  },
+  {
+    value: 200,
+    suffix: "K+",
+    title: "Daily swipes",
+    description:
+      "High-intent decisions from employers and candidates every day.",
+  },
+  {
+    value: 20,
+    suffix: "K+",
+    title: "Successful hires",
+    description: "People matched into roles they want through Hirance.",
+  },
+  {
+    value: 500,
+    suffix: "K+",
+    title: "Candidates",
+    description: "Verified professionals actively exploring opportunities.",
+  },
+] as const
+
+const Counter = ({
+  value,
+  duration = 1.4,
+}: {
+  value: number
+  duration?: number
+}) => {
+  const ref = useRef<HTMLSpanElement>(null)
+  const inView = useInView(ref, { once: true, amount: 0.4 })
+  const [count, setCount] = useState(0)
+  const reducedMotion = useReducedMotion()
 
   useEffect(() => {
-    if (!inView) return;
+    if (!inView) return
 
-    const end = value;
-    const startTime = performance.now();
-    const durationMs = duration * 1000;
+    if (reducedMotion) {
+      setCount(value)
+      return
+    }
 
-    let frameId: number;
+    const startTime = performance.now()
+    const durationMs = duration * 1000
+    let frameId: number
 
     const updateCount = (now: number) => {
-      const elapsed = now - startTime;
-      const progress = Math.min(elapsed / durationMs, 1);
-
-      // Ease out quad
-      const easeProgress = progress * (2 - progress);
-      const current = Math.min(Math.floor(easeProgress * end), end);
-
-      setCount(current);
+      const progress = Math.min((now - startTime) / durationMs, 1)
+      const easeProgress = progress * (2 - progress)
+      setCount(Math.min(Math.floor(easeProgress * value), value))
 
       if (progress < 1) {
-        frameId = requestAnimationFrame(updateCount);
+        frameId = requestAnimationFrame(updateCount)
       }
-    };
+    }
 
-    frameId = requestAnimationFrame(updateCount);
-    return () => cancelAnimationFrame(frameId);
-  }, [value, inView, duration]);
+    frameId = requestAnimationFrame(updateCount)
+    return () => cancelAnimationFrame(frameId)
+  }, [value, inView, duration, reducedMotion])
 
-  return <span ref={ref}>{count}</span>;
+  return <span ref={ref}>{count}</span>
 }
-
-// Mobile-app style swipe simulator — job cards swipe right to apply
-function SwipeSimulator() {
-  const [cardIndex, setCardIndex] = useState(0);
-  const [swipeState, setSwipeState] = useState<"idle" | "swiping" | "matched">("idle");
-
-  const jobs = [
-    { title: "Product Designer", company: "DevFlow", location: "Remote", type: "Full-time", salary: "$120k–150k", match: "98%" },
-    { title: "Fullstack Engineer", company: "LinearQ", location: "Berlin", type: "Hybrid", salary: "$130k–160k", match: "95%" },
-    { title: "DevOps Architect", company: "Aether AI", location: "Remote", type: "Contract", salary: "$140k–175k", match: "97%" },
-  ];
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setSwipeState("swiping");
-
-      setTimeout(() => {
-        setSwipeState("matched");
-      }, 700);
-
-      setTimeout(() => {
-        setSwipeState("idle");
-        setCardIndex((prev) => (prev + 1) % jobs.length);
-      }, 2100);
-    }, 3800);
-
-    return () => clearInterval(interval);
-  }, [jobs.length]);
-
-  const current = jobs[cardIndex];
-  const next = jobs[(cardIndex + 1) % jobs.length];
-
-  const renderCard = (j: typeof jobs[number]) => (
-    <div className="flex h-full flex-col p-2">
-      {/* Company badge + match */}
-      <div className="flex items-center justify-between">
-        <div className="flex h-6 w-6 items-center justify-center rounded-md bg-brand-500/10 text-[9px] font-extrabold text-brand-600">
-          {j.company.slice(0, 2).toUpperCase()}
-        </div>
-        <span className="rounded-full bg-brand-600 px-1.5 py-0.5 text-[7px] font-bold text-white shadow-sm">
-          {j.match} Match
-        </span>
-      </div>
-
-      {/* Title + company */}
-      <div className="mt-1.5">
-        <h4 className="text-[10px] font-bold leading-tight text-foreground">{j.title}</h4>
-        <p className="truncate text-[8px] font-medium text-muted-foreground">{j.company}</p>
-      </div>
-
-      {/* Details */}
-      <div className="mt-1.5 space-y-0.5">
-        <div className="flex items-center gap-1 text-[8px] text-muted-foreground">
-          <MapPin className="h-2 w-2 shrink-0 text-brand-500" />
-          <span className="truncate">{j.location}</span>
-        </div>
-        <div className="flex items-center gap-1 text-[8px] text-muted-foreground">
-          <Clock className="h-2 w-2 shrink-0 text-brand-500" />
-          <span className="truncate">{j.type}</span>
-        </div>
-        <div className="flex items-center gap-1 text-[8px] font-semibold text-foreground/80">
-          <Wallet className="h-2 w-2 shrink-0 text-brand-500" />
-          <span className="truncate">{j.salary}</span>
-        </div>
-      </div>
-
-      {/* Pass / Apply actions */}
-      <div className="mt-auto flex items-center justify-center gap-2.5">
-        <span className="flex h-5 w-5 items-center justify-center rounded-full border border-red-200 bg-red-50 text-[8px] text-red-500 dark:border-red-900/40 dark:bg-red-950/30">✕</span>
-        <span className="flex h-5 w-5 items-center justify-center rounded-full border border-green-200 bg-green-50 text-[9px] text-green-500 dark:border-green-900/40 dark:bg-green-950/30">💚</span>
-      </div>
-    </div>
-  );
-
-  return (
-    <div className="relative flex h-48 w-full items-center justify-center overflow-hidden rounded-2xl border border-border/40 bg-secondary/30">
-      {/* Phone frame */}
-      <div className="relative h-[11rem] w-[7.5rem] rounded-[1.4rem] border-[3px] border-foreground/80 bg-card p-1 shadow-xl">
-        {/* Notch */}
-        <div className="absolute left-1/2 top-1 z-30 h-1 w-8 -translate-x-1/2 rounded-full bg-foreground/70" />
-
-        {/* Screen */}
-        <div className="relative h-full w-full overflow-hidden rounded-[1.1rem] bg-background">
-          {/* Preview / next card behind */}
-          <motion.div
-            initial={false}
-            animate={
-              swipeState === "idle"
-                ? { scale: 0.92, y: 6, opacity: 0.7 }
-                : { scale: 1, y: 0, opacity: 1 }
-            }
-            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-            className="absolute inset-0 overflow-hidden rounded-[1.1rem]"
-          >
-            {renderCard(next)}
-          </motion.div>
-
-          {/* Current card — swipes right */}
-          <motion.div
-            animate={
-              swipeState === "swiping" || swipeState === "matched"
-                ? { x: "120%", rotate: 12, opacity: 0 }
-                : { x: 0, rotate: 0, opacity: 1 }
-            }
-            transition={{ duration: 0.65, ease: [0.25, 1, 0.5, 1] }}
-            className="absolute inset-0 select-none overflow-hidden rounded-[1.1rem] bg-card"
-          >
-            {/* "APPLY" stamp appears as the card swipes right */}
-            <motion.span
-              animate={{ opacity: swipeState === "idle" ? 0 : 1 }}
-              transition={{ duration: 0.2 }}
-              className="absolute left-2 top-2 z-10 -rotate-12 rounded-md border-2 border-green-500 px-1.5 py-0.5 text-[9px] font-extrabold uppercase tracking-wider text-green-500"
-            >
-              Apply
-            </motion.span>
-            {renderCard(current)}
-          </motion.div>
-
-          {/* Match overlay fills the screen */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={swipeState === "matched" ? { opacity: 1 } : { opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            className="pointer-events-none absolute inset-0 z-20 flex flex-col items-center justify-center bg-brand-600/95 text-center text-white backdrop-blur-[1px] dark:bg-brand-700/95"
-          >
-            <motion.div
-              initial={{ scale: 0.6 }}
-              animate={swipeState === "matched" ? { scale: 1 } : { scale: 0.6 }}
-              transition={{ type: "spring", stiffness: 240, damping: 13 }}
-              className="mb-1 flex h-9 w-9 items-center justify-center rounded-full bg-white text-sm shadow-lg"
-            >
-              💚
-            </motion.div>
-            <span className="text-[10px] font-extrabold uppercase tracking-wider">Applied!</span>
-            <span className="mt-0.5 px-2 text-[8px] leading-tight opacity-80">Application sent to employer</span>
-          </motion.div>
-        </div>
-      </div>
-
-      {/* Rightward swipe motion cue */}
-      <motion.div
-        aria-hidden
-        animate={{ x: [-4, 6, -4], opacity: [0.3, 0.9, 0.3] }}
-        transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute bottom-3 right-3 text-brand-500"
-      >
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M5 12h14M12 5l7 7-7 7" />
-        </svg>
-      </motion.div>
-    </div>
-  );
-}
-
-// Drifting/Floating tags component for categories
-function DriftingBadges() {
-  const categoryTags = [
-    "Product Design", "React Engineer", "AI Researcher",
-    "DevOps Architect", "Growth Marketing", "iOS Developer",
-    "QA Specialist", "Sales Lead", "Data Scientist",
-    "Backend Engineer", "UX Researcher", "Product Manager",
-    "Cloud Architect", "ML Engineer", "Content Strategist",
-    "Android Developer", "Cybersecurity", "Finance Analyst",
-    "HR Business Partner", "Customer Success", "Technical Writer",
-    "Motion Designer", "Blockchain Dev", "SRE Engineer",
-  ];
-
-  const half = Math.ceil(categoryTags.length / 2);
-  const row1 = categoryTags.slice(0, half);
-  const row2 = categoryTags.slice(half);
-
-  return (
-    <div className="relative flex h-48 w-full flex-col justify-center gap-2.5 overflow-hidden rounded-2xl border border-border/40 bg-secondary/30 p-4">
-      {/* Row 1 */}
-      <div className="flex w-max animate-[marquee_28s_linear_infinite] justify-start gap-2">
-        {[...row1, ...row1].map((tag, idx) => (
-          <span
-            key={`tag-r1-${idx}`}
-            className="whitespace-nowrap rounded-full border border-border/80 bg-card/65 px-3 py-1.5 text-xs font-semibold text-foreground/80 shadow-sm transition-all hover:border-brand-500/40 hover:text-brand-600 dark:hover:text-brand-400"
-          >
-            {tag}
-          </span>
-        ))}
-      </div>
-
-      {/* Row 2 */}
-      <div className="flex w-max animate-[marquee_22s_linear_infinite_reverse] justify-start gap-2">
-        {[...row2, ...row2].map((tag, idx) => (
-          <span
-            key={`tag-r2-${idx}`}
-            className="whitespace-nowrap rounded-full border border-border/80 bg-card/65 px-3 py-1.5 text-xs font-semibold text-foreground/80 shadow-sm transition-all hover:border-brand-500/40 hover:text-brand-600 dark:hover:text-brand-400"
-          >
-            {tag}
-          </span>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-// Successful hires visual — a stack of hired candidate avatars with a success pulse
-function HiredVisual() {
-  const hires = [
-    "https://randomuser.me/api/portraits/men/32.jpg",
-    "https://randomuser.me/api/portraits/women/44.jpg",
-    "https://randomuser.me/api/portraits/men/76.jpg",
-    "https://randomuser.me/api/portraits/women/68.jpg",
-    "https://randomuser.me/api/portraits/men/51.jpg",
-  ];
-
-  return (
-    <div className="relative flex h-48 w-full flex-col items-center justify-center gap-4 overflow-hidden rounded-2xl border border-border/40 bg-secondary/30 p-4">
-      {/* Overlapping avatar stack */}
-      <div className="flex items-center">
-        {hires.map((src, idx) => (
-          <motion.div
-            key={src}
-            initial={{ opacity: 0, scale: 0.6, y: 8 }}
-            whileInView={{ opacity: 1, scale: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.4, delay: idx * 0.09, ease: [0.16, 1, 0.3, 1] }}
-            style={{ zIndex: hires.length - idx }}
-            className="relative -ml-3 first:ml-0"
-          >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={src}
-              alt="Hired candidate"
-              loading="lazy"
-              decoding="async"
-              className="h-11 w-11 rounded-full object-cover ring-2 ring-card shadow-sm"
-            />
-            <span className="absolute -bottom-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-success-500 ring-2 ring-card">
-              <Check className="h-2.5 w-2.5 text-white" strokeWidth={3} />
-            </span>
-          </motion.div>
-        ))}
-        <div className="z-10 -ml-3 flex h-11 w-11 items-center justify-center rounded-full border border-brand-500/20 bg-brand-500/10 text-xs font-bold text-brand-600 ring-2 ring-card">
-          +20K
-        </div>
-      </div>
-
-      {/* Animated "just hired" pulse chip */}
-      <motion.div
-        initial={{ opacity: 0, y: 6 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.5, delay: 0.5 }}
-        className="inline-flex items-center gap-2 rounded-full border border-success-500/20 bg-success-50 px-3 py-1.5 text-xs font-semibold text-success-600 shadow-sm dark:bg-success-500/10"
-      >
-        <span className="relative flex h-1.5 w-1.5">
-          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-success-500/70" />
-          <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-success-500" />
-        </span>
-        New hire made just now
-      </motion.div>
-    </div>
-  );
-}
-
-// Candidate pool visual
-function CandidateVisual() {
-  return (
-    <div className="relative flex h-48 w-full items-center justify-center overflow-hidden rounded-2xl border border-border/40 bg-secondary/30 p-4">
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(59,130,246,0.1)_0%,transparent_70%)]" />
-      <div className="relative flex h-16 w-16 items-center justify-center rounded-full border border-brand-500/20 bg-brand-500/10 shadow-[0_0_20px_rgba(59,130,246,0.15)]">
-        <Users className="h-7 w-7 text-brand-500" />
-        
-        {/* Orbiting dots */}
-        <motion.div 
-          animate={{ rotate: 360 }} 
-          transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-          className="absolute -inset-6 rounded-full border border-dashed border-brand-500/30"
-        >
-           <div className="absolute -top-1.5 left-1/2 h-3 w-3 -translate-x-1/2 rounded-full bg-brand-400 shadow-[0_0_10px_rgba(59,130,246,0.8)]" />
-           <div className="absolute -bottom-1.5 left-1/2 h-2 w-2 -translate-x-1/2 rounded-full bg-sky-400 shadow-[0_0_10px_rgba(56,189,248,0.8)]" />
-        </motion.div>
-        
-        <motion.div 
-          animate={{ rotate: -360 }} 
-          transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
-          className="absolute -inset-12 rounded-full border border-brand-500/10"
-        >
-           <div className="absolute top-1/4 -left-1.5 h-2.5 w-2.5 -translate-y-1/2 rounded-full bg-violet-400 shadow-[0_0_10px_rgba(139,92,246,0.8)]" />
-           <div className="absolute bottom-1/4 -right-1.5 h-2 w-2 -translate-y-1/2 rounded-full bg-brand-300 shadow-[0_0_10px_rgba(96,165,250,0.8)]" />
-        </motion.div>
-      </div>
-      
-      <div className="absolute bottom-3 flex items-center gap-1.5 rounded-full border border-border/50 bg-background/50 px-2.5 py-1 backdrop-blur-md">
-        <span className="flex h-1.5 w-1.5 rounded-full bg-success-500 animate-pulse" />
-        <span className="text-[9px] font-medium uppercase tracking-wider text-muted-foreground">Live Talent Pool</span>
-      </div>
-    </div>
-  );
-}
-
-// A single high-impact stat / showcase card
-function ShowcaseCard({
-  icon: Icon,
-  label,
-  value,
-  suffix,
-  title,
-  description,
-  index,
-  inView,
-}: {
-  icon: typeof Briefcase;
-  label: string;
-  value: number;
-  suffix: string;
-  title: string;
-  description: string;
-  index: number;
-  inView: boolean;
-}) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.7, delay: index * 0.12, ease: [0.16, 1, 0.3, 1] }}
-      className="group relative flex h-full flex-col gap-5 rounded-3xl border border-border/60 bg-card/45 p-6 shadow-sm backdrop-blur-md transition-all duration-300 hover:border-brand-500/25 hover:shadow-[0_16px_36px_-6px_rgba(59,130,246,0.08)] sm:p-7"
-    >
-      {/* <div className="flex items-center justify-between">
-        <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-brand-500/10 text-brand-600 shadow-[inset_0_1px_2px_rgba(0,0,0,0.05)]">
-          <Icon className="h-5 w-5" />
-        </div>
-        <span className="rounded-full border border-brand-500/10 bg-brand-500/5 px-2.5 py-1 text-xs font-semibold uppercase tracking-widest text-brand-500">
-          {label}
-        </span>
-      </div> */}
-
-      <div>
-        <h3 className="text-4xl font-extrabold tracking-tight text-foreground sm:text-5xl">
-          <Counter value={value} />
-          {suffix}
-        </h3>
-        <p className="mt-1 text-sm font-bold text-foreground/90">{title}</p>
-        <p className="mt-2 text-xs leading-relaxed text-muted-foreground">{description}</p>
-      </div>
-
-    </motion.div>
-  );
-}
-
-
 
 export function Presentation() {
-  const sectionRef = useRef<HTMLElement>(null);
-  const headerRef = useRef<HTMLDivElement>(null);
-  const statsRef = useRef<HTMLDivElement>(null);
-
-  const isHeaderInView = useInView(headerRef, { once: true, amount: 0.3 });
-  const isStatsInView = useInView(statsRef, { once: true, amount: 0.2 });
+  const headerRef = useRef<HTMLDivElement>(null)
+  const metricsRef = useRef<HTMLUListElement>(null)
+  const isHeaderInView = useInView(headerRef, { once: true, amount: 0.35 })
+  const isMetricsInView = useInView(metricsRef, { once: true, amount: 0.2 })
+  const reducedMotion = useReducedMotion()
 
   return (
     <section
-      ref={sectionRef}
-      id="stats-reviews"
-      className="relative overflow-hidden border-t border-border/30 pt-16 pb-24 sm:pt-24 sm:pb-32"
+      id="employers"
+      className="relative overflow-hidden border-t border-border/40 pt-16 pb-24 sm:pt-24 sm:pb-32"
+      aria-labelledby="presentation-heading"
     >
-      {/* Ambient glowing washes */}
-      <div className="pointer-events-none absolute inset-0 -z-10">
-        <div className="absolute right-1/4 top-1/4 h-[30rem] w-[30rem] rounded-full bg-brand-500/5 blur-[120px]" />
-        <div className="absolute bottom-1/4 left-1/4 h-[25rem] w-[25rem] rounded-full bg-sky-400/5 blur-[100px]" />
+      <div
+        className="pointer-events-none absolute inset-0 -z-10"
+        aria-hidden="true"
+      >
+        <div className="absolute left-1/2 top-0 h-[22rem] w-[40rem] -translate-x-1/2 rounded-full bg-brand-500/[0.04] blur-[110px]" />
       </div>
 
       <div className="mx-auto max-w-6xl px-6">
-        {/* Header */}
-        <div ref={headerRef} className="mx-auto mb-16 max-w-3xl text-center">
-          <motion.span
-            initial={{ opacity: 0, y: 10 }}
-            animate={isHeaderInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.5 }}
-            className="mb-6 inline-flex items-center gap-2 rounded-full border border-border bg-secondary/80 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground shadow-[0_1px_2px_rgba(0,0,0,0.02)]"
-          >
-            <Sparkles className="h-3.5 w-3.5 text-brand-500" />
-            Real Impact, In Real Time
-          </motion.span>
-
+        <div ref={headerRef} className="mx-auto mb-14 max-w-2xl text-center sm:mb-16">
           <motion.h2
-            initial={{ opacity: 0, y: 15 }}
+            id="presentation-heading"
+            initial={reducedMotion ? false : { opacity: 0, y: 14 }}
             animate={isHeaderInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="text-balance text-4xl font-bold leading-[1.15] tracking-tight sm:text-5xl md:text-6xl"
+            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+            className="text-balance text-3xl font-bold leading-[1.15] tracking-tight sm:text-4xl md:text-5xl"
           >
-            Powering <span className="text-gradient">Smarter Hiring</span>
+            Powering <span className="text-gradient">smarter hiring</span>
           </motion.h2>
 
           <motion.p
-            initial={{ opacity: 0, y: 15 }}
+            initial={reducedMotion ? false : { opacity: 0, y: 14 }}
             animate={isHeaderInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="mx-auto mt-6 text-pretty text-base text-muted-foreground/90 sm:text-lg"
+            transition={{
+              duration: 0.5,
+              delay: reducedMotion ? 0 : 0.08,
+              ease: [0.16, 1, 0.3, 1],
+            }}
+            className="mx-auto mt-4 max-w-lg text-pretty text-base text-muted-foreground sm:text-lg"
           >
             Helping companies and candidates connect faster every day.
           </motion.p>
         </div>
 
-        {/* Showcase stat cards — equal height, evenly aligned */}
-        <div
-          ref={statsRef}
-          className="grid grid-cols-1 md:grid-cols-2 items-stretch gap-6 lg:grid-cols-4"
+        <ul
+          ref={metricsRef}
+          className="grid grid-cols-1 gap-10 sm:grid-cols-2 sm:gap-x-10 sm:gap-y-12 lg:grid-cols-4 lg:gap-8"
+          aria-label="Hirance platform metrics"
         >
-          <ShowcaseCard
-            icon={Briefcase}
-            label="Global Roles"
-            value={80}
-            suffix="+"
-            title="Job Categories"
-            description="Opportunities across technology, design, operations, marketing, and leadership fields."
-            index={0}
-            inView={isStatsInView}
-          />
-
-          <ShowcaseCard
-            icon={RefreshCw}
-            label="Active Matching"
-            value={200}
-            suffix="K+"
-            title="Candidate Swipes"
-            description="High-intent decisions made daily by quality employers and active job seekers."
-            index={1}
-            inView={isStatsInView}
-          />
-
-          <ShowcaseCard
-            icon={UserCheck}
-            label="Real Outcomes"
-            value={20}
-            suffix="K+"
-            title="Successful Hires"
-            description="Candidates matched, interviewed, and hired into roles they love through Hirance."
-            index={2}
-            inView={isStatsInView}
-          />
-
-          <ShowcaseCard
-            icon={Users}
-            label="Growing Network"
-            value={500}
-            suffix="K+"
-            title="Total Candidates"
-            description="A rapidly growing talent pool of verified professionals actively seeking opportunities."
-            index={3}
-            inView={isStatsInView}
-          />
-        </div>
-
-
+          {METRICS.map((metric, index) => (
+            <motion.li
+              key={metric.title}
+              initial={reducedMotion ? false : { opacity: 0, y: 18 }}
+              animate={isMetricsInView ? { opacity: 1, y: 0 } : {}}
+              transition={{
+                duration: 0.5,
+                delay: reducedMotion ? 0 : index * 0.08,
+                ease: [0.16, 1, 0.3, 1],
+              }}
+              className="relative text-center sm:text-left"
+            >
+              {index > 0 && (
+                <span
+                  className="absolute -left-4 top-1 hidden h-14 w-px bg-border/70 lg:block"
+                  aria-hidden="true"
+                />
+              )}
+              <p className="text-4xl font-extrabold tracking-tight text-foreground sm:text-5xl">
+                <Counter value={metric.value} />
+                {metric.suffix}
+              </p>
+              <p className="mt-2 text-sm font-semibold text-foreground">
+                {metric.title}
+              </p>
+              <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
+                {metric.description}
+              </p>
+            </motion.li>
+          ))}
+        </ul>
       </div>
     </section>
-  );
+  )
 }

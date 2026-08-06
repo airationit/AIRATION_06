@@ -1,8 +1,8 @@
-"use client";
+"use client"
 
-import Image from "next/image";
-import Link from "next/link";
-import { motion } from "framer-motion";
+import Image from "next/image"
+import Link from "next/link"
+import { motion } from "framer-motion"
 
 const socialLinks = [
   {
@@ -32,77 +32,94 @@ const socialLinks = [
       </svg>
     ),
   },
-];
+]
 
 const footerLinks = [
-  { label: "About", href: "#" },
-  { label: "Contact", href: "#" },
-  { label: "Feedback", href: "mailto:hello@hirance.com?subject=Feedback%20for%20Hirance" },
-  { label: "Terms", href: "#" },
-  { label: "Privacy", href: "#" },
-  { label: "Cookies", href: "#" },
-];
+  { label: "About", href: "/about" },
+  { label: "Contact", href: "/contact" },
+  {
+    label: "Feedback",
+    href: "mailto:hello@hirance.com?subject=Feedback%20for%20Hirance",
+  },
+  { label: "Terms", href: "/terms" },
+  { label: "Privacy", href: "/privacy" },
+  { label: "Cookies", href: "/cookies" },
+]
 
 export function Footer() {
   return (
-    <footer className="relative mt-auto border-t border-border/40 bg-background/30 backdrop-blur-md glass">
-      {/* Background ambient glow matching the site's dark mode and premium look */}
-      <div className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-t from-brand-500/5 via-transparent to-transparent opacity-50 dark:from-brand-500/10" />
-
-      {/* Centered logo of Hirance just above the footer bottom bar */}
-      <div className="flex justify-center pt-8 pb-4">
-        <Link href="/" className="group inline-flex items-center" aria-label="Hirance Home" id="footer-logo-link">
+    <footer className="relative mt-auto">
+      <div className="relative flex justify-center px-6 pb-4 sm:pb-6">
+        <div
+          className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-t from-brand-500/[0.04] via-transparent to-transparent"
+          aria-hidden="true"
+        />
+        <Link
+          href="/"
+          className="group inline-flex items-center focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-brand-500/40 focus-visible:ring-offset-2"
+          aria-label="Hirance Home"
+          id="footer-logo-link"
+          tabIndex={0}
+        >
           <Image
             src="/images/logo.png"
             alt="Hirance Logo"
-            width={180}
-            height={60}
+            width={480}
+            height={160}
             loading="lazy"
-            className="h-12 md:h-14 w-auto transition-transform duration-300 group-hover:scale-105"
+            className="h-16 w-auto opacity-90 transition-[opacity,transform] duration-300 group-hover:scale-[1.02] group-hover:opacity-100 sm:h-24 md:h-28"
             id="footer-logo-center"
           />
         </Link>
       </div>
 
-      <div className="mx-auto max-w-7xl px-6 pb-8 pt-4 flex flex-col justify-between gap-6 md:flex-row md:items-center border-t border-border/10">
-        {/* Left Side: Copyright and Socials aligned in a single row on desktop, stacked on mobile */}
-        <div className="flex flex-col gap-4 md:flex-row md:items-center md:gap-6">
-          <p className="text-xs text-muted-foreground md:text-sm">
-            &copy; {new Date().getFullYear()} Hirance Private Limited. All rights reserved.
-          </p>
-          {/* Subtle vertical divider, visible only on desktop */}
-          <span className="hidden h-4 w-px bg-border/60 md:block" aria-hidden="true" />
-          <div className="flex gap-2.5">
-            {socialLinks.map((social) => (
-              <motion.a
-                key={social.name}
-                id={`footer-social-${social.name.toLowerCase()}`}
-                href={social.href}
-                whileHover={{ y: -2 }}
-                whileTap={{ scale: 0.95 }}
-                className="flex h-8 w-8 items-center justify-center rounded-full border border-border/50 bg-card/60 text-muted-foreground transition-colors hover:border-brand-500 hover:bg-brand-500 hover:text-white"
-                aria-label={`Follow us on ${social.name}`}
-              >
-                {social.icon}
-              </motion.a>
-            ))}
+      <div className="relative border-t border-border/50 bg-background/40 backdrop-blur-sm">
+        <div className="mx-auto flex max-w-7xl flex-col justify-between gap-6 px-6 py-7 md:flex-row md:items-center md:py-8">
+          <div className="flex flex-col gap-4 md:flex-row md:items-center md:gap-6">
+            <p className="text-xs text-muted-foreground md:text-sm">
+              &copy; {new Date().getFullYear()} Hirance Private Limited. All
+              rights reserved.
+            </p>
+            <span
+              className="hidden h-4 w-px bg-border/60 md:block"
+              aria-hidden="true"
+            />
+            <div className="flex gap-2">
+              {socialLinks.map((social) => (
+                <motion.a
+                  key={social.name}
+                  id={`footer-social-${social.name.toLowerCase()}`}
+                  href={social.href}
+                  whileHover={{ y: -2 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="flex h-9 w-9 items-center justify-center rounded-full border border-border/50 bg-card text-muted-foreground transition-colors hover:border-brand-500 hover:bg-brand-600 hover:text-white focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-brand-500/40"
+                  aria-label={`Follow us on ${social.name}`}
+                  tabIndex={0}
+                >
+                  {social.icon}
+                </motion.a>
+              ))}
+            </div>
           </div>
-        </div>
 
-        {/* Right Side: Links */}
-        <nav className="flex flex-wrap items-center gap-x-6 gap-y-2" aria-label="Footer links">
-          {footerLinks.map((item) => (
-            <Link
-              key={item.label}
-              id={`footer-link-${item.label.toLowerCase()}`}
-              href={item.href}
-              className="text-xs md:text-sm text-muted-foreground transition-colors hover:text-brand-600 dark:hover:text-brand-400 font-medium"
-            >
-              {item.label}
-            </Link>
-          ))}
-        </nav>
+          <nav
+            className="flex flex-wrap items-center gap-x-5 gap-y-2"
+            aria-label="Footer links"
+          >
+            {footerLinks.map((item) => (
+              <Link
+                key={item.label}
+                id={`footer-link-${item.label.toLowerCase()}`}
+                href={item.href}
+                className="text-xs font-medium text-muted-foreground transition-colors hover:text-brand-600 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-brand-500/40 dark:hover:text-brand-400 md:text-sm"
+                tabIndex={0}
+              >
+                {item.label}
+              </Link>
+            ))}
+          </nav>
+        </div>
       </div>
     </footer>
-  );
+  )
 }
