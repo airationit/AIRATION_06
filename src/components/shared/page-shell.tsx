@@ -43,7 +43,7 @@ export const PageShell = ({
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.45, ease: [0.25, 0.1, 0.25, 1] }}
-            className="text-sm font-semibold tracking-wide text-brand-600"
+            className="text-sm font-semibold tracking-wide text-brand-600 dark:text-brand-400"
           >
             {brand}
           </motion.p>
@@ -90,7 +90,7 @@ export const LegalSection = ({ id, title, children }: LegalSectionProps) => {
       <h2 className="text-xl font-semibold tracking-tight text-foreground">
         {title}
       </h2>
-      <div className="mt-4 space-y-4 text-[15px] leading-relaxed text-muted-foreground [&_a]:font-medium [&_a]:text-brand-600 [&_a]:underline-offset-4 hover:[&_a]:underline [&_ul]:list-disc [&_ul]:space-y-2 [&_ul]:pl-5">
+      <div className="mt-4 space-y-4 text-[15px] leading-relaxed text-muted-foreground [&_a]:font-medium [&_a]:text-brand-600 [&_a]:underline-offset-4 hover:[&_a]:underline dark:[&_a]:text-brand-400 [&_ul]:list-disc [&_ul]:space-y-2 [&_ul]:pl-5">
         {children}
       </div>
     </section>
@@ -121,7 +121,7 @@ export const InlineLink = ({ href, children }: InlineLinkProps) => {
     return (
       <a
         href={href}
-        className="font-medium text-brand-600 underline-offset-4 hover:underline"
+        className="font-medium text-brand-600 underline-offset-4 hover:underline dark:text-brand-400"
         {...(href.startsWith("http")
           ? { target: "_blank", rel: "noopener noreferrer" }
           : {})}
@@ -134,7 +134,7 @@ export const InlineLink = ({ href, children }: InlineLinkProps) => {
   return (
     <Link
       href={href}
-      className="font-medium text-brand-600 underline-offset-4 hover:underline"
+      className="font-medium text-brand-600 underline-offset-4 hover:underline dark:text-brand-400"
     >
       {children}
     </Link>

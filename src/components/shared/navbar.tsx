@@ -8,6 +8,7 @@ import { ArrowUpRight, Menu, X } from "lucide-react"
 import { siteConfig } from "@/config/site"
 import { cn } from "@/lib/utils"
 import { GooglePlayButton } from "./google-play-button"
+import { ThemeToggle } from "./theme-toggle"
 
 interface NavbarProps {
   className?: string
@@ -160,7 +161,7 @@ export function Navbar({ className }: NavbarProps) {
             aria-hidden="true"
           />
 
-          <div className="h-10 w-10 shrink-0 md:hidden" aria-hidden="true" />
+          <div className="h-10 w-[5.5rem] shrink-0 md:hidden" aria-hidden="true" />
         </nav>
 
         <AnimatePresence>
@@ -170,7 +171,7 @@ export function Navbar({ className }: NavbarProps) {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -12 }}
               transition={{ duration: 0.25, ease: "easeOut" }}
-              className="mt-2 w-full overflow-hidden rounded-2xl border border-border/50 bg-white p-4 shadow-[0_12px_40px_-20px_rgba(15,23,42,0.25)] md:hidden"
+              className="mt-2 w-full overflow-hidden rounded-2xl border border-border/50 bg-card/95 p-4 shadow-[0_12px_40px_-20px_rgba(15,23,42,0.25)] backdrop-blur-md dark:shadow-[0_12px_40px_-20px_rgba(0,0,0,0.55)] md:hidden"
             >
               <p className="px-3 pb-2 text-[11px] font-semibold tracking-[0.14em] text-muted-foreground uppercase">
                 Choose your path
@@ -258,10 +259,16 @@ export function Navbar({ className }: NavbarProps) {
         className={cn(
           "pointer-events-auto fixed top-3 right-4 z-[60] hidden items-center gap-2 rounded-full px-2 py-1.5 transition-[background-color,box-shadow,border-color,backdrop-filter] duration-300 ease-out sm:top-4 sm:right-6 md:flex lg:right-8",
           scrolled
-            ? "border border-border/50 bg-white/95 shadow-[0_10px_36px_-18px_rgba(15,23,42,0.22)] backdrop-blur-md"
+            ? "border border-border/50 bg-card/95 shadow-[0_10px_36px_-18px_rgba(15,23,42,0.22)] backdrop-blur-md dark:shadow-[0_10px_36px_-18px_rgba(0,0,0,0.55)]"
             : "border border-transparent bg-transparent shadow-none"
         )}
       >
+        <ThemeToggle
+          className={cn(
+            !scrolled &&
+              "border-border/40 bg-background/70 shadow-none dark:bg-card/60"
+          )}
+        />
         {candidate && (
           <a
             href={candidate.href}
@@ -287,22 +294,31 @@ export function Navbar({ className }: NavbarProps) {
         )}
       </div>
 
-      <button
-        type="button"
-        onClick={handleMenuToggle}
-        aria-label={menuOpen ? "Close menu" : "Open menu"}
-        aria-expanded={menuOpen}
-        tabIndex={0}
-        className={cn(
-          "fixed top-3 right-4 z-[60] flex h-10 w-10 items-center justify-center rounded-full border text-foreground transition-[background-color,box-shadow,border-color] duration-300 ease-out sm:top-4 sm:right-6 md:hidden",
-          "focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-brand-500/40",
-          scrolled
-            ? "border-border/50 bg-white/95 shadow-[0_10px_36px_-18px_rgba(15,23,42,0.22)]"
-            : "border-border/40 bg-white/90 hover:bg-muted"
-        )}
-      >
-        {menuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-      </button>
+      <div className="fixed top-3 right-4 z-[60] flex items-center gap-2 sm:top-4 sm:right-6 md:hidden">
+        <ThemeToggle
+          className={cn(
+            scrolled
+              ? "border-border/50 bg-card/95 shadow-[0_10px_36px_-18px_rgba(15,23,42,0.22)] dark:shadow-[0_10px_36px_-18px_rgba(0,0,0,0.55)]"
+              : "border-border/40 bg-background/80 shadow-none dark:bg-card/70"
+          )}
+        />
+        <button
+          type="button"
+          onClick={handleMenuToggle}
+          aria-label={menuOpen ? "Close menu" : "Open menu"}
+          aria-expanded={menuOpen}
+          tabIndex={0}
+          className={cn(
+            "flex h-10 w-10 items-center justify-center rounded-full border text-foreground transition-[background-color,box-shadow,border-color] duration-300 ease-out",
+            "focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-brand-500/40",
+            scrolled
+              ? "border-border/50 bg-card/95 shadow-[0_10px_36px_-18px_rgba(15,23,42,0.22)] dark:shadow-[0_10px_36px_-18px_rgba(0,0,0,0.55)]"
+              : "border-border/40 bg-background/80 hover:bg-muted dark:bg-card/70"
+          )}
+        >
+          {menuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+        </button>
+      </div>
     </>
   )
 }

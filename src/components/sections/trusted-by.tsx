@@ -54,7 +54,7 @@ const CompanyDisc = ({
           )}
         >
           <span
-            className="absolute inset-[6px] rounded-full bg-white ring-1 ring-black/[0.04]"
+            className="absolute inset-[6px] rounded-full bg-white ring-1 ring-black/[0.04] dark:bg-white/95 dark:ring-white/10"
             aria-hidden="true"
           />
 
