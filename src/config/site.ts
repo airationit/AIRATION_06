@@ -19,7 +19,7 @@ export const siteConfig = {
       label: "Employers",
       href: "#employers",
       hint: "Web platform",
-      cta: "Start hiring",
+      cta: "Employer login",
       external: false,
     },
     {
@@ -32,8 +32,6 @@ export const siteConfig = {
     },
   ],
   nav: [
-    { label: "Employers", href: "#employers" },
-    { label: "Candidates", href: "https://play.google.com/store/apps", external: true },
     { label: "About", href: "/about" },
     { label: "Contact", href: "/contact" },
   ],
