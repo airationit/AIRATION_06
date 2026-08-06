@@ -41,7 +41,7 @@ function CompanyCard({ company }: { company: Company }) {
         <div className="absolute top-0 left-0 h-full w-[45%] bg-gradient-to-r from-transparent via-white/20 dark:via-white/10 to-transparent pointer-events-none opacity-0 group-hover/card:opacity-100 group-hover/card:animate-[card-shine_0.85s_ease-out_forwards]" />
       </div>
 
-      <span className="grid h-14 w-14 shrink-0 place-items-center overflow-hidden rounded-full bg-white shadow-[inset_0_1px_2px_rgba(0,0,0,0.05)] ring-1 ring-black/5 transition-transform duration-500 group-hover/card:scale-105 dark:bg-white/95 dark:ring-white/10">
+      <span className="grid h-14 w-14 shrink-0 place-items-center overflow-hidden rounded-full bg-white shadow-[inset_0_1px_2px_rgba(0,0,0,0.05)] ring-1 ring-black/5 transition-transform duration-500 group-hover/card:scale-105">
         {failed ? (
           <span
             aria-hidden

@@ -83,7 +83,7 @@ export const ContactForm = () => {
   if (submitted) {
     return (
       <div
-        className="rounded-2xl border border-border/70 bg-card/80 px-6 py-12 text-center shadow-sm backdrop-blur-sm"
+        className="rounded-2xl border border-border/70 bg-white/80 px-6 py-12 text-center shadow-sm backdrop-blur-sm"
         role="status"
         aria-live="polite"
       >
@@ -140,7 +140,7 @@ export const ContactForm = () => {
                     ? { target: "_blank", rel: "noopener noreferrer" }
                     : {})}
                 >
-                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-border/70 bg-brand-50 text-brand-600 transition-colors group-hover:border-brand-200 group-hover:bg-brand-100 dark:bg-brand-950/50 dark:text-brand-400 dark:group-hover:border-brand-700/50 dark:group-hover:bg-brand-900/40">
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-border/70 bg-brand-50 text-brand-600 transition-colors group-hover:border-brand-200 group-hover:bg-brand-100">
                     <Icon className="h-4 w-4" aria-hidden="true" />
                   </span>
                   <span>
@@ -160,7 +160,7 @@ export const ContactForm = () => {
 
       <form
         onSubmit={handleSubmit}
-        className="rounded-2xl border border-border/70 bg-card/80 p-6 shadow-sm backdrop-blur-sm sm:p-8"
+        className="rounded-2xl border border-border/70 bg-white/80 p-6 shadow-sm backdrop-blur-sm sm:p-8"
         noValidate
       >
         <div className="grid gap-5 sm:grid-cols-2">
@@ -240,7 +240,7 @@ export const ContactForm = () => {
             By submitting, you agree to our{" "}
             <a
               href="/privacy"
-              className="font-medium text-brand-600 underline-offset-4 hover:underline dark:text-brand-400"
+              className="font-medium text-brand-600 underline-offset-4 hover:underline"
             >
               Privacy Policy
             </a>

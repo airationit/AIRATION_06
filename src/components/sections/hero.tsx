@@ -105,7 +105,7 @@ export function Hero() {
             initial={reducedMotion ? false : { opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.05, ease: [0.16, 1, 0.3, 1] }}
-            className="text-sm font-semibold tracking-[0.18em] text-brand-600 uppercase dark:text-brand-400"
+            className="text-sm font-semibold tracking-[0.18em] text-brand-600 uppercase"
           >
             {siteConfig.name}
           </motion.p>
