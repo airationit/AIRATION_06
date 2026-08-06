@@ -33,14 +33,31 @@ export function Hero() {
       const wrap = videoWrapRef.current
       if (!copy || !wrap) return
 
+      const getPinEnd = () => `+=${wrap.offsetHeight * 0.7}`
+
       ScrollTrigger.create({
         trigger: copy,
         start: "center center",
-        end: () => `+=${wrap.offsetHeight * 0.7}`,
+        end: getPinEnd,
         pin: true,
         pinSpacing: false,
         anticipatePin: 1,
       })
+
+      gsap.fromTo(
+        copy,
+        { scale: 1, transformOrigin: "center center" },
+        {
+          scale: 0.72,
+          ease: "none",
+          scrollTrigger: {
+            trigger: copy,
+            start: "center center",
+            end: getPinEnd,
+            scrub: 1.1,
+          },
+        }
+      )
     }, sectionRef)
 
     return () => ctx.revert()
@@ -76,13 +93,13 @@ export function Hero() {
         className={cn(
           "relative z-0 flex items-center justify-center px-6",
           reducedMotion
-            ? "pt-28 pb-10 sm:pt-32"
-            : "min-h-[95dvh] pt-28 pb-6 sm:pt-32"
+            ? "pt-20 pb-10 sm:pt-24"
+            : "min-h-[95dvh] pt-20 pb-6 sm:pt-24"
         )}
       >
         <div
           ref={copyRef}
-          className="mx-auto flex w-full max-w-5xl flex-col items-center justify-center text-center"
+          className="mx-auto flex w-full max-w-5xl flex-col items-center justify-center text-center will-change-transform"
         >
           <motion.p
             initial={reducedMotion ? false : { opacity: 0, y: 10 }}
