@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { fontSans, fontMono } from "@/lib/fonts";
 import { Providers } from "@/providers";
-import { Navbar, GradientBackground, Footer } from "@/components/shared";
+import { Navbar, GradientBackground } from "@/components/shared";
 import { siteConfig } from "@/config/site";
 import "./globals.css";
 
@@ -48,14 +48,13 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body
-        className="min-h-dvh overflow-x-hidden antialiased"
+        className="min-h-dvh overflow-x-clip antialiased"
         suppressHydrationWarning
       >
         <Providers>
           <GradientBackground />
           <Navbar />
           {children}
-          <Footer />
         </Providers>
       </body>
     </html>

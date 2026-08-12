@@ -10,7 +10,7 @@ export interface Company {
   url: string;
 }
 
-export const companies: Company[] = companiesData.slice(0, 30).map((c) => ({
+export const companies: Company[] = companiesData.slice(0, 100).map((c) => ({
   name: c.name,
   logoUrl: c.logo_url,
   url: c.url,

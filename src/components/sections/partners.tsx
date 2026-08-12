@@ -226,14 +226,6 @@ export function Partners() {
         ref={headerRef}
         className="mx-auto mb-20 max-w-6xl px-6 text-center"
       >
-        <span className="mb-6 inline-flex items-center gap-2 rounded-full border border-border bg-secondary/80 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground shadow-[0_1px_2px_rgba(0,0,0,0.02)]">
-          <span className="relative flex h-1.5 w-1.5">
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand-500/60" />
-            <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-brand-500" />
-          </span>
-          Trusted by top teams
-        </span>
-
         <h2
           id="partners-heading"
           className="text-balance text-4xl font-bold leading-[1.1] tracking-tight sm:text-5xl md:text-6xl"

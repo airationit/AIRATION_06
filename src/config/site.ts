@@ -6,8 +6,8 @@ export const siteConfig = {
   url: "https://hirance.com",
   ogImage: "/og.png",
   links: {
-    // Google Play store listing — update with the real app id when published
-    playStore: "https://play.google.com/store/apps",
+    // Google Play store listing
+    playStore: "https://play.google.com/store/apps/details?id=com.hirance",
     employer: "#employers",
     twitter: "#",
     github: "#",
@@ -25,7 +25,7 @@ export const siteConfig = {
     {
       id: "candidates",
       label: "Candidates",
-      href: "https://play.google.com/store/apps",
+      href: "https://play.google.com/store/apps/details?id=com.hirance",
       hint: "Mobile app",
       cta: "Get the app",
       external: true,
