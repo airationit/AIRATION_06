@@ -1,30 +1,8 @@
-"use client";
+"use client"
 
-import Image from "next/image";
-import Link from "next/link";
-import { motion } from "framer-motion";
-import { Mail, MapPin, Phone } from "lucide-react";
-
-const footerLinks = {
-  product: {
-    title: "Product",
-    links: [
-      { label: "How It Works", href: "#" },
-      { label: "For Job Seekers", href: "#" },
-      { label: "For Employers", href: "#" },
-      { label: "Pricing", href: "#" },
-    ],
-  },
-  company: {
-    title: "Company",
-    links: [
-      { label: "About", href: "#" },
-      { label: "Careers", href: "#" },
-      { label: "Blog", href: "#" },
-      { label: "Contact", href: "#" },
-    ],
-  },
-};
+import Image from "next/image"
+import Link from "next/link"
+import { motion } from "framer-motion"
 
 const socialLinks = [
   {
@@ -54,45 +32,69 @@ const socialLinks = [
       </svg>
     ),
   },
-];
+]
 
-const legalLinks = [
-  { label: "Terms", href: "#" },
-  { label: "Privacy", href: "#" },
-  { label: "Cookies", href: "#" },
-];
+const footerLinks = [
+  { label: "About", href: "/about" },
+  { label: "Contact", href: "/contact" },
+  {
+    label: "Feedback",
+    href: "mailto:hello@hirance.com?subject=Feedback%20for%20Hirance",
+  },
+  { label: "Terms", href: "/terms" },
+  { label: "Privacy", href: "/privacy" },
+  { label: "Cookies", href: "/cookies" },
+]
 
 export function Footer() {
   return (
-    <footer className="relative mt-auto border-t border-border/40 bg-background/30 backdrop-blur-md glass">
-      <div className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-t from-brand-500/5 via-transparent to-transparent opacity-50 dark:from-brand-500/10" />
+    <footer className="relative mt-auto">
+      <div className="relative flex justify-center px-6 pb-4 sm:pb-6">
+        <div
+          className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-t from-brand-500/[0.04] via-transparent to-transparent"
+          aria-hidden="true"
+        />
+        <Link
+          href="/"
+          className="group inline-flex items-center focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-brand-500/40 focus-visible:ring-offset-2"
+          aria-label="Hirance Home"
+          id="footer-logo-link"
+          tabIndex={0}
+        >
+          <Image
+            src="/images/logo.png"
+            alt="Hirance Logo"
+            width={480}
+            height={160}
+            loading="lazy"
+            className="h-16 w-auto opacity-90 transition-[opacity,transform] duration-300 group-hover:scale-[1.02] group-hover:opacity-100 sm:h-24 md:h-28"
+            id="footer-logo-center"
+          />
+        </Link>
+      </div>
 
-      <div className="mx-auto max-w-7xl px-6 py-14">
-        <div className="grid grid-cols-1 gap-10 md:grid-cols-12 md:gap-8">
-          {/* Brand */}
-          <div className="md:col-span-5 flex flex-col gap-5">
-            <Link href="/" className="group inline-flex items-center" aria-label="Hirance Home">
-              <Image
-                src="/images/logo.png"
-                alt="Hirance"
-                width={150}
-                height={50}
-                loading="lazy"
-                className="h-10 w-auto transition-transform duration-300 group-hover:scale-105"
-              />
-            </Link>
-            <p className="max-w-sm text-sm leading-relaxed text-muted-foreground">
-              The modern hiring platform connecting ambitious people with the companies building the future.
+      <div className="relative border-t border-border/50 bg-background/40 backdrop-blur-sm">
+        <div className="mx-auto flex max-w-7xl flex-col justify-between gap-6 px-6 py-7 md:flex-row md:items-center md:py-8">
+          <div className="flex flex-col gap-4 md:flex-row md:items-center md:gap-6">
+            <p className="text-xs text-muted-foreground md:text-sm">
+              &copy; {new Date().getFullYear()} Hirance Private Limited. All
+              rights reserved.
             </p>
-            <div className="flex gap-2.5">
+            <span
+              className="hidden h-4 w-px bg-border/60 md:block"
+              aria-hidden="true"
+            />
+            <div className="flex gap-2">
               {socialLinks.map((social) => (
                 <motion.a
                   key={social.name}
+                  id={`footer-social-${social.name.toLowerCase()}`}
                   href={social.href}
                   whileHover={{ y: -2 }}
                   whileTap={{ scale: 0.95 }}
-                  className="flex h-9 w-9 items-center justify-center rounded-full border border-border/50 bg-card/60 text-muted-foreground transition-colors hover:border-brand-500 hover:bg-brand-500 hover:text-white"
+                  className="flex h-9 w-9 items-center justify-center rounded-full border border-border/50 bg-card text-muted-foreground transition-colors hover:border-brand-500 hover:bg-brand-600 hover:text-white focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-brand-500/40"
                   aria-label={`Follow us on ${social.name}`}
+                  tabIndex={0}
                 >
                   {social.icon}
                 </motion.a>
@@ -100,73 +102,24 @@ export function Footer() {
             </div>
           </div>
 
-          {/* Link columns */}
-          {Object.values(footerLinks).map((column) => (
-            <div key={column.title} className="md:col-span-2 flex flex-col gap-4">
-              <h3 className="text-sm font-semibold text-foreground">{column.title}</h3>
-              <ul className="flex flex-col gap-2.5">
-                {column.links.map((link) => (
-                  <li key={link.label}>
-                    <Link
-                      href={link.href}
-                      className="text-sm text-muted-foreground transition-colors hover:text-brand-600 dark:hover:text-brand-400"
-                    >
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-
-          {/* Contact */}
-          <div className="md:col-span-3 flex flex-col gap-4">
-            <h3 className="text-sm font-semibold text-foreground">Get in touch</h3>
-            <ul className="flex flex-col gap-3">
-              <li>
-                <a
-                  href="mailto:hello@hirance.com"
-                  className="group inline-flex items-center gap-2.5 text-sm text-muted-foreground transition-colors hover:text-brand-600 dark:hover:text-brand-400"
-                >
-                  <Mail className="h-4 w-4 text-brand-600 dark:text-brand-400" />
-                  hello@hirance.com
-                </a>
-              </li>
-              <li>
-                <a
-                  href="tel:+919876543210"
-                  className="group inline-flex items-center gap-2.5 text-sm text-muted-foreground transition-colors hover:text-brand-600 dark:hover:text-brand-400"
-                >
-                  <Phone className="h-4 w-4 text-brand-600 dark:text-brand-400" />
-                  +91 98765 43210
-                </a>
-              </li>
-              <li className="inline-flex items-center gap-2.5 text-sm text-muted-foreground">
-                <MapPin className="h-4 w-4 text-brand-600 dark:text-brand-400" />
-                Bengaluru, India
-              </li>
-            </ul>
-          </div>
-        </div>
-
-        {/* Bottom bar */}
-        <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-border/40 pt-6 sm:flex-row">
-          <p className="text-xs text-muted-foreground">
-            &copy; {new Date().getFullYear()} Hirance Private Limited. All rights reserved.
-          </p>
-          <div className="flex items-center gap-5">
-            {legalLinks.map((item) => (
+          <nav
+            className="flex flex-wrap items-center gap-x-5 gap-y-2"
+            aria-label="Footer links"
+          >
+            {footerLinks.map((item) => (
               <Link
                 key={item.label}
+                id={`footer-link-${item.label.toLowerCase()}`}
                 href={item.href}
-                className="text-xs text-muted-foreground transition-colors hover:text-brand-600 dark:hover:text-brand-400"
+                className="text-xs font-medium text-muted-foreground transition-colors hover:text-brand-600 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-brand-500/40 dark:hover:text-brand-400 md:text-sm"
+                tabIndex={0}
               >
                 {item.label}
               </Link>
             ))}
-          </div>
+          </nav>
         </div>
       </div>
     </footer>
-  );
+  )
 }

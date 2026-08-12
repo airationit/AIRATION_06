@@ -1,4 +1,4 @@
-import { Hero, Partners, Presentation } from "@/components/sections";
+import { Hero, TrustedBy, Presentation } from "@/components/sections";
 import { InteractiveDots } from "@/components/shared";
 
 export default function Home() {
@@ -9,7 +9,7 @@ export default function Home() {
         <InteractiveDots />
       </div>
       <Hero />
-      <Partners />
+      <TrustedBy />
       <Presentation />
     </main>
   );

@@ -12,8 +12,27 @@ export const siteConfig = {
     twitter: "#",
     github: "#",
   },
+  /** Dual audience: employers use the web; candidates use the mobile app */
+  audiences: [
+    {
+      id: "employers",
+      label: "Employers",
+      href: "#employers",
+      hint: "Web platform",
+      cta: "Employer login",
+      external: false,
+    },
+    {
+      id: "candidates",
+      label: "Candidates",
+      href: "https://play.google.com/store/apps",
+      hint: "Mobile app",
+      cta: "Get the app",
+      external: true,
+    },
+  ],
   nav: [
-    { label: "Why Hirance", href: "#features" },
-    { label: "For Employers", href: "#employers" },
+    { label: "About", href: "/about" },
+    { label: "Contact", href: "/contact" },
   ],
 };
