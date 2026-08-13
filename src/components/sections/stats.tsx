@@ -112,9 +112,12 @@ export function Stats() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="text-gradient text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl"
+            className="text-balance text-2xl font-extrabold tracking-tight text-foreground sm:text-3xl md:text-4xl lg:text-5xl leading-tight"
           >
-            Our User Presentation Countings Database
+            Our User Presentation{" "}
+            <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-brand-600 dark:from-brand-400 dark:via-indigo-300 dark:to-sky-300 bg-clip-text text-transparent">
+              Metrics Database
+            </span>
           </motion.h2>
 
           {/* Subtitle */}

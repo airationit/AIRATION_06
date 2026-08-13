@@ -226,19 +226,14 @@ export function Partners() {
         ref={headerRef}
         className="mx-auto mb-20 max-w-6xl px-6 text-center"
       >
-        <span className="mb-6 inline-flex items-center gap-2 rounded-full border border-border bg-secondary/80 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground shadow-[0_1px_2px_rgba(0,0,0,0.02)]">
-          <span className="relative flex h-1.5 w-1.5">
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand-500/60" />
-            <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-brand-500" />
-          </span>
-          Trusted by top teams
-        </span>
-
         <h2
           id="partners-heading"
-          className="text-balance text-4xl font-bold leading-[1.1] tracking-tight sm:text-5xl md:text-6xl"
+          className="text-balance text-2xl font-extrabold tracking-tight text-foreground sm:text-3xl md:text-4xl lg:text-5xl leading-tight"
         >
-          Trusted by <span className="text-gradient">100+ leading companies</span>
+          Trusted by{" "}
+          <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-brand-600 dark:from-brand-400 dark:via-indigo-300 dark:to-sky-300 bg-clip-text text-transparent">
+            100+ Leading Companies
+          </span>
         </h2>
 
         <p className="mx-auto mt-6 max-w-xl text-pretty text-base text-muted-foreground/90 sm:text-lg">

@@ -10,3 +10,9 @@ export {
   LegalMeta,
   InlineLink,
 } from "./page-shell";
+export {
+  StackedSection,
+  StackedFooterWrapper,
+  StackedPagesContainer,
+} from "./stacked-scroll";
+

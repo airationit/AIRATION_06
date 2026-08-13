@@ -19,6 +19,9 @@ export function LenisProvider({ children }: LenisProviderProps) {
     });
 
     lenisRef.current = lenis;
+    if (typeof window !== "undefined") {
+      (window as unknown as { lenis: Lenis }).lenis = lenis;
+    }
 
     function raf(time: number) {
       lenis.raf(time);
@@ -28,6 +31,9 @@ export function LenisProvider({ children }: LenisProviderProps) {
     requestAnimationFrame(raf);
 
     return () => {
+      if (typeof window !== "undefined") {
+        delete (window as unknown as { lenis?: Lenis }).lenis;
+      }
       lenis.destroy();
       lenisRef.current = null;
     };
