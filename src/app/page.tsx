@@ -16,24 +16,23 @@ export default function Home() {
       {/* Hero section: Text section above + Video 1 & Video 2 scroll carousel below */}
       <Hero />
 
-      {/* Pages after Hero: Stacked smoothly on scroll */}
+      {/* Pages after Hero: Stacked smoothly on scroll, ending with the Footer at the bottom */}
       <StackedPagesContainer
         pageMeta={[
           { title: "Partners", badge: "01 · TRUSTED BY 100+ COMPANIES" },
           { title: "App Download", badge: "02 · DOWNLOAD OUR APP" },
           { title: "Want to Hire", badge: "03 · WANT TO HIRE ?" },
           { title: "Metrics", badge: "04 · POWERING SMARTER HIRING" },
+          { title: "Footer", badge: "05 · EXPLORE HIRANCE PLATFORM", isFooter: true },
         ]}
         pages={[
           <TrustedBy key="trusted-by" />,
           <AppDownload key="app-download" />,
           <WantToHire key="want-to-hire" />,
           <Presentation key="presentation" />,
+          <Footer key="footer" />,
         ]}
       />
-
-      {/* Always at bottom — normal page footer */}
-      <Footer />
     </main>
   );
 }
