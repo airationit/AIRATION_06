@@ -71,7 +71,7 @@ export function Hero2() {
   };
 
   return (
-    <section className="relative w-full h-full flex flex-col justify-between overflow-hidden rounded-2xl sm:rounded-3xl border border-white/10 bg-slate-950 text-white shadow-2xl">
+    <section className="relative w-full h-full flex flex-col justify-between overflow-hidden rounded-xl sm:rounded-2xl border border-white/15 bg-black/30 backdrop-blur-sm text-white shadow-2xl">
       {/* Background Video (Full focus, clear visibility) */}
       <div className="absolute inset-0 z-0 overflow-hidden">
         <video

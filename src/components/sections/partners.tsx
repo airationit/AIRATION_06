@@ -228,9 +228,12 @@ export function Partners() {
       >
         <h2
           id="partners-heading"
-          className="text-balance text-4xl font-bold leading-[1.1] tracking-tight sm:text-5xl md:text-6xl"
+          className="text-balance text-2xl font-extrabold tracking-tight text-foreground sm:text-3xl md:text-4xl lg:text-5xl leading-tight"
         >
-          Trusted by <span className="text-gradient">100+ leading companies</span>
+          Trusted by{" "}
+          <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-brand-600 dark:from-brand-400 dark:via-indigo-300 dark:to-sky-300 bg-clip-text text-transparent">
+            100+ Leading Companies
+          </span>
         </h2>
 
         <p className="mx-auto mt-6 max-w-xl text-pretty text-base text-muted-foreground/90 sm:text-lg">

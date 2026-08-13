@@ -20,7 +20,7 @@ function QRCodeSVG({ className = "w-14 h-14" }: { className?: string }) {
       <rect x="15" y="71" width="14" height="14" rx="3" fill="#FFFFFF" />
       {/* Data Pattern Dots */}
       <rect x="42" y="10" width="6" height="6" rx="1.5" fill="#FFFFFF" />
-      <rect x="52" y="10" width="6" height="6" rx="1.5" fill="#E5C378" />
+      <rect x="52" y="10" width="6" height="6" rx="1.5" fill="#60A5FA" />
       <rect x="42" y="20" width="6" height="6" rx="1.5" fill="#FFFFFF" />
       <rect x="42" y="30" width="6" height="6" rx="1.5" fill="#FFFFFF" />
       <rect x="52" y="30" width="6" height="6" rx="1.5" fill="#FFFFFF" />
@@ -28,7 +28,7 @@ function QRCodeSVG({ className = "w-14 h-14" }: { className?: string }) {
       <rect x="10" y="42" width="6" height="6" rx="1.5" fill="#FFFFFF" />
       <rect x="20" y="42" width="6" height="6" rx="1.5" fill="#FFFFFF" />
       <rect x="30" y="42" width="6" height="6" rx="1.5" fill="#FFFFFF" />
-      <rect x="42" y="42" width="6" height="6" rx="1.5" fill="#E5C378" />
+      <rect x="42" y="42" width="6" height="6" rx="1.5" fill="#60A5FA" />
       <rect x="52" y="42" width="6" height="6" rx="1.5" fill="#FFFFFF" />
       <rect x="64" y="42" width="6" height="6" rx="1.5" fill="#FFFFFF" />
       <rect x="74" y="42" width="6" height="6" rx="1.5" fill="#FFFFFF" />
@@ -38,7 +38,7 @@ function QRCodeSVG({ className = "w-14 h-14" }: { className?: string }) {
       <rect x="30" y="52" width="6" height="6" rx="1.5" fill="#FFFFFF" />
       <rect x="42" y="52" width="6" height="6" rx="1.5" fill="#FFFFFF" />
       <rect x="64" y="52" width="6" height="6" rx="1.5" fill="#FFFFFF" />
-      <rect x="84" y="52" width="6" height="6" rx="1.5" fill="#E5C378" />
+      <rect x="84" y="52" width="6" height="6" rx="1.5" fill="#60A5FA" />
 
       <rect x="42" y="64" width="6" height="6" rx="1.5" fill="#FFFFFF" />
       <rect x="52" y="64" width="6" height="6" rx="1.5" fill="#FFFFFF" />
@@ -166,15 +166,17 @@ export function Footer() {
           
           {/* Brand Logo & Tagline (Left) */}
           <div className="flex flex-col gap-3 sm:col-span-2 lg:col-span-4">
-            <Link href="/" className="inline-flex items-center gap-1 group">
-              <span className="font-serif text-3xl font-extrabold tracking-tight text-white transition-opacity group-hover:opacity-90 md:text-4xl">
-                Hirance
-              </span>
-              <span className="text-3xl font-black text-rose-500 md:text-4xl">.</span>
+            <Link href="/" className="inline-flex items-center group">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/images/logo2.png"
+                alt="Hirance"
+                className="h-8 md:h-10 w-auto object-contain transition-opacity group-hover:opacity-90"
+              />
             </Link>
 
-            <p className="font-serif text-base italic text-[#E6C687] md:text-lg">
-              Swipe. Match. Get Hired.
+            <p className="font-sans text-xs md:text-sm font-bold tracking-[0.15em] text-blue-400 uppercase">
+              Swipe • Match • Get Hired
             </p>
 
             <p className="max-w-sm text-xs leading-relaxed text-slate-400 md:text-sm">
@@ -254,7 +256,7 @@ export function Footer() {
                   </span>
                   <a
                     href="mailto:support@hirance.in"
-                    className="font-medium text-white transition-colors hover:text-amber-300"
+                    className="font-medium text-white transition-colors hover:text-blue-400"
                   >
                     support@hirance.in
                   </a>
@@ -266,7 +268,7 @@ export function Footer() {
                   </span>
                   <a
                     href="tel:+919876543210"
-                    className="font-medium text-white transition-colors hover:text-amber-300"
+                    className="font-medium text-white transition-colors hover:text-blue-400"
                   >
                     +91 XXXXX XXXXX
                   </a>
@@ -347,7 +349,7 @@ export function Footer() {
                   rel="noopener noreferrer"
                   whileHover={{ y: -2, scale: 1.08 }}
                   whileTap={{ scale: 0.95 }}
-                  className="flex h-9 w-9 items-center justify-center rounded-full border border-white/15 bg-white/[0.03] text-slate-300 transition-colors hover:border-amber-400 hover:bg-amber-400/10 hover:text-amber-300"
+                  className="flex h-9 w-9 items-center justify-center rounded-full border border-white/15 bg-white/[0.03] text-slate-300 transition-colors hover:border-blue-400 hover:bg-blue-400/10 hover:text-blue-400"
                   aria-label={social.label}
                 >
                   <Icon className="h-4 w-4" />
@@ -360,15 +362,15 @@ export function Footer() {
         {/* ── Middle Metric Highlight Bar ── */}
         <div className="my-6 border-y border-white/[0.08] py-4 text-center">
           <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1.5 text-xs sm:text-sm md:text-base font-medium">
-            <span className="font-bold text-[#E6C687] text-sm sm:text-base md:text-lg">500+</span>
+            <span className="font-bold text-blue-400 text-sm sm:text-base md:text-lg">500+</span>
             <span className="text-slate-300">Employers</span>
             <span className="text-slate-600 font-light" aria-hidden="true">/</span>
 
-            <span className="font-bold text-[#E6C687] text-sm sm:text-base md:text-lg">220+</span>
+            <span className="font-bold text-blue-400 text-sm sm:text-base md:text-lg">220+</span>
             <span className="text-slate-300">Categories</span>
             <span className="text-slate-600 font-light" aria-hidden="true">/</span>
 
-            <span className="font-bold text-[#E6C687] text-sm sm:text-base md:text-lg">100+</span>
+            <span className="font-bold text-blue-400 text-sm sm:text-base md:text-lg">100+</span>
             <span className="text-slate-300">Cities across India</span>
           </div>
         </div>
