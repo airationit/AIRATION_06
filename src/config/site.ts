@@ -32,6 +32,7 @@ export const siteConfig = {
     },
   ],
   nav: [
+    { label: "Jobs", href: "/jobs" },
     { label: "How It Works", href: "/how-it-works" },
     { label: "About Us", href: "/about-us" },
     { label: "Blog", href: "/blog" },

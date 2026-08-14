@@ -49,8 +49,8 @@ const socialIcons = [
 /* ─── Link Columns Data ─── */
 const platformLinks = [
   { label: "How It Works", href: "/how-it-works" },
+  { label: "Browse Jobs", href: "/jobs" },
   { label: "Download the App", href: "https://play.google.com/store/apps/details?id=com.hirance" },
-  { label: "Browse Jobs", href: "#browse-jobs" },
 ]
 
 const employerLinks = [
@@ -68,8 +68,6 @@ const companyLinks = [
 const legalLinks = [
   { label: "Terms of Service", href: "/terms" },
   { label: "Privacy Policy", href: "/privacy" },
-  { label: "Refund Policy", href: "/refund" },
-  { label: "Grievance Redressal", href: "/grievance" },
 ]
 
 export function Footer() {
