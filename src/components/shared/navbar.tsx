@@ -275,16 +275,28 @@ export function Navbar({ className }: NavbarProps) {
             <ArrowUpRight className="h-3.5 w-3.5 opacity-60" aria-hidden="true" />
           </a>
         )}
-        {employer && (
-          <Link
-            href={employer.href}
-            className="inline-flex h-10 items-center justify-center rounded-full bg-brand-600 px-5 text-sm font-semibold text-white transition-colors hover:bg-brand-700 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-brand-500/40"
-            aria-label="Employer login on the Hirance web platform"
-            tabIndex={0}
-          >
-            {employer.cta}
-          </Link>
-        )}
+        {employer &&
+          (employer.external || isExternalHref(employer.href) ? (
+            <a
+              href={employer.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex h-10 items-center justify-center rounded-full bg-brand-600 px-5 text-sm font-semibold text-white transition-colors hover:bg-brand-700 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-brand-500/40"
+              aria-label="Employer login on the Hirance web platform"
+              tabIndex={0}
+            >
+              {employer.cta}
+            </a>
+          ) : (
+            <Link
+              href={employer.href}
+              className="inline-flex h-10 items-center justify-center rounded-full bg-brand-600 px-5 text-sm font-semibold text-white transition-colors hover:bg-brand-700 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-brand-500/40"
+              aria-label="Employer login on the Hirance web platform"
+              tabIndex={0}
+            >
+              {employer.cta}
+            </Link>
+          ))}
       </div>
 
       <button

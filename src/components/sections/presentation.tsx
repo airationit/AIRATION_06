@@ -222,7 +222,7 @@ export function Presentation() {
             transition={{ duration: 0.5, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
             className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 border-t border-border/40 pt-8 sm:pt-10"
           >
-            {FEATURE_HIGHLIGHTS.map((item) => {
+            {/* {FEATURE_HIGHLIGHTS.map((item) => {
               const ItemIcon = item.icon;
               return (
                 <div
@@ -233,7 +233,7 @@ export function Presentation() {
                   <span>{item.label}</span>
                 </div>
               );
-            })}
+            })} */}
           </motion.div>
         </div>
       </div>
