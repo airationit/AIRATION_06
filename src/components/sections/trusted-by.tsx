@@ -172,7 +172,7 @@ export function TrustedBy() {
           transition={{ duration: 0.5, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
           className="mt-8 sm:mt-12 mx-auto flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs sm:text-sm font-medium text-muted-foreground"
         >
-          <span className="flex items-center gap-1.5">
+          {/* <span className="flex items-center gap-1.5">
             <span className="h-1.5 w-1.5 rounded-full bg-brand-500" />
             <strong className="text-foreground font-semibold">100+</strong> Hiring Partners
           </span>
@@ -185,7 +185,7 @@ export function TrustedBy() {
           <span className="flex items-center gap-1.5">
             <span className="h-1.5 w-1.5 rounded-full bg-indigo-500" />
             <strong className="text-foreground font-semibold">98%</strong> Satisfaction
-          </span>
+          </span> */}
         </motion.div>
       </div>
     </section>

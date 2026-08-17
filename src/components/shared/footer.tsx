@@ -2,60 +2,8 @@
 
 import React from "react"
 import Link from "next/link"
+import Image from "next/image"
 import { motion } from "framer-motion"
-
-/* ─── Vector QR Code Component ─── */
-function QRCodeSVG({ className = "w-14 h-14" }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 100 100" className={className} aria-hidden="true">
-      <rect width="100" height="100" fill="#091426" rx="10" />
-      {/* Top-Left Finder */}
-      <rect x="8" y="8" width="28" height="28" rx="6" fill="none" stroke="#FFFFFF" strokeWidth="4" />
-      <rect x="15" y="15" width="14" height="14" rx="3" fill="#FFFFFF" />
-      {/* Top-Right Finder */}
-      <rect x="64" y="8" width="28" height="28" rx="6" fill="none" stroke="#FFFFFF" strokeWidth="4" />
-      <rect x="71" y="15" width="14" height="14" rx="3" fill="#FFFFFF" />
-      {/* Bottom-Left Finder */}
-      <rect x="8" y="64" width="28" height="28" rx="6" fill="none" stroke="#FFFFFF" strokeWidth="4" />
-      <rect x="15" y="71" width="14" height="14" rx="3" fill="#FFFFFF" />
-      {/* Data Pattern Dots */}
-      <rect x="42" y="10" width="6" height="6" rx="1.5" fill="#FFFFFF" />
-      <rect x="52" y="10" width="6" height="6" rx="1.5" fill="#60A5FA" />
-      <rect x="42" y="20" width="6" height="6" rx="1.5" fill="#FFFFFF" />
-      <rect x="42" y="30" width="6" height="6" rx="1.5" fill="#FFFFFF" />
-      <rect x="52" y="30" width="6" height="6" rx="1.5" fill="#FFFFFF" />
-
-      <rect x="10" y="42" width="6" height="6" rx="1.5" fill="#FFFFFF" />
-      <rect x="20" y="42" width="6" height="6" rx="1.5" fill="#FFFFFF" />
-      <rect x="30" y="42" width="6" height="6" rx="1.5" fill="#FFFFFF" />
-      <rect x="42" y="42" width="6" height="6" rx="1.5" fill="#60A5FA" />
-      <rect x="52" y="42" width="6" height="6" rx="1.5" fill="#FFFFFF" />
-      <rect x="64" y="42" width="6" height="6" rx="1.5" fill="#FFFFFF" />
-      <rect x="74" y="42" width="6" height="6" rx="1.5" fill="#FFFFFF" />
-      <rect x="84" y="42" width="6" height="6" rx="1.5" fill="#FFFFFF" />
-
-      <rect x="10" y="52" width="6" height="6" rx="1.5" fill="#FFFFFF" />
-      <rect x="30" y="52" width="6" height="6" rx="1.5" fill="#FFFFFF" />
-      <rect x="42" y="52" width="6" height="6" rx="1.5" fill="#FFFFFF" />
-      <rect x="64" y="52" width="6" height="6" rx="1.5" fill="#FFFFFF" />
-      <rect x="84" y="52" width="6" height="6" rx="1.5" fill="#60A5FA" />
-
-      <rect x="42" y="64" width="6" height="6" rx="1.5" fill="#FFFFFF" />
-      <rect x="52" y="64" width="6" height="6" rx="1.5" fill="#FFFFFF" />
-      <rect x="64" y="64" width="18" height="18" rx="4" fill="none" stroke="#FFFFFF" strokeWidth="3" />
-      <rect x="70" y="70" width="6" height="6" rx="1.5" fill="#FFFFFF" />
-
-      <rect x="42" y="74" width="6" height="6" rx="1.5" fill="#FFFFFF" />
-      <rect x="52" y="74" width="6" height="6" rx="1.5" fill="#FFFFFF" />
-
-      <rect x="42" y="84" width="6" height="6" rx="1.5" fill="#FFFFFF" />
-      <rect x="52" y="84" width="6" height="6" rx="1.5" fill="#FFFFFF" />
-      <rect x="64" y="84" width="6" height="6" rx="1.5" fill="#FFFFFF" />
-      <rect x="74" y="84" width="6" height="6" rx="1.5" fill="#FFFFFF" />
-      <rect x="84" y="84" width="6" height="6" rx="1.5" fill="#FFFFFF" />
-    </svg>
-  )
-}
 
 /* ─── Social SVG Icons ─── */
 function IconLinkedin({ className }: { className?: string }) {
@@ -99,32 +47,27 @@ const socialIcons = [
 ]
 
 /* ─── Link Columns Data ─── */
-const candidateLinks = [
+const platformLinks = [
+  { label: "How It Works", href: "/how-it-works" },
+  { label: "Browse Jobs", href: "/jobs" },
   { label: "Download the App", href: "https://play.google.com/store/apps/details?id=com.hirance" },
-  { label: "How It Works", href: "#how-it-works" },
-  { label: "Browse Jobs", href: "#browse-jobs" },
-  { label: "Success Stories", href: "#success-stories" },
 ]
 
 const employerLinks = [
-  { label: "Post a Job", href: "https://uat.hirance.in" },
-  { label: "Pricing Plans", href: "#pricing" },
-  { label: "Dashboard Login", href: "https://uat.hirance.in" },
-  { label: "Request a Demo", href: "#demo" },
+  { label: "Post a Job", href: "https://employer.hirance.com/" },
+  { label: "Dashboard Login", href: "https://employer.hirance.com/" },
+  { label: "Request a Demo", href: "/request-demo" },
 ]
 
 const companyLinks = [
-  { label: "About Us", href: "#about" },
-  { label: "Careers", href: "#careers" },
-  { label: "Blog", href: "#blog" },
-  { label: "Press", href: "#press" },
+  { label: "About Us", href: "/about-us" },
+  { label: "Contact Us", href: "/contact" },
+  { label: "Blog", href: "/blog" },
 ]
 
 const legalLinks = [
   { label: "Terms of Service", href: "/terms" },
   { label: "Privacy Policy", href: "/privacy" },
-  { label: "Refund Policy", href: "/refund" },
-  { label: "Grievance Redressal", href: "/grievance" },
 ]
 
 export function Footer() {
@@ -166,12 +109,13 @@ export function Footer() {
           
           {/* Brand Logo & Tagline (Left) */}
           <div className="flex flex-col gap-3 sm:col-span-2 lg:col-span-4">
-            <Link href="/" className="inline-flex items-center group">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="/images/logo2.png"
+            <Link href="/" className="inline-flex items-center group" aria-label="Hirance Home">
+              <Image
+                src="/images/logo-white.svg"
                 alt="Hirance"
-                className="h-8 md:h-10 w-auto object-contain transition-opacity group-hover:opacity-90"
+                width={180}
+                height={50}
+                className="h-10 md:h-15 w-auto object-contain transition-opacity group-hover:opacity-90"
               />
             </Link>
 
@@ -187,20 +131,29 @@ export function Footer() {
           {/* Navigation Columns (Right Grid) */}
           <div className="grid grid-cols-2 gap-6 sm:grid-cols-4 sm:col-span-2 lg:col-span-8 lg:gap-6">
             
-            {/* CANDIDATES */}
+            {/* PLATFORM */}
             <div className="flex flex-col gap-3">
               <h4 className="text-[11px] font-bold uppercase tracking-[0.15em] text-slate-400">
-                Candidates
+                Platform
               </h4>
               <ul className="flex flex-col gap-2.5 text-xs text-slate-300 md:text-sm">
-                {candidateLinks.map((item) => (
+                {platformLinks.map((item) => (
                   <li key={item.label}>
-                    <a
-                      href={item.href}
-                      className="transition-colors hover:text-white hover:underline hover:underline-offset-4"
-                    >
-                      {item.label}
-                    </a>
+                    {item.href.startsWith("/") ? (
+                      <Link
+                        href={item.href}
+                        className="transition-colors hover:text-white hover:underline hover:underline-offset-4"
+                      >
+                        {item.label}
+                      </Link>
+                    ) : (
+                      <a
+                        href={item.href}
+                        className="transition-colors hover:text-white hover:underline hover:underline-offset-4"
+                      >
+                        {item.label}
+                      </a>
+                    )}
                   </li>
                 ))}
               </ul>
@@ -214,12 +167,21 @@ export function Footer() {
               <ul className="flex flex-col gap-2.5 text-xs text-slate-300 md:text-sm">
                 {employerLinks.map((item) => (
                   <li key={item.label}>
-                    <a
-                      href={item.href}
-                      className="transition-colors hover:text-white hover:underline hover:underline-offset-4"
-                    >
-                      {item.label}
-                    </a>
+                    {item.href.startsWith("/") ? (
+                      <Link
+                        href={item.href}
+                        className="transition-colors hover:text-white hover:underline hover:underline-offset-4"
+                      >
+                        {item.label}
+                      </Link>
+                    ) : (
+                      <a
+                        href={item.href}
+                        className="transition-colors hover:text-white hover:underline hover:underline-offset-4"
+                      >
+                        {item.label}
+                      </a>
+                    )}
                   </li>
                 ))}
               </ul>
@@ -233,12 +195,21 @@ export function Footer() {
               <ul className="flex flex-col gap-2.5 text-xs text-slate-300 md:text-sm">
                 {companyLinks.map((item) => (
                   <li key={item.label}>
-                    <a
-                      href={item.href}
-                      className="transition-colors hover:text-white hover:underline hover:underline-offset-4"
-                    >
-                      {item.label}
-                    </a>
+                    {item.href.startsWith("/") ? (
+                      <Link
+                        href={item.href}
+                        className="transition-colors hover:text-white hover:underline hover:underline-offset-4"
+                      >
+                        {item.label}
+                      </Link>
+                    ) : (
+                      <a
+                        href={item.href}
+                        className="transition-colors hover:text-white hover:underline hover:underline-offset-4"
+                      >
+                        {item.label}
+                      </a>
+                    )}
                   </li>
                 ))}
               </ul>
@@ -255,10 +226,10 @@ export function Footer() {
                     Email
                   </span>
                   <a
-                    href="mailto:support@hirance.in"
+                    href="mailto:hello@hirance.com"
                     className="font-medium text-white transition-colors hover:text-blue-400"
                   >
-                    support@hirance.in
+                    hello@hirance.com
                   </a>
                 </div>
 
@@ -267,10 +238,10 @@ export function Footer() {
                     Phone
                   </span>
                   <a
-                    href="tel:+919876543210"
+                    href="tel:+919793780913"
                     className="font-medium text-white transition-colors hover:text-blue-400"
                   >
-                    +91 XXXXX XXXXX
+                    +91 9793780913
                   </a>
                 </div>
 
@@ -278,8 +249,10 @@ export function Footer() {
                   <span className="block text-[10px] uppercase tracking-wider text-slate-400 font-semibold">
                     Office
                   </span>
-                  <span className="font-medium text-slate-300">
-                    Lucknow, India
+                  <span className="font-medium text-slate-300 block leading-snug">
+                    Janki Puram Extension
+                    <br />
+                    Lucknow-226021, India
                   </span>
                 </div>
               </div>
@@ -294,8 +267,14 @@ export function Footer() {
           {/* App Store & QR Download Widget (Bottom Left) */}
           <div className="flex items-center gap-3.5">
             {/* QR Code Container */}
-            <div className="flex shrink-0 items-center justify-center rounded-xl border border-white/10 bg-[#091426] p-1.5 shadow-inner">
-              <QRCodeSVG className="h-14 w-14 md:h-16 md:w-16" />
+            <div className="flex shrink-0 items-center justify-center border border-white/10 bg-white/5 p-1 shadow-inner overflow-hidden">
+              <Image
+                src="/images/qr.png"
+                alt="Scan to download Hirance app"
+                width={96}
+                height={96}
+                className="h-20 w-20 object-contain md:h-24 md:w-24"
+              />
             </div>
 
             {/* Text + Side-by-side Download Buttons */}

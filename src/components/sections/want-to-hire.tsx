@@ -42,7 +42,7 @@ export function WantToHire() {
             className="relative flex items-center justify-start lg:col-span-7"
           >
             {/* Hire Web Mockup Image */}
-            <div className="relative w-full max-w-none flex justify-start -ml-2 sm:-ml-6 lg:-ml-12 xl:-ml-16">
+            <div className="relative w-full max-w-none flex justify-start ml-1 sm:ml-2 lg:ml-3">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src="/images/web_mock.png"

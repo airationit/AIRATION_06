@@ -17,15 +17,15 @@ const CONTACT_CHANNELS = [
     id: "phone",
     icon: Phone,
     label: "Phone",
-    value: "+91 98765 43210",
-    href: "tel:+919876543210",
+    value: "+91 9793780913",
+    href: "tel:+919793780913",
   },
   {
     id: "office",
     icon: MapPin,
     label: "Office",
-    value: "Bengaluru, Karnataka, India",
-    href: "https://maps.google.com/?q=Bengaluru,+Karnataka,+India",
+    value: "Janki Puram Extension, Lucknow-226021, India",
+    href: "https://maps.google.com/?q=Janki+Puram+Extension,+Lucknow+226021,+India",
   },
 ] as const
 
@@ -61,7 +61,6 @@ export const ContactForm = () => {
 
     setSubmitting(true)
 
-    // Client-side confirmation until a backend endpoint exists
     window.setTimeout(() => {
       setSubmitting(false)
       setSubmitted(true)
@@ -83,12 +82,12 @@ export const ContactForm = () => {
   if (submitted) {
     return (
       <div
-        className="rounded-2xl border border-border/70 bg-white/80 px-6 py-12 text-center shadow-sm backdrop-blur-sm"
+        className="rounded-2xl border border-border/70 bg-white/80 px-6 py-12 text-center shadow-sm backdrop-blur-sm dark:bg-background/80"
         role="status"
         aria-live="polite"
       >
         <CheckCircle2
-          className="mx-auto h-10 w-10 text-success-500"
+          className="mx-auto h-10 w-10 text-emerald-500"
           aria-hidden="true"
         />
         <h2 className="mt-4 text-2xl font-semibold tracking-tight text-foreground">
@@ -140,14 +139,14 @@ export const ContactForm = () => {
                     ? { target: "_blank", rel: "noopener noreferrer" }
                     : {})}
                 >
-                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-border/70 bg-brand-50 text-brand-600 transition-colors group-hover:border-brand-200 group-hover:bg-brand-100">
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-border/70 bg-blue-500/10 text-blue-600 transition-colors group-hover:border-blue-500/40 group-hover:bg-blue-600 group-hover:text-white">
                     <Icon className="h-4 w-4" aria-hidden="true" />
                   </span>
                   <span>
                     <span className="block text-xs font-medium uppercase tracking-wide text-muted-foreground">
                       {channel.label}
                     </span>
-                    <span className="mt-0.5 block text-sm font-medium text-foreground group-hover:text-brand-600">
+                    <span className="mt-0.5 block text-sm font-medium text-foreground group-hover:text-blue-600">
                       {channel.value}
                     </span>
                   </span>
@@ -160,7 +159,7 @@ export const ContactForm = () => {
 
       <form
         onSubmit={handleSubmit}
-        className="rounded-2xl border border-border/70 bg-white/80 p-6 shadow-sm backdrop-blur-sm sm:p-8"
+        className="rounded-2xl border border-border/70 bg-white/80 p-6 shadow-sm backdrop-blur-sm dark:bg-background/80 sm:p-8"
         noValidate
       >
         <div className="grid gap-5 sm:grid-cols-2">
@@ -240,7 +239,7 @@ export const ContactForm = () => {
             By submitting, you agree to our{" "}
             <a
               href="/privacy"
-              className="font-medium text-brand-600 underline-offset-4 hover:underline"
+              className="font-medium text-blue-600 underline-offset-4 hover:underline"
             >
               Privacy Policy
             </a>
@@ -249,7 +248,7 @@ export const ContactForm = () => {
           <Button
             type="submit"
             disabled={submitting}
-            className="h-11 min-w-[140px] px-5"
+            className="h-11 min-w-[140px] px-5 bg-blue-600 hover:bg-blue-700 text-white"
             aria-label="Send message"
           >
             {submitting ? "Sending…" : "Send message"}
@@ -261,4 +260,4 @@ export const ContactForm = () => {
 }
 
 const inputClassName =
-  "w-full rounded-xl border border-border bg-background px-3.5 py-2.5 text-sm text-foreground outline-none transition-colors placeholder:text-muted-foreground/70 focus:border-brand-400 focus:ring-3 focus:ring-brand-500/20"
+  "w-full rounded-xl border border-border bg-background px-3.5 py-2.5 text-sm text-foreground outline-none transition-colors placeholder:text-muted-foreground/70 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"

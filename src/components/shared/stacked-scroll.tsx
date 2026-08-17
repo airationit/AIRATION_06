@@ -15,6 +15,7 @@ export interface PageMeta {
   title: string;
   badge: string;
   direction?: "left" | "up";
+  isFooter?: boolean;
 }
 
 interface StackedPagesContainerProps {
@@ -30,6 +31,7 @@ interface StackedPageCardProps {
   meta?: PageMeta;
   hasFirstPageLeft?: boolean;
   scrollYProgress: MotionValue<number>;
+  isFooter?: boolean;
 }
 
 function StackedPageCard({
@@ -39,6 +41,7 @@ function StackedPageCard({
   meta,
   hasFirstPageLeft = false,
   scrollYProgress,
+  isFooter = false,
 }: StackedPageCardProps) {
   const numTransitions = hasFirstPageLeft ? total : Math.max(1, total - 1);
   const step = 1 / numTransitions;
@@ -55,6 +58,22 @@ function StackedPageCard({
     ? (index + 1) * step
     : index * step;
 
+  // Next section transition calculation for blurring the current section as next slides over
+  const nextIndex = index + 1;
+  const hasNext = nextIndex < total;
+
+  const nextSlideStart = hasNext
+    ? hasFirstPageLeft
+      ? (nextIndex + holdFraction) * step
+      : Math.max(0, (nextIndex - 1 + holdFraction) * step)
+    : 1;
+
+  const nextSlideFinish = hasNext
+    ? hasFirstPageLeft
+      ? (nextIndex + 1) * step
+      : nextIndex * step
+    : 1;
+
   // Slide horizontally from left (-100% -> 0%)
   const xTransform = useTransform(
     scrollYProgress,
@@ -69,15 +88,57 @@ function StackedPageCard({
     ["100%", "100%", "0%", "0%"]
   );
 
+  // Blur amount when covered by next section (0px -> 16px)
+  const blurAmount = useTransform(
+    scrollYProgress,
+    hasNext ? [0, nextSlideStart, nextSlideFinish, 1] : [0, 1],
+    hasNext ? [0, 0, 16, 16] : [0, 0]
+  );
+  const filterBlur = useTransform(blurAmount, (val) => (val > 0.1 ? `blur(${val}px)` : "none"));
+
+  // Scale down slightly when covered (1.0 -> 0.95)
+  const scaleValue = useTransform(
+    scrollYProgress,
+    hasNext ? [0, nextSlideStart, nextSlideFinish, 1] : [0, 1],
+    hasNext ? [1, 1, 0.95, 0.95] : [1, 1]
+  );
+
+  // Dim opacity when covered (1.0 -> 0.4)
+  const opacityValue = useTransform(
+    scrollYProgress,
+    hasNext ? [0, nextSlideStart, nextSlideFinish, 1] : [0, 1],
+    hasNext ? [1, 1, 0.4, 0.4] : [1, 1]
+  );
+
   const x = isLeft ? xTransform : "0%";
   const y = isLeft ? "0%" : index === 0 ? "0%" : yTransform;
   const zIndex = (index + 1) * 10;
+
+  if (isFooter) {
+    return (
+      <motion.div
+        style={{
+          x: "0%",
+          y: yTransform,
+          zIndex: zIndex + 20,
+        }}
+        className="absolute bottom-0 left-0 right-0 w-full h-auto overflow-hidden bg-[#0B1528] border-t border-blue-500/30 shadow-[0_-12px_40px_rgba(0,0,0,0.6)]"
+      >
+        <div className="w-full h-auto">
+          {children}
+        </div>
+      </motion.div>
+    );
+  }
 
   return (
     <motion.div
       style={{
         x: x,
         y: y,
+        scale: scaleValue,
+        opacity: opacityValue,
+        filter: filterBlur,
         zIndex,
       }}
       className="absolute inset-0 w-full h-full flex flex-col justify-center items-center overflow-hidden bg-background border-t border-border/50 shadow-2xl"
@@ -94,14 +155,14 @@ function StackedPageCard({
 
 /**
  * StackedPagesContainer pins the viewport after Hero section and smoothly stacks
- * each full-screen section on top of the previous one with a dedicated hold window.
+ * each section on top of the previous one with a dedicated hold window.
  */
 export function StackedPagesContainer({
   pages,
   pageMeta = [
     { title: "Partners", badge: "01 · TRUSTED BY LEADING COMPANIES" },
     { title: "Metrics", badge: "02 · PLATFORM IMPACT & NUMBERS" },
-    { title: "Footer", badge: "03 · EXPLORE HIRANCE PLATFORM" },
+    { title: "Footer", badge: "03 · EXPLORE HIRANCE PLATFORM", isFooter: true },
   ],
   className = "",
 }: StackedPagesContainerProps) {
@@ -193,7 +254,14 @@ export function StackedPagesContainer({
     return (
       <div className={`w-full ${className}`}>
         {pages.map((page, i) => (
-          <div key={i} className="w-full min-h-screen flex flex-col justify-center">
+          <div
+            key={i}
+            className={
+              pageMeta?.[i]?.isFooter
+                ? "w-full"
+                : "w-full min-h-screen flex flex-col justify-center"
+            }
+          >
             {page}
           </div>
         ))}
@@ -210,18 +278,22 @@ export function StackedPagesContainer({
       }}
     >
       <div className="sticky top-0 w-full h-screen overflow-hidden">
-        {pages.map((page, index) => (
-          <StackedPageCard
-            key={index}
-            index={index}
-            total={total}
-            meta={pageMeta[index]}
-            hasFirstPageLeft={hasFirstPageLeft}
-            scrollYProgress={springProgress}
-          >
-            {page}
-          </StackedPageCard>
-        ))}
+        {pages.map((page, index) => {
+          const isFooterCard = Boolean(pageMeta?.[index]?.isFooter);
+          return (
+            <StackedPageCard
+              key={index}
+              index={index}
+              total={total}
+              meta={pageMeta[index]}
+              hasFirstPageLeft={hasFirstPageLeft}
+              scrollYProgress={springProgress}
+              isFooter={isFooterCard}
+            >
+              {page}
+            </StackedPageCard>
+          );
+        })}
       </div>
     </div>
   );

@@ -8,7 +8,7 @@ export const siteConfig = {
   links: {
     // Google Play store listing
     playStore: "https://play.google.com/store/apps/details?id=com.hirance",
-    employer: "#employers",
+    employer: "https://employer.hirance.com/",
     twitter: "#",
     github: "#",
   },
@@ -17,10 +17,10 @@ export const siteConfig = {
     {
       id: "employers",
       label: "Employers",
-      href: "#employers",
+      href: "https://employer.hirance.com/",
       hint: "Web platform",
       cta: "Employer login",
-      external: false,
+      external: true,
     },
     {
       id: "candidates",
@@ -32,7 +32,10 @@ export const siteConfig = {
     },
   ],
   nav: [
-    { label: "About", href: "/about" },
+    { label: "Jobs", href: "/jobs" },
+    { label: "How It Works", href: "/how-it-works" },
+    { label: "About Us", href: "/about-us" },
+    { label: "Blog", href: "/blog" },
     { label: "Contact", href: "/contact" },
   ],
 };

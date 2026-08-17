@@ -1,4 +1,8 @@
-// Shared type definitions for the landing page
+// Shared type definitions for Hirance
+
+export * from "./api";
+export * from "./masterdata";
+export * from "./jobs";
 
 export interface NavItem {
   label: string;
