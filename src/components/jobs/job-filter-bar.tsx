@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
-import { Search, MapPin, SlidersHorizontal, ArrowRight } from "lucide-react";
+import { Search, MapPin, ArrowRight } from "lucide-react";
 import { POPULAR_CITIES, POPULAR_JOB_ROLES } from "@/config/jobs-taxonomy";
+import { useMasterdataStore } from "@/store/masterdata-store";
 
 interface JobFilterBarProps {
   initialSearch?: string;
@@ -29,6 +30,47 @@ export function JobFilterBar({
   const [selectedCity, setSelectedCity] = useState(initialCity);
   const [selectedRole, setSelectedRole] = useState(initialRole);
 
+  const { jobRoles, cities, loadMasterdata } = useMasterdataStore();
+
+  useEffect(() => {
+    loadMasterdata();
+  }, [loadMasterdata]);
+
+  // Combine taxonomy with live masterdata and deduplicate by slug
+  const availableRoles = useMemo<{ slug: string; label: string }[]>(() => {
+    const rolesList: { slug: string; label: string }[] =
+      jobRoles.length > 0
+        ? jobRoles.map((r) => ({
+            slug: r.name.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
+            label: r.name,
+          }))
+        : POPULAR_JOB_ROLES.map((r) => ({ slug: r.slug, label: r.label }));
+
+    const seen = new Set<string>();
+    return rolesList.filter((r) => {
+      if (!r.slug || seen.has(r.slug)) return false;
+      seen.add(r.slug);
+      return true;
+    });
+  }, [jobRoles]);
+
+  const availableCities = useMemo<{ slug: string; name: string }[]>(() => {
+    const citiesList: { slug: string; name: string }[] =
+      cities.length > 0
+        ? cities.map((c) => ({
+            slug: c.name.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
+            name: c.name,
+          }))
+        : POPULAR_CITIES.map((c) => ({ slug: c.slug, name: c.name }));
+
+    const seen = new Set<string>();
+    return citiesList.filter((c) => {
+      if (!c.slug || seen.has(c.slug)) return false;
+      seen.add(c.slug);
+      return true;
+    });
+  }, [cities]);
+
   const handleApplyFilters = (e?: React.FormEvent) => {
     if (e) e.preventDefault();
 
@@ -53,7 +95,7 @@ export function JobFilterBar({
   };
 
   return (
-    <div className="w-full rounded-2xl border border-border/60 bg-card/70 p-4 sm:p-5 shadow-sm backdrop-blur-md">
+    <div className="w-full rounded-2xl border border-border/80 bg-card/90 p-4 sm:p-5 shadow-sm backdrop-blur-md">
       <form
         onSubmit={handleApplyFilters}
         className="flex flex-col gap-3 md:flex-row md:items-center"
@@ -63,13 +105,13 @@ export function JobFilterBar({
           <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <input
             type="text"
-            placeholder="Search by job title, skills, or company..."
+            placeholder="Search by job title, skill, or company..."
             value={searchTerm}
             onChange={(e) => {
               setSearchTerm(e.target.value);
               if (onSearchChange) onSearchChange(e.target.value);
             }}
-            className="h-11 w-full rounded-xl border border-border/70 bg-background/80 pl-10 pr-4 text-sm text-foreground placeholder:text-muted-foreground/70 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all"
+            className="h-11 w-full rounded-xl border border-border/80 bg-background pl-10 pr-4 text-sm text-foreground placeholder:text-muted-foreground/70 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all"
           />
         </div>
 
@@ -78,11 +120,11 @@ export function JobFilterBar({
           <select
             value={selectedRole}
             onChange={(e) => setSelectedRole(e.target.value)}
-            className="h-11 w-full rounded-xl border border-border/70 bg-background/80 px-3 text-sm text-foreground focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all cursor-pointer"
+            className="h-11 w-full rounded-xl border border-border/80 bg-background px-3 text-sm text-foreground focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all cursor-pointer"
           >
-            <option value="">All Job Roles</option>
-            {POPULAR_JOB_ROLES.map((r) => (
-              <option key={r.slug} value={r.slug}>
+            <option value="" className="bg-background text-foreground">All Job Roles</option>
+            {availableRoles.map((r) => (
+              <option key={r.slug} value={r.slug} className="bg-background text-foreground">
                 {r.label}
               </option>
             ))}
@@ -98,11 +140,11 @@ export function JobFilterBar({
               setSelectedCity(e.target.value);
               if (onCityChange) onCityChange(e.target.value);
             }}
-            className="h-11 w-full rounded-xl border border-border/70 bg-background/80 pl-10 pr-3 text-sm text-foreground focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all cursor-pointer"
+            className="h-11 w-full rounded-xl border border-border/80 bg-background pl-10 pr-3 text-sm text-foreground focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all cursor-pointer"
           >
-            <option value="all">All Locations</option>
-            {POPULAR_CITIES.map((c) => (
-              <option key={c.slug} value={c.slug}>
+            <option value="all" className="bg-background text-foreground">All Locations</option>
+            {availableCities.map((c) => (
+              <option key={c.slug} value={c.slug} className="bg-background text-foreground">
                 {c.name}
               </option>
             ))}
@@ -112,19 +154,19 @@ export function JobFilterBar({
         {/* Find Jobs Button */}
         <button
           type="submit"
-          className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-blue-600 px-6 text-sm font-semibold text-white shadow-sm transition-all hover:bg-blue-700 hover:shadow-md shrink-0"
+          className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-brand-600 px-6 text-sm font-bold text-white shadow-sm transition-all hover:bg-brand-500 hover:shadow-md shrink-0 cursor-pointer"
         >
           <span>Find Jobs</span>
           <ArrowRight className="h-4 w-4" />
         </button>
       </form>
 
-      {/* Quick filter pill toggles */}
-      <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-border/40 pt-3 text-xs">
+      {/* Filter toggles */}
+      <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-border/60 pt-3 text-xs">
         <span className="font-medium text-muted-foreground mr-1">Popular Filters:</span>
         {[
           { label: "All Openings", value: "all" },
-          { label: "Remote / WFH", value: "Remote" },
+          { label: "Remote", value: "Remote" },
           { label: "Full Time", value: "Full-Time" },
           { label: "Freshers", value: "freshers" },
         ].map((pill) => {
@@ -136,8 +178,8 @@ export function JobFilterBar({
               onClick={() => onTypeChange && onTypeChange(pill.value)}
               className={`rounded-lg px-3 py-1.5 font-medium transition-all ${
                 isActive
-                  ? "bg-blue-600 text-white shadow-xs"
-                  : "border border-border/50 bg-background/50 text-muted-foreground hover:bg-muted/60 hover:text-foreground"
+                  ? "bg-brand-600 text-white shadow-xs"
+                  : "border border-border/70 bg-background/80 text-muted-foreground hover:bg-muted hover:text-foreground"
               }`}
             >
               {pill.label}

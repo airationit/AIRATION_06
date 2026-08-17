@@ -1,6 +1,8 @@
 import { JOBS_SEO_TEMPLATES, SeoPatternKey } from "@/config/jobs-seo-templates";
 import { POPULAR_JOB_ROLES, POPULAR_CITIES, EXPERIENCE_LEVELS } from "@/config/jobs-taxonomy";
 import { siteConfig } from "@/config/site";
+import { normalizeCitySlug } from "./city-normalizer";
+import { Job } from "./jobs-data";
 
 export interface ParsedJobSlug {
   pattern: SeoPatternKey;
@@ -45,20 +47,52 @@ export function slugToTitleCase(str: string): string {
 
 /**
  * Parse dynamic URL slugs for Hirance programmatic job routes
- * Supports patterns:
- * - {role}-jobs-in-{city} / {role}-in-{city}
- * - remote-{role}-jobs / remote-{role}
- * - freshers-jobs-in-{city} / freshers-in-{city}
- * - {experience}-{role}-jobs
- * - jobs-in-{city} / in-{city}
- * - {role}-jobs / {role}
  */
 export function parseJobSlug(slug: string): ParsedJobSlug {
-  const cleanSlug = slug.toLowerCase().replace(/-jobs$/, "").replace(/^jobs-in-/, "in-");
+  const lowerSlug = slug.toLowerCase().trim();
 
-  // Check 1: remote-{role}
-  if (cleanSlug.startsWith("remote-")) {
-    const roleSlug = cleanSlug.replace(/^remote-/, "").replace(/-jobs$/, "");
+  // Check 1: Explicit "jobs-in-{city}" or "in-{city}" pattern
+  const cityInMatch = lowerSlug.match(/^(?:jobs-in-|in-)(.+)$/);
+  if (cityInMatch) {
+    const cityPart = cityInMatch[1].replace(/-jobs$/, "");
+    const normalizedCitySlug = normalizeCitySlug(cityPart);
+
+    if (normalizedCitySlug === "remote") {
+      return {
+        pattern: "remote-role",
+        citySlug: "remote",
+        cityName: "Remote",
+        isRemote: true,
+        rawSlug: slug,
+      };
+    }
+    const matchedCity = POPULAR_CITIES.find(
+      (c) =>
+        c.slug === normalizedCitySlug ||
+        c.slug === cityPart ||
+        c.name.toLowerCase().replace(/[^a-z0-9]+/g, "-") === cityPart ||
+        c.name.toLowerCase() === cityPart
+    );
+    return {
+      pattern: "city",
+      citySlug: matchedCity ? matchedCity.slug : normalizedCitySlug,
+      cityName: matchedCity ? matchedCity.name : slugToTitleCase(normalizedCitySlug),
+      rawSlug: slug,
+    };
+  }
+
+  // Check 2: "remote-{role}"
+  if (lowerSlug.startsWith("remote-")) {
+    const roleSlug = lowerSlug.replace(/^remote-/, "").replace(/-jobs$/, "");
+    if (roleSlug === "" || roleSlug === "jobs") {
+      return {
+        pattern: "city",
+        citySlug: "remote",
+        cityName: "Remote",
+        isRemote: true,
+        rawSlug: slug,
+      };
+    }
     const matchedRole = POPULAR_JOB_ROLES.find((r) => r.slug === roleSlug);
     const roleLabel = matchedRole ? matchedRole.label : slugToTitleCase(roleSlug);
     return {
@@ -72,11 +106,13 @@ export function parseJobSlug(slug: string): ParsedJobSlug {
     };
   }
 
-  // Check 2: freshers-in-{city} or freshers-jobs-in-{city}
-  const fresherMatch = cleanSlug.match(/^freshers(?:-jobs)?-in-(.+)$/);
+  // Check 3: "freshers-in-{city}" or "freshers-jobs-in-{city}"
+  const fresherMatch = lowerSlug.match(/^freshers(?:-jobs)?-in-(.+)$/);
   if (fresherMatch) {
-    const citySlug = fresherMatch[1];
-    const matchedCity = POPULAR_CITIES.find((c) => c.slug === citySlug);
+    const citySlug = fresherMatch[1].replace(/-jobs$/, "");
+    const matchedCity = POPULAR_CITIES.find(
+      (c) => c.slug === citySlug || c.name.toLowerCase() === citySlug
+    );
     const cityName = matchedCity ? matchedCity.name : slugToTitleCase(citySlug);
     return {
       pattern: "freshers-city",
@@ -88,13 +124,12 @@ export function parseJobSlug(slug: string): ParsedJobSlug {
     };
   }
 
-  // Check 3: {role}-in-{city}
-  const roleCityMatch = cleanSlug.match(/^(.+)-in-(.+)$/);
+  // Check 4: "{role}-in-{city}"
+  const roleCityMatch = lowerSlug.match(/^(.+)-in-(.+)$/);
   if (roleCityMatch) {
     const maybeRole = roleCityMatch[1].replace(/-jobs$/, "");
-    const maybeCity = roleCityMatch[2];
+    const maybeCity = roleCityMatch[2].replace(/-jobs$/, "");
 
-    // Check if the prefix is "jobs" (i.e. jobs-in-bangalore)
     if (maybeRole === "jobs" || maybeRole === "in") {
       const matchedCity = POPULAR_CITIES.find((c) => c.slug === maybeCity);
       return {
@@ -118,10 +153,10 @@ export function parseJobSlug(slug: string): ParsedJobSlug {
     };
   }
 
-  // Check 4: {experience}-{role}
+  // Check 5: "{experience}-{role}"
   for (const exp of EXPERIENCE_LEVELS) {
-    if (cleanSlug.startsWith(exp.slug + "-")) {
-      const roleSlug = cleanSlug.replace(exp.slug + "-", "").replace(/-jobs$/, "");
+    if (lowerSlug.startsWith(exp.slug + "-")) {
+      const roleSlug = lowerSlug.replace(exp.slug + "-", "").replace(/-jobs$/, "");
       const matchedRole = POPULAR_JOB_ROLES.find((r) => r.slug === roleSlug);
       return {
         pattern: "experience-role",
@@ -134,8 +169,57 @@ export function parseJobSlug(slug: string): ParsedJobSlug {
     }
   }
 
-  // Check 5: Only City (e.g. "bangalore", "mumbai")
-  const cityOnly = POPULAR_CITIES.find((c) => c.slug === cleanSlug || cleanSlug === `jobs-in-${c.slug}`);
+  // Check 6: Special Global Categories (e.g. freshers-jobs, remote-jobs, part-time-jobs)
+  if (lowerSlug === "freshers-jobs" || lowerSlug === "freshers") {
+    return {
+      pattern: "freshers-city",
+      experienceSlug: "freshers",
+      experienceLabel: "Freshers & Entry Level",
+      rawSlug: slug,
+    };
+  }
+  if (lowerSlug === "remote-jobs" || lowerSlug === "work-from-home-jobs" || lowerSlug === "wfh-jobs") {
+    return {
+      pattern: "city",
+      citySlug: "remote",
+      cityName: "Remote / Work From Home",
+      isRemote: true,
+      rawSlug: slug,
+    };
+  }
+  if (lowerSlug === "free-to-apply-jobs" || lowerSlug === "free-jobs") {
+    return {
+      pattern: "role",
+      roleSlug: "free-to-apply",
+      roleLabel: "Verified & Free to Apply",
+      rawSlug: slug,
+    };
+  }
+  if (lowerSlug === "internship-jobs" || lowerSlug === "internships") {
+    return {
+      pattern: "role",
+      roleSlug: "internship",
+      roleLabel: "Internships with Stipend",
+      rawSlug: slug,
+    };
+  }
+  if (lowerSlug === "part-time-jobs" || lowerSlug === "part-time") {
+    return {
+      pattern: "role",
+      roleSlug: "part-time",
+      roleLabel: "Part-Time & Flexible",
+      rawSlug: slug,
+    };
+  }
+
+  // Check 7: Standalone City (e.g. "bangalore", "mumbai", "pune")
+  const cityOnly = POPULAR_CITIES.find(
+    (c) =>
+      c.slug === lowerSlug ||
+      c.name.toLowerCase() === lowerSlug ||
+      lowerSlug === `jobs-in-${c.slug}` ||
+      lowerSlug === `${c.slug}-jobs`
+  );
   if (cityOnly) {
     return {
       pattern: "city",
@@ -145,8 +229,11 @@ export function parseJobSlug(slug: string): ParsedJobSlug {
     };
   }
 
-  // Check 6: Only Role (e.g. "react-developer", "ui-ux-designer")
-  const roleOnly = POPULAR_JOB_ROLES.find((r) => r.slug === cleanSlug || cleanSlug === `${r.slug}-jobs`);
+  // Check 7: Standalone Role (e.g. "react-developer", "ui-ux-designer")
+  const cleanRoleSlug = lowerSlug.replace(/-jobs$/, "");
+  const roleOnly = POPULAR_JOB_ROLES.find(
+    (r) => r.slug === cleanRoleSlug || r.slug === lowerSlug
+  );
   if (roleOnly) {
     return {
       pattern: "role",
@@ -159,8 +246,8 @@ export function parseJobSlug(slug: string): ParsedJobSlug {
   // Fallback generic role / slug
   return {
     pattern: "role",
-    roleSlug: cleanSlug,
-    roleLabel: slugToTitleCase(cleanSlug),
+    roleSlug: cleanRoleSlug,
+    roleLabel: slugToTitleCase(cleanRoleSlug),
     rawSlug: slug,
   };
 }
@@ -213,19 +300,11 @@ export function generateJobSeoData(
 }
 
 /**
- * Build JSON-LD Structured Data for Google (ItemList & BreadcrumbList)
+ * Build JSON-LD Structured Data for Job Directory (ItemList & BreadcrumbList)
  */
 export function generateJobsJsonLd(
   seo: GeneratedJobSeo,
-  jobs: Array<{
-    id: string;
-    title: string;
-    company: string;
-    location: string;
-    salary?: string;
-    salaryRange?: string;
-    postedDate?: string;
-  }>
+  jobs: Job[]
 ) {
   return [
     {
@@ -264,7 +343,7 @@ export function generateJobsJsonLd(
         item: {
           "@type": "JobPosting",
           title: job.title,
-          description: `Apply for ${job.title} at ${job.company} in ${job.location} on Hirance. Salary: ${job.salaryRange || job.salary || "Competitive"}.`,
+          description: `Apply for ${job.title} at ${job.company} in ${job.location} on Hirance. Salary: ${job.salaryRange || "Competitive"}.`,
           hiringOrganization: {
             "@type": "Organization",
             name: job.company,
@@ -287,9 +366,88 @@ export function generateJobsJsonLd(
             },
           },
           datePosted: job.postedDate || "2026-08-01",
-          employmentType: "FULL_TIME",
+          employmentType: job.jobType === "Full-Time" ? "FULL_TIME" : "OTHER",
         },
       })),
     },
   ];
 }
+
+import { stripHtml } from "./html-utils";
+
+/**
+ * Build Schema.org JobPosting and BreadcrumbList for a Single Job Detail Page
+ */
+export function generateSingleJobJsonLd(job: Job) {
+  const cleanDescription =
+    stripHtml(job.description) ||
+    `Apply for ${job.title} at ${job.company} in ${job.location}. Salary: ${job.salaryRange || "Competitive"}. View role details and swipe to apply directly on Hirance.`;
+
+  return [
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: siteConfig.url,
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Jobs",
+          item: `${siteConfig.url}/jobs`,
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: job.title,
+          item: `${siteConfig.url}/jobs/view/${job.slug}`,
+        },
+      ],
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "JobPosting",
+      title: job.title,
+      description: cleanDescription,
+      datePosted: job.postedDate || new Date().toISOString(),
+      validThrough: job.applicationDeadline || new Date(Date.now() + 60 * 24 * 60 * 60 * 1000).toISOString(),
+      employmentType:
+        job.jobType?.toLowerCase().includes("full")
+          ? "FULL_TIME"
+          : job.jobType?.toLowerCase().includes("part")
+          ? "PART_TIME"
+          : job.jobType?.toLowerCase().includes("intern")
+          ? "INTERN"
+          : "OTHER",
+      hiringOrganization: {
+        "@type": "Organization",
+        name: job.company,
+        sameAs: siteConfig.url,
+        logo: job.companyLogo || undefined,
+      },
+      jobLocation: {
+        "@type": "Place",
+        address: {
+          "@type": "PostalAddress",
+          addressLocality: job.cityName || job.location,
+          addressRegion: job.stateName || "India",
+          addressCountry: "IN",
+        },
+      },
+      baseSalary: {
+        "@type": "MonetaryAmount",
+        currency: "INR",
+        value: {
+          "@type": "QuantitativeValue",
+          value: job.salaryRange,
+          unitText: job.salaryRange.includes("/ mo") ? "MONTH" : "YEAR",
+        },
+      },
+    },
+  ];
+}
+

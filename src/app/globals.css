@@ -557,5 +557,44 @@
   .footer-made-with {
     @apply text-[12px] text-muted-foreground;
   }
+
+  /* ── Job Description Typography ───────────────────────── */
+  .prose-job {
+    @apply leading-relaxed text-foreground/90;
+  }
+  .prose-job p {
+    @apply my-3 text-[15px] sm:text-base leading-relaxed text-foreground/90;
+  }
+  .prose-job p:first-child {
+    @apply mt-0;
+  }
+  .prose-job p:last-child {
+    @apply mb-0;
+  }
+  .prose-job h3, .prose-job h4, .prose-job h5, .prose-job h6 {
+    @apply mt-6 mb-2.5 font-bold tracking-tight text-foreground text-base sm:text-lg;
+  }
+  .prose-job ul {
+    @apply my-3 list-disc space-y-1.5 pl-5 marker:text-brand-600 dark:marker:text-brand-400;
+  }
+  .prose-job ol {
+    @apply my-3 list-decimal space-y-1.5 pl-5 marker:text-brand-600 dark:marker:text-brand-400;
+  }
+  .prose-job li {
+    @apply pl-1 text-[15px] sm:text-base leading-relaxed text-foreground/90;
+  }
+  .prose-job strong, .prose-job b {
+    @apply font-semibold text-foreground;
+  }
+  .prose-job em, .prose-job i {
+    @apply italic text-foreground/80;
+  }
+  .prose-job a {
+    @apply font-medium text-brand-600 underline underline-offset-4 hover:text-brand-500 dark:text-brand-400;
+  }
+  .prose-job blockquote {
+    @apply my-4 border-l-2 border-brand-500 pl-4 italic text-muted-foreground;
+  }
 }
+
 

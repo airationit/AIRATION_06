@@ -1,12 +1,14 @@
 import { MetadataRoute } from "next";
 import { siteConfig } from "@/config/site";
+import { fetchJobSitemapList } from "@/lib/api/jobs";
+import { generateJobSlug } from "@/lib/jobs-data";
 import { POPULAR_JOB_ROLES, POPULAR_CITIES } from "@/config/jobs-taxonomy";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = siteConfig.url;
   const now = new Date();
 
-  // Static core routes
+  // 1. Static Core Routes
   const staticRoutes: MetadataRoute.Sitemap = [
     {
       url: `${baseUrl}`,
@@ -18,7 +20,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       url: `${baseUrl}/jobs`,
       lastModified: now,
       changeFrequency: "hourly",
-      priority: 0.9,
+      priority: 0.95,
     },
     {
       url: `${baseUrl}/how-it-works`,
@@ -58,53 +60,80 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
   ];
 
-  // Programmatic SEO routes: Top Roles in Top Cities
-  const topCities = POPULAR_CITIES.filter((c) => c.isPopular);
-  const topRoles = POPULAR_JOB_ROLES.slice(0, 12);
-
+  // 2. Programmatic SEO Routes (Roles, Cities, Combinations, Freshers, and Remote)
+  const popularCities = POPULAR_CITIES.filter((c) => c.isPopular && c.slug !== "remote");
   const programmaticRoutes: MetadataRoute.Sitemap = [];
 
-  // 1. Role-only routes
-  topRoles.forEach((role) => {
+  // All Role hubs
+  POPULAR_JOB_ROLES.forEach((role) => {
     programmaticRoutes.push({
       url: `${baseUrl}/jobs/${role.slug}`,
-      lastModified: now,
-      changeFrequency: "daily",
-      priority: 0.8,
-    });
-  });
-
-  // 2. City-only routes
-  topCities.forEach((city) => {
-    programmaticRoutes.push({
-      url: `${baseUrl}/jobs/jobs-in-${city.slug}`,
-      lastModified: now,
-      changeFrequency: "daily",
-      priority: 0.8,
-    });
-  });
-
-  // 3. Role + City high priority matrix
-  topRoles.slice(0, 6).forEach((role) => {
-    topCities.slice(0, 5).forEach((city) => {
-      programmaticRoutes.push({
-        url: `${baseUrl}/jobs/${role.slug}-in-${city.slug}`,
-        lastModified: now,
-        changeFrequency: "daily",
-        priority: 0.85,
-      });
-    });
-  });
-
-  // 4. Remote Roles
-  topRoles.forEach((role) => {
-    programmaticRoutes.push({
-      url: `${baseUrl}/jobs/remote-${role.slug}`,
       lastModified: now,
       changeFrequency: "daily",
       priority: 0.85,
     });
   });
 
-  return [...staticRoutes, ...programmaticRoutes];
+  // All City hubs
+  POPULAR_CITIES.forEach((city) => {
+    programmaticRoutes.push({
+      url: `${baseUrl}/jobs/jobs-in-${city.slug}`,
+      lastModified: now,
+      changeFrequency: "daily",
+      priority: 0.85,
+    });
+  });
+
+  // High-Intent Role + City matrix (Top 20 roles in Top 10 cities)
+  POPULAR_JOB_ROLES.slice(0, 20).forEach((role) => {
+    popularCities.slice(0, 10).forEach((city) => {
+      programmaticRoutes.push({
+        url: `${baseUrl}/jobs/${role.slug}-in-${city.slug}`,
+        lastModified: now,
+        changeFrequency: "daily",
+        priority: 0.8,
+      });
+    });
+  });
+
+  // Remote roles
+  POPULAR_JOB_ROLES.forEach((role) => {
+    programmaticRoutes.push({
+      url: `${baseUrl}/jobs/remote-${role.slug}`,
+      lastModified: now,
+      changeFrequency: "daily",
+      priority: 0.8,
+    });
+  });
+
+  // Freshers city hubs
+  popularCities.forEach((city) => {
+    programmaticRoutes.push({
+      url: `${baseUrl}/jobs/freshers-jobs-in-${city.slug}`,
+      lastModified: now,
+      changeFrequency: "daily",
+      priority: 0.8,
+    });
+  });
+
+  // 3. Dynamic Live Job Postings from Sitemap List API
+  let liveJobRoutes: MetadataRoute.Sitemap = [];
+  try {
+    const sitemapData = await fetchJobSitemapList();
+    if (sitemapData && sitemapData.jobs && sitemapData.jobs.length > 0) {
+      liveJobRoutes = sitemapData.jobs.map((job) => {
+        const jobSlug = generateJobSlug(job.title, "", job.city || "india", job.id);
+        return {
+          url: `${baseUrl}/jobs/view/${jobSlug}`,
+          lastModified: job.updatedAt ? new Date(job.updatedAt) : now,
+          changeFrequency: "daily",
+          priority: 0.75,
+        };
+      });
+    }
+  } catch (error) {
+    console.error("Error generating dynamic sitemap from jobs API:", error);
+  }
+
+  return [...staticRoutes, ...programmaticRoutes, ...liveJobRoutes];
 }

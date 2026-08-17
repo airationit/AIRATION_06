@@ -7,7 +7,7 @@ import { siteConfig } from "@/config/site";
 export const metadata: Metadata = {
   title: "Search Jobs & Career Opportunities in India (2026) | Hirance",
   description:
-    "Explore 1,000+ verified job openings in tech, sales, design, and operations on Hirance. Swipe right to apply, get instant AI fit scores, and chat directly with employers.",
+    "Explore verified job openings in tech, sales, design, and operations on Hirance. Swipe right to apply, get instant AI fit scores, and chat directly with employers.",
   keywords: [
     "jobs in india",
     "hirance jobs",
@@ -26,13 +26,13 @@ export const metadata: Metadata = {
     url: `${siteConfig.url}/jobs`,
     title: "Search Jobs & Career Opportunities | Hirance",
     description:
-      "Explore verified job vacancies across top tech companies & startups in India. Swipe to apply with AI match score.",
+      "Explore verified job vacancies across top tech companies & startups in India. Swipe to apply directly on Hirance.",
     siteName: "Hirance",
   },
 };
 
 export default async function JobsPage() {
-  const data = await getJobs({ limit: 12 });
+  const data = await getJobs({ limit: 12, page: 1 });
   const seo = generateJobSeoData(
     {
       pattern: "default",
