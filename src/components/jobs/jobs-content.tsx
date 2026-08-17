@@ -28,6 +28,7 @@ import { useMasterdataStore } from "@/store/masterdata-store";
 import { POPULAR_CITIES } from "@/config/jobs-taxonomy";
 import { cn } from "@/lib/utils";
 import { isCityMatch, normalizeCitySlug } from "@/lib/city-normalizer";
+import { Footer } from "@/components/shared";
 
 // Helper to match jobs with selected city/location supporting all Indian aliases & variations
 function isLocationMatch(job: Job, targetSlugOrId: string): boolean {
@@ -321,8 +322,8 @@ export function JobsContent({
   ]);
 
   return (
-    <div className="min-h-dvh bg-white dark:bg-background pt-28 pb-20 sm:pt-32 transition-colors">
-      <div className="container mx-auto px-4 sm:px-6 max-w-7xl">
+    <main className="min-h-dvh bg-white dark:bg-background pt-28 sm:pt-32 transition-colors flex flex-col justify-between">
+      <div className="container mx-auto px-4 sm:px-6 max-w-7xl pb-20 flex-1">
         {/* Breadcrumb Navigation */}
         <nav
           aria-label="Breadcrumb"
@@ -887,6 +888,9 @@ export function JobsContent({
         {/* Full-Width Programmatic SEO Career Hubs */}
         <JobSeoLinks currentRoleSlug={roleSlug} currentCitySlug={citySlug} />
       </div>
-    </div>
+
+      {/* Footer */}
+      <Footer />
+    </main>
   );
 }

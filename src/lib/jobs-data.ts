@@ -266,11 +266,12 @@ export function normalizeJobItem(raw: JobListItem | JobDetail): Job {
     applicationsCount: raw.applications_count,
     description: "description" in raw ? raw.description : undefined,
     responsibilities: "responsibilities" in raw ? raw.responsibilities : undefined,
-    educationLevel: raw.education_level
-      ? typeof raw.education_level === "object"
-        ? raw.education_level.name
-        : String(raw.education_level)
-      : undefined,
+    educationLevel:
+      "education_level" in raw && raw.education_level
+        ? typeof raw.education_level === "object"
+          ? raw.education_level.name
+          : String(raw.education_level)
+        : undefined,
     educationSpecialization: "education_specialization" in raw ? raw.education_specialization || undefined : undefined,
     englishProficiency: "english_proficiency" in raw ? raw.english_proficiency || undefined : undefined,
     isWalkIn: "is_walk_in" in raw ? Boolean(raw.is_walk_in) : false,
