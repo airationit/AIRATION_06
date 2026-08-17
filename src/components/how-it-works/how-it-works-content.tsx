@@ -301,12 +301,12 @@ export function HowItWorksContent() {
       {/* SECTION 1: FOR CANDIDATES */}
       <section id="for-candidates" className="relative py-20 sm:py-28 overflow-hidden border-t border-border/30">
         
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="mx-auto max-w-7xl 2xl:max-w-[1440px] px-4 sm:px-6 lg:px-8 relative z-10">
           
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 xl:gap-12 2xl:gap-14 items-center">
             
             {/* Candidate Content Column */}
-            <div className="lg:col-span-6 space-y-8">
+            <div className="lg:col-span-6 xl:col-span-5 space-y-6">
               
               <div className="space-y-3">
                 <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-foreground leading-tight">
@@ -328,13 +328,13 @@ export function HowItWorksContent() {
               </p>
 
               {/* Highlight Line */}
-              <div className="py-2 flex items-center gap-3 text-base sm:text-lg font-bold text-foreground">
+              <div className="py-1.5 flex items-center gap-3 text-base sm:text-lg font-bold text-foreground">
                 <Sparkles className="h-5 w-5 text-brand-600 shrink-0" />
                 <span>Apply to 10+ relevant jobs in under a minute—fast, smooth, and actually enjoyable.</span>
               </div>
 
               {/* Feature Points Row */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-1">
                 {candidateFeatures.map((item, idx) => {
                   const Icon = item.icon;
                   return (
@@ -359,7 +359,7 @@ export function HowItWorksContent() {
               </div>
 
               {/* Download CTA Box */}
-              <div className="pt-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-t border-border/30">
+              <div className="pt-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-t border-border/30">
                 <div>
                   <h4 className="text-sm font-bold text-foreground">Ready to find your job?</h4>
                   <p className="text-xs text-muted-foreground">Download the Hirance Candidate Mobile App.</p>
@@ -369,15 +369,16 @@ export function HowItWorksContent() {
 
             </div>
 
-            {/* Candidate App Clean Mockup Display (NO background card wrapper) */}
-            <div className="lg:col-span-6 flex justify-center">
-              <div className="relative max-w-[320px] sm:max-w-[360px]">
+            {/* Candidate App Showcase Display */}
+            <div className="lg:col-span-6 xl:col-span-7 flex items-center justify-center lg:justify-end">
+              <div className="relative w-full max-w-lg sm:max-w-xl lg:max-w-none">
                 <Image
-                  src="/images/mockup.png"
-                  alt="Hirance Mobile App Showcase for Candidates"
-                  width={380}
-                  height={760}
-                  className="h-auto w-full object-contain filter drop-shadow-[0_15px_30px_rgba(0,0,0,0.15)] transition-transform duration-300 hover:scale-[1.02]"
+                  src="/pics/left_right.png"
+                  alt="Hirance Swipe Left to Skip, Swipe Right to Apply for Candidates"
+                  width={1823}
+                  height={863}
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 600px, (max-width: 1280px) 50vw, (max-width: 1536px) 58vw, 850px"
+                  className="h-auto w-full object-contain transition-transform duration-300 hover:scale-[1.02]"
                   priority
                 />
               </div>
