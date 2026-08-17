@@ -109,12 +109,13 @@ export function Footer() {
           
           {/* Brand Logo & Tagline (Left) */}
           <div className="flex flex-col gap-3 sm:col-span-2 lg:col-span-4">
-            <Link href="/" className="inline-flex items-center group">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="/images/logo2.png"
+            <Link href="/" className="inline-flex items-center group" aria-label="Hirance Home">
+              <Image
+                src="/images/logo-white.svg"
                 alt="Hirance"
-                className="h-8 md:h-10 w-auto object-contain transition-opacity group-hover:opacity-90"
+                width={180}
+                height={50}
+                className="h-10 md:h-15 w-auto object-contain transition-opacity group-hover:opacity-90"
               />
             </Link>
 

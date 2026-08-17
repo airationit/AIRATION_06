@@ -4,26 +4,47 @@ import { getJobs } from "@/lib/jobs-data";
 import { JobsContent } from "@/components/jobs/jobs-content";
 import { siteConfig } from "@/config/site";
 
+import { POPULAR_JOB_ROLES, POPULAR_CITIES } from "@/config/jobs-taxonomy";
+
 interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
+// Allows any other dynamic slug combination to be rendered on-demand & cached
+export const dynamicParams = true;
+
 export async function generateStaticParams() {
-  return [
-    { slug: "react-developer-in-bangalore" },
-    { slug: "remote-frontend-developer" },
-    { slug: "ui-ux-designer-in-mumbai" },
-    { slug: "backend-developer-in-delhi-ncr" },
-    { slug: "freshers-jobs-in-pune" },
-    { slug: "python-developer-in-hyderabad" },
-    { slug: "full-stack-developer-in-chennai" },
-    { slug: "product-manager-in-bangalore" },
-    { slug: "remote-product-designer" },
-    { slug: "sales-executive-in-delhi-ncr" },
-    { slug: "jobs-in-bangalore" },
-    { slug: "jobs-in-mumbai" },
-    { slug: "jobs-in-delhi-ncr" },
-  ];
+  const topCities = POPULAR_CITIES.filter((c) => c.isPopular);
+  const params: { slug: string }[] = [];
+
+  // 1. Role in City combinations (e.g. react-developer-in-bangalore)
+  POPULAR_JOB_ROLES.forEach((role) => {
+    topCities.forEach((city) => {
+      params.push({ slug: `${role.slug}-in-${city.slug}` });
+    });
+  });
+
+  // 2. Role-only routes (e.g. react-developer)
+  POPULAR_JOB_ROLES.forEach((role) => {
+    params.push({ slug: role.slug });
+  });
+
+  // 3. City-only routes (e.g. jobs-in-bangalore)
+  POPULAR_CITIES.forEach((city) => {
+    params.push({ slug: `jobs-in-${city.slug}` });
+  });
+
+  // 4. Remote roles (e.g. remote-frontend-developer)
+  POPULAR_JOB_ROLES.forEach((role) => {
+    params.push({ slug: `remote-${role.slug}` });
+  });
+
+  // 5. Fresher routes by city (e.g. freshers-jobs-in-pune)
+  topCities.forEach((city) => {
+    params.push({ slug: `freshers-jobs-in-${city.slug}` });
+  });
+
+  return params;
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {

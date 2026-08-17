@@ -83,13 +83,13 @@ export function Navbar({ className }: NavbarProps) {
               tabIndex={0}
             >
               <Image
-                src="/images/logo.png"
+                src="/images/logo.svg"
                 alt={siteConfig.name}
-                width={300}
-                height={100}
+                width={180}
+                height={50}
                 loading="eager"
                 fetchPriority="high"
-                className="h-8 w-auto transition-transform duration-300 group-hover:scale-[1.03] sm:h-10"
+                className="h-15 w-auto transition-transform duration-300 group-hover:scale-[1.03] sm:h-15"
               />
             </Link>
 

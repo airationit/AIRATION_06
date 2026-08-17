@@ -222,8 +222,9 @@ export function generateJobsJsonLd(
     title: string;
     company: string;
     location: string;
-    salary: string;
-    postedDate: string;
+    salary?: string;
+    salaryRange?: string;
+    postedDate?: string;
   }>
 ) {
   return [
@@ -263,7 +264,7 @@ export function generateJobsJsonLd(
         item: {
           "@type": "JobPosting",
           title: job.title,
-          description: `Apply for ${job.title} at ${job.company} in ${job.location} on Hirance. Salary: ${job.salary}.`,
+          description: `Apply for ${job.title} at ${job.company} in ${job.location} on Hirance. Salary: ${job.salaryRange || job.salary || "Competitive"}.`,
           hiringOrganization: {
             "@type": "Organization",
             name: job.company,
