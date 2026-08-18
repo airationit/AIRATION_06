@@ -4,7 +4,7 @@ import { HowItWorksContent } from "@/components/how-it-works/how-it-works-conten
 export const metadata: Metadata = {
   title: "How It Works | Hirance - India's 1st Swipe-Based Hiring Platform",
   description:
-    "Hirance is India's 1st swipe-based hiring platform. Candidates swipe right to apply with AI match scores. Employers post jobs in 60 seconds and receive pre-filtered candidates.",
+    "Discover how hiring works on Hirance. Candidates swipe right to apply with instant AI match scores, and employers post jobs in 60 seconds with pre-filtered candidate matching.",
   keywords: [
     "Hirance how it works",
     "swipe based hiring platform",
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     url: "https://hirance.com/how-it-works",
     title: "How It Works | Hirance - India's 1st Swipe-Based Hiring Platform",
     description:
-      "Hirance is India's 1st swipe-based hiring platform. Fast, form-free hiring for candidates and employers.",
+      "Discover how hiring works on Hirance. Fast, transparent, and form-free hiring for candidates and employers.",
     siteName: "Hirance",
     images: [
       {
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "How It Works | Hirance - India's 1st Swipe-Based Hiring Platform",
     description:
-      "Swipe. Match. Get Hired. Fastest way to Post & Apply for jobs with AI match scores.",
+      "From instant swipe applications to 60-second job postings—see how hiring happens on Hirance.",
   },
 };
 

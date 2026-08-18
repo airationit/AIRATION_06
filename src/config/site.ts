@@ -1,8 +1,8 @@
 export const siteConfig = {
   name: "Hirance",
-  tagline: "Hiring, reimagined.",
+  tagline: "India's 1st Swipe-Based Hiring Platform",
   description:
-    "Hirance is the modern hiring platform connecting ambitious people with the companies building the future. For employers and job seekers alike.",
+    "Hirance is India's 1st swipe-based hiring platform. Fastest way to post & apply for jobs with zero forms, zero scrolling, zero waiting, and instant AI match scores.",
   url: "https://hirance.com",
   ogImage: "/og.png",
   links: {

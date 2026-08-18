@@ -11,6 +11,7 @@ import {
   Sparkles,
   ShieldCheck,
   ArrowRight,
+  ArrowUpRight,
   Phone,
   Mail,
   Zap,
@@ -131,19 +132,22 @@ export function RequestDemoContent() {
             </div>
 
             {/* Highlights List */}
-            <div className="space-y-4">
+            <div className="space-y-3.5">
               {HIGHLIGHTS.map((item, idx) => {
                 const Icon = item.icon;
                 return (
                   <div
                     key={idx}
-                    className="flex items-start gap-4 rounded-2xl border border-border/60 bg-background/60 p-4 transition-all duration-300 hover:border-blue-500/40 hover:bg-blue-50/20 dark:hover:bg-blue-950/20"
+                    className="group relative flex items-start gap-4 overflow-hidden rounded-2xl border border-border/70 bg-card/60 p-4 transition-all duration-300 hover:border-blue-500/50 hover:bg-card hover:shadow-lg hover:shadow-blue-500/5 dark:bg-card/40 dark:hover:bg-card/80"
                   >
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400">
-                      <Icon className="h-5 w-5" />
+                    {/* Subtle hover gradient highlight */}
+                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-blue-500/[0.04] to-indigo-500/[0.04] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+
+                    <div className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-blue-500/10 text-blue-600 transition-all duration-300 group-hover:scale-105 group-hover:bg-blue-600 group-hover:text-white dark:bg-blue-950/60 dark:text-blue-400 dark:group-hover:bg-blue-600 dark:group-hover:text-white shadow-sm">
+                      <Icon className="h-5 w-5 transition-transform duration-300 group-hover:scale-110" />
                     </div>
-                    <div>
-                      <h3 className="text-sm font-semibold text-foreground">
+                    <div className="relative min-w-0">
+                      <h3 className="text-sm font-semibold text-foreground transition-colors group-hover:text-blue-600 dark:group-hover:text-blue-400">
                         {item.title}
                       </h3>
                       <p className="mt-0.5 text-xs leading-relaxed text-muted-foreground">
@@ -156,25 +160,37 @@ export function RequestDemoContent() {
             </div>
 
             {/* Direct Phone/Email Callout */}
-            <div className="rounded-2xl border border-blue-500/20 bg-gradient-to-br from-blue-50/60 via-indigo-50/40 to-transparent p-4 dark:from-blue-950/40 dark:via-indigo-950/20">
-              <div className="flex items-center gap-2 text-blue-600 dark:text-blue-400 font-semibold text-xs uppercase tracking-wider">
+            <div className="relative overflow-hidden rounded-2xl border border-blue-500/25 bg-gradient-to-br from-blue-600/[0.08] via-indigo-600/[0.04] to-transparent p-5 sm:p-6 shadow-sm backdrop-blur-sm">
+              <div className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-blue-500/15 blur-2xl" />
+
+              <div className="relative flex items-center gap-2 text-blue-600 dark:text-blue-400 font-semibold text-xs uppercase tracking-wider">
                 <Building2 className="h-4 w-4" />
                 <span>Direct Support</span>
               </div>
-              <div className="mt-2 flex flex-col gap-1.5 text-xs font-medium">
+              <p className="relative mt-1 text-xs text-muted-foreground leading-relaxed">
+                Have urgent recruitment requirements? Connect with our team directly.
+              </p>
+
+              <div className="relative mt-3.5 flex flex-col gap-2 text-xs font-medium">
                 <a
                   href="tel:+919793780913"
-                  className="inline-flex items-center gap-2 text-foreground hover:text-blue-600"
+                  className="group inline-flex items-center justify-between rounded-xl border border-border/60 bg-background/60 px-3.5 py-2.5 text-foreground transition-all duration-200 hover:border-blue-500/40 hover:bg-background hover:text-blue-600 dark:hover:text-blue-400 backdrop-blur-sm"
                 >
-                  <Phone className="h-3.5 w-3.5 text-blue-600" />
-                  +91 9793780913
+                  <span className="flex items-center gap-2">
+                    <Phone className="h-3.5 w-3.5 text-blue-600 dark:text-blue-400" />
+                    <span>+91 9793780913</span>
+                  </span>
+                  <ArrowUpRight className="h-3.5 w-3.5 opacity-60 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:opacity-100" />
                 </a>
                 <a
                   href="mailto:hello@hirance.com"
-                  className="inline-flex items-center gap-2 text-foreground hover:text-blue-600"
+                  className="group inline-flex items-center justify-between rounded-xl border border-border/60 bg-background/60 px-3.5 py-2.5 text-foreground transition-all duration-200 hover:border-blue-500/40 hover:bg-background hover:text-blue-600 dark:hover:text-blue-400 backdrop-blur-sm"
                 >
-                  <Mail className="h-3.5 w-3.5 text-blue-600" />
-                  hello@hirance.com
+                  <span className="flex items-center gap-2">
+                    <Mail className="h-3.5 w-3.5 text-blue-600 dark:text-blue-400" />
+                    <span>hello@hirance.com</span>
+                  </span>
+                  <ArrowUpRight className="h-3.5 w-3.5 opacity-60 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:opacity-100" />
                 </a>
               </div>
             </div>
@@ -187,9 +203,13 @@ export function RequestDemoContent() {
             transition={{ duration: 0.5, delay: 0.15 }}
             className="lg:col-span-7"
           >
-            <div className="rounded-3xl border border-border/70 bg-background/80 p-6 sm:p-10 shadow-lg backdrop-blur-md">
+            <div className="relative overflow-hidden rounded-3xl border border-border/80 bg-card/85 p-6 sm:p-10 shadow-xl shadow-blue-500/5 backdrop-blur-xl">
+              {/* Subtle ambient light accents */}
+              <div className="pointer-events-none absolute -right-20 -top-20 h-48 w-48 rounded-full bg-blue-500/10 blur-3xl" />
+              <div className="pointer-events-none absolute -left-20 -bottom-20 h-48 w-48 rounded-full bg-indigo-500/10 blur-3xl" />
+
               {submitted ? (
-                <div className="py-10 text-center" role="status" aria-live="polite">
+                <div className="relative py-10 text-center" role="status" aria-live="polite">
                   <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
                     <CheckCircle2 className="h-8 w-8" />
                   </div>
@@ -202,14 +222,14 @@ export function RequestDemoContent() {
                   <button
                     type="button"
                     onClick={() => setSubmitted(false)}
-                    className="mt-6 inline-flex items-center gap-2 rounded-xl bg-blue-600 px-6 py-3 text-sm font-semibold text-white transition-all hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500/40"
+                    className="mt-6 inline-flex items-center gap-2 rounded-xl bg-blue-600 hover:bg-blue-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-600/20 transition-all duration-200"
                   >
                     Submit Another Request
                     <ArrowRight className="h-4 w-4" />
                   </button>
                 </div>
               ) : (
-                <form onSubmit={handleSubmit} className="space-y-5" noValidate>
+                <form onSubmit={handleSubmit} className="relative space-y-5" noValidate>
                   <div>
                     <h3 className="text-2xl font-bold tracking-tight text-foreground">
                       Book a Quick Demo
@@ -233,7 +253,7 @@ export function RequestDemoContent() {
                         value={form.fullName}
                         onChange={(e) => handleChange("fullName", e.target.value)}
                         placeholder="John Doe"
-                        className="w-full rounded-xl border border-border/80 bg-background px-4 py-3 text-sm text-foreground outline-none transition-all placeholder:text-muted-foreground/60 focus:border-blue-600 focus:ring-2 focus:ring-blue-500/20"
+                        className="w-full rounded-xl border border-border/80 bg-background/80 px-4 py-3 text-sm text-foreground outline-none transition-all placeholder:text-muted-foreground/60 focus:border-blue-600 focus:bg-background focus:ring-4 focus:ring-blue-500/10"
                       />
                     </div>
 
@@ -249,7 +269,7 @@ export function RequestDemoContent() {
                         value={form.workEmail}
                         onChange={(e) => handleChange("workEmail", e.target.value)}
                         placeholder="john@company.com"
-                        className="w-full rounded-xl border border-border/80 bg-background px-4 py-3 text-sm text-foreground outline-none transition-all placeholder:text-muted-foreground/60 focus:border-blue-600 focus:ring-2 focus:ring-blue-500/20"
+                        className="w-full rounded-xl border border-border/80 bg-background/80 px-4 py-3 text-sm text-foreground outline-none transition-all placeholder:text-muted-foreground/60 focus:border-blue-600 focus:bg-background focus:ring-4 focus:ring-blue-500/10"
                       />
                     </div>
 
@@ -265,7 +285,7 @@ export function RequestDemoContent() {
                         value={form.phone}
                         onChange={(e) => handleChange("phone", e.target.value)}
                         placeholder="+91 98765 43210"
-                        className="w-full rounded-xl border border-border/80 bg-background px-4 py-3 text-sm text-foreground outline-none transition-all placeholder:text-muted-foreground/60 focus:border-blue-600 focus:ring-2 focus:ring-blue-500/20"
+                        className="w-full rounded-xl border border-border/80 bg-background/80 px-4 py-3 text-sm text-foreground outline-none transition-all placeholder:text-muted-foreground/60 focus:border-blue-600 focus:bg-background focus:ring-4 focus:ring-blue-500/10"
                       />
                     </div>
 
@@ -281,7 +301,7 @@ export function RequestDemoContent() {
                         value={form.companyName}
                         onChange={(e) => handleChange("companyName", e.target.value)}
                         placeholder="Acme Inc."
-                        className="w-full rounded-xl border border-border/80 bg-background px-4 py-3 text-sm text-foreground outline-none transition-all placeholder:text-muted-foreground/60 focus:border-blue-600 focus:ring-2 focus:ring-blue-500/20"
+                        className="w-full rounded-xl border border-border/80 bg-background/80 px-4 py-3 text-sm text-foreground outline-none transition-all placeholder:text-muted-foreground/60 focus:border-blue-600 focus:bg-background focus:ring-4 focus:ring-blue-500/10"
                       />
                     </div>
                   </div>
@@ -302,7 +322,7 @@ export function RequestDemoContent() {
                     <button
                       type="submit"
                       disabled={submitting}
-                      className="inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-blue-600 px-8 text-sm font-semibold text-white transition-all hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500/40 disabled:opacity-60 shrink-0"
+                      className="inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-blue-600 hover:bg-blue-500 px-8 text-sm font-semibold text-white shadow-lg shadow-blue-600/25 transition-all duration-200 active:scale-[0.98] disabled:opacity-60 shrink-0"
                     >
                       {submitting ? (
                         <span>Submitting...</span>

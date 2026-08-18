@@ -66,9 +66,17 @@ export default function ContactPage() {
           "@type": "PostalAddress",
           streetAddress: "Janki Puram Extension",
           addressLocality: "Lucknow",
+          addressRegion: "Uttar Pradesh",
           postalCode: "226021",
           addressCountry: "IN",
         },
+        geo: {
+          "@type": "GeoCoordinates",
+          latitude: "26.923114",
+          longitude: "80.95313",
+        },
+        hasMap:
+          "https://www.google.com/maps?ll=26.923114,80.95313&z=15&t=m&hl=en&gl=IN&mapclient=embed&q=Jankipuram+Lucknow,+Uttar+Pradesh",
         contactPoint: {
           "@type": "ContactPoint",
           telephone: "+91-9793780913",
