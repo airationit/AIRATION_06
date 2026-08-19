@@ -7,6 +7,7 @@ import {
   Search,
   Clock,
   ArrowRight,
+  ArrowUpRight,
   Sparkles,
   BookOpen,
   X,
@@ -139,12 +140,16 @@ export function BlogListContent() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="group relative overflow-hidden rounded-3xl border border-border/70 bg-gradient-to-br from-background/90 via-background/60 to-blue-500/5 p-6 sm:p-10 backdrop-blur-md shadow-xl transition-all hover:border-blue-500/30"
+              className="group relative overflow-hidden rounded-3xl border border-border/80 bg-card/85 p-6 sm:p-10 shadow-xl shadow-blue-500/5 backdrop-blur-xl transition-all duration-300 hover:border-blue-500/50"
             >
-              <div className="grid gap-8 lg:grid-cols-12 lg:items-center">
+              {/* Subtle ambient light accents */}
+              <div className="pointer-events-none absolute -right-20 -top-20 h-48 w-48 rounded-full bg-blue-500/10 blur-3xl" />
+              <div className="pointer-events-none absolute -left-20 -bottom-20 h-48 w-48 rounded-full bg-indigo-500/10 blur-3xl" />
+
+              <div className="relative grid gap-8 lg:grid-cols-12 lg:items-center">
                 <div className="lg:col-span-7">
                   <div className="flex items-center gap-3">
-                    <span className="inline-flex items-center gap-1.5 rounded-full bg-blue-600/10 px-3 py-1 text-xs font-semibold text-blue-600 dark:text-blue-400">
+                    <span className="inline-flex items-center gap-1.5 rounded-full border border-blue-500/20 bg-blue-500/10 px-3.5 py-1 text-xs font-semibold text-blue-600 dark:text-blue-400 shadow-sm">
                       <Sparkles className="h-3.5 w-3.5" />
                       Featured Article
                     </span>
@@ -153,7 +158,7 @@ export function BlogListContent() {
                     </span>
                   </div>
 
-                  <h2 className="mt-4 text-2xl font-bold tracking-tight sm:text-3xl lg:text-4xl text-foreground group-hover:text-blue-600 transition-colors">
+                  <h2 className="mt-4 text-2xl font-extrabold tracking-tight sm:text-3xl lg:text-4xl text-foreground group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
                     {featuredPost.title}
                   </h2>
 
@@ -174,19 +179,19 @@ export function BlogListContent() {
                     </span>
                   </div>
 
-                  <div className="mt-8 flex items-center gap-4">
+                  <div className="mt-8 flex items-center gap-3.5">
                     <Link
                       href={`/blog/${featuredPost.slug}`}
-                      className="inline-flex h-11 items-center justify-center rounded-xl bg-brand-600 px-5 text-sm font-semibold text-white transition-all hover:bg-brand-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                      className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-blue-600 hover:bg-blue-500 px-5 text-sm font-semibold text-white shadow-lg shadow-blue-600/25 transition-all duration-200 active:scale-[0.98]"
                     >
                       Read full story
-                      <ArrowRight className="ml-2 h-4 w-4" />
+                      <ArrowRight className="h-4 w-4" />
                     </Link>
                     
                     <button
                       type="button"
                       onClick={() => setActiveModalPost(featuredPost)}
-                      className="inline-flex h-11 items-center justify-center rounded-xl border border-border/80 bg-background/80 px-4 text-sm font-medium text-foreground transition-all hover:bg-accent"
+                      className="inline-flex h-11 items-center justify-center rounded-xl border border-border/80 bg-background/80 px-4 text-sm font-medium text-foreground backdrop-blur-sm transition-all hover:bg-background hover:border-blue-500/40"
                     >
                       Quick Preview
                     </button>
@@ -194,18 +199,18 @@ export function BlogListContent() {
                 </div>
 
                 <div className="hidden lg:col-span-5 lg:block">
-                  <div className="relative aspect-4/3 overflow-hidden rounded-2xl border border-border/60 bg-gradient-to-br from-blue-600/10 via-indigo-600/10 to-transparent p-6 flex flex-col justify-between backdrop-blur-sm">
+                  <div className="relative aspect-[4/3] overflow-hidden rounded-2xl border border-border/70 bg-gradient-to-br from-blue-600/[0.08] via-indigo-600/[0.05] to-transparent p-6 flex flex-col justify-between backdrop-blur-md shadow-sm">
                     <div className="space-y-3">
                       <div className="h-2 w-20 rounded-full bg-blue-600/40" />
                       <div className="h-4 w-3/4 rounded-full bg-foreground/20" />
                       <div className="h-3 w-1/2 rounded-full bg-foreground/15" />
                     </div>
 
-                    <div className="space-y-2 rounded-xl bg-background/80 p-4 border border-border/50 shadow-sm">
-                      <p className="text-xs font-semibold text-blue-600 dark:text-blue-400">
+                    <div className="space-y-2 rounded-xl border border-border/70 bg-background/80 p-4 shadow-sm backdrop-blur-sm">
+                      <p className="text-xs font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400">
                         Key Takeaway
                       </p>
-                      <p className="text-xs text-muted-foreground leading-snug">
+                      <p className="text-xs text-muted-foreground leading-relaxed">
                         "{featuredPost.keyTakeaways[0]}"
                       </p>
                     </div>
@@ -230,10 +235,10 @@ export function BlogListContent() {
                     key={category}
                     type="button"
                     onClick={() => setSelectedCategory(category)}
-                    className={`rounded-xl px-4 py-2 text-sm font-semibold transition-all ${
+                    className={`rounded-xl px-4 py-2 text-xs sm:text-sm font-semibold transition-all duration-200 ${
                       isActive
-                        ? "bg-blue-600 text-white shadow-md shadow-blue-600/20"
-                        : "bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground"
+                        ? "border border-blue-600 bg-blue-600 text-white shadow-md shadow-blue-600/20"
+                        : "border border-border/70 bg-background/60 text-muted-foreground hover:border-blue-500/40 hover:text-foreground hover:bg-background"
                     }`}
                   >
                     {category}
@@ -249,7 +254,7 @@ export function BlogListContent() {
 
           {/* Grid Listing */}
           {gridPosts.length > 0 ? (
-            <div className="mt-8 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {gridPosts.map((post, idx) => (
                 <motion.article
                   key={post.id}
@@ -257,34 +262,55 @@ export function BlogListContent() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.35, delay: idx * 0.05 }}
-                  className="group relative flex flex-col justify-between rounded-2xl border border-border/60 bg-background/60 p-6 backdrop-blur-sm transition-all hover:border-blue-500/30 hover:shadow-lg"
+                  className="group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-border/80 bg-card/85 shadow-lg shadow-blue-500/5 backdrop-blur-xl transition-all duration-300 hover:border-blue-500/50 hover:bg-card hover:shadow-2xl hover:shadow-blue-500/10 hover:-translate-y-1 dark:bg-card/40 dark:hover:bg-card/80"
                 >
-                  <div>
-                    <div className="flex items-center justify-between gap-2">
-                      <span className="text-xs font-bold text-blue-600 dark:text-blue-400">
+                  {/* Card Visual Banner Header */}
+                  <div className="relative aspect-[16/7] w-full overflow-hidden bg-gradient-to-br from-blue-600/[0.12] via-indigo-600/[0.08] to-sky-500/[0.06] p-4 flex flex-col justify-between border-b border-border/60">
+                    {/* Ambient light blur decoration */}
+                    <div className="pointer-events-none absolute -right-6 -top-6 h-24 w-24 rounded-full bg-blue-500/15 blur-xl transition-transform duration-500 group-hover:scale-125" />
+
+                    {/* Top Bar inside Banner */}
+                    <div className="relative flex items-center justify-between gap-2">
+                      <span className="rounded-full border border-blue-500/20 bg-background/80 px-3 py-1 text-[11px] font-bold text-blue-600 dark:text-blue-400 backdrop-blur-md shadow-xs">
                         {post.category}
                       </span>
-                      <span className="inline-flex items-center text-xs text-muted-foreground">
-                        <Clock className="mr-1 h-3 w-3" />
-                        {post.readTime}
+                      <span className="inline-flex items-center gap-1 rounded-full border border-border/50 bg-background/80 px-2.5 py-0.5 text-[11px] font-medium text-muted-foreground backdrop-blur-md shadow-xs">
+                        <Clock className="h-3 w-3 text-blue-600 dark:text-blue-400" />
+                        <span>{post.readTime}</span>
                       </span>
                     </div>
 
-                    <h3 className="mt-3 text-lg font-bold tracking-tight text-foreground group-hover:text-blue-600 transition-colors line-clamp-2">
-                      <Link href={`/blog/${post.slug}`}>
-                        {post.title}
-                      </Link>
-                    </h3>
-
-                    <p className="mt-2 text-sm leading-relaxed text-muted-foreground line-clamp-3">
-                      {post.excerpt}
-                    </p>
+                    {/* Bottom tags */}
+                    <div className="relative flex flex-wrap gap-1.5 opacity-80 transition-opacity group-hover:opacity-100">
+                      {post.tags.slice(0, 2).map((tag) => (
+                        <span
+                          key={tag}
+                          className="rounded-md bg-background/60 px-2 py-0.5 text-[10px] font-medium text-muted-foreground backdrop-blur-xs"
+                        >
+                          #{tag}
+                        </span>
+                      ))}
+                    </div>
                   </div>
 
-                  <div className="mt-6 pt-4 border-t border-border/50">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className={`h-7 w-7 rounded-full ${post.author.avatarBg} flex items-center justify-center text-white text-xs font-bold`}>
+                  {/* Card Body Content */}
+                  <div className="p-5 sm:p-6 flex flex-col justify-between flex-1">
+                    <div>
+                      <h3 className="text-lg font-extrabold tracking-tight text-foreground group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-2 leading-snug">
+                        <Link href={`/blog/${post.slug}`}>
+                          {post.title}
+                        </Link>
+                      </h3>
+
+                      <p className="mt-2.5 text-xs sm:text-sm leading-relaxed text-muted-foreground line-clamp-3">
+                        {post.excerpt}
+                      </p>
+                    </div>
+
+                    {/* Card Footer */}
+                    <div className="mt-6 pt-4 border-t border-border/60 flex items-center justify-between">
+                      <div className="flex items-center gap-2.5">
+                        <div className={`h-8 w-8 rounded-full ${post.author.avatarBg} flex items-center justify-center text-white text-xs font-bold shadow-sm`}>
                           {post.author.name.charAt(0)}
                         </div>
                         <div className="flex flex-col text-xs">
@@ -301,18 +327,18 @@ export function BlogListContent() {
                         <button
                           type="button"
                           onClick={() => setActiveModalPost(post)}
-                          className="rounded-lg p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground"
+                          className="rounded-xl border border-border/70 bg-background/70 px-2.5 py-1.5 text-xs font-semibold text-muted-foreground transition-all hover:border-blue-500/40 hover:bg-background hover:text-blue-600 shadow-xs"
                           title="Quick preview"
                           aria-label={`Preview article: ${post.title}`}
                         >
-                          <BookOpen className="h-4 w-4" />
+                          Preview
                         </button>
                         <Link
                           href={`/blog/${post.slug}`}
-                          className="rounded-lg p-1.5 text-blue-600 hover:bg-blue-500/10"
+                          className="flex h-8 w-8 items-center justify-center rounded-xl bg-blue-600 text-white transition-all duration-200 hover:bg-blue-500 shadow-sm shadow-blue-600/20 active:scale-[0.95]"
                           aria-label={`Read full article: ${post.title}`}
                         >
-                          <ArrowRight className="h-4 w-4" />
+                          <ArrowUpRight className="h-4 w-4" />
                         </Link>
                       </div>
                     </div>
@@ -373,56 +399,72 @@ export function BlogListContent() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 sm:p-6 backdrop-blur-sm"
             onClick={() => setActiveModalPost(null)}
           >
             <motion.div
-              initial={{ scale: 0.95, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.95, opacity: 0 }}
+              initial={{ scale: 0.96, opacity: 0, y: 12 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.96, opacity: 0, y: 12 }}
+              transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
               onClick={(e) => e.stopPropagation()}
-              className="relative max-h-[85vh] w-full max-w-2xl overflow-y-auto rounded-3xl border border-border bg-background p-6 sm:p-8 shadow-2xl"
+              className="relative flex max-h-[88vh] w-full max-w-2xl flex-col overflow-hidden rounded-3xl border border-border/80 bg-card/95 shadow-2xl shadow-blue-500/10 backdrop-blur-2xl"
             >
-              <button
-                type="button"
-                onClick={() => setActiveModalPost(null)}
-                className="absolute right-5 top-5 rounded-full p-2 text-muted-foreground hover:bg-muted hover:text-foreground"
-                aria-label="Close preview"
-              >
-                <X className="h-5 w-5" />
-              </button>
+              {/* Top ambient lighting contained inside overflow-hidden */}
+              <div className="pointer-events-none absolute -right-12 -top-12 h-36 w-36 rounded-full bg-blue-500/15 blur-2xl" />
 
-              <div className="flex items-center gap-2 text-xs font-bold text-blue-600 dark:text-blue-400">
-                <span>{activeModalPost.category}</span>
-                <span>•</span>
-                <span className="text-muted-foreground">{activeModalPost.readTime}</span>
+              {/* Modal Header */}
+              <div className="relative flex items-center justify-between border-b border-border/60 px-6 py-4 sm:px-8">
+                <div className="flex items-center gap-2.5">
+                  <span className="rounded-full border border-blue-500/20 bg-blue-500/10 px-3 py-1 text-xs font-bold text-blue-600 dark:text-blue-400">
+                    {activeModalPost.category}
+                  </span>
+                  <span className="text-xs text-muted-foreground">•</span>
+                  <span className="inline-flex items-center text-xs text-muted-foreground">
+                    <Clock className="mr-1 h-3.5 w-3.5" />
+                    {activeModalPost.readTime}
+                  </span>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => setActiveModalPost(null)}
+                  className="flex h-8 w-8 items-center justify-center rounded-full bg-muted/60 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                  aria-label="Close preview"
+                >
+                  <X className="h-4 w-4" />
+                </button>
               </div>
 
-              <h2 className="mt-3 text-2xl font-bold tracking-tight text-foreground">
-                {activeModalPost.title}
-              </h2>
+              {/* Modal Body - Scrollable only in Y direction with zero horizontal overflow */}
+              <div className="overflow-y-auto overflow-x-hidden p-6 sm:p-8 space-y-5">
+                <h2 className="text-xl sm:text-2xl lg:text-[26px] font-extrabold tracking-tight text-foreground leading-snug">
+                  {activeModalPost.title}
+                </h2>
 
-              <div className="mt-4 flex items-center gap-3 text-xs text-muted-foreground border-b border-border/50 pb-4">
-                <span className="font-semibold text-foreground">
-                  By {activeModalPost.author.name} ({activeModalPost.author.role})
-                </span>
-                <span>•</span>
-                <span>{activeModalPost.publishedAt}</span>
-              </div>
+                <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground border-b border-border/50 pb-4">
+                  <span className="font-semibold text-foreground">
+                    {activeModalPost.author.name}
+                  </span>
+                  <span>({activeModalPost.author.role})</span>
+                  <span>•</span>
+                  <span>Published {activeModalPost.publishedAt}</span>
+                </div>
 
-              <div className="mt-5 space-y-4">
-                <p className="text-sm font-medium leading-relaxed text-foreground">
+                <p className="text-sm sm:text-base leading-relaxed text-muted-foreground">
                   {activeModalPost.excerpt}
                 </p>
 
-                <div className="rounded-xl border border-blue-500/20 bg-blue-500/5 p-4 space-y-2">
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400">
-                    Key Highlights
-                  </h4>
-                  <ul className="space-y-1.5 text-xs text-muted-foreground">
+                {/* Key Highlights Card */}
+                <div className="rounded-2xl border border-blue-500/20 bg-gradient-to-br from-blue-500/[0.08] via-indigo-500/[0.04] to-transparent p-5 sm:p-6 space-y-3 shadow-sm backdrop-blur-sm">
+                  <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400">
+                    <Sparkles className="h-4 w-4" />
+                    <span>Key Highlights</span>
+                  </div>
+                  <ul className="space-y-2.5">
                     {activeModalPost.keyTakeaways.map((item, i) => (
-                      <li key={i} className="flex items-start">
-                        <CheckCircle2 className="mr-2 h-4 w-4 shrink-0 text-blue-600 dark:text-blue-400 mt-0.5" />
+                      <li key={i} className="flex items-start gap-2.5 text-xs sm:text-sm text-foreground/90 leading-relaxed">
+                        <CheckCircle2 className="h-4 w-4 shrink-0 text-blue-600 dark:text-blue-400 mt-0.5" />
                         <span>{item}</span>
                       </li>
                     ))}
@@ -430,22 +472,23 @@ export function BlogListContent() {
                 </div>
               </div>
 
-              <div className="mt-8 flex items-center justify-between border-t border-border/50 pt-4">
+              {/* Modal Action Footer */}
+              <div className="relative flex items-center justify-between border-t border-border/60 bg-card/60 px-6 py-4 sm:px-8 backdrop-blur-sm">
                 <button
                   type="button"
                   onClick={() => handleShare(activeModalPost)}
-                  className="inline-flex items-center gap-1.5 text-xs font-semibold text-muted-foreground hover:text-foreground"
+                  className="inline-flex items-center gap-2 rounded-xl border border-border/70 bg-background/80 px-3.5 py-2 text-xs font-semibold text-muted-foreground transition-all hover:border-blue-500/40 hover:bg-background hover:text-foreground"
                 >
                   <Share2 className="h-3.5 w-3.5" />
-                  {copied ? "Link Copied!" : "Share Article"}
+                  <span>{copied ? "Link Copied!" : "Share"}</span>
                 </button>
 
                 <Link
                   href={`/blog/${activeModalPost.slug}`}
-                  className="inline-flex h-10 items-center justify-center rounded-xl bg-blue-600 px-4 text-xs font-semibold text-white transition-all hover:bg-blue-700"
+                  className="inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-blue-600 hover:bg-blue-500 px-5 text-xs sm:text-sm font-semibold text-white shadow-lg shadow-blue-600/25 transition-all duration-200 active:scale-[0.98]"
                 >
-                  Read Full Article
-                  <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
+                  <span>Read Full Article</span>
+                  <ArrowRight className="h-3.5 w-3.5" />
                 </Link>
               </div>
             </motion.div>

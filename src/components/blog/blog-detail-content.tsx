@@ -10,6 +10,7 @@ import {
   CheckCircle2,
   Sparkles,
   ArrowRight,
+  ArrowUpRight,
   BookOpen,
 } from "lucide-react";
 import { BlogPost, BLOG_POSTS } from "@/data/blogs";
@@ -173,12 +174,13 @@ export function BlogDetailContent({ post }: BlogDetailContentProps) {
         <div className="mx-auto max-w-4xl px-6">
           {/* Key Takeaways Box */}
           {post.keyTakeaways && post.keyTakeaways.length > 0 && (
-            <div className="mb-10 rounded-2xl border border-blue-500/20 bg-blue-500/5 p-6 backdrop-blur-sm">
-              <div className="flex items-center gap-2 text-sm font-bold text-blue-600 dark:text-blue-400">
+            <div className="mb-10 relative overflow-hidden rounded-2xl border border-blue-500/25 bg-gradient-to-br from-blue-500/10 via-indigo-500/5 to-transparent p-6 shadow-sm backdrop-blur-md">
+              <div className="pointer-events-none absolute -right-10 -top-10 h-28 w-28 rounded-full bg-blue-500/15 blur-2xl" />
+              <div className="relative flex items-center gap-2 text-sm font-bold text-blue-600 dark:text-blue-400">
                 <Sparkles className="h-4 w-4" />
                 <span>Key Takeaways</span>
               </div>
-              <ul className="mt-3 space-y-2 text-sm text-foreground">
+              <ul className="relative mt-3 space-y-2 text-sm text-foreground">
                 {post.keyTakeaways.map((takeaway, i) => (
                   <li key={i} className="flex items-start">
                     <CheckCircle2 className="mr-2.5 h-4 w-4 shrink-0 text-blue-600 dark:text-blue-400 mt-0.5" />
@@ -231,30 +233,40 @@ export function BlogDetailContent({ post }: BlogDetailContentProps) {
               {relatedPosts.map((relPost) => (
                 <div
                   key={relPost.id}
-                  className="group flex flex-col justify-between rounded-2xl border border-border/60 bg-background/60 p-5 backdrop-blur-sm transition-all hover:border-blue-500/30 hover:shadow-md"
+                  className="group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-border/80 bg-card/85 shadow-md backdrop-blur-xl transition-all duration-300 hover:border-blue-500/50 hover:bg-card hover:shadow-xl hover:shadow-blue-500/5 hover:-translate-y-0.5 dark:bg-card/40 dark:hover:bg-card/80"
                 >
-                  <div>
-                    <span className="text-xs font-bold text-blue-600 dark:text-blue-400">
+                  {/* Banner Header */}
+                  <div className="relative aspect-[16/7] w-full overflow-hidden bg-gradient-to-br from-blue-600/[0.12] via-indigo-600/[0.08] to-sky-500/[0.06] p-3.5 flex items-start justify-between border-b border-border/60">
+                    <span className="rounded-full border border-blue-500/20 bg-background/80 px-2.5 py-0.5 text-[11px] font-bold text-blue-600 dark:text-blue-400 backdrop-blur-md shadow-xs">
                       {relPost.category}
                     </span>
-                    <h3 className="mt-2 text-base font-bold text-foreground group-hover:text-blue-600 transition-colors line-clamp-2">
-                      <Link href={`/blog/${relPost.slug}`}>
-                        {relPost.title}
-                      </Link>
-                    </h3>
-                    <p className="mt-2 text-xs leading-relaxed text-muted-foreground line-clamp-2">
-                      {relPost.excerpt}
-                    </p>
+                    <span className="inline-flex items-center gap-1 rounded-full border border-border/50 bg-background/80 px-2 py-0.5 text-[10px] font-medium text-muted-foreground backdrop-blur-md shadow-xs">
+                      <Clock className="h-3 w-3 text-blue-600 dark:text-blue-400" />
+                      <span>{relPost.readTime}</span>
+                    </span>
                   </div>
-                  <div className="mt-4 pt-3 border-t border-border/40 flex items-center justify-between text-xs text-muted-foreground">
-                    <span>{relPost.readTime}</span>
-                    <Link
-                      href={`/blog/${relPost.slug}`}
-                      className="inline-flex items-center font-semibold text-blue-600 hover:underline"
-                    >
-                      Read
-                      <ArrowRight className="ml-1 h-3 w-3" />
-                    </Link>
+
+                  <div className="p-5 flex flex-col justify-between flex-1">
+                    <div>
+                      <h3 className="text-base font-bold text-foreground group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-2 leading-snug">
+                        <Link href={`/blog/${relPost.slug}`}>
+                          {relPost.title}
+                        </Link>
+                      </h3>
+                      <p className="mt-2 text-xs leading-relaxed text-muted-foreground line-clamp-2">
+                        {relPost.excerpt}
+                      </p>
+                    </div>
+                    <div className="mt-4 pt-3.5 border-t border-border/60 flex items-center justify-between text-xs text-muted-foreground">
+                      <span className="text-[11px] font-medium">{relPost.author.name}</span>
+                      <Link
+                        href={`/blog/${relPost.slug}`}
+                        className="flex h-7 w-7 items-center justify-center rounded-lg bg-blue-600 text-white transition-all duration-200 hover:bg-blue-500 shadow-xs active:scale-[0.95]"
+                        aria-label={`Read ${relPost.title}`}
+                      >
+                        <ArrowUpRight className="h-3.5 w-3.5" />
+                      </Link>
+                    </div>
                   </div>
                 </div>
               ))}

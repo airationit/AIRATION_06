@@ -15,7 +15,7 @@ import { siteConfig } from "@/config/site";
 import { GooglePlayButton } from "@/components/shared";
 import { cn } from "@/lib/utils";
 
-const headlineWords = ["Where", "ambition", "finds", "its", "match."];
+const headlineWords = ["Swipe.", "Match.", "Get", "Hired."];
 
 export function Hero() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -202,6 +202,24 @@ export function Hero() {
           }
           className="mx-auto flex w-full max-w-5xl flex-col items-center justify-center text-center will-change-transform"
         >
+          {/* Clean Kicker (No chip pill, pure crisp typography) */}
+          <motion.p
+            initial={
+              reducedMotion
+                ? false
+                : { opacity: 0, y: 16, filter: "blur(6px)" }
+            }
+            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+            transition={{
+              duration: 0.6,
+              delay: reducedMotion ? 0 : 0.05,
+              ease: [0.16, 1, 0.3, 1],
+            }}
+            className="mb-4 text-xs sm:text-sm font-semibold tracking-wider uppercase text-brand-600 dark:text-brand-400"
+          >
+            India&apos;s 1st Swipe-Based Hiring Platform
+          </motion.p>
+
           {/* Headline Words with 3D perspective entrance */}
           <h1 className="max-w-4xl text-balance text-4xl font-bold leading-[1.02] tracking-tight sm:text-6xl lg:text-[4.75rem] [perspective:1000px]">
             {headlineWords.map((word, i) => (
@@ -219,8 +237,8 @@ export function Hero() {
                   ease: [0.16, 1, 0.3, 1],
                 }}
                 className={
-                  i >= 3
-                    ? "text-gradient mr-[0.22em] inline-block bg-gradient-to-r from-brand-500 via-sky-400 to-indigo-400 bg-clip-text text-transparent"
+                  i >= 2
+                    ? "text-gradient mr-[0.22em] inline-block bg-gradient-to-r from-brand-600 via-sky-500 to-indigo-600 dark:from-brand-400 dark:via-sky-400 dark:to-indigo-300 bg-clip-text text-transparent"
                     : "mr-[0.22em] inline-block"
                 }
               >
@@ -229,20 +247,45 @@ export function Hero() {
             ))}
           </h1>
 
-          {/* Subtitle with soft blur reveal */}
+          {/* Key Differentiator Subheading */}
           <motion.p
-            initial={reducedMotion ? false : { opacity: 0, y: 18, filter: "blur(8px)" }}
+            initial={
+              reducedMotion ? false : { opacity: 0, y: 18, filter: "blur(8px)" }
+            }
             animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
             transition={{
               duration: 0.7,
-              delay: reducedMotion ? 0 : 0.58,
+              delay: reducedMotion ? 0 : 0.48,
               ease: [0.16, 1, 0.3, 1],
             }}
-            className="mx-auto mt-6 max-w-xl text-pretty text-base text-muted-foreground sm:text-lg leading-relaxed font-normal"
+            className="mx-auto mt-6 max-w-2xl text-pretty text-lg sm:text-xl font-semibold text-foreground/90 leading-snug"
           >
-            Smarter matches, faster hires, and zero noise — connecting exceptional
-            people with the companies shaping tomorrow.
+            Fastest way to Post &amp; Apply for jobs—
+            <span className="text-brand-600 dark:text-brand-400 font-bold">
+              No forms, No scrolling, No waiting.
+            </span>
           </motion.p>
+
+          {/* Crisp, Humanized Platform Description */}
+          {/* <motion.p
+            initial={
+              reducedMotion ? false : { opacity: 0, y: 18, filter: "blur(8px)" }
+            }
+            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+            transition={{
+              duration: 0.7,
+              delay: reducedMotion ? 0 : 0.62,
+              ease: [0.16, 1, 0.3, 1],
+            }}
+            className="mx-auto mt-4 max-w-2xl text-pretty text-sm sm:text-base text-muted-foreground leading-relaxed font-normal"
+          >
+            Hirance is India&apos;s first swipe-based hiring platform, built to solve the
+            biggest problem in job hunting and recruitment—speed. No more long forms,
+            resume uploads, or endless job scrolling. Candidates swipe right to apply and
+            left to skip, based on an AI-calculated match score for every job. Employers
+            post jobs in under a minute and get only relevant, pre-filtered candidates.
+            Smarter hiring starts here.
+          </motion.p> */}
 
           {/* Action Buttons Row */}
           <motion.div
@@ -253,7 +296,7 @@ export function Hero() {
               delay: reducedMotion ? 0 : 0.75,
               ease: [0.16, 1, 0.3, 1],
             }}
-            className="mt-9 flex flex-col items-center gap-3 sm:flex-row sm:gap-4"
+            className="mt-8 sm:mt-9 flex flex-col items-center gap-3 sm:flex-row sm:gap-4"
           >
             <Link
               href={siteConfig.links.employer}
@@ -339,10 +382,13 @@ export function Hero() {
                 >
                   <div className="max-w-xl">
                     <h2 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white leading-tight">
-                      Next-Gen <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-400 via-sky-300 to-indigo-300">Talent Dynamics</span>
+                      Post in 60s,{" "}
+                      <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-400 via-sky-300 to-indigo-300">
+                        Hire Instantly
+                      </span>
                     </h2>
                     <p className="mt-2 text-xs sm:text-sm text-slate-300 font-medium max-w-md">
-                      Real-time video evaluation & skill matching at scale.
+                      No forms, no scrolling, no waiting — pre-filtered talent on demand.
                     </p>
                   </div>
 
@@ -412,10 +458,13 @@ export function Hero() {
                 >
                   <div className="max-w-xl">
                     <h2 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white leading-tight">
-                      Where Ambition <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-400 via-sky-300 to-indigo-300">Finds Its Match</span>
+                      Swipe. Match.{" "}
+                      <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-400 via-sky-300 to-indigo-300">
+                        Get Hired.
+                      </span>
                     </h2>
                     <p className="mt-2 text-xs sm:text-sm text-slate-300 font-medium max-w-md">
-                      Smarter matching algorithm & high-performing team scaling.
+                      India&apos;s 1st swipe-based hiring platform. Instant AI match scoring with zero forms.
                     </p>
                   </div>
 

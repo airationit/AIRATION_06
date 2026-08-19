@@ -250,20 +250,19 @@ export function HowItWorksContent() {
             {...fadeIn(0.05)}
             className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-foreground leading-[1.08]"
           >
-            Swipe.{" "}
+            How Hiring Works on{" "}
             <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-brand-600 dark:from-brand-400 dark:via-indigo-300 dark:to-sky-300 bg-clip-text text-transparent">
-              Match.
-            </span>{" "}
-            Get Hired.
+              Hirance
+            </span>
           </motion.h1>
 
           {/* Tagline & Subtitle */}
           <motion.div {...fadeIn(0.1)} className="mt-6 space-y-2">
             <p className="text-lg sm:text-xl font-semibold text-brand-600 dark:text-brand-400 tracking-wide">
-              India's 1st Swipe-Based Hiring Platform
+              Simple, Transparent & Fast
             </p>
             <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-foreground/90 max-w-3xl mx-auto leading-snug">
-              Fastest way to Post & Apply for jobs—No forms, No scrolling, No waiting.
+              From instant swipe applications to 60-second job postings—see how hiring happens here.
             </p>
           </motion.div>
 
@@ -272,7 +271,7 @@ export function HowItWorksContent() {
             {...fadeIn(0.15)}
             className="mt-6 text-base sm:text-lg leading-relaxed text-muted-foreground max-w-3xl mx-auto"
           >
-            Hirance is built to solve the biggest problem in job hunting and recruitment—<strong className="text-foreground font-semibold">speed</strong>. No more long forms, resume uploads, or endless job scrolling. Candidates swipe right to apply based on an AI match score, and employers post jobs in under a minute to receive pre-filtered candidates. Smarter hiring starts here.
+            We have eliminated tedious forms, long email threads, and resume clutter. Whether you are looking for your next role or building your dream team, explore the simple step-by-step process below.
           </motion.p>
 
           {/* Action CTAs */}
