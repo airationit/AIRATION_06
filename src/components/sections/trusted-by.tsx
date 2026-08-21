@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, memo } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import {
   companies,
@@ -12,9 +12,9 @@ import { cn } from "@/lib/utils";
 
 /**
  * App-icon squircle card for a company.
- * Clean, stable display with no hover stops or shifts.
+ * Clean, lightweight, and hardware-accelerated with subtle grey borders.
  */
-function AppIconCompanyCard({
+const AppIconCompanyCard = memo(function AppIconCompanyCard({
   company,
   index,
 }: {
@@ -22,7 +22,7 @@ function AppIconCompanyCard({
   index: number;
 }) {
   const [failed, setFailed] = useState(false);
-  const theme = getCompanyColorTheme(company.name, index);
+  const theme = useMemo(() => getCompanyColorTheme(company.name, index), [company.name, index]);
 
   return (
     <a
@@ -31,60 +31,60 @@ function AppIconCompanyCard({
       rel="noopener noreferrer"
       title={company.name}
       aria-label={`Visit ${company.name}`}
-      className="relative flex shrink-0 items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 rounded-2xl sm:rounded-[22px] md:rounded-[26px]"
+      className="relative flex shrink-0 items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 rounded-2xl sm:rounded-[22px] md:rounded-[24px]"
     >
-      {/* Squircle App-Icon Container with Varied Background */}
+      {/* Squircle App-Icon Container with Light Background & Crisp 2px Grey Border */}
       <div
         className={cn(
           "relative flex items-center justify-center overflow-hidden select-none",
-          "w-18 h-18 sm:w-22 sm:h-22 md:w-24 md:h-24 lg:w-26 lg:h-26",
-          "rounded-2xl sm:rounded-[22px] md:rounded-[26px]",
-          "shadow-[0_4px_14px_rgba(0,0,0,0.08)]",
-          theme.isLight
-            ? "border border-slate-200/90 dark:border-white/15 dark:shadow-[0_4px_16px_rgba(0,0,0,0.4)]"
-            : "border border-white/15"
+          "w-16 h-16 sm:w-20 sm:h-20 md:w-22 md:h-22 lg:w-24 lg:h-24",
+          "rounded-2xl sm:rounded-[22px] md:rounded-[24px]",
+          "border-2 border-slate-300",
+          "shadow-[0_2px_6px_rgba(0,0,0,0.04)]",
+          "transition-transform duration-200 ease-out hover:scale-105"
         )}
         style={{
           backgroundColor: theme.bg,
         }}
       >
-        {/* Top Bevel Inner Ring */}
-        <div className="pointer-events-none absolute inset-0 rounded-2xl sm:rounded-[22px] md:rounded-[26px] ring-1 ring-inset ring-white/20" />
-
-        {/* Content: Centered Logo or Monogram */}
-        <div className="relative z-10 flex h-full w-full items-center justify-center p-3 sm:p-3.5 md:p-4">
+        {/* Content: Centered Logo or Monogram with Balanced Proportions */}
+        <div className="relative z-10 flex h-full w-full items-center justify-center p-2.5 sm:p-3">
           {failed ? (
             <span
               aria-hidden
-              className="grid h-full w-full place-items-center text-base sm:text-lg md:text-xl font-black select-none tracking-tight"
+              className="grid h-full w-full place-items-center text-sm sm:text-base md:text-lg font-bold select-none tracking-tight rounded-lg"
               style={{
-                color: theme.textColor || (theme.isLight ? "#18181B" : "#FFFFFF"),
+                color: theme.textColor || (theme.isLight ? "#1E293B" : "#FFFFFF"),
               }}
             >
               {initials(company.name)}
             </span>
-          ) : (
-            // On dark or colored backgrounds, render on a subtle clean plate for perfect visibility
-            <div
+          ) : theme.isLight ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={company.logoUrl}
+              alt={company.name}
+              width={56}
+              height={56}
+              loading="lazy"
+              decoding="async"
               className={cn(
-                "flex items-center justify-center",
-                theme.bg === "#FFFFFF"
-                  ? "w-full h-full"
-                  : "w-11 h-11 sm:w-13 sm:h-13 md:w-14 md:h-14 rounded-xl sm:rounded-[14px] bg-white/95 backdrop-blur-xs p-1.5 shadow-xs ring-1 ring-black/5"
+                "object-contain select-none rounded-lg sm:rounded-xl",
+                "max-h-9 max-w-9 sm:max-h-11 sm:max-w-11 md:max-h-12 md:max-w-12 lg:max-h-13 lg:max-w-13"
               )}
-            >
+              onError={() => setFailed(true)}
+            />
+          ) : (
+            <div className="flex h-10 w-10 sm:h-12 sm:w-12 md:h-13 md:w-13 items-center justify-center rounded-xl sm:rounded-[14px] bg-white p-1.5 shadow-xs overflow-hidden">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={company.logoUrl}
                 alt={company.name}
+                width={44}
+                height={44}
                 loading="lazy"
                 decoding="async"
-                className={cn(
-                  "object-contain select-none",
-                  theme.bg === "#FFFFFF"
-                    ? "max-h-9 max-w-9 sm:max-h-11 sm:max-w-11 md:max-h-12 md:max-w-12"
-                    : "max-h-8 max-w-8 sm:max-h-9 sm:max-w-9 md:max-h-10 md:max-w-10"
-                )}
+                className="max-h-7 max-w-7 sm:max-h-9 sm:max-w-9 md:max-h-10 md:max-w-10 object-contain select-none rounded-md sm:rounded-lg"
                 onError={() => setFailed(true)}
               />
             </div>
@@ -93,7 +93,7 @@ function AppIconCompanyCard({
       </div>
     </a>
   );
-}
+});
 
 /**
  * Continuous infinite marquee row that never stops on hover.
@@ -112,9 +112,9 @@ function ContinuousMarqueeRow({
   const duplicatedItems = useMemo(() => [...items, ...items], [items]);
 
   return (
-    <div className="relative flex overflow-hidden py-2 sm:py-3 select-none">
+    <div className="relative flex overflow-hidden py-1.5 sm:py-2.5 select-none [contain:layout_paint]">
       <div
-        className="flex shrink-0 gap-3.5 sm:gap-5 md:gap-6 animate-marquee will-change-transform items-center"
+        className="flex shrink-0 gap-3 sm:gap-4 md:gap-5 animate-marquee will-change-transform items-center"
         style={
           {
             "--marquee-duration": speed,
