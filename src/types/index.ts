@@ -3,6 +3,7 @@
 export * from "./api";
 export * from "./masterdata";
 export * from "./jobs";
+export * from "./blogs";
 
 export interface NavItem {
   label: string;

@@ -1,6 +1,7 @@
 import { MetadataRoute } from "next";
 import { siteConfig } from "@/config/site";
 import { fetchJobSitemapList } from "@/lib/api/jobs";
+import { fetchBlogSitemap } from "@/lib/api/blogs";
 import { generateJobSlug } from "@/lib/jobs-data";
 import { POPULAR_JOB_ROLES, POPULAR_CITIES } from "@/config/jobs-taxonomy";
 
@@ -135,5 +136,21 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     console.error("Error generating dynamic sitemap from jobs API:", error);
   }
 
-  return [...staticRoutes, ...programmaticRoutes, ...liveJobRoutes];
+  // 4. Dynamic Live Blog Articles from Blog Sitemap API
+  let liveBlogRoutes: MetadataRoute.Sitemap = [];
+  try {
+    const blogSitemapData = await fetchBlogSitemap();
+    if (blogSitemapData && blogSitemapData.items && blogSitemapData.items.length > 0) {
+      liveBlogRoutes = blogSitemapData.items.map((item) => ({
+        url: `${baseUrl}/blog/${item.slug}`,
+        lastModified: item.updated_at ? new Date(item.updated_at) : (item.published_at ? new Date(item.published_at) : now),
+        changeFrequency: (item.change_freq as MetadataRoute.Sitemap[number]["changeFrequency"]) || "monthly",
+        priority: item.priority || 0.8,
+      }));
+    }
+  } catch (error) {
+    console.error("Error generating dynamic blog sitemap:", error);
+  }
+
+  return [...staticRoutes, ...programmaticRoutes, ...liveJobRoutes, ...liveBlogRoutes];
 }
