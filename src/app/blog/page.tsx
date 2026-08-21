@@ -1,5 +1,10 @@
 import type { Metadata } from "next";
 import { BlogListContent } from "@/components/blog/blog-list-content";
+import {
+  fetchBlogs,
+  fetchBlogCategories,
+  fetchBlogTags,
+} from "@/lib/api/blogs";
 
 export const metadata: Metadata = {
   title: "Blog & Hiring Insights | Hirance - India's 1st Swipe-Based Hiring Platform",
@@ -43,7 +48,14 @@ export const metadata: Metadata = {
   },
 };
 
-export default function BlogIndexPage() {
+export default async function BlogIndexPage() {
+  // Pre-fetch initial data server-side for instant SSR & SEO indexing
+  const [blogsResponse, categories, tags] = await Promise.all([
+    fetchBlogs({ page: 1, page_size: 9, category: "all" }, { revalidate: 60 }),
+    fetchBlogCategories({ revalidate: 3600 }),
+    fetchBlogTags({ revalidate: 3600 }),
+  ]);
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Blog",
@@ -58,6 +70,17 @@ export default function BlogIndexPage() {
       logo: "https://hirance.com/og.png",
       slogan: "Swipe. Match. Get Hired.",
     },
+    blogPost: (blogsResponse.data || []).map((post) => ({
+      "@type": "BlogPosting",
+      headline: post.title,
+      description: post.excerpt,
+      url: `https://hirance.com/blog/${post.slug}`,
+      datePublished: post.published_at,
+      author: {
+        "@type": "Person",
+        name: post.author.name,
+      },
+    })),
   };
 
   return (
@@ -66,7 +89,14 @@ export default function BlogIndexPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <BlogListContent />
+      <BlogListContent
+        initialBlogs={blogsResponse.data || []}
+        totalCount={blogsResponse.pagination?.count || 0}
+        initialCategories={categories}
+        initialTags={tags}
+        currentPage={blogsResponse.pagination?.current_page || 1}
+        totalPages={blogsResponse.pagination?.total_pages || 1}
+      />
     </>
   );
 }

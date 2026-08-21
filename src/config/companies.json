@@ -69,15 +69,11 @@
     "url": "https://aryaconsultingservices.in",
     "logo_url": "https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://aryaconsultingservices.in&size=256"
   },
-  {
-    "name": "ATQ Information Technology",
-    "url": "https://atqits.com",
-    "logo_url": "https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://atqits.com&size=256"
-  },
+
   {
     "name": "Augurs Technologies",
     "url": "https://augurs.in",
-    "logo_url": "https://icons.duckduckgo.com/ip3/augurs.in.ico"
+    "logo_url": "https://augurs.in/assets/images/logo.png"
   },
   {
     "name": "Axsem Softwares",
@@ -87,7 +83,7 @@
   {
     "name": "Bigbasket",
     "url": "https://bigbasket.com",
-    "logo_url": "https://unavatar.io/bigbasket.com?fallback=false"
+    "logo_url": "https://play-lh.googleusercontent.com/OP5Xf_95EAJhJ_riZcWxyaFUu4TaEISBVHXLkzRfK2PH2AZQrVGsZgru0Y4r2BMJhnl_fCRixVBDLQGVhNuI=w480-h960-rw"
   },
   {
     "name": "Biz-tech Analytics",
@@ -102,7 +98,7 @@
   {
     "name": "Codinwalk Software",
     "url": "https://codinwalk.com",
-    "logo_url": "https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://codinwalk.com&size=256"
+    "logo_url": "https://codinwalk.com/images/logo.svg"
   },
   {
     "name": "Cognizant",
@@ -162,7 +158,7 @@
   {
     "name": "Digital Search Technologies Pvt. Ltd.",
     "url": "https://digitalsearchtech.com",
-    "logo_url": "https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://digitalsearchtech.com&size=256"
+    "logo_url": "https://img1.wsimg.com/isteam/ip/f3559e1f-be1e-4db8-869d-0fdaef9bd29a/TM-e820e44.png/:/rs=w:202,h:68,cg:true,m/cr=w:202,h:68/qt=q:100/ll"
   },
   {
     "name": "eDelta Corporation",
@@ -194,11 +190,7 @@
     "url": "https://finesofttechnologies.com",
     "logo_url": "https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://finesofttechnologies.com&size=256"
   },
-  {
-    "name": "FlairUp Digital Marketing",
-    "url": "https://fairup.in",
-    "logo_url": "https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://fairup.in&size=256"
-  },
+
   {
     "name": "Fliparrow Technologies Pvt. Ltd.",
     "url": "https://fliparrow.com",
@@ -222,7 +214,7 @@
   {
     "name": "Goomi Technology",
     "url": "https://goomitechnology.com",
-    "logo_url": "https://icons.duckduckgo.com/ip3/goomitechnology.com.ico"
+    "logo_url": "https://goomitechnology.com/wp-content/uploads/logo-2.png"
   },
   {
     "name": "Graygraph Technologies Pvt Ltd",
@@ -237,23 +229,11 @@
   {
     "name": "HCLTech",
     "url": "https://hcltech.com",
-    "logo_url": "https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://hcltech.com&size=256"
+    "logo_url": "https://scontent.flko13-2.fna.fbcdn.net/v/t39.30808-1/307377964_10159766756760985_6467272317538767870_n.jpg?stp=dst-jpg_tt6&cstp=mx1080x1080&ctp=s200x200&_nc_cat=104&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=2d3e12&_nc_ohc=vqAdynEtcGUQ7kNvwEcSvts&_nc_oc=AdqWbOKG3RyqLsfm6eLuCYImTvUscRvpPEGd2ZcELSTwUtnHLMKHhHx3hG-HWBzTlubIuhH6oaU_Z52aba9YUofW&_nc_zt=24&_nc_ht=scontent.flko13-2.fna&_nc_gid=EAMPhsmXQ0_Sk3d0BLN6vA&_nc_ss=7b289&oh=00_AQFg5D70t5N1QjyJfpgNH1y6fqQUOuyhCSlg0uOsXN4lEA&oe=6A8C7D33"
   },
-  {
-    "name": "HVR SOLAR LTD",
-    "url": "https://hvrsolar.com",
-    "logo_url": "https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://hvrsolar.com&size=256"
-  },
-  {
-    "name": "iCreatives Solutions",
-    "url": "https://icspl.in",
-    "logo_url": "https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://icspl.in&size=256"
-  },
-  {
-    "name": "Ienergizer",
-    "url": "https://ienergizer.com",
-    "logo_url": "https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://ienergizer.com&size=256"
-  },
+ 
+
+
   {
     "name": "IMCH Patna",
     "url": "https://imchpatna.com",
@@ -284,16 +264,8 @@
     "url": "https://jobgenix.co.in",
     "logo_url": "https://unavatar.io/jobgenix.co.in?fallback=false"
   },
-  {
-    "name": "Keylogic Infotech Private Limited",
-    "url": "https://keylogicinfotech.com",
-    "logo_url": "https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://keylogicinfotech.com&size=256"
-  },
-  {
-    "name": "KL Sons Steel",
-    "url": "https://klsons.in",
-    "logo_url": "https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://klsons.in&size=256"
-  },
+ 
+ 
   {
     "name": "Kriprimaa HR Services",
     "url": "https://kriprimaa.com",
@@ -304,11 +276,7 @@
     "url": "https://lateralprostaff.com",
     "logo_url": "https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://lateralprostaff.com&size=256"
   },
-  {
-    "name": "LogicGo Infotech",
-    "url": "https://logicgoinfotech.in",
-    "logo_url": "https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://logicgoinfotech.in&size=256"
-  },
+ 
   {
     "name": "Lumoslogic",
     "url": "https://lumoslogic.com",
@@ -354,16 +322,8 @@
     "url": "https://olbuz.com",
     "logo_url": "https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://olbuz.com&size=256"
   },
-  {
-    "name": "Om Logistics Supply Chain Pvt Ltd",
-    "url": "https://olsc.in",
-    "logo_url": "https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://olsc.in&size=256"
-  },
-  {
-    "name": "Omni Tech Integrators",
-    "url": "https://omnichat.in",
-    "logo_url": "https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://omnichat.in&size=256"
-  },
+
+  
   {
     "name": "Orbish Infotech",
     "url": "https://orbishinfotech.com",
@@ -374,21 +334,13 @@
     "url": "https://pitchpinemedia.com",
     "logo_url": "https://unavatar.io/pitchpinemedia.com?fallback=false"
   },
-  {
-    "name": "Prits IT Solutions",
-    "url": "https://pritsitsolutions.com",
-    "logo_url": "https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://pritsitsolutions.com&size=256"
-  },
+ 
   {
     "name": "Quokka Labs LLP",
     "url": "https://quokkalabs.com",
     "logo_url": "https://icons.duckduckgo.com/ip3/quokkalabs.com.ico"
   },
-  {
-    "name": "Recruitment Nexus",
-    "url": "https://recruitmentnexus.com",
-    "logo_url": "https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://recruitmentnexus.com&size=256"
-  },
+  
   {
     "name": "RedTech Software",
     "url": "https://redtechsoftware.com",
@@ -434,11 +386,7 @@
     "url": "https://steadfastmedishield.com",
     "logo_url": "https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://steadfastmedishield.com&size=256"
   },
-  {
-    "name": "Steelax Interio",
-    "url": "https://steelaxinterio.co.in",
-    "logo_url": "https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://steelaxinterio.co.in&size=256"
-  },
+
   {
     "name": "Suffescom Solutions",
     "url": "https://suffescom.in",
@@ -484,26 +432,10 @@
     "url": "https://tripathidigital.com",
     "logo_url": "https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://tripathidigital.com&size=256"
   },
-  {
-    "name": "Triserv 360 Business Solution Pvt Ltd",
-    "url": "https://triserv360.com",
-    "logo_url": "https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://triserv360.com&size=256"
-  },
-  {
-    "name": "Tulip Fintech",
-    "url": "https://tulipfin.com",
-    "logo_url": "https://icons.duckduckgo.com/ip3/tulipfin.com.ico"
-  },
-  {
-    "name": "Unified Management Consulting",
-    "url": "https://unifiedmanagementconsulting.com",
-    "logo_url": "https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://unifiedmanagementconsulting.com&size=256"
-  },
-  {
-    "name": "Urbanfeat Technologies",
-    "url": "https://urbanfeatgroup.com",
-    "logo_url": "https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://urbanfeatgroup.com&size=256"
-  },
+
+  
+ 
+ 
   {
     "name": "Vexil Infotech Pvt Ltd",
     "url": "https://vexilinfotech.com",
@@ -544,11 +476,7 @@
     "url": "https://wedowebapps.com",
     "logo_url": "https://icons.duckduckgo.com/ip3/wedowebapps.com.ico"
   },
-  {
-    "name": "Weknow Technologies",
-    "url": "https://weknowtech.in",
-    "logo_url": "https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://weknowtech.in&size=256"
-  },
+ 
   {
     "name": "Whirlpool",
     "url": "https://whirlpool.com",
