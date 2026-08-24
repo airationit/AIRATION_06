@@ -5,5 +5,6 @@ export { AppDownload } from "./app-download";
 export { WantToHire } from "./want-to-hire";
 export { Presentation } from "./presentation";
 export { BrandStatement } from "./brand-statement";
+export { JobPostDemo } from "./job-post-demo";
 
 

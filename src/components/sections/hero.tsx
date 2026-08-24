@@ -13,6 +13,7 @@ import { ArrowRight, Play, Pause, Volume2, VolumeX } from "lucide-react";
 import Link from "next/link";
 import { siteConfig } from "@/config/site";
 import { GooglePlayButton } from "@/components/shared";
+import { JobPostDemo } from "./job-post-demo";
 import { cn } from "@/lib/utils";
 
 const headlineWords = ["Swipe.", "Match.", "Get", "Hired."];
@@ -22,7 +23,6 @@ export function Hero() {
   const copyRef = useRef<HTMLDivElement>(null);
   const videoSectionRef = useRef<HTMLDivElement>(null);
   const video1Ref = useRef<HTMLVideoElement>(null);
-  const video2Ref = useRef<HTMLVideoElement>(null);
   const reducedMotion = useReducedMotion();
 
   const [activeSlide, setActiveSlide] = useState<0 | 1>(0);
@@ -30,10 +30,6 @@ export function Hero() {
   // Video 1 controls state
   const [isPlaying1, setIsPlaying1] = useState(true);
   const [isMuted1, setIsMuted1] = useState(true);
-
-  // Video 2 controls state
-  const [isPlaying2, setIsPlaying2] = useState(true);
-  const [isMuted2, setIsMuted2] = useState(true);
 
   // Smooth scroll animations for Copy Text section (natural scale, elevation, fade & blur, 0% pinning jitter)
   const { scrollYProgress: copyScrollProgress } = useScroll({
@@ -62,24 +58,19 @@ export function Hero() {
 
   // Ultra-Smooth Continuous Horizontal Carousel Translation:
   // 0.00 -> 0.20: Video 1 pinned full screen for comfortable reading
-  // 0.20 -> 0.80: Smooth, gradual continuous slide-over from Video 1 (-50%) to Video 2 (0%)
-  // 0.80 -> 1.00: Video 2 pinned full screen before passing to next section
+  // 0.20 -> 0.80: Smooth, gradual continuous slide-over from Video 1 (-50%) to Slide 2 (0%)
+  // 0.80 -> 1.00: Slide 2 pinned full screen before passing to next section
   const trackX = useTransform(
     springVideoProgress,
     [0.0, 0.20, 0.50, 0.80, 1.0],
     ["-50%", "-50%", "-25%", "0%", "0%"]
   );
 
-  // Motion depth and blur effects for content inside Slide 1 & Slide 2 text overlays
+  // Motion depth and blur effects for content inside Slide 1
   const slide1TextY = useTransform(springVideoProgress, [0.20, 0.50], [0, -30]);
   const slide1TextOpacity = useTransform(springVideoProgress, [0.20, 0.45], [1, 0]);
   const slide1BlurNum = useTransform(springVideoProgress, [0.20, 0.45], [0, 8]);
   const slide1TextFilter = useTransform(slide1BlurNum, (v) => `blur(${v}px)`);
-
-  const slide2TextY = useTransform(springVideoProgress, [0.50, 0.80], [40, 0]);
-  const slide2TextOpacity = useTransform(springVideoProgress, [0.55, 0.80], [0, 1]);
-  const slide2BlurNum = useTransform(springVideoProgress, [0.55, 0.80], [8, 0]);
-  const slide2TextFilter = useTransform(slide2BlurNum, (v) => `blur(${v}px)`);
 
   // Manage video 1 auto play/pause when active slide changes or component mounts
   useEffect(() => {
@@ -91,19 +82,6 @@ export function Hero() {
     } else {
       v1.pause();
       setIsPlaying1(false);
-    }
-  }, [activeSlide]);
-
-  // Manage video 2 auto play/pause when active slide changes
-  useEffect(() => {
-    const v2 = video2Ref.current;
-    if (!v2) return;
-    if (activeSlide === 1) {
-      v2.play().catch(() => {});
-      setIsPlaying2(true);
-    } else {
-      v2.pause();
-      setIsPlaying2(false);
     }
   }, [activeSlide]);
 
@@ -132,25 +110,6 @@ export function Hero() {
     } else {
       v.play();
       setIsPlaying1(true);
-    }
-  };
-
-  const toggleMute2 = () => {
-    const v = video2Ref.current;
-    if (!v) return;
-    v.muted = !isMuted2;
-    setIsMuted2(!isMuted2);
-  };
-
-  const togglePlay2 = () => {
-    const v = video2Ref.current;
-    if (!v) return;
-    if (isPlaying2) {
-      v.pause();
-      setIsPlaying2(false);
-    } else {
-      v.play();
-      setIsPlaying2(true);
     }
   };
 
@@ -329,84 +288,13 @@ export function Hero() {
             className="flex flex-row w-[200%] h-full"
           >
             
-            {/* SLIDE 2: Video 2 (Positioned on Left, enters from Left on scroll) */}
-            <div className="relative w-1/2 h-full flex-shrink-0 p-2 sm:p-3 md:p-3.5">
-              <div className="relative w-full h-full flex flex-col justify-between overflow-hidden rounded-xl sm:rounded-2xl border border-white/20 bg-black/30 backdrop-blur-sm shadow-2xl">
-                <video
-                  ref={video2Ref}
-                  src="/videos/hero_video2.mp4"
-                  className="absolute inset-0 h-full w-full object-cover object-center opacity-100 scale-[1.01]"
-                  autoPlay
-                  muted={isMuted2}
-                  loop
-                  playsInline
-                  aria-label="Next generation hiring intelligence video showcase 2"
-                />
-                {/* Subtle bottom shadow gradient for text contrast */}
-                <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
-
-                {/* Slide 2 Header Bar */}
-                <div className="relative z-20 w-full flex items-center justify-end p-6 sm:p-10 pt-12 sm:pt-16">
-
-                  {/* Video 2 Controls */}
-                  <div className="flex items-center gap-3">
-                    <button
-                      onClick={toggleMute2}
-                      className="flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-full border border-white/20 bg-slate-900/60 text-white backdrop-blur-md transition-all hover:bg-white/20 active:scale-95 shadow-lg"
-                      aria-label={isMuted2 ? "Unmute video 2" : "Mute video 2"}
-                    >
-                      {isMuted2 ? <VolumeX className="h-4 w-4 text-slate-300" /> : <Volume2 className="h-4 w-4 text-brand-400 animate-pulse" />}
-                    </button>
-                    <button
-                      onClick={togglePlay2}
-                      className="flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-full border border-white/20 bg-slate-900/60 text-white backdrop-blur-md transition-all hover:bg-white/20 active:scale-95 shadow-lg"
-                      aria-label={isPlaying2 ? "Pause video 2" : "Play video 2"}
-                    >
-                      {isPlaying2 ? <Pause className="h-4 w-4 text-white" /> : <Play className="h-4 w-4 text-brand-400 fill-brand-400 ml-0.5" />}
-                    </button>
-                  </div>
-                </div>
-
-                {/* Slide 2 Bottom Info (Motion entrance as Slide 2 takes place of Slide 1) */}
-                <motion.div
-                  style={
-                    reducedMotion
-                      ? {}
-                      : {
-                          y: slide2TextY,
-                          opacity: slide2TextOpacity,
-                          filter: slide2TextFilter,
-                        }
-                  }
-                  className="relative z-20 w-full p-6 sm:p-10 flex flex-col sm:flex-row sm:items-end justify-between gap-6"
-                >
-                  <div className="max-w-xl">
-                    <h2 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white leading-tight">
-                      Post in 60s,{" "}
-                      <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-400 via-sky-300 to-indigo-300">
-                        Hire Instantly
-                      </span>
-                    </h2>
-                    <p className="mt-2 text-xs sm:text-sm text-slate-300 font-medium max-w-md">
-                      No forms, no scrolling, no waiting — pre-filtered talent on demand.
-                    </p>
-                  </div>
-
-                  <div className="shrink-0">
-                    <Link
-                      href={siteConfig.links.employer}
-                      className="group inline-flex h-11 sm:h-12 items-center justify-center gap-2 rounded-full bg-gradient-to-r from-brand-600 to-sky-600 px-6 sm:px-7 text-xs sm:text-sm font-semibold text-white transition-all duration-300 hover:shadow-[0_0_20px_rgba(37,99,235,0.5)] hover:scale-[1.02]"
-                    >
-                      Explore Platform
-                      <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                    </Link>
-                  </div>
-                </motion.div>
-              </div>
+            {/* SLIDE 2: Job Post Demo Simulation (Positioned on Left, enters from Left on scroll) */}
+            <div className="relative w-1/2 h-full flex-shrink-0 p-2 sm:p-3 md:p-3.5 pt-16 sm:pt-20 pb-3">
+              <JobPostDemo className="w-full h-full" />
             </div>
 
             {/* SLIDE 1: Video 1 (Positioned on Right, shown initially at scroll top) */}
-            <div className="relative w-1/2 h-full flex-shrink-0 p-2 sm:p-3 md:p-3.5">
+            <div className="relative w-1/2 h-full flex-shrink-0 p-2 sm:p-3 md:p-3.5 pt-16 sm:pt-20 pb-3">
               <div className="relative w-full h-full flex flex-col justify-between overflow-hidden rounded-xl sm:rounded-2xl border border-white/20 bg-black/30 backdrop-blur-sm shadow-2xl">
                 <video
                   ref={video1Ref}

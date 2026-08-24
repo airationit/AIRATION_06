@@ -227,8 +227,8 @@
 
   /* ── Custom Global Scrollbar UI ── */
   ::-webkit-scrollbar {
-    width: 7px;
-    height: 7px;
+    width: 9.5px;
+    height: 9.5px;
   }
 
   ::-webkit-scrollbar-track {
@@ -236,13 +236,18 @@
   }
 
   ::-webkit-scrollbar-thumb {
-    background: #0284c7;
+    background: linear-gradient(180deg, #38bdf8 0%, #0ea5e9 40%, #0284c7 100%);
     border-radius: 9999px;
-    transition: background-color 0.2s ease;
+    border: 1px solid transparent;
+    background-clip: padding-box;
+    transition: background 0.25s ease, transform 0.2s ease;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: #0369a1;
+    background: linear-gradient(180deg, #0ea5e9 0%, #0284c7 50%, #0369a1 100%);
+    border-radius: 9999px;
+    border: 1px solid transparent;
+    background-clip: padding-box;
   }
 
   /* Firefox standard scrollbar */
