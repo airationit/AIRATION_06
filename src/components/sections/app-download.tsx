@@ -7,7 +7,9 @@ import {
   Clock3,
   TrendingUp,
   Briefcase,
+  ArrowRight,
 } from "lucide-react";
+import { siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
 import { CandidatePhoneMockup } from "./candidate-phone-mockup";
 
@@ -122,6 +124,30 @@ export function AppDownload() {
                 })}
               </div>
             </div>
+
+            {/* CTA Button */}
+            <motion.div
+              initial={reducedMotion ? false : { opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-48px" }}
+              transition={{
+                delay: reducedMotion ? 0 : 0.35,
+                duration: 0.5,
+                ease: [0.16, 1, 0.3, 1],
+              }}
+              className="mt-8 sm:mt-10 flex items-center justify-center lg:justify-start"
+            >
+              <a
+                href={siteConfig.links.playStore}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Start swiping — Download Hirance on Google Play"
+                className="group inline-flex items-center justify-center gap-2.5 rounded-full bg-[#0077c8] hover:bg-[#0066ad] dark:bg-brand-600 dark:hover:bg-brand-500 px-6 sm:px-7 py-3 sm:py-3.5 text-sm sm:text-base font-semibold text-white shadow-lg shadow-[#0077c8]/25 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-brand-500/40"
+              >
+                <span>Start swiping</span>
+                <ArrowRight className="h-4 w-4 sm:h-4.5 sm:w-4.5 transition-transform duration-200 group-hover:translate-x-1" />
+              </a>
+            </motion.div>
           </motion.div>
 
           {/* Right Column: Interactive Phone Showcase with Swipeable Job Cards */}

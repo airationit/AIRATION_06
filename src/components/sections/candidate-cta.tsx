@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
-import { ArrowRight, Sparkles } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { siteConfig } from "@/config/site";
 
@@ -12,18 +12,48 @@ interface CandidateCTAProps {
   className?: string;
 }
 
-function AppleStoreIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      viewBox="0 0 170 170"
-      className={className}
-      fill="currentColor"
-      aria-hidden="true"
-    >
-      <path d="M150.37 130.25c-2.45 5.66-5.35 10.87-8.71 15.66-4.58 6.53-8.33 11.05-11.22 13.56-4.48 4.12-9.28 6.23-14.42 6.35-3.69 0-8.14-1.05-13.32-3.18-5.19-2.12-9.97-3.17-14.34-3.17-4.58 0-9.49 1.05-14.75 3.17-5.26 2.13-9.5 3.24-12.74 3.35-4.35.13-9.16-1.9-14.42-6.08-3.69-3.04-7.69-7.87-12-14.49-6.09-9.35-10.87-20.02-14.34-32.01-3.48-11.99-5.22-23.08-5.22-33.27 0-14.92 3.8-27.18 11.39-36.78 7.59-9.6 17.06-14.46 28.4-14.59 4.35 0 9.24 1.13 14.67 3.39 5.43 2.26 9.17 3.44 11.22 3.53 1.62-.1 5.39-1.28 11.31-3.53 5.92-2.25 10.7-3.28 14.34-3.08 13.06.84 23.36 5.62 30.89 14.34-11.53 7.02-17.18 16.71-16.96 29.07.22 10.02 4.09 18.39 11.62 25.12 7.53 6.73 16.32 10.37 26.37 10.92-2.29 6.86-4.94 13.62-7.95 20.28zM119.22 31.84c0-7.39 2.66-14.37 7.97-20.93 5.31-6.56 11.97-10.64 19.98-12.24.23 1.57.34 2.94.34 4.12 0 7.4-2.73 14.4-8.19 21.01-5.46 6.61-12.16 10.74-20.1 12.39-.23-1.47-.35-2.92-.35-4.35z" />
-    </svg>
-  );
-}
+const DECK_CARDS = [
+  {
+    id: "card-1",
+    title: "Senior React Developer",
+    company: "Airation Softtech",
+    match: "96%",
+    tags: ["React", "Node", "TypeScript"],
+    color: "from-cyan-400 to-blue-600",
+    dir: 1, // swipe right (APPLY)
+    stamp: "APPLY",
+  },
+  {
+    id: "card-2",
+    title: "Product Designer",
+    company: "Nova Studios",
+    match: "88%",
+    tags: ["Figma", "UI/UX", "Design System"],
+    color: "from-indigo-400 to-purple-600",
+    dir: -1, // swipe left (SKIP)
+    stamp: "SKIP",
+  },
+  {
+    id: "card-3",
+    title: "Full Stack Engineer",
+    company: "Nexus Cloud Systems",
+    match: "94%",
+    tags: ["Next.js", "GraphQL", "Tailwind"],
+    color: "from-emerald-400 to-teal-600",
+    dir: 1, // swipe right (APPLY)
+    stamp: "APPLY",
+  },
+  {
+    id: "card-4",
+    title: "Growth Marketer",
+    company: "ScaleFlow India",
+    match: "91%",
+    tags: ["SEO", "Performance", "Analytics"],
+    color: "from-amber-400 to-orange-600",
+    dir: 1, // swipe right (APPLY)
+    stamp: "APPLY",
+  },
+];
 
 function GooglePlayIcon({ className }: { className?: string }) {
   return (
@@ -53,14 +83,83 @@ function GooglePlayIcon({ className }: { className?: string }) {
   );
 }
 
+function CardContent({ card }: { card: (typeof DECK_CARDS)[number] }) {
+  return (
+    <div className="h-full flex flex-col justify-between select-none">
+      <div>
+        {/* Card Header Placeholder */}
+        <div className="flex items-center gap-2.5">
+          <div
+            className={cn(
+              "w-9 h-9 rounded-xl shadow-xs shrink-0 flex items-center justify-center text-white font-black text-xs bg-gradient-to-br",
+              card.color
+            )}
+          >
+            {card.company.charAt(0)}
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-xs font-bold text-white leading-tight truncate">
+              {card.title}
+            </p>
+            <p className="text-[10px] text-white/70 truncate">{card.company}</p>
+          </div>
+        </div>
+
+        {/* Match Percentage Pill */}
+        <div className="mt-3.5 inline-flex items-center gap-1.5 self-start rounded-full bg-emerald-400/20 px-2.5 py-1 border border-emerald-400/30">
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-300 animate-pulse" />
+          <span className="font-mono-hi text-[10px] font-extrabold text-emerald-200">
+            {card.match} MATCH
+          </span>
+        </div>
+
+        {/* Content Wireframe Bars */}
+        <div className="mt-4 space-y-2">
+          <div className="h-2 w-full rounded-full bg-white/15" />
+          <div className="h-2 w-4/5 rounded-full bg-white/15" />
+          <div className="h-2 w-2/3 rounded-full bg-white/15" />
+        </div>
+      </div>
+
+      {/* Role Tags */}
+      <div className="flex gap-1.5 flex-wrap">
+        {card.tags.map((t) => (
+          <span
+            key={t}
+            className="text-[9.5px] font-medium px-2.5 py-0.5 rounded-full bg-white/15 text-white/90 border border-white/10"
+          >
+            {t}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export function CandidateCTA({ onFindJobs, className }: CandidateCTAProps) {
   const reducedMotion = useReducedMotion();
+  const [index, setIndex] = React.useState(0);
+  const [isSwiping, setIsSwiping] = React.useState(false);
 
-  const deckCards = [
-    { dir: 1, delay: 0, c: "#00E5FF", m: "96%" },
-    { dir: -1, delay: 1.6, c: "#38bdf8", m: "88%" },
-    { dir: 1, delay: 3.2, c: "#0ea5e9", m: "92%" },
-  ];
+  React.useEffect(() => {
+    if (reducedMotion) return;
+
+    const interval = setInterval(() => {
+      setIsSwiping(true);
+      const timer = setTimeout(() => {
+        setIndex((prev) => (prev + 1) % DECK_CARDS.length);
+        setIsSwiping(false);
+      }, 550);
+
+      return () => clearTimeout(timer);
+    }, 2800);
+
+    return () => clearInterval(interval);
+  }, [reducedMotion]);
+
+  const topCard = DECK_CARDS[index];
+  const nextCard = DECK_CARDS[(index + 1) % DECK_CARDS.length];
+  const thirdCard = DECK_CARDS[(index + 2) % DECK_CARDS.length];
 
   return (
     <motion.div
@@ -89,116 +188,85 @@ export function CandidateCTA({ onFindJobs, className }: CandidateCTAProps) {
         aria-hidden="true"
       />
 
-      {/* Animated Swipe Deck on the Right Side (Visible on sm and up) */}
+      {/* Synchronized Swiping Glass Card Deck on Right Side */}
       <div
-        className="absolute right-4 sm:right-10 lg:right-16 top-1/2 -translate-y-1/2 w-[220px] sm:w-[240px] h-[290px] sm:h-[310px] pointer-events-none hidden md:block"
+        className="absolute right-6 sm:right-10 lg:right-16 top-1/2 -translate-y-1/2 w-[220px] sm:w-[240px] h-[290px] sm:h-[310px] pointer-events-none hidden md:block"
         aria-hidden="true"
       >
-        {/* Static background cards for visual depth */}
-        <div className="absolute inset-0 rounded-3xl border border-white/10 bg-white/[0.04] scale-90 translate-y-4" />
-        <div className="absolute inset-0 rounded-3xl border border-white/10 bg-white/[0.05] scale-95 translate-y-2" />
+        {/* 3rd Card (Deepest Stack Layer) */}
+        <motion.div
+          key={`third-${thirdCard.id}`}
+          className="absolute inset-0 rounded-3xl border border-white/10 bg-white/[0.04] backdrop-blur-xs p-5"
+          style={{ zIndex: 10 }}
+          animate={{
+            scale: isSwiping ? 0.95 : 0.9,
+            y: isSwiping ? 6 : 14,
+            opacity: isSwiping ? 0.65 : 0.4,
+          }}
+          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <CardContent card={thirdCard} />
+        </motion.div>
 
-        {/* Dynamic Swiping Glass Cards */}
-        {deckCards.map((card, i) => (
-          <motion.div
-            key={i}
-            className="absolute inset-0 rounded-3xl border border-white/20 bg-white/[0.09] backdrop-blur-sm p-5 flex flex-col shadow-lg select-none"
-            initial={{ x: 0, rotate: 0, opacity: 1 }}
-            animate={
-              reducedMotion
-                ? {}
-                : {
-                    x: [0, 0, card.dir * 320, card.dir * 320, 0],
-                    rotate: [0, 0, card.dir * 20, card.dir * 20, 0],
-                    opacity: [1, 1, 0, 0, 1],
-                  }
-            }
-            transition={{
-              duration: 4.8,
-              times: [0, 0.45, 0.62, 0.9, 1],
-              repeat: Infinity,
-              delay: card.delay,
-              ease: "easeInOut",
-            }}
-          >
-            {/* Card Header Placeholder */}
-            <div className="flex items-center gap-2.5">
-              <div
-                className="w-10 h-10 rounded-xl shadow-xs shrink-0"
-                style={{
-                  background: `linear-gradient(135deg, ${card.c}, #0284C7)`,
-                }}
-              />
-              <div className="flex-1 space-y-1.5 min-w-0">
-                <div className="h-2 w-20 rounded-full bg-white/40" />
-                <div className="h-2 w-14 rounded-full bg-white/20" />
-              </div>
-            </div>
+        {/* 2nd Card (Middle Stack Layer -> Steps up to Top) */}
+        <motion.div
+          key={`next-${nextCard.id}`}
+          className="absolute inset-0 rounded-3xl border border-white/15 bg-white/[0.07] backdrop-blur-sm p-5 shadow-md"
+          style={{ zIndex: 20 }}
+          animate={{
+            scale: isSwiping ? 1 : 0.95,
+            y: isSwiping ? 0 : 7,
+            opacity: isSwiping ? 1 : 0.8,
+          }}
+          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <CardContent card={nextCard} />
+        </motion.div>
 
-            {/* Match Percentage Pill */}
-            <div className="mt-3.5 inline-flex items-center gap-1.5 self-start rounded-full bg-emerald-400/20 px-2.5 py-1 border border-emerald-400/30">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-300 animate-pulse" />
-              <span className="font-mono-hi text-[10px] font-extrabold text-emerald-200">
-                {card.m} MATCH
-              </span>
-            </div>
+        {/* 1st Card (Top Active Layer -> Swipes out smoothly) */}
+        <motion.div
+          key={`top-${topCard.id}-${index}`}
+          className="absolute inset-0 rounded-3xl border border-white/25 bg-white/[0.11] backdrop-blur-md p-5 shadow-2xl"
+          style={{ zIndex: 30 }}
+          animate={
+            reducedMotion
+              ? { x: 0, rotate: 0, opacity: 1 }
+              : {
+                  x: isSwiping ? topCard.dir * 320 : 0,
+                  rotate: isSwiping ? topCard.dir * 18 : 0,
+                  opacity: isSwiping ? 0 : 1,
+                  scale: isSwiping ? 0.96 : 1,
+                }
+          }
+          transition={{
+            duration: 0.55,
+            ease: [0.16, 1, 0.3, 1],
+          }}
+        >
+          <CardContent card={topCard} />
 
-            {/* Content Wireframe Bars */}
-            <div className="mt-4 space-y-2">
-              <div className="h-2 w-full rounded-full bg-white/15" />
-              <div className="h-2 w-4/5 rounded-full bg-white/15" />
-              <div className="h-2 w-2/3 rounded-full bg-white/15" />
-            </div>
-
-            {/* Role Tags */}
-            <div className="mt-auto flex gap-1.5">
-              {["React", "Node"].map((t) => (
-                <span
-                  key={t}
-                  className="text-[9.5px] font-medium px-2.5 py-0.5 rounded-full bg-white/15 text-white/80 border border-white/10"
-                >
-                  {t}
-                </span>
-              ))}
-            </div>
-
-            {/* Swipe Verdict Stamp (APPLY / SKIP) */}
-            {!reducedMotion && (
-              <motion.div
-                className={cn(
-                  "absolute top-4 border-2 font-black text-sm px-2.5 py-0.5 rounded-lg select-none uppercase tracking-wider",
-                  card.dir === 1
-                    ? "left-4 text-emerald-300 border-emerald-300 bg-emerald-950/40"
-                    : "right-4 text-rose-300 border-rose-300 bg-rose-950/40"
-                )}
-                style={{
-                  transform: `rotate(${card.dir === 1 ? -14 : 14}deg)`,
-                }}
-                animate={{ opacity: [0, 0, 1, 1, 0] }}
-                transition={{
-                  duration: 4.8,
-                  times: [0, 0.45, 0.55, 0.9, 1],
-                  repeat: Infinity,
-                  delay: card.delay,
-                }}
-              >
-                {card.dir === 1 ? "APPLY" : "SKIP"}
-              </motion.div>
-            )}
-          </motion.div>
-        ))}
+          {/* Swipe Verdict Stamp (APPLY / SKIP) */}
+          {!reducedMotion && isSwiping && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.75 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className={cn(
+                "absolute top-5 border-2 font-black text-sm px-3 py-0.5 rounded-xl select-none uppercase tracking-wider shadow-lg",
+                topCard.dir === 1
+                  ? "left-4 text-emerald-300 border-emerald-400 bg-emerald-950/80 shadow-emerald-500/20 -rotate-12"
+                  : "right-4 text-rose-300 border-rose-400 bg-rose-950/80 shadow-rose-500/20 rotate-12"
+              )}
+            >
+              {topCard.stamp}
+            </motion.div>
+          )}
+        </motion.div>
       </div>
 
       {/* Main Left Content */}
       <div className="relative z-10 max-w-xl text-left">
-        {/* Chip Badge */}
-        <div className="inline-flex items-center gap-2 rounded-full bg-white/15 border border-white/20 px-4 py-1.5 mb-5 select-none">
-          <Sparkles size={14} className="text-cyan-200 shrink-0" />
-          <span className="text-xs sm:text-sm font-semibold text-white">
-            Free forever for candidates
-          </span>
-        </div>
-
         {/* Heading */}
         <h3 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight leading-[1.1] text-balance text-white">
           Your Next Opportunity <br className="hidden sm:inline" />
@@ -210,14 +278,14 @@ export function CandidateCTA({ onFindJobs, className }: CandidateCTAProps) {
           Swipe through jobs. Apply in seconds. Get hired faster.
         </p>
 
-        {/* Action Button: Find Jobs */}
-        <div className="mt-7 flex flex-wrap items-center gap-3">
+        {/* Action Row: Find Jobs & Google Play */}
+        <div className="mt-8 flex flex-wrap items-center gap-3.5 sm:gap-4">
           {onFindJobs ? (
             <button
               type="button"
               onClick={onFindJobs}
               data-testid="candidate-cta-find-jobs-button"
-              className="group flex items-center justify-center gap-2.5 font-bold text-[#060c18] bg-white hover:bg-cyan-200 px-8 py-3.5 sm:py-4 rounded-full transition-all duration-200 shadow-lg shadow-black/20 hover:scale-[1.02] active:scale-[0.98]"
+              className="group flex items-center justify-center gap-2.5 font-bold text-[#060c18] bg-white hover:bg-slate-100 px-7 sm:px-8 py-3.5 sm:py-4 rounded-full transition-all duration-200 shadow-lg shadow-black/20 hover:scale-[1.02] active:scale-[0.98]"
             >
               <span>Find Jobs</span>
               <ArrowRight
@@ -229,7 +297,7 @@ export function CandidateCTA({ onFindJobs, className }: CandidateCTAProps) {
             <Link
               href="/jobs"
               data-testid="candidate-cta-find-jobs-button"
-              className="group flex items-center justify-center gap-2.5 font-bold text-[#060c18] bg-white hover:bg-cyan-200 px-8 py-3.5 sm:py-4 rounded-full transition-all duration-200 shadow-lg shadow-black/20 hover:scale-[1.02] active:scale-[0.98]"
+              className="group flex items-center justify-center gap-2.5 font-bold text-[#060c18] bg-white hover:bg-slate-100 px-7 sm:px-8 py-3.5 sm:py-4 rounded-full transition-all duration-200 shadow-lg shadow-black/20 hover:scale-[1.02] active:scale-[0.98]"
             >
               <span>Find Jobs</span>
               <ArrowRight
@@ -238,52 +306,25 @@ export function CandidateCTA({ onFindJobs, className }: CandidateCTAProps) {
               />
             </Link>
           )}
-        </div>
 
-        {/* App Download Badges */}
-        <div className="mt-6 pt-1">
-          <p className="font-mono-hi text-[11px] font-bold uppercase tracking-widest text-white/70 mb-2.5 select-none">
-            Or download the app
-          </p>
-          <div className="flex flex-wrap items-center gap-3">
-            {/* App Store Button */}
-            <a
-              href={siteConfig.links.playStore}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Download Hirance on Apple App Store"
-              className="group inline-flex items-center gap-3 rounded-2xl border border-white/20 bg-white/10 hover:bg-white/15 px-4 py-2.5 text-left text-white shadow-xs transition-all duration-200 hover:scale-[1.02]"
-            >
-              <AppleStoreIcon className="h-5 w-5 fill-current shrink-0 text-white" />
-              <div className="flex flex-col leading-none">
-                <span className="text-[9px] uppercase tracking-wider text-white/70">
-                  Download on the
-                </span>
-                <span className="text-xs font-bold text-white mt-0.5">
-                  App Store
-                </span>
-              </div>
-            </a>
-
-            {/* Google Play Button */}
-            <a
-              href={siteConfig.links.playStore}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Get Hirance on Google Play Store"
-              className="group inline-flex items-center gap-3 rounded-2xl border border-white/20 bg-white/10 hover:bg-white/15 px-4 py-2.5 text-left text-white shadow-xs transition-all duration-200 hover:scale-[1.02]"
-            >
-              <GooglePlayIcon className="h-5 w-5 shrink-0" />
-              <div className="flex flex-col leading-none">
-                <span className="text-[9px] uppercase tracking-wider text-white/70">
-                  Get it on
-                </span>
-                <span className="text-xs font-bold text-white mt-0.5">
-                  Google Play
-                </span>
-              </div>
-            </a>
-          </div>
+          {/* Google Play Button */}
+          <a
+            href={siteConfig.links.playStore}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Get Hirance on Google Play Store"
+            className="group inline-flex items-center gap-3 rounded-full border border-white/20 bg-white/10 hover:bg-white/15 px-5 sm:px-6 py-2.5 sm:py-3 text-left text-white shadow-xs transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
+          >
+            <GooglePlayIcon className="h-5 w-5 shrink-0" />
+            <div className="flex flex-col leading-none">
+              <span className="text-[9px] uppercase tracking-wider text-white/70">
+                Get it on
+              </span>
+              <span className="text-xs sm:text-sm font-bold text-white mt-0.5">
+                Google Play
+              </span>
+            </div>
+          </a>
         </div>
       </div>
     </motion.div>

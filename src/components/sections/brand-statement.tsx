@@ -36,7 +36,7 @@ export function BrandStatement() {
 
   return (
     <section
-      className="relative py-24 lg:py-32 overflow-hidden bg-[var(--hi-navy)] text-white"
+      className="relative pt-14 pb-20 sm:pt-16 sm:pb-24 lg:pt-20 lg:pb-28 overflow-hidden rounded-t-[32px] sm:rounded-t-[44px] lg:rounded-t-[56px] border-t border-white/10 bg-[var(--hi-navy)] text-white shadow-2xl shadow-slate-950/20"
       data-testid="brand-statement-section"
       aria-label="Hirance Brand Statement"
     >
@@ -50,7 +50,7 @@ export function BrandStatement() {
       />
 
       {/* editorial marquee */}
-      <div className="overflow-hidden mb-20 mask-fade-r">
+      <div className="overflow-hidden mb-12 sm:mb-16 mask-fade-r">
         <div className="flex gap-8 w-max animate-marquee-slow select-none" aria-hidden="true">
           {[...MARQUEE, ...MARQUEE].map((t, i) => (
             <span

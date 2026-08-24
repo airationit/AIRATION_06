@@ -137,30 +137,5 @@ function CompanyLogoItem({ name, logoUrl }: { name: string; logoUrl: string }) {
 }
 
 export function Presentation() {
-  const reducedMotion = useReducedMotion();
-  const showcaseCompanies = companies.slice(0, 8);
-
-  return (
-    <section
-      id="employers"
-      className="relative w-full overflow-hidden py-16 sm:py-24 lg:py-28 flex flex-col items-center justify-center min-h-0"
-      aria-labelledby="presentation-heading"
-    >
-      {/* Background Arc & Ambient Glow (matching reference image) */}
-      <div
-        className="pointer-events-none absolute inset-0 -z-10 overflow-hidden"
-        aria-hidden="true"
-      >
-        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-border/80 to-transparent" />
-        
-        {/* Soft Ambient Mesh Glows */}
-        <div className="absolute right-0 top-1/4 h-[32rem] w-[32rem] rounded-full bg-blue-500/10 blur-[130px]" />
-        <div className="absolute left-1/4 top-1/2 h-[26rem] w-[26rem] rounded-full bg-brand-500/5 blur-[120px]" />
-
-        {/* Elegant Curved Orbital Ring */}
-        <div className="absolute -right-20 sm:-right-32 top-1/4 h-[44rem] w-[44rem] rounded-full border border-blue-500/15 dark:border-blue-400/10 [mask-image:linear-gradient(to_bottom,black_40%,transparent_90%)]" />
-        <div className="absolute -right-36 sm:-right-48 top-1/6 h-[58rem] w-[58rem] rounded-full border border-blue-500/10 dark:border-blue-400/5 [mask-image:linear-gradient(to_bottom,black_30%,transparent_80%)]" />
-      </div>
-    </section>
-  );
+  return null;
 }
