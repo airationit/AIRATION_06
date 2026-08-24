@@ -170,13 +170,13 @@ export function TrustedBy() {
             id="trusted-by-heading"
             className="text-balance text-2xl font-extrabold tracking-tight text-foreground sm:text-3xl md:text-4xl lg:text-5xl leading-tight"
           >
-            Trusted By Top Teams Across{" "}
+            Companies Are Hiring on{" "}
             <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-brand-600 dark:from-brand-400 dark:via-indigo-300 dark:to-sky-300 bg-clip-text text-transparent">
-              India
+              Hirance
             </span>
           </h2>
           <p className="mt-3 text-sm sm:text-base text-muted-foreground max-w-xl mx-auto">
-            From high-growth startups to established leaders, top hiring teams trust Hirance.
+            Built for modern hiring teams looking for better matches, faster applications and simpler hiring.
           </p>
         </motion.div>
 

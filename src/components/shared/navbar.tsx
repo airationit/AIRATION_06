@@ -20,8 +20,26 @@ export function Navbar({ className }: NavbarProps) {
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
+  const [hideActions, setHideActions] = useState(false)
   const actionsRef = useRef<HTMLDivElement>(null)
   const [actionsWidth, setActionsWidth] = useState(0)
+
+  useEffect(() => {
+    const check = () => {
+      setHideActions(document.documentElement.dataset.hideNavActions === "true")
+    }
+    check()
+    const observer = new MutationObserver(check)
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["data-hide-nav-actions"],
+    })
+    window.addEventListener("hirance:toggle-nav-actions", check)
+    return () => {
+      observer.disconnect()
+      window.removeEventListener("hirance:toggle-nav-actions", check)
+    }
+  }, [])
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20)
@@ -267,10 +285,11 @@ export function Navbar({ className }: NavbarProps) {
       <div
         ref={actionsRef}
         className={cn(
-          "pointer-events-auto fixed top-4 right-6 z-[60] hidden items-center gap-2 rounded-full px-2 py-1.5 transition-[background-color,box-shadow,border-color,backdrop-filter] duration-300 ease-out sm:top-5 sm:right-10 md:flex lg:right-16 xl:right-24",
+          "pointer-events-auto fixed top-4 right-6 z-[60] hidden items-center gap-2 rounded-full px-2 py-1.5 transition-all duration-300 ease-out sm:top-5 sm:right-10 md:flex lg:right-16 xl:right-24",
           scrolled
             ? "border border-border/50 bg-white/95 shadow-[0_10px_36px_-18px_rgba(15,23,42,0.22)] backdrop-blur-md"
-            : "border border-transparent bg-transparent shadow-none"
+            : "border border-transparent bg-transparent shadow-none",
+          hideActions && "pointer-events-none -translate-y-3 opacity-0"
         )}
       >
         {candidate && (
@@ -317,11 +336,12 @@ export function Navbar({ className }: NavbarProps) {
         aria-expanded={menuOpen}
         tabIndex={0}
         className={cn(
-          "fixed top-4 right-6 z-[60] flex h-10 w-10 items-center justify-center rounded-full border text-foreground transition-[background-color,box-shadow,border-color] duration-300 ease-out sm:top-5 sm:right-10 md:hidden",
+          "fixed top-4 right-6 z-[60] flex h-10 w-10 items-center justify-center rounded-full border text-foreground transition-all duration-300 ease-out sm:top-5 sm:right-10 md:hidden",
           "focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-brand-500/40",
           scrolled
             ? "border-border/50 bg-white/95 shadow-[0_10px_36px_-18px_rgba(15,23,42,0.22)]"
-            : "border-border/40 bg-white/90 hover:bg-muted"
+            : "border-border/40 bg-white/90 hover:bg-muted",
+          hideActions && "pointer-events-none -translate-y-3 opacity-0"
         )}
       >
         {menuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}

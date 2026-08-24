@@ -57,26 +57,26 @@ export function Hero() {
   });
 
   // Ultra-Smooth Continuous Horizontal Carousel Translation:
-  // 0.00 -> 0.20: Video 1 pinned full screen for comfortable reading
-  // 0.20 -> 0.80: Smooth, gradual continuous slide-over from Video 1 (-50%) to Slide 2 (0%)
-  // 0.80 -> 1.00: Slide 2 pinned full screen before passing to next section
+  // 0.00 -> 0.20: Slide 1 (Animated Job Post Demo) pinned full screen
+  // 0.20 -> 0.80: Smooth, gradual continuous slide-over from Animated Demo (0%) to Video (-50%)
+  // 0.80 -> 1.00: Slide 2 (Hero Video) pinned full screen before passing to next section
   const trackX = useTransform(
     springVideoProgress,
     [0.0, 0.20, 0.50, 0.80, 1.0],
-    ["-50%", "-50%", "-25%", "0%", "0%"]
+    ["0%", "0%", "-25%", "-50%", "-50%"]
   );
 
-  // Motion depth and blur effects for content inside Slide 1
-  const slide1TextY = useTransform(springVideoProgress, [0.20, 0.50], [0, -30]);
-  const slide1TextOpacity = useTransform(springVideoProgress, [0.20, 0.45], [1, 0]);
-  const slide1BlurNum = useTransform(springVideoProgress, [0.20, 0.45], [0, 8]);
-  const slide1TextFilter = useTransform(slide1BlurNum, (v) => `blur(${v}px)`);
+  // Motion depth and blur effects for content inside Video Slide
+  const videoTextY = useTransform(springVideoProgress, [0.45, 0.75], [30, 0]);
+  const videoTextOpacity = useTransform(springVideoProgress, [0.45, 0.70], [0, 1]);
+  const videoBlurNum = useTransform(springVideoProgress, [0.45, 0.70], [8, 0]);
+  const videoTextFilter = useTransform(videoBlurNum, (v) => `blur(${v}px)`);
 
-  // Manage video 1 auto play/pause when active slide changes or component mounts
+  // Manage video 1 auto play/pause when active slide changes
   useEffect(() => {
     const v1 = video1Ref.current;
     if (!v1) return;
-    if (activeSlide === 0) {
+    if (activeSlide === 1) {
       v1.play().catch(() => {});
       setIsPlaying1(true);
     } else {
@@ -85,14 +85,26 @@ export function Hero() {
     }
   }, [activeSlide]);
 
-  // Update active slide state based on scroll
+  // Update active slide state based on scroll & hide fixed navbar actions when demo is showing
   useMotionValueEvent(springVideoProgress, "change", (latest) => {
+    const isDemoShowing = latest <= 0.65;
+    const shouldHide = isDemoShowing ? "true" : "false";
+    if (document.documentElement.dataset.hideNavActions !== shouldHide) {
+      document.documentElement.dataset.hideNavActions = shouldHide;
+    }
+
     if (latest >= 0.5 && activeSlide !== 1) {
       setActiveSlide(1);
     } else if (latest < 0.5 && activeSlide !== 0) {
       setActiveSlide(0);
     }
   });
+
+  useEffect(() => {
+    return () => {
+      document.documentElement.dataset.hideNavActions = "false";
+    };
+  }, []);
 
   const toggleMute1 = () => {
     const v = video1Ref.current;
@@ -113,7 +125,7 @@ export function Hero() {
     }
   };
 
-  // Scroll smoothly to Video 1 or Video 2
+  // Scroll smoothly to Animated Demo (0) or Video (1)
   const scrollToSlide = (slideIndex: number) => {
     const container = videoSectionRef.current;
     if (!container) return;
@@ -331,15 +343,15 @@ export function Hero() {
                   </div>
                 </div>
 
-                {/* Slide 1 Bottom Info */}
+                {/* Slide 2 (Video) Bottom Info */}
                 <motion.div
                   style={
                     reducedMotion
                       ? {}
                       : {
-                          opacity: slide1TextOpacity,
-                          y: slide1TextY,
-                          filter: slide1TextFilter,
+                          opacity: videoTextOpacity,
+                          y: videoTextY,
+                          filter: videoTextFilter,
                         }
                   }
                   className="relative z-20 w-full p-6 sm:p-10 flex flex-col sm:flex-row sm:items-end justify-between gap-6"
