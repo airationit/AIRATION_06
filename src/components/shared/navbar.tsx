@@ -67,7 +67,7 @@ export function Navbar({ className }: NavbarProps) {
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.7, ease: [0.25, 0.1, 0.25, 1] }}
         className={cn(
-          "absolute inset-x-0 top-0 z-50 w-full px-4 pt-3 sm:px-6 sm:pt-4 lg:px-8",
+          "absolute inset-x-0 top-0 z-50 w-full px-6 pt-4 sm:px-10 sm:pt-5 lg:px-16 xl:px-24",
           className
         )}
       >
@@ -78,18 +78,29 @@ export function Navbar({ className }: NavbarProps) {
           <div className="flex min-w-0 items-center gap-6 lg:gap-10">
             <Link
               href="/"
-              className="group relative flex shrink-0 items-center focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-brand-500/40 focus-visible:ring-offset-2"
+              className="group relative flex shrink-0 items-center gap-2 sm:gap-2.5 select-none focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-brand-500/40 focus-visible:ring-offset-2"
               aria-label={`${siteConfig.name} home`}
               tabIndex={0}
             >
               <Image
-                src="/images/logo.svg"
-                alt={siteConfig.name}
-                width={180}
-                height={50}
+                src="/images/icon.png"
+                alt={`${siteConfig.name} icon`}
+                width={36}
+                height={36}
                 loading="eager"
                 fetchPriority="high"
-                className="h-15 w-auto transition-transform duration-300 group-hover:scale-[1.03] sm:h-15"
+                priority
+                className="h-7 sm:h-8 w-auto object-contain transition-transform duration-300 group-hover:scale-[1.03]"
+              />
+              <Image
+                src="/images/wordmark-navy.png"
+                alt={siteConfig.name}
+                width={110}
+                height={28}
+                loading="eager"
+                fetchPriority="high"
+                priority
+                className="h-5 sm:h-5.5 w-auto object-contain transition-transform duration-300 group-hover:scale-[1.03]"
               />
             </Link>
 
@@ -256,7 +267,7 @@ export function Navbar({ className }: NavbarProps) {
       <div
         ref={actionsRef}
         className={cn(
-          "pointer-events-auto fixed top-3 right-4 z-[60] hidden items-center gap-2 rounded-full px-2 py-1.5 transition-[background-color,box-shadow,border-color,backdrop-filter] duration-300 ease-out sm:top-4 sm:right-6 md:flex lg:right-8",
+          "pointer-events-auto fixed top-4 right-6 z-[60] hidden items-center gap-2 rounded-full px-2 py-1.5 transition-[background-color,box-shadow,border-color,backdrop-filter] duration-300 ease-out sm:top-5 sm:right-10 md:flex lg:right-16 xl:right-24",
           scrolled
             ? "border border-border/50 bg-white/95 shadow-[0_10px_36px_-18px_rgba(15,23,42,0.22)] backdrop-blur-md"
             : "border border-transparent bg-transparent shadow-none"
@@ -306,7 +317,7 @@ export function Navbar({ className }: NavbarProps) {
         aria-expanded={menuOpen}
         tabIndex={0}
         className={cn(
-          "fixed top-3 right-4 z-[60] flex h-10 w-10 items-center justify-center rounded-full border text-foreground transition-[background-color,box-shadow,border-color] duration-300 ease-out sm:top-4 sm:right-6 md:hidden",
+          "fixed top-4 right-6 z-[60] flex h-10 w-10 items-center justify-center rounded-full border text-foreground transition-[background-color,box-shadow,border-color] duration-300 ease-out sm:top-5 sm:right-10 md:hidden",
           "focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-brand-500/40",
           scrolled
             ? "border-border/50 bg-white/95 shadow-[0_10px_36px_-18px_rgba(15,23,42,0.22)]"

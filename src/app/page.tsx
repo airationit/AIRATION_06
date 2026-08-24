@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Hero, TrustedBy, AppDownload, WantToHire, Presentation } from "@/components/sections";
+import { Hero, TrustedBy, AppDownload, WantToHire, Presentation, BrandStatement } from "@/components/sections";
 import {
   Footer,
   InteractiveDots,
@@ -32,6 +32,7 @@ export default function Home() {
       <AppDownload />
       <WantToHire />
       <Presentation />
+      <BrandStatement />
       <Footer />
     </main>
   );

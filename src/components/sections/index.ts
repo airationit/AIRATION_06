@@ -4,4 +4,6 @@ export { TrustedBy } from "./trusted-by";
 export { AppDownload } from "./app-download";
 export { WantToHire } from "./want-to-hire";
 export { Presentation } from "./presentation";
+export { BrandStatement } from "./brand-statement";
+
 
