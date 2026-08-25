@@ -1,12 +1,14 @@
 "use client";
 
-import React, { useState, useCallback } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
+import Image from "next/image";
 import {
   motion,
   AnimatePresence,
   useMotionValue,
   useTransform,
   useReducedMotion,
+  animate,
   PanInfo,
 } from "framer-motion";
 import {
@@ -26,15 +28,18 @@ import {
   User,
   BadgeCheck,
   Hand,
+  AlertCircle,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export interface JobCardData {
   id: string;
+  department: string;
   title: string;
   company: string;
   verified: boolean;
   matchScore: number;
+  matchGrade: "HIGH MATCH" | "LOW MATCH";
   aiNote: string;
   location: string;
   salary: string;
@@ -52,39 +57,18 @@ export interface JobCardData {
     salaryOk: boolean;
   };
   logoColor: string;
+  logoLetter: string;
 }
 
 const JOBS_DATA: JobCardData[] = [
   {
-    id: "job-1",
-    title: "Area Sales Manager",
-    company: "Airation Softtech Pvt Ltd",
-    verified: true,
-    matchScore: 94,
-    aiNote: "Perfect for Dealer & Distributor Management professionals with 2-5 Years looking for FMCG growth.",
-    location: "Bareilly, UP",
-    salary: "₹ 6.5 - 9.0 LPA",
-    experience: "2-5 Years",
-    type: "Full Time",
-    tags: ["Distributor Management", "Regional Sales", "B2B Expansion"],
-    breakdown: {
-      skills: "38/40",
-      skillsOk: true,
-      exp: "12/13",
-      expOk: true,
-      location: "7/7",
-      locationOk: true,
-      salary: "5/5",
-      salaryOk: true,
-    },
-    logoColor: "from-cyan-500 to-blue-600",
-  },
-  {
-    id: "job-2",
+    id: "it-job-1",
+    department: "Web & Frontend Engineering",
     title: "Frontend Engineer (Next.js)",
     company: "Nexus Cloud Systems",
     verified: true,
     matchScore: 98,
+    matchGrade: "HIGH MATCH",
     aiNote: "Strong match for your React, TypeScript, and high-performance UI architecture skillset.",
     location: "Bengaluru (Hybrid)",
     salary: "₹ 14 - 20 LPA",
@@ -102,43 +86,103 @@ const JOBS_DATA: JobCardData[] = [
       salaryOk: true,
     },
     logoColor: "from-indigo-500 to-purple-600",
+    logoLetter: "N",
   },
   {
-    id: "job-3",
-    title: "Performance Marketing Lead",
-    company: "Zeta Commerce India",
+    id: "it-job-2",
+    department: "Cloud Infrastructure & DevOps",
+    title: "Lead DevOps & SRE Engineer",
+    company: "StrataScale Cloud Infra",
     verified: true,
-    matchScore: 89,
-    aiNote: "Ideal for growth marketers skilled in paid Meta/Google ads and ROAS scaling.",
-    location: "Gurugram / Remote",
-    salary: "₹ 12 - 18 LPA",
+    matchScore: 56,
+    matchGrade: "LOW MATCH",
+    aiNote: "Requires 7+ yrs multi-cloud Terraform, Golang & 24/7 on-call. Stack gap with your current frontend/web focus.",
+    location: "Hyderabad (On-site)",
+    salary: "₹ 22 - 30 LPA",
+    experience: "6-9 Years",
+    type: "Full Time",
+    tags: ["Kubernetes", "Terraform", "AWS / GCP", "Golang"],
+    breakdown: {
+      skills: "20/40",
+      skillsOk: false,
+      exp: "7/13",
+      expOk: false,
+      location: "5/7",
+      locationOk: true,
+      salary: "5/5",
+      salaryOk: true,
+    },
+    logoColor: "from-slate-600 to-slate-800",
+    logoLetter: "S",
+  },
+  {
+    id: "it-job-3",
+    department: "Backend & Distributed Systems",
+    title: "Backend Systems Engineer",
+    company: "FinVortex Technologies",
+    verified: true,
+    matchScore: 94,
+    matchGrade: "HIGH MATCH",
+    aiNote: "High synergy with your Node.js, PostgreSQL, Redis, and high-throughput microservices experience.",
+    location: "Pune (Remote)",
+    salary: "₹ 16 - 24 LPA",
     experience: "3-6 Years",
     type: "Full Time",
-    tags: ["Meta Ads", "Google Ads", "ROAS Optimization"],
+    tags: ["Node.js", "PostgreSQL", "Redis", "System Design"],
     breakdown: {
-      skills: "35/40",
+      skills: "38/40",
       skillsOk: true,
       exp: "12/13",
       expOk: true,
       location: "7/7",
       locationOk: true,
-      salary: "4.5/5",
+      salary: "5/5",
       salaryOk: true,
     },
-    logoColor: "from-emerald-500 to-teal-600",
+    logoColor: "from-blue-600 to-cyan-600",
+    logoLetter: "F",
   },
   {
-    id: "job-4",
-    title: "Senior HR Talent Partner",
-    company: "Apex Global Solutions",
+    id: "it-job-4",
+    department: "AI & Machine Learning",
+    title: "AI / ML Research Engineer",
+    company: "Cerebra AI Labs",
     verified: true,
-    matchScore: 92,
-    aiNote: "Great role for end-to-end recruitment lifecycle and hiring manager management.",
-    location: "Mumbai, MH",
-    salary: "₹ 10 - 15 LPA",
+    matchScore: 62,
+    matchGrade: "LOW MATCH",
+    aiNote: "Role demands PyTorch, LLM fine-tuning & CUDA optimizations. Does not align with application-tier background.",
+    location: "Gurugram (Hybrid)",
+    salary: "₹ 24 - 35 LPA",
     experience: "4-7 Years",
     type: "Full Time",
-    tags: ["Talent Acquisition", "HR Operations", "Leadership"],
+    tags: ["PyTorch", "LLM Ops", "CUDA", "Deep Learning"],
+    breakdown: {
+      skills: "22/40",
+      skillsOk: false,
+      exp: "9/13",
+      expOk: false,
+      location: "7/7",
+      locationOk: true,
+      salary: "5/5",
+      salaryOk: true,
+    },
+    logoColor: "from-purple-600 to-pink-600",
+    logoLetter: "C",
+  },
+  {
+    id: "it-job-5",
+    department: "Cybersecurity & InfoSec",
+    title: "Cybersecurity Analyst & SecOps",
+    company: "ShieldPoint Infosec",
+    verified: true,
+    matchScore: 92,
+    matchGrade: "HIGH MATCH",
+    aiNote: "Great match for Application Security, OWASP standards, penetration audits, and SOC compliance monitoring.",
+    location: "Noida (Hybrid)",
+    salary: "₹ 12 - 18 LPA",
+    experience: "2-5 Years",
+    type: "Full Time",
+    tags: ["AppSec", "OWASP", "SOC Monitoring", "Pen-testing"],
     breakdown: {
       skills: "37/40",
       skillsOk: true,
@@ -149,7 +193,35 @@ const JOBS_DATA: JobCardData[] = [
       salary: "5/5",
       salaryOk: true,
     },
-    logoColor: "from-amber-500 to-orange-600",
+    logoColor: "from-emerald-600 to-teal-700",
+    logoLetter: "S",
+  },
+  {
+    id: "it-job-6",
+    department: "Mobile Engineering",
+    title: "Senior React Native Developer",
+    company: "Airation Softtech Pvt Ltd",
+    verified: true,
+    matchScore: 96,
+    matchGrade: "HIGH MATCH",
+    aiNote: "Excellent match for cross-platform iOS & Android mobile app architecture, gesture animations & state management.",
+    location: "Bareilly / Hybrid",
+    salary: "₹ 14 - 22 LPA",
+    experience: "3-5 Years",
+    type: "Full Time",
+    tags: ["React Native", "Expo", "TypeScript", "Mobile UI"],
+    breakdown: {
+      skills: "39/40",
+      skillsOk: true,
+      exp: "13/13",
+      expOk: true,
+      location: "7/7",
+      locationOk: true,
+      salary: "5/5",
+      salaryOk: true,
+    },
+    logoColor: "from-cyan-500 to-blue-600",
+    logoLetter: "A",
   },
 ];
 
@@ -157,46 +229,72 @@ interface SwipeCardProps {
   job: JobCardData;
   isTop: boolean;
   indexOffset: number;
-  onSwipe: (direction: "left" | "right") => void;
-  isExiting: boolean;
-  exitDirection: "left" | "right";
+  onSwipeComplete: (direction: "left" | "right") => void;
+  triggerDirection?: "left" | "right" | null;
 }
 
 function SwipeCard({
   job,
   isTop,
   indexOffset,
-  onSwipe,
-  isExiting,
-  exitDirection,
+  onSwipeComplete,
+  triggerDirection,
 }: SwipeCardProps) {
   const x = useMotionValue(0);
   const rotate = useTransform(x, [-160, 0, 160], [-14, 0, 14]);
-  const applyStampOpacity = useTransform(x, [20, 70], [0, 1]);
-  const skipStampOpacity = useTransform(x, [-20, -70], [0, 1]);
+  const applyStampOpacity = useTransform(x, [18, 65], [0, 1]);
+  const skipStampOpacity = useTransform(x, [-18, -65], [0, 1]);
   const overlayGreen = useTransform(
     x,
     [0, 120],
-    ["rgba(34, 197, 94, 0)", "rgba(34, 197, 94, 0.12)"]
+    ["rgba(34, 197, 94, 0)", "rgba(34, 197, 94, 0.14)"]
   );
   const overlayRed = useTransform(
     x,
     [0, -120],
-    ["rgba(239, 68, 68, 0)", "rgba(239, 68, 68, 0.12)"]
+    ["rgba(239, 68, 68, 0)", "rgba(239, 68, 68, 0.14)"]
   );
 
+  const isHighMatch = job.matchScore >= 80;
+  const isAnimatingOut = useRef(false);
+
+  const performSwipe = useCallback(
+    (direction: "left" | "right") => {
+      if (isAnimatingOut.current) return;
+      isAnimatingOut.current = true;
+
+      const targetX = direction === "right" ? 380 : -380;
+      animate(x, targetX, {
+        duration: 0.38,
+        ease: [0.16, 1, 0.3, 1],
+      }).then(() => {
+        onSwipeComplete(direction);
+      });
+    },
+    [onSwipeComplete, x]
+  );
+
+  // Triggered programmatically via auto-swipe
+  useEffect(() => {
+    if (isTop && triggerDirection && !isAnimatingOut.current) {
+      performSwipe(triggerDirection);
+    }
+  }, [isTop, triggerDirection, performSwipe]);
+
   const handleDragEnd = (_: unknown, info: PanInfo) => {
-    if (!isTop) return;
-    const swipeThreshold = 80;
-    const velocityThreshold = 400;
+    if (!isTop || isAnimatingOut.current) return;
+    const swipeThreshold = 65;
+    const velocityThreshold = 300;
 
     if (info.offset.x > swipeThreshold || info.velocity.x > velocityThreshold) {
-      onSwipe("right");
+      performSwipe("right");
     } else if (
       info.offset.x < -swipeThreshold ||
       info.velocity.x < -velocityThreshold
     ) {
-      onSwipe("left");
+      performSwipe("left");
+    } else {
+      animate(x, 0, { type: "spring", stiffness: 350, damping: 25 });
     }
   };
 
@@ -215,24 +313,14 @@ function SwipeCard({
         zIndex: 30 - indexOffset,
         cursor: isTop ? "grab" : "default",
       }}
-      initial={{
-        scale: isExiting ? 1 : scale,
-        y: isExiting ? 0 : translateY,
-        opacity: isExiting ? 1 : opacity,
-      }}
       animate={{
         scale,
         y: translateY,
         opacity,
-        ...(isExiting && {
-          x: exitDirection === "right" ? 340 : -340,
-          rotate: exitDirection === "right" ? 20 : -20,
-          opacity: 0,
-        }),
       }}
       transition={{
         type: "spring",
-        stiffness: 320,
+        stiffness: 280,
         damping: 24,
         mass: 0.8,
       }}
@@ -245,13 +333,13 @@ function SwipeCard({
     >
       {/* Card Body */}
       <div className="relative h-full w-full rounded-[18px] border border-slate-200/90 bg-white p-2.5 sm:p-3 shadow-lg flex flex-col justify-between dark:border-slate-800 dark:bg-slate-900 overflow-hidden">
-        {/* Dynamic Stamp Overlays during drag */}
+        {/* Dynamic Stamp Overlays during manual drag OR programmatic auto-swiping */}
         {isTop && (
           <>
             {/* APPLY Stamp */}
             <motion.div
               style={{ opacity: applyStampOpacity }}
-              className="pointer-events-none absolute left-3 top-3 z-40 rounded-lg border-2 border-emerald-500 bg-emerald-500/10 px-2 py-0.5 text-[10px] font-black uppercase tracking-wider text-emerald-600 shadow-md backdrop-blur-sm -rotate-12 dark:bg-emerald-500/20 dark:text-emerald-400"
+              className="pointer-events-none absolute left-3 top-3 z-40 rounded-lg border-2 border-emerald-500 bg-emerald-500/15 px-2 py-0.5 text-[10px] font-black uppercase tracking-wider text-emerald-600 shadow-md backdrop-blur-sm -rotate-12 dark:bg-emerald-500/25 dark:text-emerald-400"
             >
               ✓ APPLY
             </motion.div>
@@ -259,7 +347,7 @@ function SwipeCard({
             {/* SKIP Stamp */}
             <motion.div
               style={{ opacity: skipStampOpacity }}
-              className="pointer-events-none absolute right-3 top-3 z-40 rounded-lg border-2 border-rose-500 bg-rose-500/10 px-2 py-0.5 text-[10px] font-black uppercase tracking-wider text-rose-600 shadow-md backdrop-blur-sm rotate-12 dark:bg-rose-500/20 dark:text-rose-400"
+              className="pointer-events-none absolute right-3 top-3 z-40 rounded-lg border-2 border-rose-500 bg-rose-500/15 px-2 py-0.5 text-[10px] font-black uppercase tracking-wider text-rose-600 shadow-md backdrop-blur-sm rotate-12 dark:bg-rose-500/25 dark:text-rose-400"
             >
               ✕ SKIP
             </motion.div>
@@ -286,7 +374,7 @@ function SwipeCard({
                   job.logoColor
                 )}
               >
-                {job.company.charAt(0)}
+                {job.logoLetter}
               </div>
               <div className="min-w-0">
                 <p className="truncate text-[11px] font-bold text-slate-800 dark:text-slate-200">
@@ -294,17 +382,36 @@ function SwipeCard({
                 </p>
                 <div className="flex items-center gap-0.5">
                   <BadgeCheck className="h-3 w-3 text-blue-500 shrink-0" />
-                  <span className="text-[9px] font-medium text-slate-500 dark:text-slate-400">
+                  <span className="text-[9px] font-medium text-slate-500 dark:text-slate-400 truncate">
                     Verified Employer
                   </span>
                 </div>
               </div>
             </div>
 
-            {/* Match Circle */}
-            <div className="shrink-0 flex items-center gap-1 rounded-full border border-emerald-500/30 bg-emerald-50 px-1.5 py-0.5 dark:bg-emerald-950/40">
-              <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
-              <span className="text-[9.5px] font-extrabold text-emerald-600 dark:text-emerald-400">
+            {/* Match Circle (Green for High Match, Rose/Amber for Low Match) */}
+            <div
+              className={cn(
+                "shrink-0 flex items-center gap-1 rounded-full border px-1.5 py-0.5",
+                isHighMatch
+                  ? "border-emerald-500/30 bg-emerald-50 dark:bg-emerald-950/40"
+                  : "border-rose-500/30 bg-rose-50 dark:bg-rose-950/40"
+              )}
+            >
+              <div
+                className={cn(
+                  "h-1.5 w-1.5 rounded-full animate-pulse",
+                  isHighMatch ? "bg-emerald-500" : "bg-rose-500"
+                )}
+              />
+              <span
+                className={cn(
+                  "text-[9.5px] font-extrabold",
+                  isHighMatch
+                    ? "text-emerald-600 dark:text-emerald-400"
+                    : "text-rose-600 dark:text-rose-400"
+                )}
+              >
                 {job.matchScore}% Match
               </span>
             </div>
@@ -316,10 +423,28 @@ function SwipeCard({
           </h4>
 
           {/* AI Match Insight Box */}
-          <div className="mt-1.5 rounded-lg border border-indigo-100 bg-indigo-50/70 p-1.5 sm:p-2 dark:border-indigo-950 dark:bg-indigo-950/30">
+          <div
+            className={cn(
+              "mt-1.5 rounded-lg border p-1.5 sm:p-2",
+              isHighMatch
+                ? "border-indigo-100 bg-indigo-50/70 dark:border-indigo-950 dark:bg-indigo-950/30"
+                : "border-amber-100 bg-amber-50/70 dark:border-amber-950 dark:bg-amber-950/30"
+            )}
+          >
             <div className="flex items-start gap-1">
-              <Sparkles className="h-3 w-3 text-indigo-600 dark:text-indigo-400 shrink-0 mt-0.5" />
-              <p className="text-[9.5px] leading-snug text-indigo-950 dark:text-indigo-200 font-medium line-clamp-2">
+              {isHighMatch ? (
+                <Sparkles className="h-3 w-3 text-indigo-600 dark:text-indigo-400 shrink-0 mt-0.5" />
+              ) : (
+                <AlertCircle className="h-3 w-3 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
+              )}
+              <p
+                className={cn(
+                  "text-[9.5px] leading-snug font-medium line-clamp-2",
+                  isHighMatch
+                    ? "text-indigo-950 dark:text-indigo-200"
+                    : "text-amber-950 dark:text-amber-200"
+                )}
+              >
                 {job.aiNote}
               </p>
             </div>
@@ -362,32 +487,61 @@ function SwipeCard({
         <div className="mt-1.5 pt-1.5 border-t border-slate-100 dark:border-slate-800">
           <div className="flex items-center justify-between text-[8.5px] text-slate-500 font-bold uppercase tracking-wider mb-1">
             <span>Why {job.matchScore}% Match?</span>
-            <span className="text-emerald-600 dark:text-emerald-400">High Match</span>
+            <span
+              className={cn(
+                "font-bold",
+                isHighMatch
+                  ? "text-emerald-600 dark:text-emerald-400"
+                  : "text-rose-600 dark:text-rose-400"
+              )}
+            >
+              {job.matchGrade}
+            </span>
           </div>
           <div className="grid grid-cols-4 gap-1 text-center text-[9px]">
-            <div className="rounded bg-emerald-50/70 p-0.5 dark:bg-emerald-950/30">
+            <div
+              className={cn(
+                "rounded p-0.5",
+                job.breakdown.skillsOk
+                  ? "bg-emerald-50/70 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400"
+                  : "bg-rose-50/70 dark:bg-rose-950/30 text-rose-600 dark:text-rose-400"
+              )}
+            >
               <span className="block text-[8px] text-slate-500">Skills</span>
-              <span className="font-bold text-emerald-600 dark:text-emerald-400">
-                {job.breakdown.skills}
-              </span>
+              <span className="font-bold">{job.breakdown.skills}</span>
             </div>
-            <div className="rounded bg-emerald-50/70 p-0.5 dark:bg-emerald-950/30">
+            <div
+              className={cn(
+                "rounded p-0.5",
+                job.breakdown.expOk
+                  ? "bg-emerald-50/70 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400"
+                  : "bg-rose-50/70 dark:bg-rose-950/30 text-rose-600 dark:text-rose-400"
+              )}
+            >
               <span className="block text-[8px] text-slate-500">Exp</span>
-              <span className="font-bold text-emerald-600 dark:text-emerald-400">
-                {job.breakdown.exp}
-              </span>
+              <span className="font-bold">{job.breakdown.exp}</span>
             </div>
-            <div className="rounded bg-emerald-50/70 p-0.5 dark:bg-emerald-950/30">
+            <div
+              className={cn(
+                "rounded p-0.5",
+                job.breakdown.locationOk
+                  ? "bg-emerald-50/70 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400"
+                  : "bg-rose-50/70 dark:bg-rose-950/30 text-rose-600 dark:text-rose-400"
+              )}
+            >
               <span className="block text-[8px] text-slate-500">Location</span>
-              <span className="font-bold text-emerald-600 dark:text-emerald-400">
-                {job.breakdown.location}
-              </span>
+              <span className="font-bold">{job.breakdown.location}</span>
             </div>
-            <div className="rounded bg-emerald-50/70 p-0.5 dark:bg-emerald-950/30">
+            <div
+              className={cn(
+                "rounded p-0.5",
+                job.breakdown.salaryOk
+                  ? "bg-emerald-50/70 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400"
+                  : "bg-rose-50/70 dark:bg-rose-950/30 text-rose-600 dark:text-rose-400"
+              )}
+            >
               <span className="block text-[8px] text-slate-500">Salary</span>
-              <span className="font-bold text-emerald-600 dark:text-emerald-400">
-                {job.breakdown.salary}
-              </span>
+              <span className="font-bold">{job.breakdown.salary}</span>
             </div>
           </div>
         </div>
@@ -399,23 +553,29 @@ function SwipeCard({
             type="button"
             onClick={(e) => {
               e.stopPropagation();
-              onSwipe("left");
+              performSwipe("left");
             }}
             aria-label="Skip Job"
-            className="flex-1 flex items-center justify-center gap-1 rounded-full border border-rose-200 bg-rose-50/80 py-1.5 text-[10.5px] font-bold text-rose-600 transition-all hover:bg-rose-100 active:scale-95 dark:border-rose-900/60 dark:bg-rose-950/40 dark:text-rose-400"
+            className="flex-1 flex items-center justify-center gap-1 rounded-full border border-rose-200 bg-rose-50/80 py-1.5 text-[10.5px] font-bold text-rose-600 transition-all hover:bg-rose-100 active:scale-95 dark:border-rose-900/60 dark:bg-rose-950/40 dark:text-rose-400 cursor-pointer"
           >
             <X className="h-3 w-3" />
             <span>Skip</span>
           </button>
 
-          {/* Bookmark Button */}
+          {/* Bookmark / Hirance Logo Button */}
           <button
             type="button"
             onClick={(e) => e.stopPropagation()}
-            aria-label="Bookmark Job"
-            className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-slate-200 bg-slate-50 text-slate-600 transition-all hover:bg-slate-100 active:scale-95 dark:border-slate-800 dark:bg-slate-800 dark:text-slate-300"
+            aria-label="Save Job"
+            className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-slate-200 bg-slate-50 p-1.5 transition-all hover:bg-slate-100 hover:scale-105 active:scale-95 dark:border-slate-800 dark:bg-slate-800 cursor-pointer"
           >
-            <Bookmark className="h-3 w-3" />
+            <Image
+              src="/images/icon.png"
+              alt="Hirance Icon"
+              width={16}
+              height={16}
+              className="h-3.5 w-3.5 object-contain"
+            />
           </button>
 
           {/* Apply Button */}
@@ -423,10 +583,10 @@ function SwipeCard({
             type="button"
             onClick={(e) => {
               e.stopPropagation();
-              onSwipe("right");
+              performSwipe("right");
             }}
             aria-label="Apply to Job"
-            className="flex-1 flex items-center justify-center gap-1 rounded-full bg-emerald-600 py-1.5 text-[10.5px] font-bold text-white shadow-sm shadow-emerald-600/25 transition-all hover:bg-emerald-500 active:scale-95"
+            className="flex-1 flex items-center justify-center gap-1 rounded-full bg-emerald-600 py-1.5 text-[10.5px] font-bold text-white shadow-sm shadow-emerald-600/25 transition-all hover:bg-emerald-500 active:scale-95 cursor-pointer"
           >
             <Check className="h-3 w-3" strokeWidth={2.8} />
             <span>Apply</span>
@@ -439,43 +599,71 @@ function SwipeCard({
 
 export function CandidatePhoneMockup() {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [exitingDirection, setExitingDirection] = useState<"left" | "right">("right");
-  const [isExiting, setIsExiting] = useState(false);
+  const [autoSwipeTarget, setAutoSwipeTarget] = useState<{
+    id: string;
+    direction: "left" | "right";
+  } | null>(null);
   const [appliedCount, setAppliedCount] = useState(0);
   const [showAppliedToast, setShowAppliedToast] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
   const reducedMotion = useReducedMotion();
 
-  const handleSwipe = useCallback(
-    (direction: "left" | "right") => {
-      if (isExiting || currentIndex >= JOBS_DATA.length) return;
+  const handleSwipeComplete = useCallback((direction: "left" | "right") => {
+    setAutoSwipeTarget(null);
+    if (direction === "right") {
+      setAppliedCount((prev) => prev + 1);
+      setShowAppliedToast(true);
+      setTimeout(() => setShowAppliedToast(false), 2200);
+    }
+    setCurrentIndex((prev) => prev + 1);
+  }, []);
 
-      setExitingDirection(direction);
-      setIsExiting(true);
-
-      if (direction === "right") {
-        setAppliedCount((prev) => prev + 1);
-        setShowAppliedToast(true);
-        setTimeout(() => setShowAppliedToast(false), 2400);
-      }
-
-      setTimeout(() => {
-        setCurrentIndex((prev) => prev + 1);
-        setIsExiting(false);
-      }, 260);
-    },
-    [currentIndex, isExiting]
-  );
-
-  const handleReset = () => {
+  const handleReset = useCallback(() => {
     setCurrentIndex(0);
-    setIsExiting(false);
-  };
+    setAutoSwipeTarget(null);
+  }, []);
+
+  // Automatic Swiping Engine based on match score
+  useEffect(() => {
+    if (reducedMotion || isPaused || autoSwipeTarget) return;
+
+    if (currentIndex >= JOBS_DATA.length) {
+      // Reached the end: pause on completion screen for 3.2 seconds then seamlessly auto-loop
+      timerRef.current = setTimeout(() => {
+        handleReset();
+      }, 3200);
+      return () => {
+        if (timerRef.current) clearTimeout(timerRef.current);
+      };
+    }
+
+    // Evaluate top card match score for direction:
+    // Low Score (< 80) -> Left (Skip)
+    // High Score (>= 80) -> Right (Apply)
+    const currentJob = JOBS_DATA[currentIndex];
+    const targetDirection = currentJob.matchScore >= 80 ? "right" : "left";
+
+    timerRef.current = setTimeout(() => {
+      setAutoSwipeTarget({ id: currentJob.id, direction: targetDirection });
+    }, 3400);
+
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
+  }, [currentIndex, isPaused, autoSwipeTarget, reducedMotion, handleReset]);
 
   const visibleJobs = JOBS_DATA.slice(currentIndex, currentIndex + 3);
   const isDeckFinished = currentIndex >= JOBS_DATA.length;
 
   return (
-    <div className="relative flex flex-col items-center">
+    <div
+      className="relative flex flex-col items-center"
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
+      onTouchStart={() => setIsPaused(true)}
+      onTouchEnd={() => setIsPaused(false)}
+    >
       {/* Smartphone Chassis */}
       <div className="relative w-[265px] sm:w-[285px] md:w-[295px] rounded-[38px] sm:rounded-[42px] border-[7px] sm:border-[8px] border-slate-900 bg-slate-900 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.45),0_0_0_1px_rgba(255,255,255,0.1)] ring-1 ring-black/80 dark:border-slate-800 dark:ring-white/10 overflow-hidden">
         {/* Dynamic Island Notch */}
@@ -508,6 +696,7 @@ export function CandidatePhoneMockup() {
             <button
               type="button"
               className="flex h-7 w-7 items-center justify-center rounded-lg bg-white/90 shadow-2xs border border-slate-200 dark:bg-slate-900 dark:border-slate-800 text-slate-700 dark:text-slate-300"
+              aria-label="Filter Preferences"
             >
               <SlidersHorizontal className="h-3 w-3" />
             </button>
@@ -522,6 +711,7 @@ export function CandidatePhoneMockup() {
               <button
                 type="button"
                 className="flex h-7 w-7 items-center justify-center rounded-lg bg-white/90 shadow-2xs border border-slate-200 dark:bg-slate-900 dark:border-slate-800 text-slate-700 dark:text-slate-300"
+                aria-label="Notifications"
               >
                 <Bell className="h-3 w-3" />
               </button>
@@ -541,9 +731,12 @@ export function CandidatePhoneMockup() {
                     job={job}
                     isTop={idx === 0}
                     indexOffset={idx}
-                    onSwipe={handleSwipe}
-                    isExiting={idx === 0 && isExiting}
-                    exitDirection={exitingDirection}
+                    onSwipeComplete={handleSwipeComplete}
+                    triggerDirection={
+                      idx === 0 && autoSwipeTarget?.id === job.id
+                        ? autoSwipeTarget.direction
+                        : null
+                    }
                   />
                 ))
               ) : (
@@ -659,7 +852,7 @@ export function CandidatePhoneMockup() {
         </div>
       </div>
 
-      {/* Dynamic Toast for Swiping Right */}
+      {/* Dynamic Toast for Swiping Right (Applications) */}
       <AnimatePresence>
         {showAppliedToast && (
           <motion.div
@@ -678,3 +871,4 @@ export function CandidatePhoneMockup() {
     </div>
   );
 }
+

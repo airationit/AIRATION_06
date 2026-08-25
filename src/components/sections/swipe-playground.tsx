@@ -1,13 +1,14 @@
 "use client";
 
-import React, { useState, useCallback } from "react";
-import Link from "next/link";
+import React, { useState, useCallback, useRef } from "react";
+import Image from "next/image";
 import {
   motion,
   AnimatePresence,
   useMotionValue,
   useTransform,
   useReducedMotion,
+  animate,
   PanInfo,
 } from "framer-motion";
 import {
@@ -17,76 +18,206 @@ import {
   RotateCcw,
   ArrowRight,
   PartyPopper,
-  Bookmark,
   MapPin,
   Briefcase,
+  Clock,
   IndianRupee,
   BadgeCheck,
+  AlertCircle,
 } from "lucide-react";
 import { siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
 
 export interface PlaygroundJob {
   id: string;
+  department: string;
   title: string;
   company: string;
+  verified: boolean;
   matchScore: number;
+  matchGrade: "HIGH MATCH" | "LOW MATCH";
   aiNote: string;
   location: string;
   salary: string;
   experience: string;
+  type: string;
   tags: string[];
+  breakdown: {
+    skills: string;
+    skillsOk: boolean;
+    exp: string;
+    expOk: boolean;
+    location: string;
+    locationOk: boolean;
+    salary: string;
+    salaryOk: boolean;
+  };
   logoColor: string;
+  logoLetter: string;
 }
 
 const PLAYGROUND_JOBS: PlaygroundJob[] = [
   {
-    id: "pg-1",
-    title: "Senior Full Stack Engineer",
+    id: "pg-job-1",
+    department: "Web & Frontend Engineering",
+    title: "Frontend Engineer (Next.js)",
     company: "Nexus Cloud Systems",
-    matchScore: 96,
-    aiNote: "Strong match for React, Next.js, Node.js & high-scale architecture.",
+    verified: true,
+    matchScore: 98,
+    matchGrade: "HIGH MATCH",
+    aiNote: "Strong match for your React, TypeScript, and high-performance UI architecture skillset.",
     location: "Bengaluru (Hybrid)",
+    salary: "₹ 14 - 20 LPA",
+    experience: "3-5 Years",
+    type: "Full Time",
+    tags: ["React", "Next.js", "TypeScript"],
+    breakdown: {
+      skills: "40/40",
+      skillsOk: true,
+      exp: "13/13",
+      expOk: true,
+      location: "7/7",
+      locationOk: true,
+      salary: "5/5",
+      salaryOk: true,
+    },
+    logoColor: "from-indigo-500 to-purple-600",
+    logoLetter: "N",
+  },
+  {
+    id: "pg-job-2",
+    department: "Backend & Distributed Systems",
+    title: "Backend Systems Engineer",
+    company: "FinVortex Technologies",
+    verified: true,
+    matchScore: 94,
+    matchGrade: "HIGH MATCH",
+    aiNote: "High synergy with your Node.js, PostgreSQL, Redis, and high-throughput microservices experience.",
+    location: "Pune (Remote)",
     salary: "₹ 16 - 24 LPA",
     experience: "3-6 Years",
-    tags: ["React", "Next.js", "Node.js", "TypeScript"],
-    logoColor: "from-cyan-500 to-blue-600",
+    type: "Full Time",
+    tags: ["Node.js", "PostgreSQL", "Redis"],
+    breakdown: {
+      skills: "38/40",
+      skillsOk: true,
+      exp: "12/13",
+      expOk: true,
+      location: "7/7",
+      locationOk: true,
+      salary: "5/5",
+      salaryOk: true,
+    },
+    logoColor: "from-blue-600 to-cyan-600",
+    logoLetter: "F",
   },
   {
-    id: "pg-2",
-    title: "Product Designer (UI/UX)",
-    company: "Nova Studios",
+    id: "pg-job-3",
+    department: "Cloud Infrastructure & DevOps",
+    title: "Lead DevOps & SRE Engineer",
+    company: "StrataScale Cloud Infra",
+    verified: true,
+    matchScore: 56,
+    matchGrade: "LOW MATCH",
+    aiNote: "Requires 7+ yrs multi-cloud Terraform, Golang & 24/7 on-call. Stack gap with your current frontend/web focus.",
+    location: "Hyderabad (On-site)",
+    salary: "₹ 22 - 30 LPA",
+    experience: "6-9 Years",
+    type: "Full Time",
+    tags: ["Kubernetes", "Terraform", "AWS / GCP"],
+    breakdown: {
+      skills: "20/40",
+      skillsOk: false,
+      exp: "7/13",
+      expOk: false,
+      location: "5/7",
+      locationOk: true,
+      salary: "5/5",
+      salaryOk: true,
+    },
+    logoColor: "from-slate-600 to-slate-800",
+    logoLetter: "S",
+  },
+  {
+    id: "pg-job-4",
+    department: "Mobile Engineering",
+    title: "Senior React Native Developer",
+    company: "Airation Softtech Pvt Ltd",
+    verified: true,
+    matchScore: 96,
+    matchGrade: "HIGH MATCH",
+    aiNote: "Excellent match for cross-platform iOS & Android mobile app architecture, gesture animations & state management.",
+    location: "Bareilly / Hybrid",
+    salary: "₹ 14 - 22 LPA",
+    experience: "3-5 Years",
+    type: "Full Time",
+    tags: ["React Native", "Expo", "TypeScript"],
+    breakdown: {
+      skills: "39/40",
+      skillsOk: true,
+      exp: "13/13",
+      expOk: true,
+      location: "7/7",
+      locationOk: true,
+      salary: "5/5",
+      salaryOk: true,
+    },
+    logoColor: "from-cyan-500 to-blue-600",
+    logoLetter: "A",
+  },
+  {
+    id: "pg-job-5",
+    department: "AI & Machine Learning",
+    title: "AI / ML Research Engineer",
+    company: "Cerebra AI Labs",
+    verified: true,
+    matchScore: 62,
+    matchGrade: "LOW MATCH",
+    aiNote: "Role demands PyTorch, LLM fine-tuning & CUDA optimizations. Does not align with application-tier background.",
+    location: "Gurugram (Hybrid)",
+    salary: "₹ 24 - 35 LPA",
+    experience: "4-7 Years",
+    type: "Full Time",
+    tags: ["PyTorch", "LLM Ops", "CUDA"],
+    breakdown: {
+      skills: "22/40",
+      skillsOk: false,
+      exp: "9/13",
+      expOk: false,
+      location: "7/7",
+      locationOk: true,
+      salary: "5/5",
+      salaryOk: true,
+    },
+    logoColor: "from-purple-600 to-pink-600",
+    logoLetter: "C",
+  },
+  {
+    id: "pg-job-6",
+    department: "Cybersecurity & InfoSec",
+    title: "Cybersecurity Analyst & SecOps",
+    company: "ShieldPoint Infosec",
+    verified: true,
     matchScore: 92,
-    aiNote: "Ideal fit for design systems, mobile UX, and interactive micro-animations.",
-    location: "Mumbai / Remote",
+    matchGrade: "HIGH MATCH",
+    aiNote: "Great match for Application Security, OWASP standards, penetration audits, and SOC compliance monitoring.",
+    location: "Noida (Hybrid)",
     salary: "₹ 12 - 18 LPA",
     experience: "2-5 Years",
-    tags: ["Figma", "Design Systems", "Prototyping"],
-    logoColor: "from-indigo-500 to-purple-600",
-  },
-  {
-    id: "pg-3",
-    title: "Growth & Performance Marketer",
-    company: "ScaleFlow India",
-    matchScore: 89,
-    aiNote: "Great for paid user acquisition, ROAS scaling, and analytics funnels.",
-    location: "Gurugram, HR",
-    salary: "₹ 10 - 15 LPA",
-    experience: "2-4 Years",
-    tags: ["Meta Ads", "Google Ads", "Growth Funnels"],
-    logoColor: "from-emerald-500 to-teal-600",
-  },
-  {
-    id: "pg-4",
-    title: "Area Sales Manager",
-    company: "Airation Softtech",
-    matchScore: 95,
-    aiNote: "Excellent match for regional distributor expansion and B2B client management.",
-    location: "Bareilly, UP",
-    salary: "₹ 7 - 10 LPA",
-    experience: "2-5 Years",
-    tags: ["Channel Sales", "B2B Expansion", "FMCG"],
-    logoColor: "from-amber-500 to-orange-600",
+    type: "Full Time",
+    tags: ["AppSec", "OWASP", "SOC Monitoring"],
+    breakdown: {
+      skills: "37/40",
+      skillsOk: true,
+      exp: "12/13",
+      expOk: true,
+      location: "7/7",
+      locationOk: true,
+      salary: "5/5",
+      salaryOk: true,
+    },
+    logoColor: "from-emerald-600 to-teal-700",
+    logoLetter: "S",
   },
 ];
 
@@ -94,32 +225,57 @@ interface DragCardProps {
   job: PlaygroundJob;
   onDecide: (dir: "left" | "right", job: PlaygroundJob) => void;
   isTop: boolean;
-  isExiting: boolean;
-  exitDir: "left" | "right";
 }
 
-function DragCard({ job, onDecide, isTop, isExiting, exitDir }: DragCardProps) {
+function DragCard({ job, onDecide, isTop }: DragCardProps) {
   const x = useMotionValue(0);
-  const rotate = useTransform(x, [-240, 240], [-14, 14]);
-  const applyOpacity = useTransform(x, [30, 110], [0, 1]);
-  const skipOpacity = useTransform(x, [-30, -110], [0, 1]);
+  const rotate = useTransform(x, [-160, 0, 160], [-14, 0, 14]);
+  const applyStampOpacity = useTransform(x, [18, 65], [0, 1]);
+  const skipStampOpacity = useTransform(x, [-18, -65], [0, 1]);
   const overlayGreen = useTransform(
     x,
     [0, 120],
-    ["rgba(16, 185, 129, 0)", "rgba(16, 185, 129, 0.08)"]
+    ["rgba(34, 197, 94, 0)", "rgba(34, 197, 94, 0.12)"]
   );
   const overlayRed = useTransform(
     x,
     [0, -120],
-    ["rgba(244, 63, 94, 0)", "rgba(244, 63, 94, 0.08)"]
+    ["rgba(239, 68, 68, 0)", "rgba(239, 68, 68, 0.12)"]
+  );
+
+  const isHighMatch = job.matchScore >= 80;
+  const isAnimatingOut = useRef(false);
+
+  const performSwipe = useCallback(
+    (direction: "left" | "right") => {
+      if (isAnimatingOut.current) return;
+      isAnimatingOut.current = true;
+
+      const targetX = direction === "right" ? 420 : -420;
+      animate(x, targetX, {
+        duration: 0.38,
+        ease: [0.16, 1, 0.3, 1],
+      }).then(() => {
+        onDecide(direction, job);
+      });
+    },
+    [onDecide, job, x]
   );
 
   const handleDragEnd = (_: unknown, info: PanInfo) => {
-    if (!isTop) return;
-    if (info.offset.x > 85 || info.velocity.x > 320) {
-      onDecide("right", job);
-    } else if (info.offset.x < -85 || info.velocity.x < -320) {
-      onDecide("left", job);
+    if (!isTop || isAnimatingOut.current) return;
+    const swipeThreshold = 65;
+    const velocityThreshold = 300;
+
+    if (info.offset.x > swipeThreshold || info.velocity.x > velocityThreshold) {
+      performSwipe("right");
+    } else if (
+      info.offset.x < -swipeThreshold ||
+      info.velocity.x < -velocityThreshold
+    ) {
+      performSwipe("left");
+    } else {
+      animate(x, 0, { type: "spring", stiffness: 350, damping: 25 });
     }
   };
 
@@ -133,43 +289,38 @@ function DragCard({ job, onDecide, isTop, isExiting, exitDir }: DragCardProps) {
         zIndex: isTop ? 30 : 20,
         cursor: isTop ? "grab" : "default",
       }}
-      initial={{ scale: 0.94, opacity: 0, y: 12 }}
-      animate={{
-        scale: 1,
-        opacity: isExiting ? 0 : 1,
-        y: 0,
-        ...(isExiting && {
-          x: exitDir === "right" ? 400 : -400,
-          rotate: exitDir === "right" ? 22 : -22,
-        }),
-      }}
+      initial={{ scale: 0.95, opacity: 0, y: 10 }}
+      animate={{ scale: 1, opacity: 1, y: 0 }}
+      exit={{ opacity: 0 }}
       transition={{
-        duration: isExiting ? 0.32 : 0.45,
-        ease: [0.16, 1, 0.3, 1],
+        type: "spring",
+        stiffness: 280,
+        damping: 24,
+        mass: 0.8,
       }}
       drag={isTop ? "x" : false}
       dragConstraints={{ left: 0, right: 0 }}
-      dragElastic={0.8}
+      dragElastic={0.85}
       onDragEnd={handleDragEnd}
       whileDrag={{ cursor: "grabbing" }}
       className="touch-none select-none"
     >
-      <div className="relative h-full w-full rounded-[24px] sm:rounded-[28px] border border-border/80 bg-card p-4 sm:p-5 shadow-xl shadow-slate-950/10 dark:shadow-white/5 flex flex-col justify-between overflow-hidden">
-        {/* Dynamic Stamp Overlays during drag */}
+      <div className="relative h-full w-full rounded-[22px] sm:rounded-[24px] border border-slate-200/90 bg-white p-3 sm:p-3.5 shadow-xl shadow-slate-900/5 dark:border-slate-800 dark:bg-slate-900 flex flex-col justify-between overflow-hidden">
+        {/* Dynamic Stamp Overlays during drag or button actions */}
         {isTop && (
           <>
             {/* APPLY Stamp */}
             <motion.div
-              style={{ opacity: applyOpacity }}
-              className="pointer-events-none absolute left-4 top-4 z-40 rounded-xl border-2 border-emerald-500 bg-emerald-500/15 dark:bg-emerald-950/80 px-3 py-0.5 text-xs font-black uppercase tracking-wider text-emerald-600 dark:text-emerald-400 shadow-lg backdrop-blur-sm -rotate-12"
+              style={{ opacity: applyStampOpacity }}
+              className="pointer-events-none absolute left-3 top-3 z-40 rounded-lg border-2 border-emerald-500 bg-emerald-500/15 px-2.5 py-0.5 text-[10.5px] font-black uppercase tracking-wider text-emerald-600 shadow-md backdrop-blur-sm -rotate-12 dark:bg-emerald-500/25 dark:text-emerald-400"
             >
               ✓ APPLY
             </motion.div>
 
             {/* SKIP Stamp */}
             <motion.div
-              style={{ opacity: skipOpacity }}
-              className="pointer-events-none absolute right-4 top-4 z-40 rounded-xl border-2 border-rose-500 bg-rose-500/15 dark:bg-rose-950/80 px-3 py-0.5 text-xs font-black uppercase tracking-wider text-rose-600 dark:text-rose-400 shadow-lg backdrop-blur-sm rotate-12"
+              style={{ opacity: skipStampOpacity }}
+              className="pointer-events-none absolute right-3 top-3 z-40 rounded-lg border-2 border-rose-500 bg-rose-500/15 px-2.5 py-0.5 text-[10.5px] font-black uppercase tracking-wider text-rose-600 shadow-md backdrop-blur-sm rotate-12 dark:bg-rose-500/25 dark:text-rose-400"
             >
               ✕ SKIP
             </motion.div>
@@ -186,81 +337,233 @@ function DragCard({ job, onDecide, isTop, isExiting, exitDir }: DragCardProps) {
           </>
         )}
 
-        {/* Top Section */}
-        <div className="space-y-2.5 sm:space-y-3">
-          {/* Header Row: Company info & Match pill */}
-          <div className="flex items-center justify-between gap-2">
-            <div className="flex items-center gap-2.5 min-w-0">
+        {/* Top Header: Company Row & Match Badge */}
+        <div>
+          <div className="flex items-start justify-between gap-2">
+            <div className="flex items-center gap-2 min-w-0">
               <div
                 className={cn(
-                  "h-9 w-9 sm:h-10 sm:w-10 shrink-0 rounded-xl bg-gradient-to-tr flex items-center justify-center text-white font-black text-xs sm:text-sm shadow-md",
+                  "h-7 w-7 sm:h-8 sm:w-8 shrink-0 rounded-lg bg-gradient-to-tr flex items-center justify-center text-white font-black text-xs shadow-xs",
                   job.logoColor
                 )}
               >
-                {job.company.charAt(0)}
+                {job.logoLetter}
               </div>
               <div className="min-w-0">
-                <p className="truncate text-xs sm:text-sm font-bold text-foreground leading-tight">
+                <p className="truncate text-xs font-bold text-slate-900 dark:text-slate-100 leading-tight">
                   {job.company}
                 </p>
-                <div className="flex items-center gap-1 text-[10px] sm:text-[10.5px] text-muted-foreground mt-0.5">
-                  <BadgeCheck className="h-3.5 w-3.5 text-blue-500 shrink-0" />
-                  <span>Verified Employer</span>
+                <div className="flex items-center gap-0.5 mt-0.5">
+                  <BadgeCheck className="h-3 w-3 text-blue-500 shrink-0" />
+                  <span className="text-[9.5px] font-medium text-slate-500 dark:text-slate-400 truncate">
+                    Verified Employer
+                  </span>
                 </div>
               </div>
             </div>
 
-            {/* Match Circle */}
-            <div className="shrink-0 flex items-center gap-1 rounded-full border border-emerald-500/30 bg-emerald-50 px-2.5 py-1 dark:bg-emerald-950/40">
-              <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
-              <span className="text-[11px] sm:text-xs font-extrabold text-emerald-600 dark:text-emerald-400">
+            {/* Match Pill */}
+            <div
+              className={cn(
+                "shrink-0 flex items-center gap-1 rounded-full border px-2 py-0.5",
+                isHighMatch
+                  ? "border-emerald-500/30 bg-emerald-50 dark:bg-emerald-950/40"
+                  : "border-rose-500/30 bg-rose-50 dark:bg-rose-950/40"
+              )}
+            >
+              <div
+                className={cn(
+                  "h-1.5 w-1.5 rounded-full animate-pulse",
+                  isHighMatch ? "bg-emerald-500" : "bg-rose-500"
+                )}
+              />
+              <span
+                className={cn(
+                  "text-[10px] font-extrabold",
+                  isHighMatch
+                    ? "text-emerald-600 dark:text-emerald-400"
+                    : "text-rose-600 dark:text-rose-400"
+                )}
+              >
                 {job.matchScore}% Match
               </span>
             </div>
           </div>
 
           {/* Job Title */}
-          <h3 className="text-sm sm:text-base font-extrabold tracking-tight text-foreground leading-snug">
+          <h4 className="mt-1.5 text-[13px] sm:text-sm font-black tracking-tight text-slate-900 dark:text-white leading-tight">
             {job.title}
-          </h3>
+          </h4>
 
           {/* AI Match Insight Box */}
-          <div className="rounded-xl border border-blue-100 bg-gradient-to-r from-blue-50/80 to-indigo-50/40 p-2.5 sm:p-3 dark:border-blue-900/40 dark:from-blue-950/30 dark:to-indigo-950/20">
+          <div
+            className={cn(
+              "mt-1.5 rounded-lg border p-1.5 sm:p-2",
+              isHighMatch
+                ? "border-indigo-100 bg-indigo-50/70 dark:border-indigo-950 dark:bg-indigo-950/30"
+                : "border-amber-100 bg-amber-50/70 dark:border-amber-950 dark:bg-amber-950/30"
+            )}
+          >
             <div className="flex items-start gap-1.5">
-              <Sparkles className="h-3.5 w-3.5 text-blue-600 dark:text-blue-400 shrink-0 mt-0.5" />
-              <p className="text-[11px] sm:text-xs leading-relaxed text-blue-950 dark:text-blue-200 font-medium">
+              {isHighMatch ? (
+                <Sparkles className="h-3 w-3 text-indigo-600 dark:text-indigo-400 shrink-0 mt-0.5" />
+              ) : (
+                <AlertCircle className="h-3 w-3 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
+              )}
+              <p
+                className={cn(
+                  "text-[9.5px] sm:text-[10px] leading-snug font-medium line-clamp-2",
+                  isHighMatch
+                    ? "text-indigo-950 dark:text-indigo-200"
+                    : "text-amber-950 dark:text-amber-200"
+                )}
+              >
                 {job.aiNote}
               </p>
             </div>
           </div>
 
-          {/* Meta Badges Grid */}
-          <div className="grid grid-cols-2 gap-1.5 text-[11px] sm:text-xs">
-            <div className="flex items-center gap-1.5 rounded-lg bg-muted/60 px-2.5 py-1.5 text-muted-foreground">
-              <MapPin className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+          {/* Meta Grid (4 pills in 2x2 grid) */}
+          <div className="mt-1.5 grid grid-cols-2 gap-1 text-[9.5px] sm:text-[10px]">
+            <div className="flex items-center gap-1 rounded bg-slate-50 px-2 py-1 text-slate-700 dark:bg-slate-800/60 dark:text-slate-300">
+              <MapPin className="h-3 w-3 text-slate-400 shrink-0" />
               <span className="truncate">{job.location}</span>
             </div>
-            <div className="flex items-center gap-1.5 rounded-lg bg-muted/60 px-2.5 py-1.5 text-foreground font-semibold">
-              <IndianRupee className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
-              <span className="truncate">{job.salary}</span>
+            <div className="flex items-center gap-1 rounded bg-slate-50 px-2 py-1 text-slate-700 dark:bg-slate-800/60 dark:text-slate-300">
+              <IndianRupee className="h-3 w-3 text-slate-400 shrink-0" />
+              <span className="truncate font-bold">{job.salary}</span>
             </div>
-            <div className="flex items-center gap-1.5 rounded-lg bg-muted/60 px-2.5 py-1.5 text-muted-foreground col-span-2">
-              <Briefcase className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+            <div className="flex items-center gap-1 rounded bg-slate-50 px-2 py-1 text-slate-700 dark:bg-slate-800/60 dark:text-slate-300">
+              <Briefcase className="h-3 w-3 text-slate-400 shrink-0" />
               <span className="truncate">{job.experience}</span>
+            </div>
+            <div className="flex items-center gap-1 rounded bg-slate-50 px-2 py-1 text-slate-700 dark:bg-slate-800/60 dark:text-slate-300">
+              <Clock className="h-3 w-3 text-slate-400 shrink-0" />
+              <span className="truncate">{job.type}</span>
+            </div>
+          </div>
+
+          {/* Skills Tags */}
+          <div className="mt-1.5 flex flex-wrap gap-1">
+            {job.tags.map((tag) => (
+              <span
+                key={tag}
+                className="rounded bg-blue-50/80 px-1.5 py-0.5 text-[9px] font-semibold text-blue-700 dark:bg-blue-950/50 dark:text-blue-300"
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        {/* Why Match Section */}
+        <div className="mt-1.5 pt-1.5 border-t border-slate-100 dark:border-slate-800">
+          <div className="flex items-center justify-between text-[8.5px] sm:text-[9px] text-slate-500 font-bold uppercase tracking-wider mb-1">
+            <span>Why {job.matchScore}% Match?</span>
+            <span
+              className={cn(
+                "font-bold",
+                isHighMatch
+                  ? "text-emerald-600 dark:text-emerald-400"
+                  : "text-rose-600 dark:text-rose-400"
+              )}
+            >
+              {job.matchGrade}
+            </span>
+          </div>
+          <div className="grid grid-cols-4 gap-1 text-center text-[9px]">
+            <div
+              className={cn(
+                "rounded p-0.5",
+                job.breakdown.skillsOk
+                  ? "bg-emerald-50/70 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400"
+                  : "bg-rose-50/70 dark:bg-rose-950/30 text-rose-600 dark:text-rose-400"
+              )}
+            >
+              <span className="block text-[8px] text-slate-500">Skills</span>
+              <span className="font-bold">{job.breakdown.skills}</span>
+            </div>
+            <div
+              className={cn(
+                "rounded p-0.5",
+                job.breakdown.expOk
+                  ? "bg-emerald-50/70 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400"
+                  : "bg-rose-50/70 dark:bg-rose-950/30 text-rose-600 dark:text-rose-400"
+              )}
+            >
+              <span className="block text-[8px] text-slate-500">Exp</span>
+              <span className="font-bold">{job.breakdown.exp}</span>
+            </div>
+            <div
+              className={cn(
+                "rounded p-0.5",
+                job.breakdown.locationOk
+                  ? "bg-emerald-50/70 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400"
+                  : "bg-rose-50/70 dark:bg-rose-950/30 text-rose-600 dark:text-rose-400"
+              )}
+            >
+              <span className="block text-[8px] text-slate-500">Location</span>
+              <span className="font-bold">{job.breakdown.location}</span>
+            </div>
+            <div
+              className={cn(
+                "rounded p-0.5",
+                job.breakdown.salaryOk
+                  ? "bg-emerald-50/70 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400"
+                  : "bg-rose-50/70 dark:bg-rose-950/30 text-rose-600 dark:text-rose-400"
+              )}
+            >
+              <span className="block text-[8px] text-slate-500">Salary</span>
+              <span className="font-bold">{job.breakdown.salary}</span>
             </div>
           </div>
         </div>
 
-        {/* Skills Tags at Bottom */}
-        <div className="pt-2.5 border-t border-border/50 flex flex-wrap gap-1.5">
-          {job.tags.map((tag) => (
-            <span
-              key={tag}
-              className="rounded-md bg-blue-50/90 px-2 py-0.5 text-[10px] sm:text-[10.5px] font-semibold text-blue-700 dark:bg-blue-950/60 dark:text-blue-300 border border-blue-200/40 dark:border-blue-800/40"
-            >
-              {tag}
-            </span>
-          ))}
+        {/* Action Buttons on Card */}
+        <div className="mt-2 flex items-center justify-between gap-1.5 pt-0.5">
+          {/* Skip Button */}
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              performSwipe("left");
+            }}
+            aria-label="Skip Job"
+            className="flex-1 flex items-center justify-center gap-1 rounded-full border border-rose-200 bg-rose-50/80 py-1.5 text-[11px] font-bold text-rose-600 transition-all hover:bg-rose-100 active:scale-95 dark:border-rose-900/60 dark:bg-rose-950/40 dark:text-rose-400 cursor-pointer"
+          >
+            <X className="h-3 w-3" />
+            <span>Skip</span>
+          </button>
+
+          {/* Hirance Logo / Bookmark Button */}
+          <button
+            type="button"
+            onClick={(e) => e.stopPropagation()}
+            aria-label="Save Job"
+            className="flex h-7 w-7 sm:h-8 sm:w-8 shrink-0 items-center justify-center rounded-full border border-slate-200 bg-slate-50 p-1.5 transition-all hover:bg-slate-100 hover:scale-105 active:scale-95 dark:border-slate-800 dark:bg-slate-800 cursor-pointer"
+          >
+            <Image
+              src="/images/icon.png"
+              alt="Hirance Icon"
+              width={16}
+              height={16}
+              className="h-3.5 w-3.5 sm:h-4 sm:w-4 object-contain"
+            />
+          </button>
+
+          {/* Apply Button */}
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              performSwipe("right");
+            }}
+            aria-label="Apply to Job"
+            className="flex-1 flex items-center justify-center gap-1 rounded-full bg-emerald-600 py-1.5 text-[11px] font-bold text-white shadow-sm shadow-emerald-600/25 transition-all hover:bg-emerald-500 active:scale-95 cursor-pointer"
+          >
+            <Check className="h-3 w-3" strokeWidth={2.8} />
+            <span>Apply</span>
+          </button>
         </div>
       </div>
     </motion.div>
@@ -272,37 +575,29 @@ export function SwipePlayground() {
   const [index, setIndex] = useState(0);
   const [applied, setApplied] = useState<PlaygroundJob[]>([]);
   const [skipped, setSkipped] = useState(0);
-  const [saved, setSaved] = useState(0);
-  const [isExiting, setIsExiting] = useState(false);
-  const [exitDir, setExitDir] = useState<"left" | "right">("right");
+  const [showAppliedToast, setShowAppliedToast] = useState(false);
 
   const handleDecide = useCallback(
     (dir: "left" | "right", job: PlaygroundJob) => {
-      if (isExiting || index >= PLAYGROUND_JOBS.length) return;
-
-      setExitDir(dir);
-      setIsExiting(true);
+      if (index >= PLAYGROUND_JOBS.length) return;
 
       if (dir === "right") {
         setApplied((prev) => [...prev, job]);
+        setShowAppliedToast(true);
+        setTimeout(() => setShowAppliedToast(false), 2200);
       } else {
         setSkipped((prev) => prev + 1);
       }
 
-      setTimeout(() => {
-        setIndex((prev) => prev + 1);
-        setIsExiting(false);
-      }, 300);
+      setIndex((prev) => prev + 1);
     },
-    [index, isExiting]
+    [index]
   );
 
   const handleRestart = () => {
     setIndex(0);
     setApplied([]);
     setSkipped(0);
-    setSaved(0);
-    setIsExiting(false);
   };
 
   const done = index >= PLAYGROUND_JOBS.length;
@@ -312,7 +607,7 @@ export function SwipePlayground() {
   return (
     <section
       id="playground"
-      className="relative w-full overflow-hidden py-14 sm:py-18 lg:py-24"
+      className="relative w-full overflow-hidden py-10 sm:py-14 lg:py-18"
       aria-labelledby="playground-heading"
     >
       {/* Ambient background glow */}
@@ -419,13 +714,13 @@ export function SwipePlayground() {
             className="flex flex-col items-center justify-center lg:col-span-5"
           >
             {/* Card Deck Wrapper */}
-            <div className="flex flex-col items-center w-full max-w-[350px]">
-              <div className="relative w-[300px] sm:w-[340px] h-[315px] sm:h-[335px] select-none">
+            <div className="relative flex flex-col items-center w-[285px] sm:w-[295px]">
+              <div className="relative w-full h-[370px] sm:h-[385px] select-none">
                 {!done ? (
                   <>
                     {/* Background Stack Layer (Visual Depth) */}
                     {nextJob && (
-                      <div className="absolute inset-0 translate-y-3.5 scale-[0.95] rounded-[24px] sm:rounded-[28px] border border-border/60 bg-card/70 opacity-60 shadow-lg" />
+                      <div className="absolute inset-0 translate-y-2.5 scale-[0.96] rounded-[22px] sm:rounded-[24px] border border-slate-200/60 bg-white/70 dark:border-slate-800 dark:bg-slate-900/70 opacity-60 shadow-lg" />
                     )}
 
                     {/* Active Top Draggable Card */}
@@ -435,8 +730,6 @@ export function SwipePlayground() {
                         job={currentJob}
                         onDecide={handleDecide}
                         isTop={true}
-                        isExiting={isExiting}
-                        exitDir={exitDir}
                       />
                     </AnimatePresence>
                   </>
@@ -445,105 +738,62 @@ export function SwipePlayground() {
                   <motion.div
                     initial={{ opacity: 0, scale: 0.92 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    className="absolute inset-0 rounded-[24px] sm:rounded-[28px] bg-card border border-border/80 shadow-2xl p-5 sm:p-6 flex flex-col items-center justify-center text-center"
+                    className="absolute inset-0 rounded-[22px] sm:rounded-[24px] bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-2xl p-5 sm:p-6 flex flex-col items-center justify-center text-center"
                   >
-                    <div className="flex h-11 w-11 sm:h-12 sm:w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-600 text-white mb-2 shadow-md shadow-blue-500/25">
+                    <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-600 text-white mb-2 shadow-md shadow-blue-500/25">
                       <PartyPopper size={22} />
                     </div>
 
-                    <h3 className="text-lg sm:text-xl font-extrabold text-foreground">
+                    <h3 className="text-base sm:text-lg font-extrabold text-foreground">
                       That was fast! 🎉
                     </h3>
-                    <p className="mt-1 text-xs sm:text-[13px] text-muted-foreground leading-relaxed max-w-[260px]">
+                    <p className="mt-1 text-xs text-muted-foreground leading-relaxed max-w-[240px]">
                       You reviewed all roles and applied to{" "}
                       <strong className="text-emerald-600 dark:text-emerald-400 font-bold">
                         {applied.length} role{applied.length !== 1 ? "s" : ""}
-                      </strong>
-                      {saved > 0 ? ` and saved ${saved}` : ""} in seconds.
+                      </strong>{" "}
+                      in seconds.
                     </p>
 
-                    <div className="mt-4 flex flex-col gap-2 w-full max-w-[250px]">
-                      <Link
-                        href="/jobs"
-                        className="group flex items-center justify-center gap-2 rounded-full bg-blue-600 hover:bg-blue-700 text-white py-2.5 text-xs sm:text-sm font-bold shadow-md transition-all hover:scale-[1.02] active:scale-[0.98]"
+                    <div className="mt-4 flex flex-col gap-2 w-full max-w-[230px]">
+                      <a
+                        href={siteConfig.links.playStore}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group flex items-center justify-center gap-2 rounded-full bg-[#0077c8] hover:bg-[#0066ad] dark:bg-brand-600 dark:hover:bg-brand-500 text-white py-2 px-4 text-xs font-bold shadow-md shadow-[#0077c8]/25 transition-all hover:scale-[1.02] active:scale-[0.98]"
                       >
-                        <Sparkles size={14} />
-                        <span>Explore Live Jobs</span>
-                        <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
-                      </Link>
+                        <Sparkles size={13} />
+                        <span>Get Hirance App</span>
+                        <ArrowRight size={13} className="group-hover:translate-x-0.5 transition-transform" />
+                      </a>
 
-                      <div className="flex gap-2">
-                        <a
-                          href={siteConfig.links.playStore}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex-1 inline-flex items-center justify-center rounded-full border border-border hover:bg-muted py-2 text-xs font-bold text-foreground transition-colors"
-                        >
-                          Get App
-                        </a>
-                        <button
-                          type="button"
-                          onClick={handleRestart}
-                          className="inline-flex items-center justify-center gap-1.5 rounded-full border border-border hover:bg-muted px-3.5 py-2 text-xs font-bold text-muted-foreground transition-colors"
-                        >
-                          <RotateCcw size={12} />
-                          <span>Replay</span>
-                        </button>
-                      </div>
+                      <button
+                        type="button"
+                        onClick={handleRestart}
+                        className="inline-flex items-center justify-center gap-1.5 rounded-full border border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-800 hover:bg-slate-100 px-3.5 py-1.5 text-xs font-bold text-slate-700 dark:text-slate-300 transition-colors cursor-pointer"
+                      >
+                        <RotateCcw size={12} />
+                        <span>Replay Demo</span>
+                      </button>
                     </div>
                   </motion.div>
                 )}
               </div>
 
-              {/* Action Controls positioned cleanly below the Card Deck */}
-              {!done && (
-                <div className="mt-6 sm:mt-7 flex items-center justify-center gap-7 select-none">
-                  {/* Skip Button */}
-                  <div className="flex flex-col items-center gap-1.5">
-                    <button
-                      type="button"
-                      onClick={() => handleDecide("left", currentJob)}
-                      aria-label="Skip Job"
-                      className="group flex h-14 w-14 items-center justify-center rounded-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-rose-500 shadow-lg shadow-rose-500/10 hover:border-rose-300 hover:bg-rose-50 dark:hover:bg-rose-950/40 hover:scale-110 active:scale-95 transition-all duration-200"
-                    >
-                      <X size={24} strokeWidth={2.8} />
-                    </button>
-                    <span className="text-[10.5px] font-black uppercase tracking-widest text-rose-500">
-                      Skip
-                    </span>
-                  </div>
-
-                  {/* Save Button */}
-                  <div className="flex flex-col items-center gap-1.5">
-                    <button
-                      type="button"
-                      onClick={() => setSaved((s) => s + 1)}
-                      aria-label="Bookmark Job"
-                      className="group flex h-14 w-14 items-center justify-center rounded-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-amber-500 shadow-lg shadow-amber-500/10 hover:border-amber-300 hover:bg-amber-50 dark:hover:bg-amber-950/40 hover:scale-110 active:scale-95 transition-all duration-200"
-                    >
-                      <Bookmark size={22} strokeWidth={2.4} />
-                    </button>
-                    <span className="text-[10.5px] font-black uppercase tracking-widest text-amber-500">
-                      Save
-                    </span>
-                  </div>
-
-                  {/* Apply Button */}
-                  <div className="flex flex-col items-center gap-1.5">
-                    <button
-                      type="button"
-                      onClick={() => handleDecide("right", currentJob)}
-                      aria-label="Apply to Job"
-                      className="group flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-tr from-blue-600 via-indigo-600 to-cyan-500 text-white shadow-xl shadow-blue-500/30 hover:shadow-blue-500/50 hover:scale-110 active:scale-95 transition-all duration-200"
-                    >
-                      <Check size={24} strokeWidth={3} />
-                    </button>
-                    <span className="text-[10.5px] font-black uppercase tracking-widest text-blue-600 dark:text-blue-400">
-                      Apply
-                    </span>
-                  </div>
-                </div>
-              )}
+              {/* Dynamic Toast for Applied Roles */}
+              <AnimatePresence>
+                {showAppliedToast && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 12, scale: 0.9 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: -10, scale: 0.9 }}
+                    className="absolute -top-3 z-50 flex items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-600 px-3 py-1 text-white shadow-xl shadow-emerald-600/30 text-[11px] font-bold"
+                  >
+                    <Check className="h-3 w-3" strokeWidth={3} />
+                    <span>Application Sent! Recruiter notified.</span>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           </motion.div>
         </div>

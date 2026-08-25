@@ -584,19 +584,23 @@ export function WantToHire() {
                 duration: 0.5,
                 ease: [0.16, 1, 0.3, 1],
               }}
-              className="relative mt-6 sm:mt-8 w-full overflow-hidden rounded-[24px] sm:rounded-[28px] bg-[#060c18] border border-white/12 p-6 sm:p-7 lg:p-8 text-left shadow-2xl shadow-slate-950/30"
+              className="relative mt-6 sm:mt-8 w-full overflow-hidden rounded-2xl sm:rounded-3xl border border-blue-100/90 dark:border-blue-900/40 bg-gradient-to-br from-blue-50/80 via-indigo-50/30 to-background dark:from-blue-950/30 dark:via-indigo-950/20 dark:to-card p-6 sm:p-7 lg:p-8 text-left shadow-lg shadow-blue-500/5 dark:shadow-none backdrop-blur-sm"
             >
-              {/* Subtle background dot grid pattern */}
+              {/* Subtle ambient gradient shimmer glow in background */}
               <div
-                className="pointer-events-none absolute inset-0 bg-[radial-gradient(rgba(255,255,255,0.08)_1px,transparent_1px)] bg-[size:16px_16px] opacity-70"
+                className="pointer-events-none absolute -right-10 -bottom-10 h-40 w-40 rounded-full bg-blue-500/10 dark:bg-blue-500/15 blur-3xl"
+                aria-hidden="true"
+              />
+              <div
+                className="pointer-events-none absolute -left-10 -top-10 h-32 w-32 rounded-full bg-indigo-500/10 dark:bg-indigo-500/15 blur-2xl"
                 aria-hidden="true"
               />
 
               <div className="relative z-10">
-                <h3 className="text-xl sm:text-2xl font-extrabold tracking-tight text-white leading-tight">
+                <h3 className="text-xl sm:text-2xl font-extrabold tracking-tight text-foreground leading-tight">
                   Post Any Job in 1 Minute.
                 </h3>
-                <p className="mt-1.5 text-sm sm:text-base text-slate-300 dark:text-slate-300 leading-relaxed">
+                <p className="mt-1.5 text-sm sm:text-base text-muted-foreground leading-relaxed">
                   For every job you post, someone can swipe in seconds.
                 </p>
 
@@ -608,7 +612,7 @@ export function WantToHire() {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label="Post a Job on Hirance employer portal"
-                    className="group inline-flex items-center justify-center gap-2 rounded-full bg-white hover:bg-slate-100 px-6 sm:px-7 py-3 text-sm sm:text-base font-bold text-[#060c18] shadow-md shadow-white/5 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
+                    className="group inline-flex items-center justify-center gap-2 rounded-full bg-[#0077c8] hover:bg-[#0066ad] dark:bg-brand-600 dark:hover:bg-brand-500 px-6 sm:px-7 py-3 text-sm sm:text-base font-semibold text-white shadow-md shadow-[#0077c8]/25 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-brand-500/40"
                   >
                     <span>Post a Job</span>
                     <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
@@ -618,10 +622,10 @@ export function WantToHire() {
                   <Link
                     href="/request-demo"
                     aria-label="See Hirance employer demo"
-                    className="inline-flex items-center gap-2 text-sm sm:text-base font-semibold text-[#00d2ff] hover:text-[#38bdf8] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 rounded-md"
+                    className="inline-flex items-center gap-2 text-sm sm:text-base font-semibold text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40 rounded-md"
                   >
                     <svg
-                      className="h-5 w-5 shrink-0 text-[#00d2ff]"
+                      className="h-5 w-5 shrink-0 text-blue-600 dark:text-blue-400"
                       viewBox="0 0 24 24"
                       fill="none"
                       stroke="currentColor"
@@ -635,15 +639,6 @@ export function WantToHire() {
                     </svg>
                     <span>See demo</span>
                   </Link>
-
-                  {/* View plans & pricing Action */}
-                  <Link
-                    href="/request-demo"
-                    aria-label="View employer plans and pricing"
-                    className="text-sm sm:text-base font-semibold text-[#00d2ff] hover:text-[#38bdf8] underline underline-offset-4 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 rounded-md"
-                  >
-                    View plans & pricing
-                  </Link>
                 </div>
               </div>
             </motion.div>
@@ -653,12 +648,6 @@ export function WantToHire() {
         {/* Interactive Swipe Playground */}
         <div className="mt-14 sm:mt-18 lg:mt-22 w-full">
           <SwipePlayground />
-        </div>
-
-        {/* CTA Banners */}
-        <div className="mt-8 sm:mt-12 w-full space-y-6 sm:space-y-8">
-          <CandidateCTA />
-          <EmployerCTA />
         </div>
       </div>
     </section>

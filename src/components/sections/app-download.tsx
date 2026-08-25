@@ -32,7 +32,7 @@ const POINTS = [
   {
     icon: Briefcase,
     title: "Discover jobs by role",
-    text: "Roles tailored to your title — Sales, Software, Marketing, HR, IT and more.",
+    text: "Roles tailored to your tech stack — Frontend, Cloud DevOps, Backend, AI, Security & more.",
   },
 ];
 
