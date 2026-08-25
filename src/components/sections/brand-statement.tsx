@@ -9,23 +9,35 @@ import { Logo } from "@/components/shared/logo";
 const HIGHLIGHTS = [
   {
     icon: Zap,
+    step: "01",
     title: "Apply in 2 seconds",
     text: "One swipe right. No forms, no cover letters.",
+    gradient: "from-[#0077c8] to-[#00a2ff]",
+    glow: "bg-[#0077c8]/25",
   },
   {
     icon: Target,
+    step: "02",
     title: "See your match %",
     text: "Know your fit before you ever apply.",
+    gradient: "from-indigo-500 to-blue-600",
+    glow: "bg-indigo-500/25",
   },
   {
     icon: MessageSquare,
+    step: "03",
     title: "Chat with recruiters",
-    text: "No more application black hole.",
+    text: "Direct connection. No application black holes.",
+    gradient: "from-sky-500 to-cyan-500",
+    glow: "bg-sky-500/25",
   },
   {
     icon: BadgeCheck,
+    step: "04",
     title: "Free for candidates",
-    text: "Always. Swipe and apply at zero cost.",
+    text: "Always 100% free. Swipe and apply at zero cost.",
+    gradient: "from-emerald-500 to-teal-600",
+    glow: "bg-emerald-500/25",
   },
 ];
 
@@ -85,38 +97,52 @@ export function BrandStatement() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.1 }}
-          className="text-lg text-slate-300 max-w-lg mx-auto"
+          className="text-base sm:text-lg text-slate-300 max-w-lg mx-auto"
         >
           Hirance — The Smarter Way to Hire &amp; Get Hired.
         </motion.p>
 
         {/* value highlights */}
-        <div className="mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-5xl mx-auto">
+        <div className="mt-12 sm:mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 max-w-6xl mx-auto">
           {HIGHLIGHTS.map((h, i) => {
             const Icon = h.icon;
             return (
               <motion.div
                 key={h.title}
-                initial={reducedMotion ? false : { opacity: 0, y: 24 }}
+                initial={reducedMotion ? false : { opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: i * 0.08, duration: 0.5 }}
-                whileHover={reducedMotion ? undefined : { y: -5 }}
+                transition={{ delay: i * 0.08, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                whileHover={reducedMotion ? undefined : { y: -4 }}
                 data-testid={`brand-highlight-${i}`}
-                className="rounded-3xl glass-dark border border-white/10 p-6 text-left"
+                className="group relative overflow-hidden rounded-2xl sm:rounded-3xl border border-white/[0.08] bg-gradient-to-b from-white/[0.05] to-white/[0.015] p-5 sm:p-6 text-left backdrop-blur-md transition-all duration-300 hover:border-white/20 hover:bg-white/[0.07] hover:shadow-xl hover:shadow-sky-500/5 flex flex-col justify-between"
               >
+                {/* Subtle Hover Radial Spotlight */}
                 <div
-                  className="w-12 h-12 rounded-2xl grid place-items-center text-white mb-4"
-                  style={{ background: "linear-gradient(135deg,#0284C7,#0369A1)" }}
-                >
-                  <Icon size={22} />
+                  className={`pointer-events-none absolute -top-10 -right-10 h-28 w-28 rounded-full ${h.glow} blur-2xl transition-opacity duration-300 opacity-0 group-hover:opacity-100`}
+                />
+
+                {/* Top Row: Icon + Step Index */}
+                <div className="flex items-center justify-between mb-5">
+                  <div
+                    className={`h-11 w-11 rounded-2xl flex items-center justify-center text-white shadow-md border border-white/15 bg-gradient-to-br ${h.gradient}`}
+                  >
+                    <Icon size={20} strokeWidth={2.2} />
+                  </div>
+                  <span className="font-mono text-xs font-bold text-slate-500 group-hover:text-slate-300 transition-colors">
+                    {h.step}
+                  </span>
                 </div>
-                <p className="font-display font-extrabold text-lg text-white">
-                  {h.title}
-                </p>
-                <p className="text-sm text-slate-400 mt-1 leading-relaxed">
-                  {h.text}
-                </p>
+
+                {/* Content */}
+                <div>
+                  <h3 className="font-display font-bold text-[15px] sm:text-base text-white tracking-tight leading-snug">
+                    {h.title}
+                  </h3>
+                  <p className="text-xs sm:text-[13px] text-slate-400 mt-1.5 leading-relaxed">
+                    {h.text}
+                  </p>
+                </div>
               </motion.div>
             );
           })}

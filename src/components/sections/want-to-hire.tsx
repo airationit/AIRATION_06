@@ -16,10 +16,12 @@ import {
   MapPin,
   Briefcase,
   Sparkles,
+  X,
 } from "lucide-react";
 import { siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
 import { SwipePlayground } from "./swipe-playground";
+import { JobPostDemo } from "./job-post-demo";
 import { CandidateCTA } from "./candidate-cta";
 import { EmployerCTA } from "./employer-cta";
 
@@ -434,16 +436,31 @@ function RecruiterDashboardMockup({
 
 export function WantToHire() {
   const [active, setActive] = useState(0);
+  const [isDemoModalOpen, setIsDemoModalOpen] = useState(false);
   const reducedMotion = useReducedMotion();
 
   // Auto-advance stepper every 3.5 seconds
   useEffect(() => {
-    if (reducedMotion) return;
+    if (reducedMotion || isDemoModalOpen) return;
     const interval = setInterval(() => {
       setActive((prev) => (prev >= 4 ? 0 : prev + 1));
     }, 3500);
     return () => clearInterval(interval);
-  }, [reducedMotion]);
+  }, [reducedMotion, isDemoModalOpen]);
+
+  // Handle escape key and body scroll locking for the demo modal
+  useEffect(() => {
+    if (!isDemoModalOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setIsDemoModalOpen(false);
+    };
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isDemoModalOpen]);
 
   const jumpToStep = (index: number) => {
     setActive(index);
@@ -619,10 +636,11 @@ export function WantToHire() {
                   </a>
 
                   {/* See demo Action */}
-                  <Link
-                    href="/request-demo"
-                    aria-label="See Hirance employer demo"
-                    className="inline-flex items-center gap-2 text-sm sm:text-base font-semibold text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40 rounded-md"
+                  <button
+                    type="button"
+                    onClick={() => setIsDemoModalOpen(true)}
+                    aria-label="See Hirance employer job posting interactive demo"
+                    className="inline-flex items-center gap-2 text-sm sm:text-base font-semibold text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40 rounded-md cursor-pointer"
                   >
                     <svg
                       className="h-5 w-5 shrink-0 text-blue-600 dark:text-blue-400"
@@ -638,7 +656,7 @@ export function WantToHire() {
                       <polygon points="10 8 16 12 10 16 10 8" />
                     </svg>
                     <span>See demo</span>
-                  </Link>
+                  </button>
                 </div>
               </div>
             </motion.div>
@@ -650,6 +668,57 @@ export function WantToHire() {
           <SwipePlayground />
         </div>
       </div>
+
+      {/* Interactive Job Post Demo Modal */}
+      <AnimatePresence>
+        {isDemoModalOpen && (
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="job-post-demo-modal-title"
+            className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 md:p-6"
+          >
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              onClick={() => setIsDemoModalOpen(false)}
+              className="fixed inset-0 bg-slate-950/75 backdrop-blur-md"
+              aria-hidden="true"
+            />
+
+            {/* Modal Dialog Container */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.94, y: 16 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.94, y: 16 }}
+              transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+              className="relative z-10 flex flex-col w-full max-w-5xl xl:max-w-6xl h-[88vh] max-h-[740px] rounded-2xl sm:rounded-3xl bg-white shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-800"
+            >
+              <span id="job-post-demo-modal-title" className="sr-only">
+                Hirance Job Post Interactive Demo
+              </span>
+
+              {/* Floating Close Button */}
+              <button
+                type="button"
+                onClick={() => setIsDemoModalOpen(false)}
+                aria-label="Close demo modal"
+                className="absolute top-2.5 right-2.5 sm:top-3 sm:right-3.5 z-40 flex h-8 w-8 items-center justify-center rounded-full bg-slate-900/10 text-slate-700 hover:bg-slate-900/20 hover:text-slate-900 transition-all dark:bg-white/10 dark:text-slate-200 dark:hover:bg-white/20 cursor-pointer shadow-xs"
+              >
+                <X className="h-4 w-4" />
+              </button>
+
+              {/* Embedded Job Post Demo Interactive Stage */}
+              <div className="flex-1 w-full h-full min-h-0 overflow-hidden">
+                <JobPostDemo className="h-full w-full rounded-2xl sm:rounded-3xl border-0 shadow-none ring-0" />
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </section>
   );
 }

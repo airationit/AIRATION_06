@@ -4,6 +4,7 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Logo } from "./logo";
+import { siteConfig } from "@/config/site";
 
 /* ─── Social SVG Icons ─── */
 function IconLinkedin({ size = 18 }: { size?: number }) {
@@ -58,29 +59,31 @@ const COLS: FooterColumn[] = [
     title: "Candidates",
     links: [
       { label: "Find Jobs", href: "/jobs" },
-      { label: "Download App", href: "https://play.google.com/store/apps/details?id=com.hirance" },
-      { label: "How Hirance Works", href: "/how-it-works" },
-      { label: "Candidate FAQ", href: "/how-it-works" },
+      { label: "Download App", href: siteConfig.links.playStore },
     ],
   },
   {
     title: "Employers",
     links: [
-      { label: "Post a Job", href: "https://employer.hirance.com/" },
-      { label: "Employer Dashboard", href: "https://employer.hirance.com/" },
-      { label: "Pricing", href: "/request-demo" },
-      { label: "How Hirance Works", href: "/how-it-works" },
-      { label: "Employer FAQ", href: "/how-it-works" },
+      { label: "Post a Job", href: siteConfig.links.employer },
+      { label: "Employer Dashboard", href: siteConfig.links.employer },
     ],
   },
   {
     title: "Company",
     links: [
       { label: "About Us", href: "/about-us" },
+      { label: "How Hirance Works", href: "/how-it-works" },
+      { label: "Blog", href: "/blog" },
       { label: "Contact", href: "/contact" },
-      { label: "Careers", href: "/contact" },
+    ],
+  },
+  {
+    title: "Legal & Sitemap",
+    links: [
       { label: "Privacy Policy", href: "/privacy" },
       { label: "Terms & Conditions", href: "/terms" },
+      { label: "Sitemap", href: "/sitemap.xml" },
     ],
   },
 ];
@@ -96,17 +99,26 @@ export function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-[#060c18] text-slate-400 pt-16 pb-8" data-testid="footer" aria-label="Hirance Global Footer">
+    <footer
+      id="global-footer"
+      className="bg-[#060c18] text-slate-400 pt-16 pb-8 border-t border-white/10"
+      data-testid="footer"
+      aria-label="Hirance Global Footer"
+    >
       <div className="max-w-7xl mx-auto px-5 sm:px-8">
-        <div className="grid lg:grid-cols-5 gap-10 pb-12 border-b border-white/10">
-          <div className="lg:col-span-2">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 pb-12 border-b border-white/10">
+          {/* Brand & App Download Column */}
+          <div className="lg:col-span-5 flex flex-col justify-start">
             <Logo dark />
-            <p className="mt-4 text-sm max-w-xs leading-relaxed text-slate-400">
-              India&apos;s 1st Swipe-Based Hiring Platform.
+            <p className="mt-3.5 text-sm max-w-sm leading-relaxed text-slate-400">
+              India&apos;s 1st Swipe-Based Hiring Platform. Fast, transparent, and direct matchmaking for candidates and employers.
             </p>
-            <div className="mt-5 flex items-center gap-4">
+
+            {/* QR Code (Left) + Google Play & Socials Stack (Right) */}
+            <div className="mt-6 flex items-start gap-4">
+              {/* Left: QR Code Card */}
               <div className="shrink-0">
-                <div className="rounded-2xl bg-white p-2 w-[92px]">
+                <div className="rounded-2xl bg-white p-2 w-[92px] shadow-sm">
                   <Image
                     src="/images/qr.png"
                     alt="Scan to download the Hirance app"
@@ -116,24 +128,30 @@ export function Footer() {
                     data-testid="footer-app-qr"
                   />
                 </div>
-                <p className="text-[10px] text-slate-500 text-center mt-1.5 font-mono-hi">Scan to download</p>
+                <p className="text-[10px] text-slate-400 text-center mt-1.5 font-mono-hi">
+                  Scan to download
+                </p>
               </div>
 
-              {/* Store Badges */}
-              <div className="flex flex-col gap-2">
-                {/* Google Play */}
+              {/* Right: Google Play Button + Social Media Icons below it */}
+              <div className="flex flex-col gap-3 justify-center pt-0.5">
+                {/* 1. Google Play Store Badge */}
                 <a
-                  href="https://play.google.com/store/apps/details?id=com.hirance"
+                  href={siteConfig.links.playStore}
                   target="_blank"
                   rel="noopener noreferrer"
-                  aria-label="Get it on Google Play"
-                  className="flex items-center gap-2.5 rounded-xl border border-white/15 bg-white/[0.04] px-3.5 py-2 text-left transition-all duration-200 hover:border-cyan-400/50 hover:bg-white/[0.08]"
+                  aria-label="Get Hirance on Google Play"
+                  className="inline-flex items-center gap-2.5 rounded-xl border border-white/15 bg-white/[0.04] px-4 py-2.5 text-left transition-all duration-200 hover:border-cyan-400/50 hover:bg-white/[0.08]"
                 >
-                  <svg className="h-5 w-5 fill-white shrink-0" viewBox="0 0 24 24" aria-hidden="true">
+                  <svg
+                    className="h-5 w-5 fill-white shrink-0"
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                  >
                     <path d="M3.18 23.76a2.23 2.23 0 0 1-1.18-.34V.58A2.23 2.23 0 0 1 3.18.24L13.7 12 3.18 23.76zM14.9 13.2l2.5 2.5-9.8 5.56 7.3-8.06zm2.5-4.9L14.9 10.8 7.6 2.74l9.8 5.56zM19.06 9.8l2.87 1.63a1.4 1.4 0 0 1 0 2.44l-2.87 1.63-2.7-2.7 2.7-3z" />
                   </svg>
                   <div className="flex flex-col">
-                    <span className="text-[9px] text-slate-400 uppercase leading-none">
+                    <span className="text-[9px] text-slate-400 uppercase leading-none font-medium">
                       Get it on
                     </span>
                     <span className="text-xs font-bold text-white leading-tight mt-0.5">
@@ -141,67 +159,89 @@ export function Footer() {
                     </span>
                   </div>
                 </a>
-              </div>
-            </div>
 
-            <div className="flex gap-3 mt-6">
-              {SOCIALS.map((s) => (
-                <a
-                  key={s.label}
-                  href={s.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={s.label}
-                  data-testid={`footer-social-${s.label.toLowerCase()}`}
-                  className="w-10 h-10 rounded-xl bg-white/5 grid place-items-center text-slate-400 hover:bg-gradient-to-br hover:from-cyan-400 hover:to-sky-500 hover:text-white transition-all"
-                >
-                  <s.icon size={18} />
-                </a>
-              ))}
+                {/* 2. Social Media Icons Row */}
+                <div className="flex items-center gap-2.5">
+                  {SOCIALS.map((s) => (
+                    <a
+                      key={s.label}
+                      href={s.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={s.label}
+                      data-testid={`footer-social-${s.label.toLowerCase()}`}
+                      className="w-8 h-8 rounded-lg bg-white/5 grid place-items-center text-slate-400 hover:bg-gradient-to-br hover:from-cyan-400 hover:to-sky-500 hover:text-white transition-all"
+                    >
+                      <s.icon size={15} />
+                    </a>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
 
-          {COLS.map((col) => (
-            <div key={col.title}>
-              <p className="font-display font-bold text-white mb-4">{col.title}</p>
-              <ul className="space-y-2.5">
-                {col.links.map((l) => {
-                  const isExternal = l.href.startsWith("http");
-                  const testId = `footer-link-${l.label.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`;
-                  return (
-                    <li key={l.label}>
-                      {isExternal ? (
-                        <a
-                          href={l.href}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          data-testid={testId}
-                          className="text-sm hover:text-cyan-300 transition-colors text-slate-400"
-                        >
-                          {l.label}
-                        </a>
-                      ) : (
-                        <Link
-                          href={l.href}
-                          data-testid={testId}
-                          className="text-sm hover:text-cyan-300 transition-colors text-slate-400"
-                        >
-                          {l.label}
-                        </Link>
-                      )}
-                    </li>
-                  );
-                })}
-              </ul>
-            </div>
-          ))}
+          {/* Navigation Links Columns */}
+          <nav
+            className="lg:col-span-7 grid grid-cols-2 sm:grid-cols-4 gap-7 lg:gap-8"
+            aria-label="Footer Quick Links"
+          >
+            {COLS.map((col) => (
+              <div key={col.title}>
+                <p className="font-display text-xs font-bold uppercase tracking-wider text-white mb-4">
+                  {col.title}
+                </p>
+                <ul className="space-y-2.5">
+                  {col.links.map((l) => {
+                    const isExternal = l.href.startsWith("http");
+                    const testId = `footer-link-${l.label
+                      .toLowerCase()
+                      .replace(/[^a-z0-9]+/g, "-")}`;
+                    return (
+                      <li key={l.label}>
+                        {isExternal ? (
+                          <a
+                            href={l.href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            data-testid={testId}
+                            className="text-sm hover:text-cyan-300 transition-colors text-slate-400"
+                          >
+                            {l.label}
+                          </a>
+                        ) : (
+                          <Link
+                            href={l.href}
+                            data-testid={testId}
+                            className="text-sm hover:text-cyan-300 transition-colors text-slate-400"
+                          >
+                            {l.label}
+                          </Link>
+                        )}
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            ))}
+          </nav>
         </div>
 
-        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-sm">© {currentYear} Hirance. All Rights Reserved.</p>
-          <p className="font-mono-hi text-xs flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" /> All systems operational · Bengaluru · Mumbai · Delhi-NCR
-          </p>
+        {/* Bottom Copyright & Legal Links Bar */}
+        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+          <p>© {currentYear} Hirance. All Rights Reserved.</p>
+          <div className="flex items-center gap-5">
+            <Link href="/privacy" className="hover:text-slate-400 transition-colors">
+              Privacy
+            </Link>
+            <span>·</span>
+            <Link href="/terms" className="hover:text-slate-400 transition-colors">
+              Terms
+            </Link>
+            <span>·</span>
+            <Link href="/sitemap.xml" className="hover:text-slate-400 transition-colors">
+              Sitemap
+            </Link>
+          </div>
         </div>
       </div>
     </footer>
