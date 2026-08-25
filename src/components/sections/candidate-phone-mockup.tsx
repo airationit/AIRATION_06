@@ -62,19 +62,19 @@ export interface JobCardData {
 
 const JOBS_DATA: JobCardData[] = [
   {
-    id: "it-job-1",
-    department: "Web & Frontend Engineering",
-    title: "Frontend Engineer (Next.js)",
+    id: "it-dept-1",
+    department: "Engineering & Software Development",
+    title: "Senior Full Stack Engineer (Next.js)",
     company: "Nexus Cloud Systems",
     verified: true,
     matchScore: 98,
     matchGrade: "HIGH MATCH",
-    aiNote: "Strong match for your React, TypeScript, and high-performance UI architecture skillset.",
+    aiNote: "Strong match for React, TypeScript, Next.js architecture, and Node microservices skillset.",
     location: "Bengaluru (Hybrid)",
-    salary: "₹ 14 - 20 LPA",
+    salary: "₹ 16 - 24 LPA",
     experience: "3-5 Years",
     type: "Full Time",
-    tags: ["React", "Next.js", "TypeScript", "Tailwind CSS"],
+    tags: ["Next.js", "TypeScript", "Node.js", "Tailwind CSS"],
     breakdown: {
       skills: "40/40",
       skillsOk: true,
@@ -89,68 +89,14 @@ const JOBS_DATA: JobCardData[] = [
     logoLetter: "N",
   },
   {
-    id: "it-job-2",
-    department: "Cloud Infrastructure & DevOps",
-    title: "Lead DevOps & SRE Engineer",
-    company: "StrataScale Cloud Infra",
-    verified: true,
-    matchScore: 56,
-    matchGrade: "LOW MATCH",
-    aiNote: "Requires 7+ yrs multi-cloud Terraform, Golang & 24/7 on-call. Stack gap with your current frontend/web focus.",
-    location: "Hyderabad (On-site)",
-    salary: "₹ 22 - 30 LPA",
-    experience: "6-9 Years",
-    type: "Full Time",
-    tags: ["Kubernetes", "Terraform", "AWS / GCP", "Golang"],
-    breakdown: {
-      skills: "20/40",
-      skillsOk: false,
-      exp: "7/13",
-      expOk: false,
-      location: "5/7",
-      locationOk: true,
-      salary: "5/5",
-      salaryOk: true,
-    },
-    logoColor: "from-slate-600 to-slate-800",
-    logoLetter: "S",
-  },
-  {
-    id: "it-job-3",
-    department: "Backend & Distributed Systems",
-    title: "Backend Systems Engineer",
-    company: "FinVortex Technologies",
-    verified: true,
-    matchScore: 94,
-    matchGrade: "HIGH MATCH",
-    aiNote: "High synergy with your Node.js, PostgreSQL, Redis, and high-throughput microservices experience.",
-    location: "Pune (Remote)",
-    salary: "₹ 16 - 24 LPA",
-    experience: "3-6 Years",
-    type: "Full Time",
-    tags: ["Node.js", "PostgreSQL", "Redis", "System Design"],
-    breakdown: {
-      skills: "38/40",
-      skillsOk: true,
-      exp: "12/13",
-      expOk: true,
-      location: "7/7",
-      locationOk: true,
-      salary: "5/5",
-      salaryOk: true,
-    },
-    logoColor: "from-blue-600 to-cyan-600",
-    logoLetter: "F",
-  },
-  {
-    id: "it-job-4",
-    department: "AI & Machine Learning",
+    id: "it-dept-2",
+    department: "Data Science, Analytics & AI",
     title: "AI / ML Research Engineer",
     company: "Cerebra AI Labs",
     verified: true,
     matchScore: 62,
     matchGrade: "LOW MATCH",
-    aiNote: "Role demands PyTorch, LLM fine-tuning & CUDA optimizations. Does not align with application-tier background.",
+    aiNote: "Role demands PyTorch, LLM fine-tuning & CUDA optimizations. Stack gap with application-tier background.",
     location: "Gurugram (Hybrid)",
     salary: "₹ 24 - 35 LPA",
     experience: "4-7 Years",
@@ -170,19 +116,73 @@ const JOBS_DATA: JobCardData[] = [
     logoLetter: "C",
   },
   {
-    id: "it-job-5",
-    department: "Cybersecurity & InfoSec",
-    title: "Cybersecurity Analyst & SecOps",
-    company: "ShieldPoint Infosec",
+    id: "it-dept-3",
+    department: "Design, UI/UX & Creative",
+    title: "Lead Product Designer (UI/UX)",
+    company: "PixelCraft Studios",
+    verified: true,
+    matchScore: 94,
+    matchGrade: "HIGH MATCH",
+    aiNote: "High synergy for design systems, Figma component architectures, and responsive micro-interactions.",
+    location: "Mumbai (Hybrid)",
+    salary: "₹ 14 - 20 LPA",
+    experience: "3-5 Years",
+    type: "Full Time",
+    tags: ["Figma", "Design Systems", "UX Research", "Prototyping"],
+    breakdown: {
+      skills: "38/40",
+      skillsOk: true,
+      exp: "12/13",
+      expOk: true,
+      location: "7/7",
+      locationOk: true,
+      salary: "5/5",
+      salaryOk: true,
+    },
+    logoColor: "from-rose-500 to-amber-500",
+    logoLetter: "P",
+  },
+  {
+    id: "it-dept-4",
+    department: "Marketing, SEO & Content Growth",
+    title: "Performance & Growth Marketing Lead",
+    company: "Amplifi Media Tech",
+    verified: true,
+    matchScore: 58,
+    matchGrade: "LOW MATCH",
+    aiNote: "Demands 5+ yrs paid ad spend management, CAC/LTV scaling & programmatic SEO funnels.",
+    location: "Delhi NCR (On-site)",
+    salary: "₹ 12 - 18 LPA",
+    experience: "4-6 Years",
+    type: "Full Time",
+    tags: ["SEO", "Performance Ads", "Google Analytics", "Paid Meta"],
+    breakdown: {
+      skills: "20/40",
+      skillsOk: false,
+      exp: "8/13",
+      expOk: false,
+      location: "6/7",
+      locationOk: true,
+      salary: "5/5",
+      salaryOk: true,
+    },
+    logoColor: "from-orange-500 to-red-600",
+    logoLetter: "A",
+  },
+  {
+    id: "it-dept-5",
+    department: "Sales & Business Development",
+    title: "Enterprise B2B Sales Manager",
+    company: "Zenith SaaS Corp",
     verified: true,
     matchScore: 92,
     matchGrade: "HIGH MATCH",
-    aiNote: "Great match for Application Security, OWASP standards, penetration audits, and SOC compliance monitoring.",
-    location: "Noida (Hybrid)",
-    salary: "₹ 12 - 18 LPA",
-    experience: "2-5 Years",
+    aiNote: "Great alignment for enterprise SaaS pipeline generation, contract closing, and key account expansion.",
+    location: "Pune (Hybrid)",
+    salary: "₹ 15 - 25 LPA",
+    experience: "3-6 Years",
     type: "Full Time",
-    tags: ["AppSec", "OWASP", "SOC Monitoring", "Pen-testing"],
+    tags: ["B2B Sales", "SaaS Pipeline", "Negotiation", "Closing"],
     breakdown: {
       skills: "37/40",
       skillsOk: true,
@@ -193,23 +193,50 @@ const JOBS_DATA: JobCardData[] = [
       salary: "5/5",
       salaryOk: true,
     },
-    logoColor: "from-emerald-600 to-teal-700",
-    logoLetter: "S",
+    logoColor: "from-blue-600 to-cyan-600",
+    logoLetter: "Z",
   },
   {
-    id: "it-job-6",
-    department: "Mobile Engineering",
-    title: "Senior React Native Developer",
-    company: "Airation Softtech Pvt Ltd",
+    id: "it-dept-6",
+    department: "Operations, Admin & Back Office",
+    title: "Operations & Logistics Manager",
+    company: "OmniLogix Supply Chain",
+    verified: true,
+    matchScore: 55,
+    matchGrade: "LOW MATCH",
+    aiNote: "Focuses on warehousing logistics, fleet operations & physical supply chain ERPs.",
+    location: "Chennai (On-site)",
+    salary: "₹ 8 - 12 LPA",
+    experience: "3-5 Years",
+    type: "Full Time",
+    tags: ["Supply Chain", "Vendor Mgmt", "Logistics", "ERP"],
+    breakdown: {
+      skills: "21/40",
+      skillsOk: false,
+      exp: "8/13",
+      expOk: false,
+      location: "5/7",
+      locationOk: true,
+      salary: "5/5",
+      salaryOk: true,
+    },
+    logoColor: "from-slate-600 to-slate-800",
+    logoLetter: "O",
+  },
+  {
+    id: "it-dept-7",
+    department: "Human Resources & Talent Acquisition",
+    title: "Senior Talent Acquisition Specialist",
+    company: "TalentHive Global",
     verified: true,
     matchScore: 96,
     matchGrade: "HIGH MATCH",
-    aiNote: "Excellent match for cross-platform iOS & Android mobile app architecture, gesture animations & state management.",
-    location: "Bareilly / Hybrid",
-    salary: "₹ 14 - 22 LPA",
-    experience: "3-5 Years",
+    aiNote: "Direct fit for tech hiring, LinkedIn Recruiter sourcing pipelines, and candidate lifecycle management.",
+    location: "Hyderabad (Remote)",
+    salary: "₹ 11 - 16 LPA",
+    experience: "2-5 Years",
     type: "Full Time",
-    tags: ["React Native", "Expo", "TypeScript", "Mobile UI"],
+    tags: ["Tech Hiring", "LinkedIn Recruiter", "HR Ops", "Screening"],
     breakdown: {
       skills: "39/40",
       skillsOk: true,
@@ -220,8 +247,62 @@ const JOBS_DATA: JobCardData[] = [
       salary: "5/5",
       salaryOk: true,
     },
+    logoColor: "from-emerald-600 to-teal-700",
+    logoLetter: "T",
+  },
+  {
+    id: "it-dept-8",
+    department: "Accounting, Banking & Finance",
+    title: "Senior Financial Analyst & Accounts",
+    company: "Vortex Capital Advisors",
+    verified: true,
+    matchScore: 50,
+    matchGrade: "LOW MATCH",
+    aiNote: "Requires Chartered Accountant (CA) background, corporate statutory audit & ledger compliance.",
+    location: "Noida (Hybrid)",
+    salary: "₹ 12 - 18 LPA",
+    experience: "4-7 Years",
+    type: "Full Time",
+    tags: ["Financial Analysis", "Taxation", "Auditing", "Compliance"],
+    breakdown: {
+      skills: "18/40",
+      skillsOk: false,
+      exp: "6/13",
+      expOk: false,
+      location: "6/7",
+      locationOk: true,
+      salary: "5/5",
+      salaryOk: true,
+    },
+    logoColor: "from-amber-600 to-yellow-600",
+    logoLetter: "V",
+  },
+  {
+    id: "it-dept-9",
+    department: "Customer Support & Telecalling",
+    title: "Customer Support & Success Specialist",
+    company: "EchoWave Communications",
+    verified: true,
+    matchScore: 91,
+    matchGrade: "HIGH MATCH",
+    aiNote: "Excellent match for omnichannel ticketing, customer satisfaction (CSAT) workflows & escalation resolution.",
+    location: "Jaipur / Remote",
+    salary: "₹ 5 - 8 LPA",
+    experience: "1-3 Years",
+    type: "Full Time",
+    tags: ["Zendesk", "Customer CSAT", "CRM", "Escalations"],
+    breakdown: {
+      skills: "36/40",
+      skillsOk: true,
+      exp: "12/13",
+      expOk: true,
+      location: "7/7",
+      locationOk: true,
+      salary: "5/5",
+      salaryOk: true,
+    },
     logoColor: "from-cyan-500 to-blue-600",
-    logoLetter: "A",
+    logoLetter: "E",
   },
 ];
 
@@ -417,8 +498,13 @@ function SwipeCard({
             </div>
           </div>
 
+          {/* Department Category */}
+          <p className="mt-1.5 text-[9px] font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400 truncate">
+            {job.department}
+          </p>
+
           {/* Job Title */}
-          <h4 className="mt-1.5 text-xs sm:text-sm font-black tracking-tight text-slate-900 dark:text-white leading-tight">
+          <h4 className="mt-0.5 text-xs sm:text-[13px] font-black tracking-tight text-slate-900 dark:text-white leading-tight">
             {job.title}
           </h4>
 
@@ -614,7 +700,7 @@ export function CandidatePhoneMockup() {
     if (direction === "right") {
       setAppliedCount((prev) => prev + 1);
       setShowAppliedToast(true);
-      setTimeout(() => setShowAppliedToast(false), 2200);
+      setTimeout(() => setShowAppliedToast(false), 1600);
     }
     setCurrentIndex((prev) => prev + 1);
   }, []);
@@ -629,10 +715,10 @@ export function CandidatePhoneMockup() {
     if (reducedMotion || isPaused || autoSwipeTarget) return;
 
     if (currentIndex >= JOBS_DATA.length) {
-      // Reached the end: pause on completion screen for 3.2 seconds then seamlessly auto-loop
+      // Reached the end: pause on completion screen for 2.2 seconds then seamlessly auto-loop
       timerRef.current = setTimeout(() => {
         handleReset();
-      }, 3200);
+      }, 2200);
       return () => {
         if (timerRef.current) clearTimeout(timerRef.current);
       };
@@ -646,7 +732,7 @@ export function CandidatePhoneMockup() {
 
     timerRef.current = setTimeout(() => {
       setAutoSwipeTarget({ id: currentJob.id, direction: targetDirection });
-    }, 3400);
+    }, 1800);
 
     return () => {
       if (timerRef.current) clearTimeout(timerRef.current);

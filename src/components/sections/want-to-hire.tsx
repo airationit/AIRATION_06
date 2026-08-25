@@ -17,6 +17,7 @@ import {
   Briefcase,
   Sparkles,
   X,
+  Tag,
 } from "lucide-react";
 import { siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
@@ -24,6 +25,7 @@ import { SwipePlayground } from "./swipe-playground";
 import { JobPostDemo } from "./job-post-demo";
 import { CandidateCTA } from "./candidate-cta";
 import { EmployerCTA } from "./employer-cta";
+import { PricingModal } from "./pricing-modal";
 
 const STEPS = [
   {
@@ -437,16 +439,17 @@ function RecruiterDashboardMockup({
 export function WantToHire() {
   const [active, setActive] = useState(0);
   const [isDemoModalOpen, setIsDemoModalOpen] = useState(false);
+  const [isPricingModalOpen, setIsPricingModalOpen] = useState(false);
   const reducedMotion = useReducedMotion();
 
   // Auto-advance stepper every 3.5 seconds
   useEffect(() => {
-    if (reducedMotion || isDemoModalOpen) return;
+    if (reducedMotion || isDemoModalOpen || isPricingModalOpen) return;
     const interval = setInterval(() => {
       setActive((prev) => (prev >= 4 ? 0 : prev + 1));
     }, 3500);
     return () => clearInterval(interval);
-  }, [reducedMotion, isDemoModalOpen]);
+  }, [reducedMotion, isDemoModalOpen, isPricingModalOpen]);
 
   // Handle escape key and body scroll locking for the demo modal
   useEffect(() => {
@@ -657,6 +660,17 @@ export function WantToHire() {
                     </svg>
                     <span>See demo</span>
                   </button>
+
+                  {/* View Pricing Action */}
+                  <button
+                    type="button"
+                    onClick={() => setIsPricingModalOpen(true)}
+                    aria-label="View employer hiring pricing plans"
+                    className="inline-flex items-center gap-1.5 text-sm sm:text-base font-semibold text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40 rounded-md cursor-pointer"
+                  >
+                    <Tag className="h-4 w-4 sm:h-4.5 sm:w-4.5 shrink-0 text-blue-600 dark:text-blue-400" />
+                    <span>View Pricing</span>
+                  </button>
                 </div>
               </div>
             </motion.div>
@@ -719,6 +733,12 @@ export function WantToHire() {
           </div>
         )}
       </AnimatePresence>
+
+      {/* Employer Pricing Plans Modal */}
+      <PricingModal
+        open={isPricingModalOpen}
+        onClose={() => setIsPricingModalOpen(false)}
+      />
     </section>
   );
 }
