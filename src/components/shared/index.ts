@@ -16,5 +16,6 @@ export {
   StackedFooterWrapper,
   StackedPagesContainer,
 } from "./stacked-scroll";
+export { FloatingAppBanner } from "./floating-app-banner";
 
 

@@ -3,6 +3,7 @@ import { Hero, TrustedBy, AppDownload, WantToHire, BrandStatement } from "@/comp
 import {
   Footer,
   InteractiveDots,
+  FloatingAppBanner,
 } from "@/components/shared";
 
 export const metadata: Metadata = {
@@ -33,6 +34,9 @@ export default function Home() {
       <WantToHire />
       <BrandStatement />
       <Footer />
+
+      {/* Fixed app download banner */}
+      <FloatingAppBanner />
     </main>
   );
 }

@@ -60,6 +60,7 @@ const COLS: FooterColumn[] = [
     links: [
       { label: "Find Jobs", href: "/jobs" },
       { label: "Download App", href: siteConfig.links.playStore },
+      { label: "Candidate Feedback", href: "/feedback?role=candidate" },
     ],
   },
   {
@@ -67,6 +68,7 @@ const COLS: FooterColumn[] = [
     links: [
       { label: "Post a Job", href: siteConfig.links.employer },
       { label: "Employer Dashboard", href: siteConfig.links.employer },
+      { label: "Employer Feedback", href: "/feedback?role=employer" },
     ],
   },
   {
