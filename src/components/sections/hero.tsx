@@ -29,46 +29,6 @@ export function Hero() {
     offset: ["start start", "end start"],
   });
 
-  // Track when full-screen JobPostDemo section enters viewport (hide floating nav actions)
-  const { scrollYProgress: demoScrollProgress } = useScroll({
-    target: demoSectionRef,
-    offset: ["start 80%", "end 20%"],
-  });
-
-  useMotionValueEvent(demoScrollProgress, "change", (latest) => {
-    if (latest > 0.05 && latest < 0.95) {
-      document.documentElement.dataset.hideNavActions = "true";
-    } else {
-      delete document.documentElement.dataset.hideNavActions;
-    }
-  });
-
-  useEffect(() => {
-    const el = demoSectionRef.current;
-    if (!el) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting && entry.intersectionRatio >= 0.25) {
-            document.documentElement.dataset.hideNavActions = "true";
-          } else if (!entry.isIntersecting || entry.intersectionRatio < 0.1) {
-            delete document.documentElement.dataset.hideNavActions;
-          }
-        });
-      },
-      {
-        threshold: [0, 0.1, 0.25, 0.5, 0.75, 1.0],
-      }
-    );
-
-    observer.observe(el);
-    return () => {
-      observer.disconnect();
-      delete document.documentElement.dataset.hideNavActions;
-    };
-  }, []);
-
   const copyScale = useTransform(copyScrollProgress, [0, 0.8], [1, 0.88]);
   const copyOpacity = useTransform(copyScrollProgress, [0, 0.75], [1, 0]);
   const copyY = useTransform(copyScrollProgress, [0, 0.8], [0, -50]);
@@ -218,11 +178,11 @@ export function Hero() {
         </motion.div>
       </div>
 
-      {/* FULL-SCREEN JOB POST DEMO SECTION */}
+      {/* FULL-SCREEN JOB POST DEMO SECTION (Hidden on mobile devices for clean, fast scrolling) */}
       <div
         ref={demoSectionRef}
         className={cn(
-          "relative w-full",
+          "relative w-full hidden md:block",
           "h-[calc(100dvh+4rem)]"
         )}
       >

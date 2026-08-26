@@ -20,26 +20,8 @@ export function Navbar({ className }: NavbarProps) {
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
-  const [hideActions, setHideActions] = useState(false)
   const actionsRef = useRef<HTMLDivElement>(null)
   const [actionsWidth, setActionsWidth] = useState(0)
-
-  useEffect(() => {
-    const check = () => {
-      setHideActions(document.documentElement.dataset.hideNavActions === "true")
-    }
-    check()
-    const observer = new MutationObserver(check)
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ["data-hide-nav-actions"],
-    })
-    window.addEventListener("hirance:toggle-nav-actions", check)
-    return () => {
-      observer.disconnect()
-      window.removeEventListener("hirance:toggle-nav-actions", check)
-    }
-  }, [])
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20)
@@ -67,6 +49,15 @@ export function Navbar({ className }: NavbarProps) {
     }
   }, [menuOpen])
 
+  // Close menu on ESC key
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMenuOpen(false)
+    }
+    window.addEventListener("keydown", onKeyDown)
+    return () => window.removeEventListener("keydown", onKeyDown)
+  }, [])
+
   const handleMenuToggle = () => {
     setMenuOpen((v) => !v)
   }
@@ -85,7 +76,12 @@ export function Navbar({ className }: NavbarProps) {
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.7, ease: [0.25, 0.1, 0.25, 1] }}
         className={cn(
-          "absolute inset-x-0 top-0 z-50 w-full px-6 pt-4 sm:px-10 sm:pt-5 lg:px-16 xl:px-24",
+          "w-full transition-all duration-300 ease-out",
+          "fixed inset-x-0 top-0 z-50 md:absolute",
+          scrolled || menuOpen
+            ? "border-b border-border/50 bg-white/95 py-3 shadow-xs backdrop-blur-md md:border-transparent md:bg-transparent md:py-4 md:shadow-none md:backdrop-blur-none sm:md:pt-5"
+            : "border-b border-transparent bg-transparent py-4 sm:py-5",
+          "px-6 sm:px-10 lg:px-16 xl:px-24",
           className
         )}
       >
@@ -189,7 +185,23 @@ export function Navbar({ className }: NavbarProps) {
             aria-hidden="true"
           />
 
-          <div className="h-10 w-10 shrink-0 md:hidden" aria-hidden="true" />
+          {/* Mobile hamburger button inside header to align cleanly with logo */}
+          <button
+            type="button"
+            onClick={handleMenuToggle}
+            aria-label={menuOpen ? "Close menu" : "Open menu"}
+            aria-expanded={menuOpen}
+            tabIndex={0}
+            className={cn(
+              "flex h-10 w-10 items-center justify-center rounded-full border text-foreground transition-all duration-300 ease-out md:hidden",
+              "focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-brand-500/40",
+              scrolled || menuOpen
+                ? "border-border/50 bg-white/95 shadow-[0_10px_36px_-18px_rgba(15,23,42,0.22)]"
+                : "border-border/40 bg-white/90 hover:bg-muted"
+            )}
+          >
+            {menuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
         </nav>
 
         <AnimatePresence>
@@ -199,7 +211,7 @@ export function Navbar({ className }: NavbarProps) {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -12 }}
               transition={{ duration: 0.25, ease: "easeOut" }}
-              className="mt-2 w-full overflow-hidden rounded-2xl border border-border/50 bg-white p-4 shadow-[0_12px_40px_-20px_rgba(15,23,42,0.25)] md:hidden"
+              className="mt-2 w-full max-h-[calc(100dvh-5.5rem)] overflow-y-auto rounded-2xl border border-border/50 bg-white p-4 shadow-[0_12px_40px_-20px_rgba(15,23,42,0.25)] md:hidden"
             >
               <p className="px-3 pb-2 text-[11px] font-semibold tracking-[0.14em] text-muted-foreground uppercase">
                 Choose your path
@@ -281,15 +293,14 @@ export function Navbar({ className }: NavbarProps) {
         </AnimatePresence>
       </motion.header>
 
-      {/* Outside motion header so transform does not break fixed positioning */}
+      {/* Desktop action buttons */}
       <div
         ref={actionsRef}
         className={cn(
           "pointer-events-auto fixed top-4 right-6 z-[60] hidden items-center gap-2 rounded-full px-2 py-1.5 transition-all duration-300 ease-out sm:top-5 sm:right-10 md:flex lg:right-16 xl:right-24",
           scrolled
             ? "border border-border/50 bg-white/95 shadow-[0_10px_36px_-18px_rgba(15,23,42,0.22)] backdrop-blur-md"
-            : "border border-transparent bg-transparent shadow-none",
-          hideActions && "pointer-events-none -translate-y-3 opacity-0"
+            : "border border-transparent bg-transparent shadow-none"
         )}
       >
         {candidate && (
@@ -328,24 +339,6 @@ export function Navbar({ className }: NavbarProps) {
             </Link>
           ))}
       </div>
-
-      <button
-        type="button"
-        onClick={handleMenuToggle}
-        aria-label={menuOpen ? "Close menu" : "Open menu"}
-        aria-expanded={menuOpen}
-        tabIndex={0}
-        className={cn(
-          "fixed top-4 right-6 z-[60] flex h-10 w-10 items-center justify-center rounded-full border text-foreground transition-all duration-300 ease-out sm:top-5 sm:right-10 md:hidden",
-          "focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-brand-500/40",
-          scrolled
-            ? "border-border/50 bg-white/95 shadow-[0_10px_36px_-18px_rgba(15,23,42,0.22)]"
-            : "border-border/40 bg-white/90 hover:bg-muted",
-          hideActions && "pointer-events-none -translate-y-3 opacity-0"
-        )}
-      >
-        {menuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-      </button>
     </>
   )
 }
