@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Hero, TrustedBy, AppDownload, WantToHire, BrandStatement } from "@/components/sections";
+import { Hero, TrustedBy, AppDownload, WantToHire, BrandStatement, SwipePlayground } from "@/components/sections";
 import {
   Footer,
   InteractiveDots,
@@ -31,6 +31,7 @@ export default function Home() {
       {/* Main content sections scrolling normally */}
       <TrustedBy />
       <AppDownload />
+      <SwipePlayground />
       <WantToHire />
       <BrandStatement />
       <Footer />

@@ -677,10 +677,7 @@ export function WantToHire() {
           </motion.div>
         </div>
 
-        {/* Interactive Swipe Playground */}
-        <div className="mt-14 sm:mt-18 lg:mt-22 w-full">
-          <SwipePlayground />
-        </div>
+      
       </div>
 
       {/* Interactive Job Post Demo Modal */}
