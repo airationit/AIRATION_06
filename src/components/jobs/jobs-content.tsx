@@ -17,7 +17,9 @@ import {
   Briefcase,
   MapPin,
   Loader2,
+  ChevronDown,
 } from "lucide-react";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { Job, getJobs } from "@/lib/jobs-data";
 import { JobCard } from "./job-card";
 import { JobCardSkeleton } from "./job-card-skeleton";
@@ -29,6 +31,8 @@ import { POPULAR_CITIES } from "@/config/jobs-taxonomy";
 import { cn } from "@/lib/utils";
 import { isCityMatch, normalizeCitySlug } from "@/lib/city-normalizer";
 import { Footer } from "@/components/shared";
+import { faqs } from "./jobs-faq-data";
+
 
 // Helper to match jobs with selected city/location supporting all Indian aliases & variations
 function isLocationMatch(job: Job, targetSlugOrId: string): boolean {
@@ -57,6 +61,26 @@ export function JobsContent({
   citySlug = "all",
   experienceSlug = "",
 }: JobsContentProps) {
+  const reducedMotion = useReducedMotion();
+  
+  // FAQ state management (matching how-it-works format)
+  const [openFaq, setOpenFaq] = useState<number | null>(0);
+  const [activeCategory, setActiveCategory] = useState<string>("All Questions");
+  
+  const filteredFaqs = faqs.filter(
+    (faq) => activeCategory === "All Questions" || faq.category === activeCategory
+  );
+
+  const fadeIn = (delay = 0) =>
+    reducedMotion
+      ? {}
+      : {
+          initial: { opacity: 0, y: 20 },
+          whileInView: { opacity: 1, y: 0 },
+          viewport: { once: true, margin: "-50px" },
+          transition: { duration: 0.5, delay, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] },
+        };
+
   const {
     loadMasterdata,
     jobRoles,
@@ -884,6 +908,91 @@ export function JobsContent({
             </div>
           </div>
         </div>
+
+        {/* FAQ Section - Matching How It Works Page Style */}
+        <section id="faq" className="relative py-20 sm:py-28 overflow-hidden border-t border-border/30">
+          <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 relative z-10">
+            
+            {/* Section Header (Clean & Professional) */}
+            <div className="text-center space-y-3">
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-foreground leading-tight">
+                Frequently Asked{" "}
+                <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-brand-600 dark:from-brand-400 dark:via-indigo-300 dark:to-sky-300 bg-clip-text text-transparent">
+                  Questions
+                </span>
+              </h2>
+              <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto">
+                Everything you need to know about finding jobs on Hirance.
+              </p>
+            </div>
+
+            {/* Category Filter Pills */}
+            <div className="mt-8 flex items-center justify-center gap-2 sm:gap-3 flex-wrap">
+              {["All Questions", "Candidates", "Employers", "General"].map((cat) => (
+                <button
+                  key={cat}
+                  onClick={() => {
+                    setActiveCategory(cat);
+                    setOpenFaq(0);
+                  }}
+                  className={`rounded-full px-5 py-2 text-xs sm:text-sm font-semibold transition-all duration-200 ${
+                    activeCategory === cat
+                      ? "bg-brand-600 text-white shadow-md shadow-brand-600/20"
+                      : "bg-muted/60 text-muted-foreground hover:bg-muted hover:text-foreground"
+                  }`}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
+
+            {/* Accordion FAQ Items (Clean Lines, No Cards) */}
+            <div className="mt-10 divide-y divide-border/40 border-y border-border/40">
+              {filteredFaqs.map((faq, idx) => {
+                const isOpen = openFaq === idx;
+                return (
+                  <div key={idx} className="py-4 sm:py-5 transition-colors">
+                    <button
+                      onClick={() => setOpenFaq(isOpen ? null : idx)}
+                      aria-expanded={isOpen}
+                      aria-controls={`faq-answer-${idx}`}
+                      className="flex w-full items-start justify-between gap-4 text-left group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 rounded-lg py-1"
+                    >
+                      <span className="text-base sm:text-lg font-bold text-foreground group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">
+                        {faq.question}
+                      </span>
+                      <span
+                        className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand-500/10 text-brand-600 dark:text-brand-400 transition-transform duration-200 ${
+                          isOpen ? "rotate-180 bg-brand-600 text-white dark:text-white" : ""
+                        }`}
+                      >
+                        <ChevronDown className="h-4 w-4" />
+                      </span>
+                    </button>
+
+                    <AnimatePresence initial={false}>
+                      {isOpen && (
+                        <motion.div
+                          id={`faq-answer-${idx}`}
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: "auto" }}
+                          exit={{ opacity: 0, height: 0 }}
+                          transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                          className="overflow-hidden"
+                        >
+                          <p className="pt-3 pb-1 text-sm sm:text-base leading-relaxed text-muted-foreground">
+                            {faq.answer}
+                          </p>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                );
+              })}
+            </div>
+
+          </div>
+        </section>
 
         {/* Full-Width Programmatic SEO Career Hubs */}
         <JobSeoLinks currentRoleSlug={roleSlug} currentCitySlug={citySlug} />

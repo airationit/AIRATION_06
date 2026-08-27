@@ -13,6 +13,13 @@ export const metadata: Metadata = {
     "employer support Hirance",
     "job seeker support Hirance",
     "fast hiring platform contact",
+    "Hirance customer care number",
+    "Hirance helpline",
+    "Hirance headquarters",
+    "Hirance office address",
+    "Hirance app not working",
+    "Hirance WhatsApp support",
+    "Hirance partnership inquiry",
   ],
   alternates: {
     canonical: "https://hirance.com/contact",

@@ -2,19 +2,32 @@ import type { Metadata } from "next";
 import { HowItWorksContent } from "@/components/how-it-works/how-it-works-content";
 
 export const metadata: Metadata = {
-  title: "How It Works | Hirance - India's 1st Swipe-Based Hiring Platform",
-  description:
-    "Discover how hiring works on Hirance. Candidates swipe right to apply with instant AI match scores, and employers post jobs in 60 seconds with pre-filtered candidate matching.",
-  keywords: [
-    "Hirance how it works",
-    "swipe based hiring platform",
-    "India swipe job app",
-    "AI job match score",
-    "post jobs in 1 minute",
-    "fast job application",
-    "pre-filtered candidates",
-    "hire candidates fast",
-  ],
+title: "How Hirance Works | Swipe to Apply, Post Jobs in 60 Seconds | Hirance",
+
+description: "See how Hirance works: candidates swipe right to apply instantly with AI Match Scores, and employers post jobs in under 60 seconds with pre-filtered candidates. No forms, no resume uploads, no waiting.",
+
+keywords: [
+  "Hirance how it works",
+  "how does swipe hiring work",
+  "swipe based hiring platform",
+  "India swipe job app",
+  "AI job match score",
+  "Smart Score job matching",
+  "post jobs in 60 seconds",
+  "post a job online free India",
+  "fast job application",
+  "pre-filtered candidates",
+  "hire candidates fast",
+  "apply for jobs without resume",
+  "apply jobs without form filling",
+  "job app India free",
+  "best job app for freshers",
+  "swipe to apply jobs",
+  "Tinder style job app India",
+  "AI recruitment platform India",
+  "1 click interview scheduling",
+  "bulk candidate shortlisting",
+],
   alternates: {
     canonical: "https://hirance.com/how-it-works",
   },
@@ -135,7 +148,7 @@ export default function HowItWorksPage() {
         },
         {
           "@type": "Question",
-          name: "How does 1-click interview scheduling work?",
+          name: "How does 1-click interview scheduling work on Hirance?",
           acceptedAnswer: {
             "@type": "Answer",
             text: "Employers can select shortlisted candidates and trigger interview calendar invites directly from the dashboard in a single click, eliminating long email back-and-forths.",
@@ -143,7 +156,7 @@ export default function HowItWorksPage() {
         },
         {
           "@type": "Question",
-          name: "What happens after a candidate swipes right on a job?",
+          name: "What happens after I swipe right and apply for a job on Hirance?",
           acceptedAnswer: {
             "@type": "Answer",
             text: "The candidate's application is instantly sent to the employer's dashboard along with their AI Match Score. If the employer approves, both parties get connected immediately.",
@@ -159,10 +172,26 @@ export default function HowItWorksPage() {
         },
         {
           "@type": "Question",
-          name: "Where can candidates and employers get started?",
+          name: "Where can candidates and employers get started on Hirance?",
           acceptedAnswer: {
             "@type": "Answer",
             text: "Candidates can download the free Hirance mobile app on the Google Play Store. Employers can register and post jobs directly on hirance.com in under a minute.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "Is Hirance a safe and legit hiring platform?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "Yes, Hirance is a genuine, India-based hiring platform. Candidate profiles and contact details are only shared with verified employers after a candidate explicitly swipes right to apply.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "How is Hirance different from traditional job portals like Naukri or Apna?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "Unlike traditional job portals that require long forms and manual scrolling, Hirance uses a swipe-based interface with instant AI Match Scores, letting candidates apply to multiple jobs in seconds.",
           },
         },
       ],

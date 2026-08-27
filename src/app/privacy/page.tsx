@@ -2,9 +2,9 @@ import type { Metadata } from "next"
 import { PrivacyPolicyContent } from "@/components/privacy/privacy-content"
 
 export const metadata: Metadata = {
-  title: "Privacy Policy | Hirance - Candidate & Job Seeker Data Protection",
+   title: "Privacy Policy | Candidate Data Protection & DPDP Act Compliance | Hirance",
   description:
-    "Official Privacy Policy for Hirance (Airation Softtech Pvt. Ltd.). Learn how we collect, process, store, and protect candidate data in compliance with the DPDP Act 2023 and IT Act 2000.",
+    "Read Hirance's Privacy Policy to learn how we collect, use, and protect your personal data as a job seeker or employer. Fully compliant with India's DPDP Act 2023 and IT Act 2000.",
   keywords: [
     "Hirance Privacy Policy",
     "Airation Softtech Privacy Policy",
@@ -13,6 +13,14 @@ export const metadata: Metadata = {
     "Job seeker privacy India",
     "IT Act 2000 candidate data",
     "Grievance Officer Hirance",
+    "Hirance data security",
+    "how Hirance uses my data",
+    "is Hirance safe with my data",
+    "Hirance data deletion request",
+    "how does Hirance protect candidate information",
+    "job app privacy policy India",
+    "employer data privacy Hirance",
+    "personal data protection India job app",
   ],
   alternates: {
     canonical: "https://hirance.com/privacy",

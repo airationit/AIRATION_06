@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { getJobs } from "@/lib/jobs-data";
 import { generateJobSeoData, generateJobsJsonLd } from "@/lib/seo-engine";
 import { JobsContent } from "@/components/jobs/jobs-content";
+import { faqs } from "@/components/jobs/jobs-faq-data";
 import { siteConfig } from "@/config/site";
 
 export const metadata: Metadata = {
@@ -16,6 +17,21 @@ export const metadata: Metadata = {
     "remote jobs india",
     "fresher jobs 2026",
     "sales jobs",
+    "work from home jobs",
+    "part time jobs",
+    "top hiring companies india",
+    "apply jobs online",
+    "verified employer jobs",
+    "full stack developer jobs",
+    "react developer jobs",
+    "python developer jobs",
+    "telecaller jobs",
+    "hr jobs in india",
+    "data analyst jobs",
+    "ui ux designer jobs",
+    "digital marketing jobs",
+    "finance and accounting jobs",
+    "startup hiring india",
   ],
   alternates: {
     canonical: `${siteConfig.url}/jobs`,
@@ -43,11 +59,26 @@ export default async function JobsPage() {
 
   const jsonLd = generateJobsJsonLd(seo, data.jobs);
 
+  // Generated from the same `faqs` array rendered in the UI accordion — single source of truth
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map((faq) => ({
+      "@type": "Question",
+      name: faq.question,
+      acceptedAnswer: { "@type": "Answer", text: faq.answer },
+    })),
+  };
+
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
       <JobsContent
         initialJobs={data.jobs}

@@ -60,7 +60,7 @@ const COLS: FooterColumn[] = [
       { label: "Find Jobs", href: "/jobs" },
       { label: "Download App", href: "https://play.google.com/store/apps/details?id=com.hirance" },
       { label: "How Hirance Works", href: "/how-it-works" },
-      { label: "Candidate FAQ", href: "/how-it-works" },
+      // { label: "Candidate FAQ", href: "/how-it-works" },
     ],
   },
   {
@@ -68,7 +68,7 @@ const COLS: FooterColumn[] = [
     links: [
       { label: "Post a Job", href: "https://employer.hirance.com/" },
       { label: "Employer Dashboard", href: "https://employer.hirance.com/" },
-      { label: "Pricing", href: "/request-demo" },
+      // { label: "Pricing", href: "/request-demo" },
       { label: "How Hirance Works", href: "/how-it-works" },
       { label: "Employer FAQ", href: "/how-it-works" },
     ],
