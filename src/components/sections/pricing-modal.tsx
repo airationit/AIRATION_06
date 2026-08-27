@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Rocket,
@@ -15,6 +15,7 @@ import {
   Users,
   X,
   Sparkles,
+  type LucideIcon,
 } from "lucide-react";
 import { siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
@@ -22,7 +23,7 @@ import { cn } from "@/lib/utils";
 export interface PricingPlan {
   id: string;
   name: string;
-  icon: React.ElementType;
+  icon: LucideIcon;
   tagline: string;
   price: string;
   original: string;
