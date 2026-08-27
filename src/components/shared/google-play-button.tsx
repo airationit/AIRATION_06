@@ -8,6 +8,9 @@ interface GooglePlayButtonProps {
   className?: string;
   compact?: boolean;
   animate?: boolean;
+  sublabel?: string;
+  label?: string;
+  href?: string;
 }
 
 /**
@@ -18,6 +21,9 @@ export function GooglePlayButton({
   className,
   compact = false,
   animate = true,
+  sublabel = "Candidate App",
+  label = "Apply for Jobs",
+  href = siteConfig.links.playStore,
 }: GooglePlayButtonProps) {
   const Tag = animate ? motion.a : "a";
   const motionProps = animate
@@ -30,22 +36,22 @@ export function GooglePlayButton({
 
   return (
     <Tag
-      href={siteConfig.links.playStore}
+      href={href}
       target="_blank"
       rel="noopener noreferrer"
-      aria-label="Get Hirance on Google Play"
+      aria-label={`${sublabel ? `${sublabel}: ` : ""}${label} - Hirance`}
       {...(motionProps as Record<string, unknown>)}
       className={cn(
-        "group inline-flex items-center gap-2.5 rounded-full border border-foreground/10 bg-foreground px-4 py-2.5 text-left text-background shadow-sm",
+        "group inline-flex h-12 items-center justify-center gap-3 rounded-full border border-foreground/10 bg-foreground px-5 sm:px-6 text-left text-background shadow-sm transition-all duration-300 hover:shadow-[0_0_20px_rgba(0,0,0,0.15)] focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-foreground/30 hover:scale-[1.02] active:scale-[0.98]",
         animate && "glow-hover",
         className
       )}
     >
-      <PlayIcon className="h-6 w-6 shrink-0" />
+      <PlayIcon className="h-5 w-5 shrink-0" />
       {!compact && (
-        <span className="flex flex-col leading-none">
-          <span className="text-sm font-semibold text-background">
-            Google Play
+        <span className="flex flex-col leading-none text-left">
+          <span className="text-xs sm:text-sm font-bold text-background mt-0.5">
+            {label}
           </span>
         </span>
       )}

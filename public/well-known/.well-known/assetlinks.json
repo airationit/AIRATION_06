@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.hirance",
+      "sha256_cert_fingerprints": [
+        "E4:99:6E:72:5D:8D:BE:A3:E0:6A:BC:0C:C7:91:D8:6B:F0:20:99:B6:6B:6F:6B:FE:89:B1:6F:F1:21:A0:AC:D4"
+      ]
+    }
+  }
+]

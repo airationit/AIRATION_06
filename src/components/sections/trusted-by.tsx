@@ -31,16 +31,16 @@ const AppIconCompanyCard = memo(function AppIconCompanyCard({
       rel="noopener noreferrer"
       title={company.name}
       aria-label={`Visit ${company.name}`}
-      className="relative flex shrink-0 items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 rounded-2xl sm:rounded-[22px] md:rounded-[24px]"
+      className="relative flex shrink-0 items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 rounded-xl sm:rounded-[14px] md:rounded-2xl"
     >
-      {/* Squircle App-Icon Container with Light Background & Crisp 2px Grey Border */}
+      {/* Squircle App-Icon Container with Light Background & Crisp Grey Border */}
       <div
         className={cn(
           "relative flex items-center justify-center overflow-hidden select-none",
-          "w-16 h-16 sm:w-20 sm:h-20 md:w-22 md:h-22 lg:w-24 lg:h-24",
-          "rounded-2xl sm:rounded-[22px] md:rounded-[24px]",
-          "border-2 border-slate-300",
-          "shadow-[0_2px_6px_rgba(0,0,0,0.04)]",
+          "w-11 h-11 sm:w-13 sm:h-13 md:w-14 md:h-14 lg:w-16 lg:h-16",
+          "rounded-xl sm:rounded-[14px] md:rounded-2xl",
+          "border-[1.5px] border-slate-300/90 dark:border-slate-700",
+          "shadow-[0_1px_4px_rgba(0,0,0,0.04)]",
           "transition-transform duration-200 ease-out hover:scale-105"
         )}
         style={{
@@ -48,11 +48,11 @@ const AppIconCompanyCard = memo(function AppIconCompanyCard({
         }}
       >
         {/* Content: Centered Logo or Monogram with Balanced Proportions */}
-        <div className="relative z-10 flex h-full w-full items-center justify-center p-2.5 sm:p-3">
+        <div className="relative z-10 flex h-full w-full items-center justify-center p-1.5 sm:p-2 md:p-2.5">
           {failed ? (
             <span
               aria-hidden
-              className="grid h-full w-full place-items-center text-sm sm:text-base md:text-lg font-bold select-none tracking-tight rounded-lg"
+              className="grid h-full w-full place-items-center text-xs sm:text-sm font-bold select-none tracking-tight rounded-md"
               style={{
                 color: theme.textColor || (theme.isLight ? "#1E293B" : "#FFFFFF"),
               }}
@@ -64,27 +64,27 @@ const AppIconCompanyCard = memo(function AppIconCompanyCard({
             <img
               src={company.logoUrl}
               alt={company.name}
-              width={56}
-              height={56}
+              width={36}
+              height={36}
               loading="lazy"
               decoding="async"
               className={cn(
-                "object-contain select-none rounded-lg sm:rounded-xl",
-                "max-h-9 max-w-9 sm:max-h-11 sm:max-w-11 md:max-h-12 md:max-w-12 lg:max-h-13 lg:max-w-13"
+                "object-contain select-none rounded-md sm:rounded-lg",
+                "max-h-6 max-w-6 sm:max-h-7 sm:max-w-7 md:max-h-8 md:max-w-8 lg:max-h-9 lg:max-w-9"
               )}
               onError={() => setFailed(true)}
             />
           ) : (
-            <div className="flex h-10 w-10 sm:h-12 sm:w-12 md:h-13 md:w-13 items-center justify-center rounded-xl sm:rounded-[14px] bg-white p-1.5 shadow-xs overflow-hidden">
+            <div className="flex h-7 w-7 sm:h-8 sm:w-8 md:h-9 md:w-9 lg:h-10 lg:w-10 items-center justify-center rounded-lg sm:rounded-[10px] bg-white p-1 shadow-xs overflow-hidden">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={company.logoUrl}
                 alt={company.name}
-                width={44}
-                height={44}
+                width={28}
+                height={28}
                 loading="lazy"
                 decoding="async"
-                className="max-h-7 max-w-7 sm:max-h-9 sm:max-w-9 md:max-h-10 md:max-w-10 object-contain select-none rounded-md sm:rounded-lg"
+                className="max-h-5 max-w-5 sm:max-h-6 sm:max-w-6 md:max-h-7 md:max-w-7 lg:max-h-8 lg:max-w-8 object-contain select-none rounded-sm sm:rounded-md"
                 onError={() => setFailed(true)}
               />
             </div>
@@ -112,9 +112,9 @@ function ContinuousMarqueeRow({
   const duplicatedItems = useMemo(() => [...items, ...items], [items]);
 
   return (
-    <div className="relative flex overflow-hidden py-1.5 sm:py-2.5 select-none [contain:layout_paint]">
+    <div className="relative flex overflow-hidden py-1 sm:py-1.5 select-none [contain:layout_paint]">
       <div
-        className="flex shrink-0 gap-3 sm:gap-4 md:gap-5 animate-marquee will-change-transform items-center"
+        className="flex shrink-0 gap-2.5 sm:gap-3 md:gap-3.5 animate-marquee will-change-transform items-center"
         style={
           {
             "--marquee-duration": speed,
@@ -137,10 +137,12 @@ function ContinuousMarqueeRow({
 export function TrustedBy() {
   const reducedMotion = useReducedMotion();
 
-  // Split companies into 2 balanced rows
-  const half = Math.ceil(companies.length / 2);
-  const row1 = useMemo(() => companies.slice(0, half), [half]);
-  const row2 = useMemo(() => companies.slice(half), [half]);
+  // Split companies into 4 balanced rows
+  const quarter = Math.ceil(companies.length / 4);
+  const row1 = useMemo(() => companies.slice(0, quarter), [quarter]);
+  const row2 = useMemo(() => companies.slice(quarter, quarter * 2), [quarter]);
+  const row3 = useMemo(() => companies.slice(quarter * 2, quarter * 3), [quarter]);
+  const row4 = useMemo(() => companies.slice(quarter * 3), [quarter]);
 
   return (
     <section
@@ -164,7 +166,7 @@ export function TrustedBy() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-48px" }}
           transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-          className="mx-auto max-w-3xl text-center mb-8 sm:mb-12"
+          className="mx-auto max-w-3xl text-center mb-8 sm:mb-10"
         >
           <h2
             id="trusted-by-heading"
@@ -180,13 +182,13 @@ export function TrustedBy() {
           </p>
         </motion.div>
 
-        {/* 2-Row Continuous App-Icon Stream (Continuous, no pause on hover) */}
+        {/* 4-Row Continuous App-Icon Stream (Continuous, no pause on hover) */}
         <motion.div
           initial={reducedMotion ? false : { opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-48px" }}
           transition={{ duration: 0.6, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
-          className="space-y-3 sm:space-y-4 marquee-mask"
+          className="space-y-2 sm:space-y-2.5 md:space-y-3 marquee-mask"
         >
           {/* Row 1: Leftward continuous scroll */}
           <ContinuousMarqueeRow
@@ -201,7 +203,23 @@ export function TrustedBy() {
             items={row2}
             direction="reverse"
             speed="65s"
-            startIndex={half}
+            startIndex={quarter}
+          />
+
+          {/* Row 3: Leftward continuous scroll */}
+          <ContinuousMarqueeRow
+            items={row3}
+            direction="normal"
+            speed="80s"
+            startIndex={quarter * 2}
+          />
+
+          {/* Row 4: Rightward continuous scroll */}
+          <ContinuousMarqueeRow
+            items={row4}
+            direction="reverse"
+            speed="70s"
+            startIndex={quarter * 3}
           />
         </motion.div>
       </div>
