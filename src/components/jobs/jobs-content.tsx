@@ -49,6 +49,10 @@ interface JobsContentProps {
   roleSlug?: string;
   citySlug?: string;
   experienceSlug?: string;
+  workModeSlug?: string;
+  jobTypeSlug?: string;
+  workShiftSlug?: string;
+  initialSearch?: string;
 }
 
 export function JobsContent({
@@ -60,6 +64,10 @@ export function JobsContent({
   roleSlug = "",
   citySlug = "all",
   experienceSlug = "",
+  workModeSlug,
+  jobTypeSlug,
+  workShiftSlug,
+  initialSearch = "",
 }: JobsContentProps) {
   const reducedMotion = useReducedMotion();
   
@@ -112,12 +120,12 @@ export function JobsContent({
 
   // Comprehensive filter state strictly matching jobs_browse.md query parameters
   const [filters, setFilters] = useState<JobFilterValues>({
-    search: "",
+    search: initialSearch || "",
     roleId: "",
     roleSlug: roleSlug,
-    workModeId: "",
-    jobTypeId: "",
-    workShiftId: "",
+    workModeId: workModeSlug || "",
+    jobTypeId: jobTypeSlug || "",
+    workShiftId: workShiftSlug || "",
     experienceId: experienceSlug || "",
     salaryRangeId: "",
     cityId: "",
@@ -128,7 +136,7 @@ export function JobsContent({
     ordering: "-published_at",
   });
 
-  const prevPropsRef = useRef({ roleSlug, citySlug, experienceSlug });
+  const prevPropsRef = useRef({ roleSlug, citySlug, experienceSlug, workModeSlug, jobTypeSlug, workShiftSlug, initialSearch });
 
   // Sync props on route changes only when props actually change
   useEffect(() => {
@@ -136,18 +144,117 @@ export function JobsContent({
     if (
       prev.citySlug !== citySlug ||
       prev.roleSlug !== roleSlug ||
-      prev.experienceSlug !== experienceSlug
+      prev.experienceSlug !== experienceSlug ||
+      prev.workModeSlug !== workModeSlug ||
+      prev.jobTypeSlug !== jobTypeSlug ||
+      prev.workShiftSlug !== workShiftSlug ||
+      prev.initialSearch !== initialSearch
     ) {
-      prevPropsRef.current = { roleSlug, citySlug, experienceSlug };
+      prevPropsRef.current = { roleSlug, citySlug, experienceSlug, workModeSlug, jobTypeSlug, workShiftSlug, initialSearch };
       setFilters((f) => ({
         ...f,
         citySlug: citySlug || "all",
         roleSlug: roleSlug || "",
         experienceId: experienceSlug || "",
+        workModeId: workModeSlug || "",
+        jobTypeId: jobTypeSlug || "",
+        workShiftId: workShiftSlug || "",
+        search: initialSearch || "",
       }));
       setCurrentPage(1);
     }
-  }, [citySlug, roleSlug, experienceSlug]);
+  }, [citySlug, roleSlug, experienceSlug, workModeSlug, jobTypeSlug, workShiftSlug, initialSearch]);
+
+  // Synchronize slug-based filters with masterdata store once loaded
+  useEffect(() => {
+    if (!workModeSlug && !jobTypeSlug && !workShiftSlug) return;
+
+    setFilters((prev) => {
+      let updatedModeId = prev.workModeId;
+      let updatedTypeId = prev.jobTypeId;
+      let updatedShiftId = prev.workShiftId;
+
+      if (workModeSlug) {
+        const direct = workModes.find((x) => x.id === workModeSlug);
+        if (direct) {
+          updatedModeId = direct.id;
+        } else if (workModeSlug === "remote" || workModeSlug.includes("home")) {
+          const m = workModes.find((x) => x.name.toLowerCase().includes("home") || x.name.toLowerCase().includes("remote") || x.id.includes("remote"));
+          if (m) updatedModeId = m.id;
+        } else if (workModeSlug === "onsite" || workModeSlug.includes("office") || workModeSlug.includes("site")) {
+          const m = workModes.find((x) => x.name.toLowerCase().includes("office") || x.name.toLowerCase().includes("site") || x.id.includes("onsite"));
+          if (m) updatedModeId = m.id;
+        } else if (workModeSlug === "field" || workModeSlug.includes("field")) {
+          const m = workModes.find((x) => x.name.toLowerCase().includes("field") || x.id.includes("field"));
+          if (m) updatedModeId = m.id;
+        }
+      }
+
+      if (jobTypeSlug) {
+        const direct = jobTypes.find((x) => x.id === jobTypeSlug);
+        if (direct) {
+          updatedTypeId = direct.id;
+        } else if (jobTypeSlug === "full-time" || jobTypeSlug.includes("full")) {
+          const t = jobTypes.find((x) => x.name.toLowerCase().includes("full") || x.id.includes("full"));
+          if (t) updatedTypeId = t.id;
+        } else if (jobTypeSlug === "part-time" || jobTypeSlug.includes("part")) {
+          const t = jobTypes.find((x) => x.name.toLowerCase().includes("part") || x.id.includes("part"));
+          if (t) updatedTypeId = t.id;
+        } else if (jobTypeSlug === "both" || jobTypeSlug.includes("both")) {
+          const t = jobTypes.find((x) => x.name.toLowerCase().includes("both") || x.id.includes("both"));
+          if (t) updatedTypeId = t.id;
+        }
+      }
+
+      if (workShiftSlug) {
+        const direct = workShifts.find((x) => x.id === workShiftSlug);
+        if (direct) {
+          updatedShiftId = direct.id;
+        } else if (workShiftSlug === "day" || workShiftSlug.includes("day")) {
+          const s = workShifts.find((x) => x.name.toLowerCase().includes("day") || x.id.includes("day"));
+          if (s) updatedShiftId = s.id;
+        } else if (workShiftSlug === "night" || workShiftSlug.includes("night")) {
+          const s = workShifts.find((x) => x.name.toLowerCase().includes("night") || x.id.includes("night"));
+          if (s) updatedShiftId = s.id;
+        } else if (workShiftSlug === "hybrid" || workShiftSlug.includes("hybrid")) {
+          const s = workShifts.find((x) => x.name.toLowerCase().includes("hybrid") || x.id.includes("hybrid"));
+          if (s) updatedShiftId = s.id;
+        }
+      }
+
+      if (
+        updatedModeId === prev.workModeId &&
+        updatedTypeId === prev.jobTypeId &&
+        updatedShiftId === prev.workShiftId
+      ) {
+        return prev;
+      }
+
+      return {
+        ...prev,
+        workModeId: updatedModeId,
+        jobTypeId: updatedTypeId,
+        workShiftId: updatedShiftId,
+      };
+    });
+  }, [workModeSlug, jobTypeSlug, workShiftSlug, workModes, jobTypes, workShifts]);
+
+  // Smooth scroll into directory section if keyword is searching for directory
+  useEffect(() => {
+    if (!initialSearch) return;
+    const lower = initialSearch.toLowerCase();
+    if (lower.includes("city") || lower.includes("location")) {
+      const el = document.getElementById("directory-cities");
+      if (el) {
+        setTimeout(() => el.scrollIntoView({ behavior: "smooth", block: "center" }), 450);
+      }
+    } else if (lower.includes("department") || lower.includes("role") || lower.includes("category")) {
+      const el = document.getElementById("directory-departments");
+      if (el) {
+        setTimeout(() => el.scrollIntoView({ behavior: "smooth", block: "center" }), 450);
+      }
+    }
+  }, [initialSearch]);
 
   const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
 
@@ -264,27 +371,54 @@ export function JobsContent({
 
     if (filters.workModeId) {
       const modeObj = workModes.find((m) => m.id === filters.workModeId);
+      const label =
+        modeObj?.name ||
+        (filters.workModeId === "585ed3ae-c9eb-4f89-a715-33544efa1c07" || filters.workModeId === "onsite"
+          ? "Work from Office"
+          : filters.workModeId === "8c974af2-6d8b-49c8-b891-0a5ce9847024" || filters.workModeId === "field"
+          ? "Field Job"
+          : filters.workModeId === "bf5f80ba-b651-47c0-be52-9978569789d7" || filters.workModeId === "remote"
+          ? "Work from Home"
+          : filters.workModeId);
       tags.push({
         id: "mode",
-        label: modeObj?.name || filters.workModeId,
+        label,
         onRemove: () => setFilters((f) => ({ ...f, workModeId: "" })),
       });
     }
 
     if (filters.jobTypeId) {
       const typeObj = jobTypes.find((t) => t.id === filters.jobTypeId);
+      const label =
+        typeObj?.name ||
+        (filters.jobTypeId === "c2e13590-f69f-4bd4-9545-09cf81daae9e" || filters.jobTypeId === "full-time"
+          ? "Full Time"
+          : filters.jobTypeId === "fdde7c2d-88e6-4ecf-9fb5-596ca7f81c69" || filters.jobTypeId === "part-time"
+          ? "Part Time"
+          : filters.jobTypeId === "28ecf748-85c0-4deb-9133-8f24ec85fc11" || filters.jobTypeId === "both"
+          ? "Both (Full-Time/Part-Time)"
+          : filters.jobTypeId);
       tags.push({
         id: "type",
-        label: typeObj?.name || filters.jobTypeId,
+        label,
         onRemove: () => setFilters((f) => ({ ...f, jobTypeId: "" })),
       });
     }
 
     if (filters.workShiftId) {
       const shiftObj = workShifts.find((s) => s.id === filters.workShiftId);
+      const label =
+        shiftObj?.name ||
+        (filters.workShiftId === "f7d70b0b-57c0-4014-8002-7d170de4c299" || filters.workShiftId === "day"
+          ? "Day Shift"
+          : filters.workShiftId === "6e9a009a-35af-4bfe-baa9-a77b56ca443b" || filters.workShiftId === "night"
+          ? "Night Shift"
+          : filters.workShiftId === "8a5eafb2-daef-4246-9e58-5331a2c94dcd" || filters.workShiftId === "hybrid"
+          ? "Hybrid"
+          : filters.workShiftId);
       tags.push({
         id: "shift",
-        label: shiftObj?.name || filters.workShiftId,
+        label,
         onRemove: () => setFilters((f) => ({ ...f, workShiftId: "" })),
       });
     }

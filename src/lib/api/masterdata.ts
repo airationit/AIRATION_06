@@ -155,10 +155,9 @@ export async function fetchJobTypes(): Promise<JobType[]> {
   } catch (error) {
     console.error("fetchJobTypes error:", error);
     return [
-      { id: "job-type-ft", name: "Full Time", display_order: 1 },
-      { id: "job-type-pt", name: "Part Time", display_order: 2 },
-      { id: "job-type-intern", name: "Internship", display_order: 3 },
-      { id: "job-type-contract", name: "Contract", display_order: 4 },
+      { id: "c2e13590-f69f-4bd4-9545-09cf81daae9e", name: "Full Time", display_order: 1 },
+      { id: "fdde7c2d-88e6-4ecf-9fb5-596ca7f81c69", name: "Part Time", display_order: 2 },
+      { id: "28ecf748-85c0-4deb-9133-8f24ec85fc11", name: "Both (Full-Time/Part-Time)", display_order: 3 },
     ];
   }
 }
@@ -175,9 +174,9 @@ export async function fetchWorkModes(): Promise<WorkMode[]> {
   } catch (error) {
     console.error("fetchWorkModes error:", error);
     return [
-      { id: "mode-onsite", name: "In Office", display_order: 1 },
-      { id: "mode-hybrid", name: "Hybrid", display_order: 2 },
-      { id: "mode-remote", name: "Remote", display_order: 3 },
+      { id: "585ed3ae-c9eb-4f89-a715-33544efa1c07", name: "Work from Office", display_order: 1 },
+      { id: "8c974af2-6d8b-49c8-b891-0a5ce9847024", name: "Field Job", display_order: 2 },
+      { id: "bf5f80ba-b651-47c0-be52-9978569789d7", name: "Work from Home", display_order: 3 },
     ];
   }
 }
@@ -193,7 +192,11 @@ export async function fetchWorkShifts(): Promise<WorkShift[]> {
     return res.data || [];
   } catch (error) {
     console.error("fetchWorkShifts error:", error);
-    return [];
+    return [
+      { id: "f7d70b0b-57c0-4014-8002-7d170de4c299", name: "Day Shift", display_order: 1 },
+      { id: "6e9a009a-35af-4bfe-baa9-a77b56ca443b", name: "Night Shift", display_order: 2 },
+      { id: "8a5eafb2-daef-4246-9e58-5331a2c94dcd", name: "Hybrid", display_order: 3 },
+    ];
   }
 }
 

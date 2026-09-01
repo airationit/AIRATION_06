@@ -11,6 +11,14 @@ export type SeoPatternKey =
   | "remote-role"
   | "freshers-city"
   | "experience-role"
+  | "work-from-office"
+  | "field-jobs"
+  | "work-from-home"
+  | "full-time"
+  | "part-time"
+  | "day-shift"
+  | "night-shift"
+  | "hybrid"
   | "role"
   | "city"
   | "company-city"
@@ -52,6 +60,78 @@ export const JOBS_SEO_TEMPLATES: Record<SeoPatternKey, SeoTemplate> = {
     subheading:
       "Exclusive high-growth {role} roles for {experience} professionals across leading tech and business teams.",
     breadcrumb: "{experience} {role}",
+  },
+  "work-from-office": {
+    title: "Work From Office Jobs ({year}) - {count}+ In-Office Vacancies | Hirance",
+    description:
+      "Explore {count}+ verified in-office job opportunities across India. Connect with top employers hiring for on-site positions with instant application on Hirance.",
+    heading: "Work From Office Jobs",
+    subheading:
+      "Discover active in-office opportunities at modern workplaces across India. Apply with zero form-filling.",
+    breadcrumb: "Work From Office Jobs",
+  },
+  "field-jobs": {
+    title: "Field Jobs ({year}) - {count}+ On-Field & Executive Openings | Hirance",
+    description:
+      "Browse {count}+ verified field sales, operations, and technician jobs on Hirance. Apply directly to verified companies hiring in your area.",
+    heading: "Field Jobs",
+    subheading:
+      "Find active on-field and frontline roles with verified employers. Competitive salaries and quick hiring.",
+    breadcrumb: "Field Jobs",
+  },
+  "work-from-home": {
+    title: "Work From Home Jobs ({year}) - {count}+ Remote Vacancies | Hirance",
+    description:
+      "Apply for {count}+ verified Work From Home jobs in tech, customer support, sales, and data entry on Hirance. Work flexibly from anywhere in India.",
+    heading: "Work From Home Jobs",
+    subheading:
+      "Explore top remote and telecommute jobs with verified employers. Fast-track your hiring with one swipe.",
+    breadcrumb: "Work From Home Jobs",
+  },
+  "full-time": {
+    title: "Full-Time Jobs ({year}) - {count}+ Career Openings | Hirance",
+    description:
+      "Find {count}+ verified full-time job openings in India across leading enterprises and high-growth startups on Hirance. Instant AI matching.",
+    heading: "Full-Time Jobs",
+    subheading:
+      "Discover long-term career growth with top companies hiring full-time professionals nationwide.",
+    breadcrumb: "Full-Time Jobs",
+  },
+  "part-time": {
+    title: "Part-Time Jobs ({year}) - {count}+ Flexible Vacancies | Hirance",
+    description:
+      "Browse {count}+ verified part-time and flexible jobs on Hirance. Perfect for students, freelancers, and professionals seeking flexible working hours.",
+    heading: "Part-Time Jobs",
+    subheading:
+      "Earn on your schedule with verified part-time roles offering competitive hourly and monthly compensation.",
+    breadcrumb: "Part-Time Jobs",
+  },
+  "day-shift": {
+    title: "Day Shift Jobs ({year}) - {count}+ Active Vacancies | Hirance",
+    description:
+      "Explore {count}+ verified day shift job vacancies in operations, support, sales, and administration on Hirance. Apply directly with verified employers.",
+    heading: "Day Shift Jobs",
+    subheading:
+      "Find jobs with standard daytime working hours and structured schedules at top hiring companies.",
+    breadcrumb: "Day Shift Jobs",
+  },
+  "night-shift": {
+    title: "Night Shift Jobs ({year}) - {count}+ Night Shift Openings | Hirance",
+    description:
+      "Search {count}+ verified night shift job openings in customer support, international processes, IT, and logistics on Hirance with attractive shift allowances.",
+    heading: "Night Shift Jobs",
+    subheading:
+      "Explore verified night shift roles with premium shift allowances and rapid interview scheduling.",
+    breadcrumb: "Night Shift Jobs",
+  },
+  "hybrid": {
+    title: "Hybrid Jobs ({year}) - {count}+ Flexible Work & Shift Openings | Hirance",
+    description:
+      "Search {count}+ verified hybrid jobs with flexible work arrangements and shifts on Hirance. Connect with top companies hiring nationwide.",
+    heading: "Hybrid Jobs",
+    subheading:
+      "Discover verified hybrid positions offering optimal work-life balance and flexible working models across leading employers.",
+    breadcrumb: "Hybrid Jobs",
   },
   "role": {
     title: "{count}+ {role} Jobs ({year}) | Hirance",

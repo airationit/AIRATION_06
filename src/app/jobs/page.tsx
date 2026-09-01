@@ -47,8 +47,39 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function JobsPage() {
-  const data = await getJobs({ limit: 12, page: 1 });
+interface JobsPageProps {
+  searchParams?: Promise<{
+    keyword?: string;
+    search?: string;
+    workMode?: string;
+    jobType?: string;
+    shift?: string;
+    city?: string;
+    role?: string;
+    filter?: string;
+  }>;
+}
+
+export default async function JobsPage({ searchParams }: JobsPageProps) {
+  const resolvedParams = searchParams ? await searchParams : {};
+  const keyword = resolvedParams.keyword || resolvedParams.search || "";
+  const workModeSlug = resolvedParams.workMode;
+  const jobTypeSlug = resolvedParams.jobType;
+  const workShiftSlug = resolvedParams.shift;
+  const citySlug = resolvedParams.city || "all";
+  const roleSlug = resolvedParams.role;
+
+  const data = await getJobs({
+    limit: 12,
+    page: 1,
+    search: keyword || undefined,
+    workMode: workModeSlug,
+    jobType: jobTypeSlug,
+    workShift: workShiftSlug,
+    citySlug: citySlug !== "all" ? citySlug : undefined,
+    roleSlug,
+  });
+
   const seo = generateJobSeoData(
     {
       pattern: "default",
@@ -83,9 +114,15 @@ export default async function JobsPage() {
       <JobsContent
         initialJobs={data.jobs}
         totalJobs={data.totalJobs}
-        heading="Find Your Next Career Move"
-        subheading="Search verified job openings across India's fastest-growing startups and enterprises. Apply with one swipe."
-        breadcrumbLabel="All Jobs"
+        heading={keyword ? `Jobs matching "${keyword}"` : "Find Your Next Career Move"}
+        subheading={keyword ? "Explore verified openings matching your search criteria." : "Search verified job openings across India's fastest-growing startups and enterprises. Apply with one swipe."}
+        breadcrumbLabel={keyword || "All Jobs"}
+        initialSearch={keyword}
+        workModeSlug={workModeSlug}
+        jobTypeSlug={jobTypeSlug}
+        workShiftSlug={workShiftSlug}
+        citySlug={citySlug}
+        roleSlug={roleSlug}
       />
     </>
   );
