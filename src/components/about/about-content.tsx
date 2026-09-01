@@ -22,7 +22,7 @@ const faqs = [
   {
     question: "What is Hirance and what is its mission?",
     answer:
-      "Hirance is India's 1st swipe-based hiring platform. Our mission is to make hiring instant, transparent, and form-free for job seekers and recruiters across India.",
+      "Hirance is India's swipe-based hiring platform. Our mission is to make hiring instant, transparent, and form-free for job seekers and recruiters across India.",
     category: "General",
   },
   {
@@ -161,7 +161,7 @@ export function AboutContent() {
             transition={{ duration: 0.5, delay: 0.05, ease: [0.25, 0.1, 0.25, 1] }}
             className="text-3xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl text-foreground"
           >
-            India's 1st Swipe-Based{" "}
+            India's Swipe-Based{" "}
             <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-sky-500 bg-clip-text text-transparent">
               Hiring Platform
             </span>
@@ -180,7 +180,7 @@ export function AboutContent() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.15, ease: [0.25, 0.1, 0.25, 1] }}
-            className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-lg"
+            className="mx-auto mt-4 max-w-4xl text-base leading-relaxed text-muted-foreground sm:text-lg"
           >
             Fastest way to Post & Apply for jobs—No forms, No scrolling, No waiting.
           </motion.p>
@@ -212,7 +212,7 @@ export function AboutContent() {
               Built to solve recruitment speed
             </h2>
             <p className="mt-6 text-base leading-relaxed text-muted-foreground sm:text-lg">
-              Hirance is India's first swipe-based hiring platform, built to solve the biggest problem in job hunting and recruitment—speed. No more long forms, resume uploads, or endless job scrolling. Candidates swipe right to apply and left to skip, based on a Smart Score for every job. Employers post jobs in under a minute and get only relevant, pre-filtered candidates. Smarter hiring starts here.
+              Hirance is India's swipe-based hiring platform, built to solve the biggest problem in job hunting and recruitment—speed. No more long forms, resume uploads, or endless job scrolling. Candidates swipe right to apply and left to skip, based on a Smart Score for every job. Employers post jobs in under a minute and get only relevant, pre-filtered candidates. Smarter hiring starts here.
             </p>
           </div>
 
@@ -482,7 +482,7 @@ export function AboutContent() {
             Smarter hiring starts here
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-base text-muted-foreground">
-            Join thousands of candidates and employers experiencing India's 1st swipe-based job platform.
+            Join thousands of candidates and employers experiencing India's swipe-based job platform.
           </p>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
             <GooglePlayButton />

@@ -7,11 +7,11 @@ import {
 } from "@/components/shared";
 
 export const metadata: Metadata = {
-  title: "Hirance — India's 1st Swipe-Based Hiring Platform | Swipe. Match. Get Hired.",
+  title: "Hirance — India's Swipe-Based Hiring Platform | Swipe. Match. Get Hired.",
   description:
     "Fastest way to Post & Apply for jobs—No forms, No scrolling, No waiting. AI-calculated match scores for candidates and 60-second job postings for employers.",
   openGraph: {
-    title: "Hirance — India's 1st Swipe-Based Hiring Platform",
+    title: "Hirance — India's Swipe-Based Hiring Platform",
     description:
       "Swipe. Match. Get Hired. Fastest way to Post & Apply for jobs—No forms, No scrolling, No waiting.",
   },

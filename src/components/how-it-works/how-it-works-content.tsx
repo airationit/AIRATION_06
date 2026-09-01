@@ -635,7 +635,7 @@ export function HowItWorksContent() {
               </span>
             </h2>
             <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto">
-              Everything you need to know about India's 1st swipe-based hiring platform.
+              Everything you need to know about India's swipe-based hiring platform.
             </p>
           </div>
 

@@ -86,7 +86,7 @@ export const FALLBACK_BLOGS: BlogDetail[] = [
       {
         type: "paragraph",
         content:
-          "Hirance pioneered India's first swipe-based recruitment ecosystem to eliminate friction for both job seekers and hiring teams.",
+          "Hirance pioneered India's swipe-based recruitment ecosystem to eliminate friction for both job seekers and hiring teams.",
       },
       {
         type: "list",

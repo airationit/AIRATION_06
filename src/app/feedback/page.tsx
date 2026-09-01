@@ -5,7 +5,7 @@ import { FeedbackContent } from "@/components/feedback/feedback-content";
 export const metadata: Metadata = {
   title: "Candidate & Employer Reviews | Hirance - What Users Say",
   description:
-    "Read verified reviews and feedback from job seekers and employers using Hirance—India's 1st swipe-based hiring platform. Discover how fast hiring happens.",
+    "Read verified reviews and feedback from job seekers and employers using Hirance—India's swipe-based hiring platform. Discover how fast hiring happens.",
   keywords: [
     "Hirance reviews",
     "Hirance user feedback",

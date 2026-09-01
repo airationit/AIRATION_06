@@ -284,7 +284,7 @@ export function ContactContent() {
                 <span>Experience Faster Hiring on Mobile</span>
               </div>
               <p className="relative mt-1 text-xs text-muted-foreground leading-relaxed">
-                India's 1st swipe-based hiring app. Direct matches and real-time candidate chat.
+                India's swipe-based hiring app. Direct matches and real-time candidate chat.
               </p>
 
               <div className="relative mt-4 flex flex-wrap items-center gap-3">

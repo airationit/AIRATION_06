@@ -223,7 +223,7 @@ export function CandidateCTA({ onFindJobs, className }: CandidateCTAProps) {
           <CardContent card={nextCard} />
         </motion.div>
 
-        {/* 1st Card (Top Active Layer -> Swipes out smoothly) */}
+        {/* Top Card (Top Active Layer -> Swipes out smoothly) */}
         <motion.div
           key={`top-${topCard.id}-${index}`}
           className="absolute inset-0 rounded-3xl border border-white/25 bg-white/[0.11] backdrop-blur-md p-5 shadow-2xl"

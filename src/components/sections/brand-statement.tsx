@@ -41,7 +41,7 @@ const HIGHLIGHTS = [
   },
 ];
 
-const MARQUEE = ["SWIPE.", "APPLY.", "GET HIRED.", "SWIPE.", "APPLY.", "GET HIRED."];
+const MARQUEE = ["SWIPE.", "MATCH.", "GET HIRED.", "SWIPE.", "MATCH.", "GET HIRED."];
 
 export function BrandStatement() {
   const reducedMotion = useReducedMotion();

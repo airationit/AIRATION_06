@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { ContactContent } from "@/components/contact/contact-content";
 
 export const metadata: Metadata = {
-  title: "Contact Us | Hirance - India's 1st Swipe-Based Hiring Platform",
+  title: "Contact Us | Hirance - India's Swipe-Based Hiring Platform",
   description:
     "Contact Hirance for employer support, job seeker help, press, or partnerships. Call +91 9793780913 or email hello@hirance.com. We reply within 24 hours.",
   keywords: [
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: "https://hirance.com/contact",
-    title: "Contact Us | Hirance - India's 1st Swipe-Based Hiring Platform",
+    title: "Contact Us | Hirance - India's Swipe-Based Hiring Platform",
     description:
       "Have questions about hiring or job searching on Hirance? Reach out to our team at +91 9793780913.",
     siteName: "Hirance",
@@ -43,7 +43,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Contact Us | Hirance - India's 1st Swipe-Based Hiring Platform",
+    title: "Contact Us | Hirance - India's Swipe-Based Hiring Platform",
     description:
       "Swipe. Match. Get Hired. Contact Hirance support for instant assistance.",
   },

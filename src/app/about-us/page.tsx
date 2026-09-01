@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { AboutContent } from "@/components/about/about-content";
 
 export const metadata: Metadata = {
-  title: "About Us | Hirance - India's 1st Swipe-Based Hiring Platform",
+  title: "About Us | Hirance - India's Swipe-Based Hiring Platform",
   description:
-    "Hirance is India's 1st swipe-based hiring platform. Swipe. Match. Get Hired. Post jobs in under 1 minute & apply instantly with zero forms, zero scrolling, and zero waiting.",
+    "Hirance is India's swipe-based hiring platform. Swipe. Match. Get Hired. Post jobs in under 1 minute & apply instantly with zero forms, zero scrolling, and zero waiting.",
   keywords: [
     "Hirance about us",
     "India swipe job app",
@@ -31,22 +31,22 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: "https://hirance.com/about-us",
-    title: "About Us | Hirance - India's 1st Swipe-Based Hiring Platform",
+    title: "About Us | Hirance - India's Swipe-Based Hiring Platform",
     description:
-      "Hirance is India's 1st swipe-based hiring platform built to solve recruitment speed for candidates and employers.",
+      "Hirance is India's swipe-based hiring platform built to solve recruitment speed for candidates and employers.",
     siteName: "Hirance",
     images: [
       {
         url: "/og.png",
         width: 1200,
         height: 630,
-        alt: "About Us - Hirance - India's 1st Swipe-Based Hiring Platform",
+        alt: "About Us - Hirance - India's Swipe-Based Hiring Platform",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "About Us | Hirance - India's 1st Swipe-Based Hiring Platform",
+    title: "About Us | Hirance - India's Swipe-Based Hiring Platform",
     description:
       "Swipe. Match. Get Hired. Fastest way to Post & Apply for jobs with real-time Smart Scores.",
   },
@@ -60,7 +60,7 @@ export default function AboutUsPage() {
       name: "About Us | Hirance",
       url: "https://hirance.com/about-us",
       description:
-        "Hirance is India's 1st swipe-based hiring platform, built to solve recruitment speed with real-time Smart Scores, 60-second job postings, and zero forms.",
+        "Hirance is India's swipe-based hiring platform, built to solve recruitment speed with real-time Smart Scores, 60-second job postings, and zero forms.",
       publisher: {
         "@type": "Organization",
         name: "Hirance",
@@ -68,7 +68,7 @@ export default function AboutUsPage() {
         logo: "https://hirance.com/og.png",
         slogan: "Swipe. Match. Get Hired.",
         description:
-          "India's 1st swipe-based hiring platform connecting candidates and employers faster.",
+          "India's swipe-based hiring platform connecting candidates and employers faster.",
       },
       mainEntity: {
         "@type": "Organization",
@@ -88,7 +88,7 @@ export default function AboutUsPage() {
           name: "What is Hirance and what is its mission?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Hirance is India's 1st swipe-based hiring platform. Our mission is to make hiring instant, transparent, and form-free for job seekers and recruiters across India.",
+            text: "Hirance is India's swipe-based hiring platform. Our mission is to make hiring instant, transparent, and form-free for job seekers and recruiters across India.",
           },
         },
         {

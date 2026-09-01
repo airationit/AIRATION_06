@@ -35,7 +35,7 @@ keywords: [
     type: "website",
     locale: "en_US",
     url: "https://hirance.com/how-it-works",
-    title: "How It Works | Hirance - India's 1st Swipe-Based Hiring Platform",
+    title: "How It Works | Hirance - India's Swipe-Based Hiring Platform",
     description:
       "Discover how hiring works on Hirance. Fast, transparent, and form-free hiring for candidates and employers.",
     siteName: "Hirance",
@@ -50,7 +50,7 @@ keywords: [
   },
   twitter: {
     card: "summary_large_image",
-    title: "How It Works | Hirance - India's 1st Swipe-Based Hiring Platform",
+    title: "How It Works | Hirance - India's Swipe-Based Hiring Platform",
     description:
       "From instant swipe applications to 60-second job postings—see how hiring happens on Hirance.",
   },
@@ -64,7 +64,7 @@ export default function HowItWorksPage() {
       name: "How It Works | Hirance",
       url: "https://hirance.com/how-it-works",
       description:
-        "Hirance is India's 1st swipe-based hiring platform connecting candidates and employers with AI match scores.",
+        "Hirance is India's swipe-based hiring platform connecting candidates and employers with AI match scores.",
       publisher: {
         "@type": "Organization",
         name: "Hirance",

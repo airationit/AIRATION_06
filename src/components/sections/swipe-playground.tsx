@@ -192,114 +192,6 @@ const PLAYGROUND_JOBS: PlaygroundJob[] = [
     logoColor: "from-blue-600 to-cyan-600",
     logoLetter: "Z",
   },
-  {
-    id: "pg-dept-6",
-    department: "Operations, Admin & Back Office",
-    title: "Operations & Logistics Manager",
-    company: "OmniLogix Supply Chain",
-    verified: true,
-    matchScore: 55,
-    matchGrade: "LOW MATCH",
-    aiNote: "Focuses on warehousing logistics, fleet operations & physical supply chain ERPs.",
-    location: "Chennai (On-site)",
-    salary: "₹ 8 - 12 LPA",
-    experience: "3-5 Years",
-    type: "Full Time",
-    tags: ["Supply Chain", "Vendor Mgmt", "ERP"],
-    breakdown: {
-      skills: "21/40",
-      skillsOk: false,
-      exp: "8/13",
-      expOk: false,
-      location: "5/7",
-      locationOk: true,
-      salary: "5/5",
-      salaryOk: true,
-    },
-    logoColor: "from-slate-600 to-slate-800",
-    logoLetter: "O",
-  },
-  {
-    id: "pg-dept-7",
-    department: "Human Resources & Talent Acquisition",
-    title: "Senior Talent Acquisition Specialist",
-    company: "TalentHive Global",
-    verified: true,
-    matchScore: 96,
-    matchGrade: "HIGH MATCH",
-    aiNote: "Direct fit for tech hiring, LinkedIn Recruiter sourcing pipelines, and candidate lifecycle management.",
-    location: "Hyderabad (Remote)",
-    salary: "₹ 11 - 16 LPA",
-    experience: "2-5 Years",
-    type: "Full Time",
-    tags: ["Tech Sourcing", "Screening", "HR Ops"],
-    breakdown: {
-      skills: "39/40",
-      skillsOk: true,
-      exp: "13/13",
-      expOk: true,
-      location: "7/7",
-      locationOk: true,
-      salary: "5/5",
-      salaryOk: true,
-    },
-    logoColor: "from-emerald-600 to-teal-700",
-    logoLetter: "T",
-  },
-  {
-    id: "pg-dept-8",
-    department: "Accounting, Banking & Finance",
-    title: "Senior Financial Analyst & Accounts",
-    company: "Vortex Capital Advisors",
-    verified: true,
-    matchScore: 50,
-    matchGrade: "LOW MATCH",
-    aiNote: "Requires Chartered Accountant (CA) background, corporate statutory audit & ledger compliance.",
-    location: "Noida (Hybrid)",
-    salary: "₹ 12 - 18 LPA",
-    experience: "4-7 Years",
-    type: "Full Time",
-    tags: ["Financial Analysis", "Taxation", "Auditing"],
-    breakdown: {
-      skills: "18/40",
-      skillsOk: false,
-      exp: "6/13",
-      expOk: false,
-      location: "6/7",
-      locationOk: true,
-      salary: "5/5",
-      salaryOk: true,
-    },
-    logoColor: "from-amber-600 to-yellow-600",
-    logoLetter: "V",
-  },
-  {
-    id: "pg-dept-9",
-    department: "Customer Support & Telecalling",
-    title: "Customer Support & Success Specialist",
-    company: "EchoWave Communications",
-    verified: true,
-    matchScore: 91,
-    matchGrade: "HIGH MATCH",
-    aiNote: "Excellent match for omnichannel ticketing, customer satisfaction (CSAT) workflows & escalation resolution.",
-    location: "Jaipur / Remote",
-    salary: "₹ 5 - 8 LPA",
-    experience: "1-3 Years",
-    type: "Full Time",
-    tags: ["Zendesk", "Customer CSAT", "Escalations"],
-    breakdown: {
-      skills: "36/40",
-      skillsOk: true,
-      exp: "12/13",
-      expOk: true,
-      location: "7/7",
-      locationOk: true,
-      salary: "5/5",
-      salaryOk: true,
-    },
-    logoColor: "from-cyan-500 to-blue-600",
-    logoLetter: "E",
-  },
 ];
 
 interface DragCardProps {
@@ -797,7 +689,7 @@ export function SwipePlayground() {
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true, margin: "-48px" }}
             transition={{ duration: 0.6, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
-            className="flex flex-col items-center justify-center lg:col-span-5 lg:-translate-x-8 xl:-translate-x-14"
+            className="flex flex-col items-center justify-center lg:col-span-5"
           >
             {/* Card Deck Wrapper */}
             <div className="relative flex flex-col items-center w-[285px] sm:w-[295px]">
@@ -848,8 +740,25 @@ export function SwipePlayground() {
                         rel="noopener noreferrer"
                         className="group flex items-center justify-center gap-2 rounded-full bg-[#0077c8] hover:bg-[#0066ad] dark:bg-brand-600 dark:hover:bg-brand-500 text-white py-2 px-4 text-xs font-bold shadow-md shadow-[#0077c8]/25 transition-all hover:scale-[1.02] active:scale-[0.98]"
                       >
-                        <Sparkles size={13} />
-                        <span>Get Hirance App</span>
+                        <svg className="h-3.5 w-3.5 shrink-0" viewBox="0 0 512 512" fill="none" aria-hidden="true">
+                          <path
+                            d="M47 24.6c-5.2 5.6-8.3 14.2-8.3 25.4v412c0 11.2 3.1 19.8 8.3 25.4l1.4 1.3 230.9-230.9v-5.4L48.4 23.4 47 24.6z"
+                            fill="#00D3FF"
+                          />
+                          <path
+                            d="M356.4 343.9l-77-77v-5.4l77-77 1.7 1 91.2 51.8c26 14.8 26 39 0 53.8l-91.2 51.8-1.7 1z"
+                            fill="#00F076"
+                          />
+                          <path
+                            d="M358.1 342.9l-78.7-78.7L47 497.3c8.6 9.1 22.7 10.2 38.7 1.1l272.4-155.5z"
+                            fill="#FFD900"
+                          />
+                          <path
+                            d="M358.1 185.5L85.7 30C69.7 20.9 55.6 22 47 31.1l232.4 232.4 78.7-78z"
+                            fill="#FF385C"
+                          />
+                        </svg>
+                        <span>Get Google App</span>
                         <ArrowRight size={13} className="group-hover:translate-x-0.5 transition-transform" />
                       </a>
 
