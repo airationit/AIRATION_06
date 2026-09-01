@@ -106,34 +106,68 @@ export function JobFiltersSidebar({
     return showAllRoles ? list : list.slice(0, 6);
   }, [availableRoles, roleSearch, showAllRoles]);
 
-  // 2. Work Modes list from /masterdata/work-modes/
+  // 2. Work Modes list matching exact options: Work from Office, Field Job, Work from Home
   const availableWorkModes = useMemo(() => {
-    if (workModes && workModes.length > 0) return workModes;
     return [
-      { id: "wfo", name: "In Office" },
-      { id: "hybrid", name: "Hybrid" },
-      { id: "remote", name: "Remote" },
+      {
+        id: "585ed3ae-c9eb-4f89-a715-33544efa1c07",
+        name: "Work from Office",
+        aliases: ["585ed3ae-c9eb-4f89-a715-33544efa1c07", "onsite", "wfo", "mode-onsite", "in-office", "work-from-office", "office"],
+      },
+      {
+        id: "8c974af2-6d8b-49c8-b891-0a5ce9847024",
+        name: "Field Job",
+        aliases: ["8c974af2-6d8b-49c8-b891-0a5ce9847024", "field", "field-job", "on-field"],
+      },
+      {
+        id: "bf5f80ba-b651-47c0-be52-9978569789d7",
+        name: "Work from Home",
+        aliases: ["bf5f80ba-b651-47c0-be52-9978569789d7", "remote", "wfh", "mode-remote", "work-from-home", "home"],
+      },
     ];
-  }, [workModes]);
+  }, []);
 
-  // 3. Job Types list from /masterdata/job-types/
+  // 3. Job Types list matching exact options: Full Time, Part Time, Both (Full-Time/Part-Time)
   const availableJobTypes = useMemo(() => {
-    if (jobTypes && jobTypes.length > 0) return jobTypes;
     return [
-      { id: "full-time", name: "Full Time" },
-      { id: "part-time", name: "Part Time" },
+      {
+        id: "c2e13590-f69f-4bd4-9545-09cf81daae9e",
+        name: "Full Time",
+        aliases: ["c2e13590-f69f-4bd4-9545-09cf81daae9e", "full-time", "full", "job-type-ft", "ft"],
+      },
+      {
+        id: "fdde7c2d-88e6-4ecf-9fb5-596ca7f81c69",
+        name: "Part Time",
+        aliases: ["fdde7c2d-88e6-4ecf-9fb5-596ca7f81c69", "part-time", "part", "job-type-pt", "pt"],
+      },
+      {
+        id: "28ecf748-85c0-4deb-9133-8f24ec85fc11",
+        name: "Both (Full-Time/Part-Time)",
+        aliases: ["28ecf748-85c0-4deb-9133-8f24ec85fc11", "both", "both-full-time-part-time"],
+      },
     ];
-  }, [jobTypes]);
+  }, []);
 
-  // 4. Work Shifts list from /masterdata/work-shifts/
+  // 4. Work Shifts list matching exact options: Day Shift, Night Shift, Hybrid
   const availableWorkShifts = useMemo(() => {
-    if (workShifts && workShifts.length > 0) return workShifts;
     return [
-      { id: "day", name: "Day Shift" },
-      { id: "night", name: "Night Shift" },
-      { id: "rotational", name: "Rotational Shift" },
+      {
+        id: "f7d70b0b-57c0-4014-8002-7d170de4c299",
+        name: "Day Shift",
+        aliases: ["f7d70b0b-57c0-4014-8002-7d170de4c299", "day", "day-shift", "shift-day"],
+      },
+      {
+        id: "6e9a009a-35af-4bfe-baa9-a77b56ca443b",
+        name: "Night Shift",
+        aliases: ["6e9a009a-35af-4bfe-baa9-a77b56ca443b", "night", "night-shift", "shift-night"],
+      },
+      {
+        id: "8a5eafb2-daef-4246-9e58-5331a2c94dcd",
+        name: "Hybrid",
+        aliases: ["8a5eafb2-daef-4246-9e58-5331a2c94dcd", "hybrid", "hybrid-shift", "shift-hybrid", "rotational"],
+      },
     ];
-  }, [workShifts]);
+  }, []);
 
   // 5. Salary Ranges list from /masterdata/salary-ranges/
   const availableSalaryRanges = useMemo(() => {
@@ -307,7 +341,17 @@ export function JobFiltersSidebar({
         {expandedSections.workMode && (
           <div className="mt-3 space-y-2">
             {availableWorkModes.map((mode) => {
-              const isChecked = filters.workModeId === mode.id || filters.workModeId === mode.name;
+              const current = (filters.workModeId || "").toLowerCase();
+              const storeMode = workModes.find((m) => m.id.toLowerCase() === current);
+              const isChecked =
+                current === mode.id.toLowerCase() ||
+                current === mode.name.toLowerCase() ||
+                mode.aliases.some((a) => current === a.toLowerCase()) ||
+                (storeMode && storeMode.name.toLowerCase() === mode.name.toLowerCase()) ||
+                (mode.name === "Field Job" && current.includes("field")) ||
+                (mode.name === "Work from Home" && (filters.citySlug === "remote" || current.includes("remote") || current.includes("home"))) ||
+                (mode.name === "Work from Office" && (current.includes("office") || current.includes("site") || current.includes("onsite")));
+
               return (
                 <label
                   key={mode.id}
@@ -327,12 +371,19 @@ export function JobFiltersSidebar({
                     type="checkbox"
                     className="sr-only"
                     checked={isChecked}
-                    onChange={() =>
-                      onChange({
-                        ...filters,
-                        workModeId: isChecked ? "" : mode.id,
-                      })
-                    }
+                    onChange={() => {
+                      if (isChecked) {
+                        onChange({
+                          ...filters,
+                          workModeId: "",
+                        });
+                      } else {
+                        onChange({
+                          ...filters,
+                          workModeId: mode.id,
+                        });
+                      }
+                    }}
                   />
                   <span
                     className={cn(
@@ -373,7 +424,17 @@ export function JobFiltersSidebar({
         {expandedSections.jobType && (
           <div className="mt-3 space-y-2">
             {availableJobTypes.map((type) => {
-              const isChecked = filters.jobTypeId === type.id || filters.jobTypeId === type.name;
+              const current = (filters.jobTypeId || "").toLowerCase();
+              const storeType = jobTypes.find((t) => t.id.toLowerCase() === current);
+              const isChecked =
+                current === type.id.toLowerCase() ||
+                current === type.name.toLowerCase() ||
+                type.aliases.some((a) => current === a.toLowerCase()) ||
+                (storeType && storeType.name.toLowerCase() === type.name.toLowerCase()) ||
+                (type.name === "Full Time" && (current.includes("full") || current === "full-time")) ||
+                (type.name === "Part Time" && (current.includes("part") || current === "part-time")) ||
+                (type.name.includes("Both") && (current.includes("both") || current === "both"));
+
               return (
                 <label
                   key={type.id}
@@ -393,12 +454,38 @@ export function JobFiltersSidebar({
                     type="checkbox"
                     className="sr-only"
                     checked={isChecked}
-                    onChange={() =>
-                      onChange({
-                        ...filters,
-                        jobTypeId: isChecked ? "" : type.id,
-                      })
-                    }
+                    onChange={() => {
+                      if (isChecked) {
+                        onChange({
+                          ...filters,
+                          jobTypeId: "",
+                        });
+                      } else {
+                        let typeId = type.id;
+                        if (type.id === "full-time") {
+                          const t = jobTypes.find(
+                            (x) =>
+                              x.name.toLowerCase().includes("full") ||
+                              x.id.toLowerCase().includes("full")
+                          );
+                          typeId = t ? t.id : "full-time";
+                        } else if (type.id === "part-time") {
+                          const t = jobTypes.find(
+                            (x) =>
+                              x.name.toLowerCase().includes("part") ||
+                              x.id.toLowerCase().includes("part")
+                          );
+                          typeId = t ? t.id : "part-time";
+                        } else if (type.id === "both") {
+                          typeId = "both";
+                        }
+
+                        onChange({
+                          ...filters,
+                          jobTypeId: typeId,
+                        });
+                      }
+                    }}
                   />
                   <span
                     className={cn(
@@ -439,7 +526,17 @@ export function JobFiltersSidebar({
         {expandedSections.workShift && (
           <div className="mt-3 space-y-2">
             {availableWorkShifts.map((shift) => {
-              const isChecked = filters.workShiftId === shift.id || filters.workShiftId === shift.name;
+              const current = (filters.workShiftId || "").toLowerCase();
+              const storeShift = workShifts.find((s) => s.id.toLowerCase() === current);
+              const isChecked =
+                current === shift.id.toLowerCase() ||
+                current === shift.name.toLowerCase() ||
+                shift.aliases.some((a) => current === a.toLowerCase()) ||
+                (storeShift && storeShift.name.toLowerCase() === shift.name.toLowerCase()) ||
+                (shift.name === "Day Shift" && current.includes("day")) ||
+                (shift.name === "Night Shift" && current.includes("night")) ||
+                (shift.name === "Hybrid" && (current.includes("hybrid") || filters.workModeId === "8a5eafb2-daef-4246-9e58-5331a2c94dcd" || filters.workModeId?.toLowerCase() === "hybrid"));
+
               return (
                 <label
                   key={shift.id}
@@ -459,12 +556,44 @@ export function JobFiltersSidebar({
                     type="checkbox"
                     className="sr-only"
                     checked={isChecked}
-                    onChange={() =>
-                      onChange({
-                        ...filters,
-                        workShiftId: isChecked ? "" : shift.id,
-                      })
-                    }
+                    onChange={() => {
+                      if (isChecked) {
+                        onChange({
+                          ...filters,
+                          workShiftId: "",
+                        });
+                      } else {
+                        let shiftId = shift.id;
+                        if (shift.id === "day") {
+                          const s = workShifts.find(
+                            (x) =>
+                              x.name.toLowerCase().includes("day") ||
+                              x.id.toLowerCase().includes("day")
+                          );
+                          shiftId = s ? s.id : "day";
+                        } else if (shift.id === "night") {
+                          const s = workShifts.find(
+                            (x) =>
+                              x.name.toLowerCase().includes("night") ||
+                              x.id.toLowerCase().includes("night")
+                          );
+                          shiftId = s ? s.id : "night";
+                        } else if (shift.id === "hybrid") {
+                          const s = workShifts.find(
+                            (x) =>
+                              x.name.toLowerCase().includes("hybrid") ||
+                              x.name.toLowerCase().includes("rotational") ||
+                              x.id.toLowerCase().includes("hybrid")
+                          );
+                          shiftId = s ? s.id : "hybrid";
+                        }
+
+                        onChange({
+                          ...filters,
+                          workShiftId: shiftId,
+                        });
+                      }
+                    }}
                   />
                   <span
                     className={cn(

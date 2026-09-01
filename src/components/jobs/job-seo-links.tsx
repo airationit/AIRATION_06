@@ -133,7 +133,7 @@ export function JobSeoLinks({ currentRoleSlug, currentCitySlug }: JobSeoLinksPro
       {/* 2x2 Directory Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-5">
         {/* CARD 1: JOBS BY LOCATION */}
-        <div className="flex flex-col justify-between rounded-2xl border border-border/80 bg-card/80 dark:bg-card/40 p-5 sm:p-6 backdrop-blur-md shadow-2xs transition-all duration-200 hover:border-border">
+        <div id="directory-cities" className="flex flex-col justify-between rounded-2xl border border-border/80 bg-card/80 dark:bg-card/40 p-5 sm:p-6 backdrop-blur-md shadow-2xs transition-all duration-200 hover:border-border scroll-mt-32">
           <div>
             <div className="flex items-center gap-2.5 pb-3.5 border-b border-border/60">
               <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-500/10 dark:bg-brand-500/20 text-brand-600 dark:text-brand-400 shrink-0">
@@ -249,7 +249,7 @@ export function JobSeoLinks({ currentRoleSlug, currentCitySlug }: JobSeoLinksPro
         </div>
 
         {/* CARD 3: JOBS BY DEPARTMENT */}
-        <div className="flex flex-col justify-between rounded-2xl border border-border/80 bg-card/80 dark:bg-card/40 p-5 sm:p-6 backdrop-blur-md shadow-2xs transition-all duration-200 hover:border-border">
+        <div id="directory-departments" className="flex flex-col justify-between rounded-2xl border border-border/80 bg-card/80 dark:bg-card/40 p-5 sm:p-6 backdrop-blur-md shadow-2xs transition-all duration-200 hover:border-border scroll-mt-32">
           <div>
             <div className="flex items-center gap-2.5 pb-3.5 border-b border-border/60">
               <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-500/10 dark:bg-brand-500/20 text-brand-600 dark:text-brand-400 shrink-0">
