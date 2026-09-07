@@ -61,72 +61,191 @@ const EMPLOYER_FEATURES = [
   },
 ];
 
-// Interactive Job Card Mockup with Continuous Swaying/Vibration Motion
+// 3 Realistic Roles for the Interactive Showcase Deck
+const SHOWCASE_JOBS = [
+  {
+    id: "job-1",
+    department: "Engineering & Software Development",
+    title: "Senior Full Stack Engineer (Next.js)",
+    company: "Nexus Cloud Systems",
+    verified: true,
+    matchScore: 98,
+    matchGrade: "HIGH MATCH",
+    aiNote: "Strong match for React, TypeScript, Next.js architecture, and Node microservices skillset.",
+    location: "Bengaluru (Hybrid)",
+    salary: "₹ 16 - 24 LPA",
+    experience: "3-5 Years",
+    type: "Full Time",
+    tags: ["Next.js", "TypeScript", "Node.js"],
+    breakdown: {
+      skills: "40/40",
+      exp: "13/13",
+      location: "7/7",
+      salary: "5/5",
+    },
+    logoColor: "from-indigo-500 to-purple-600",
+    logoLetter: "N",
+  },
+  {
+    id: "job-2",
+    department: "Design, UI/UX & Creative",
+    title: "Lead Product Designer (UI/UX)",
+    company: "PixelCraft Studios",
+    verified: true,
+    matchScore: 94,
+    matchGrade: "HIGH MATCH",
+    aiNote: "High synergy for design systems, Figma component architectures, and responsive micro-interactions.",
+    location: "Mumbai (Hybrid)",
+    salary: "₹ 14 - 20 LPA",
+    experience: "3-5 Years",
+    type: "Full Time",
+    tags: ["Figma", "Design Systems", "UI/UX"],
+    breakdown: {
+      skills: "38/40",
+      exp: "12/13",
+      location: "7/7",
+      salary: "5/5",
+    },
+    logoColor: "from-rose-500 to-amber-500",
+    logoLetter: "P",
+  },
+  {
+    id: "job-3",
+    department: "Sales & Business Development",
+    title: "Enterprise B2B Sales Manager",
+    company: "Zenith SaaS Corp",
+    verified: true,
+    matchScore: 92,
+    matchGrade: "HIGH MATCH",
+    aiNote: "Great alignment for enterprise SaaS pipeline generation, contract closing, and key account expansion.",
+    location: "Pune (Hybrid)",
+    salary: "₹ 15 - 25 LPA",
+    experience: "3-6 Years",
+    type: "Full Time",
+    tags: ["B2B Sales", "SaaS Pipeline", "Closing"],
+    breakdown: {
+      skills: "37/40",
+      exp: "12/13",
+      location: "7/7",
+      salary: "5/5",
+    },
+    logoColor: "from-blue-600 to-cyan-600",
+    logoLetter: "Z",
+  },
+];
+
+// Interactive Job Card Mockup aligned with Homescreen Design Language
 function InteractiveJobSwipeShowcase() {
+  const [jobIndex, setJobIndex] = useState(0);
   const [action, setAction] = useState<"idle" | "applied" | "skipped">("idle");
   const [isHovered, setIsHovered] = useState(false);
   const [dragX, setDragX] = useState(0);
 
+  const currentJob = SHOWCASE_JOBS[jobIndex];
+
   const handleApply = () => {
     setAction("applied");
     setTimeout(() => {
-      setAction("idle");
-      setDragX(0);
-    }, 1500);
-  };
-
-  const handleSkip = () => {
-    setAction("skipped");
-    setTimeout(() => {
+      setJobIndex((prev) => (prev + 1) % SHOWCASE_JOBS.length);
       setAction("idle");
       setDragX(0);
     }, 1200);
   };
 
+  const handleSkip = () => {
+    setAction("skipped");
+    setTimeout(() => {
+      setJobIndex((prev) => (prev + 1) % SHOWCASE_JOBS.length);
+      setAction("idle");
+      setDragX(0);
+    }, 900);
+  };
+
   return (
-    <div className="rounded-3xl border border-blue-100/90 dark:border-blue-900/40 bg-gradient-to-b from-blue-50/40 via-white to-blue-50/20 dark:from-blue-950/25 dark:via-card dark:to-blue-950/10 p-6 sm:p-10 lg:p-12 shadow-xs">
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-        {/* Left Column: Heading, Subtitle & Image 2 Card (01 Apply in 2 seconds) */}
+    <div className="relative overflow-hidden rounded-3xl border border-blue-100/90 dark:border-blue-900/40 bg-white/95 dark:bg-card/90 p-6 sm:p-10 lg:p-12 shadow-xs">
+      {/* Subtle ambient lighting glows matching homescreen theme */}
+      <div
+        className="pointer-events-none absolute -top-24 -left-24 h-72 w-72 rounded-full bg-blue-500/10 blur-3xl"
+        aria-hidden="true"
+      />
+      <div
+        className="pointer-events-none absolute -bottom-24 -right-24 h-72 w-72 rounded-full bg-indigo-500/10 blur-3xl"
+        aria-hidden="true"
+      />
+
+      <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+        {/* Left Column: Heading, Subtitle & Crisp Feature Highlights */}
         <div className="lg:col-span-7 flex flex-col items-center text-center lg:items-start lg:text-left">
-          {/* Headline */}
-          <h2 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-foreground tracking-tight leading-tight">
-            Swipe a Few Jobs.
+          {/* Headline matching Homescreen styling */}
+          <h2 className="text-2xl sm:text-4xl lg:text-5xl font-black text-slate-950 dark:text-white tracking-tight leading-[1.1]">
+            Swipe a Few Jobs.{" "}
+            <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-brand-600 dark:from-brand-400 dark:via-indigo-300 dark:to-sky-300 bg-clip-text text-transparent">
+              Apply in Seconds.
+            </span>
           </h2>
 
           {/* Subhead with engaging, relatable tone */}
-          <p className="mt-3.5 text-base sm:text-lg text-muted-foreground leading-relaxed max-w-xl">
+          <p className="mt-3.5 text-base sm:text-lg text-slate-600 dark:text-slate-400 leading-relaxed max-w-xl">
             Dating apps ghost. Hirance doesn’t. Drag the card right to apply, left to skip — zero forms, instant HR connection.
           </p>
 
-          {/* Image 2 Card: 01 Apply in 2 seconds (Replaces previous light box) */}
-          <div className="mt-6 w-full max-w-md group relative flex flex-col justify-between overflow-hidden rounded-3xl bg-[#0B132B] border border-slate-800/90 p-6 sm:p-7 shadow-xl transition-all duration-300 hover:border-slate-700 text-left">
-            {/* Subtle top ambient glow */}
-            <div
-              className="pointer-events-none absolute -top-12 -left-12 h-36 w-36 rounded-full bg-gradient-to-br from-[#0091FF]/20 to-transparent blur-2xl"
-              aria-hidden="true"
-            />
-
-            <div className="relative z-10">
-              {/* Top Row: Icon Badge + Step 01 */}
-              <div className="flex items-center justify-between mb-5">
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#0091FF] text-white shadow-lg shadow-[#0091FF]/30">
-                  <Zap className="h-6 w-6 stroke-[2.2]" />
-                </div>
-                <span className="font-mono text-xs font-semibold text-slate-500 tracking-wider">
-                  01
-                </span>
+          {/* 3 Crisp Feature Highlights (Clean list rows, no bulky cards) */}
+          <div className="mt-6 space-y-3 w-full max-w-md text-left">
+            <div className="flex items-start gap-3">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-blue-50 dark:bg-blue-950/60 text-[#0066FF] border border-blue-100/80 dark:border-blue-900/40 shadow-2xs">
+                <Zap className="h-4 w-4 fill-current" />
               </div>
-
-              {/* Heading */}
-              <h3 className="text-xl font-bold text-white tracking-tight leading-snug">
-                Apply in 2 seconds
-              </h3>
-
-              {/* Description */}
-              <p className="mt-2 text-sm text-slate-400 leading-relaxed">
-                One swipe right. No forms or cover letters.
-              </p>
+              <div>
+                <h3 className="text-sm font-bold text-slate-900 dark:text-white leading-snug">
+                  2-Second Apply
+                </h3>
+                <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+                  One swipe right sends your profile. Zero forms or repetitive cover letters.
+                </p>
+              </div>
             </div>
+
+            <div className="flex items-start gap-3">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-blue-50 dark:bg-blue-950/60 text-[#0066FF] border border-blue-100/80 dark:border-blue-900/40 shadow-2xs">
+                <Sparkles className="h-4 w-4 fill-current" />
+              </div>
+              <div>
+                <h3 className="text-sm font-bold text-slate-900 dark:text-white leading-snug">
+                  Instant Match Score
+                </h3>
+                <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+                  Live compatibility breakdown across skills, experience, and salary.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-3">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-blue-50 dark:bg-blue-950/60 text-[#0066FF] border border-blue-100/80 dark:border-blue-900/40 shadow-2xs">
+                <MessageSquare className="h-4 w-4 fill-current" />
+              </div>
+              <div>
+                <h3 className="text-sm font-bold text-slate-900 dark:text-white leading-snug">
+                  Direct HR Connection
+                </h3>
+                <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+                  Chat directly with verified employers. No recruiters in the middle.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Primary CTA Button */}
+          <div className="mt-7 flex justify-center lg:justify-start w-full">
+            <a
+              href={siteConfig.links.playStore}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-full bg-[#0077c8] hover:bg-[#0066ad] dark:bg-brand-600 dark:hover:bg-brand-500 text-white px-6 py-3 text-sm sm:text-base font-bold shadow-md shadow-[#0077c8]/25 transition-all hover:scale-[1.02] active:scale-[0.98]"
+            >
+              <Download className="h-4 w-4" />
+              <span>Start Swiping on Hirance</span>
+              <ArrowRight className="h-4 w-4 opacity-80" />
+            </a>
           </div>
         </div>
 
@@ -139,15 +258,15 @@ function InteractiveJobSwipeShowcase() {
             <AnimatePresence mode="wait">
               {action === "idle" ? (
                 <motion.div
-                  key="active-job-card"
+                  key={currentJob.id}
                   drag="x"
                   dragConstraints={{ left: 0, right: 0 }}
                   dragElastic={0.65}
                   onDrag={(_, info) => setDragX(info.offset.x)}
                   onDragEnd={(_, info) => {
-                    if (info.offset.x > 80) {
+                    if (info.offset.x > 75) {
                       handleApply();
-                    } else if (info.offset.x < -80) {
+                    } else if (info.offset.x < -75) {
                       handleSkip();
                     } else {
                       setDragX(0);
@@ -165,8 +284,8 @@ function InteractiveJobSwipeShowcase() {
                       : isHovered
                         ? { x: 0, rotate: 0 }
                         : {
-                          x: [-20, 20, -20],
-                          rotate: [-3.8, 3.8, -3.8],
+                          x: [-18, 18, -18],
+                          rotate: [-3.5, 3.5, -3.5],
                         }
                   }
                   transition={
@@ -196,12 +315,14 @@ function InteractiveJobSwipeShowcase() {
                     {/* Header Row: Company Avatar + Name + Match Badge */}
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex items-center gap-2.5 min-w-0">
-                        <div className="h-9 w-9 rounded-xl bg-gradient-to-tr from-indigo-500 to-purple-600 flex items-center justify-center text-white font-black text-sm shadow-xs shrink-0">
-                          N
+                        <div
+                          className={`h-9 w-9 rounded-xl bg-gradient-to-tr ${currentJob.logoColor} flex items-center justify-center text-white font-black text-sm shadow-xs shrink-0`}
+                        >
+                          {currentJob.logoLetter}
                         </div>
                         <div className="min-w-0">
                           <p className="truncate text-xs sm:text-sm font-bold text-slate-900 dark:text-white leading-tight">
-                            Nexus Cloud Systems
+                            {currentJob.company}
                           </p>
                           <div className="flex items-center gap-1 mt-0.5">
                             <BadgeCheck className="h-3 w-3 text-blue-500 shrink-0" />
@@ -212,30 +333,30 @@ function InteractiveJobSwipeShowcase() {
                         </div>
                       </div>
 
-                      {/* 98% Match Pill */}
+                      {/* Match Pill */}
                       <div className="shrink-0 flex items-center gap-1 rounded-full border border-emerald-500/30 bg-emerald-50 dark:bg-emerald-950/40 px-2.5 py-0.5">
                         <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
                         <span className="text-[11px] font-extrabold text-emerald-600 dark:text-emerald-400">
-                          98% Match
+                          {currentJob.matchScore}% Match
                         </span>
                       </div>
                     </div>
 
                     {/* Department */}
                     <p className="mt-2.5 text-[9.5px] font-bold uppercase tracking-wider text-[#2563EB] dark:text-blue-400 truncate">
-                      ENGINEERING &amp; SOFTWARE DEVELOPMENT
+                      {currentJob.department}
                     </p>
 
                     {/* Title */}
                     <h4 className="mt-0.5 text-sm sm:text-[15px] font-black text-slate-900 dark:text-white leading-snug">
-                      Senior Full Stack Engineer (Next.js)
+                      {currentJob.title}
                     </h4>
 
                     {/* AI Match Insight Box */}
                     <div className="mt-2 rounded-xl border border-indigo-100 dark:border-indigo-950 bg-indigo-50/80 dark:bg-indigo-950/30 p-2 flex items-start gap-1.5">
                       <Sparkles className="h-3.5 w-3.5 text-indigo-600 dark:text-indigo-400 shrink-0 mt-0.5" />
                       <p className="text-[10px] sm:text-[10.5px] leading-snug text-indigo-950 dark:text-indigo-200 font-medium line-clamp-2">
-                        Strong match for React, TypeScript, Next.js architecture, and Node microservices skillset.
+                        {currentJob.aiNote}
                       </p>
                     </div>
 
@@ -243,25 +364,25 @@ function InteractiveJobSwipeShowcase() {
                     <div className="mt-2 grid grid-cols-2 gap-1 text-[10px]">
                       <div className="flex items-center gap-1 rounded-md bg-slate-50 dark:bg-slate-800/60 px-2 py-1 text-slate-700 dark:text-slate-300">
                         <MapPin className="h-3 w-3 text-slate-400 shrink-0" />
-                        <span className="truncate">Bengaluru (Hybrid)</span>
+                        <span className="truncate">{currentJob.location}</span>
                       </div>
                       <div className="flex items-center gap-1 rounded-md bg-slate-50 dark:bg-slate-800/60 px-2 py-1 text-slate-700 dark:text-slate-300">
                         <IndianRupee className="h-3 w-3 text-slate-400 shrink-0" />
-                        <span className="truncate font-bold">₹ 16 - 24 LPA</span>
+                        <span className="truncate font-bold">{currentJob.salary}</span>
                       </div>
                       <div className="flex items-center gap-1 rounded-md bg-slate-50 dark:bg-slate-800/60 px-2 py-1 text-slate-700 dark:text-slate-300">
                         <Briefcase className="h-3 w-3 text-slate-400 shrink-0" />
-                        <span className="truncate">3-5 Years</span>
+                        <span className="truncate">{currentJob.experience}</span>
                       </div>
                       <div className="flex items-center gap-1 rounded-md bg-slate-50 dark:bg-slate-800/60 px-2 py-1 text-slate-700 dark:text-slate-300">
                         <Clock className="h-3 w-3 text-slate-400 shrink-0" />
-                        <span className="truncate">Full Time</span>
+                        <span className="truncate">{currentJob.type}</span>
                       </div>
                     </div>
 
                     {/* Skills Tags */}
                     <div className="mt-2 flex flex-wrap gap-1">
-                      {["Next.js", "TypeScript", "Node.js"].map((tag) => (
+                      {currentJob.tags.map((tag) => (
                         <span
                           key={tag}
                           className="rounded-md bg-blue-50/90 dark:bg-blue-950/50 px-2 py-0.5 text-[9.5px] font-semibold text-blue-700 dark:text-blue-300"
@@ -275,27 +396,27 @@ function InteractiveJobSwipeShowcase() {
                   {/* Why Match Section */}
                   <div className="mt-2.5 pt-2 border-t border-slate-100 dark:border-slate-800">
                     <div className="flex items-center justify-between text-[9px] text-slate-500 font-bold uppercase tracking-wider mb-1">
-                      <span>WHY 98% MATCH?</span>
+                      <span>WHY {currentJob.matchScore}% MATCH?</span>
                       <span className="text-emerald-600 dark:text-emerald-400 font-extrabold">
-                        HIGH MATCH
+                        {currentJob.matchGrade}
                       </span>
                     </div>
                     <div className="grid grid-cols-4 gap-1 text-center text-[9.5px]">
                       <div className="rounded bg-emerald-50/80 dark:bg-emerald-950/40 p-1 text-emerald-600 dark:text-emerald-400">
                         <span className="block text-[8px] text-slate-500">Skills</span>
-                        <span className="font-extrabold">40/40</span>
+                        <span className="font-extrabold">{currentJob.breakdown.skills}</span>
                       </div>
                       <div className="rounded bg-emerald-50/80 dark:bg-emerald-950/40 p-1 text-emerald-600 dark:text-emerald-400">
                         <span className="block text-[8px] text-slate-500">Exp</span>
-                        <span className="font-extrabold">13/13</span>
+                        <span className="font-extrabold">{currentJob.breakdown.exp}</span>
                       </div>
                       <div className="rounded bg-emerald-50/80 dark:bg-emerald-950/40 p-1 text-emerald-600 dark:text-emerald-400">
                         <span className="block text-[8px] text-slate-500">Location</span>
-                        <span className="font-extrabold">7/7</span>
+                        <span className="font-extrabold">{currentJob.breakdown.location}</span>
                       </div>
                       <div className="rounded bg-emerald-50/80 dark:bg-emerald-950/40 p-1 text-emerald-600 dark:text-emerald-400">
                         <span className="block text-[8px] text-slate-500">Salary</span>
-                        <span className="font-extrabold">5/5</span>
+                        <span className="font-extrabold">{currentJob.breakdown.salary}</span>
                       </div>
                     </div>
                   </div>
@@ -356,7 +477,7 @@ function InteractiveJobSwipeShowcase() {
                     Applied in 2 Seconds! 🎉
                   </h3>
                   <p className="mt-1.5 text-xs text-muted-foreground leading-relaxed max-w-[220px]">
-                    Zero forms, zero cover letters. Profile sent directly to HR at Nexus Cloud Systems.
+                    Zero forms, zero cover letters. Profile sent directly to HR at {currentJob.company}.
                   </p>
                   <span className="mt-4 text-[11px] font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/50 px-3 py-1 rounded-full border border-emerald-200 dark:border-emerald-800">
                     Next job loading...
