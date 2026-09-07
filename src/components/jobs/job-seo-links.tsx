@@ -16,7 +16,7 @@ interface JobSeoLinksProps {
 }
 
 export function JobSeoLinks({ currentRoleSlug, currentCitySlug }: JobSeoLinksProps) {
-  const { cities } = useMasterdataStore();
+  const { popularCities: cities } = useMasterdataStore();
 
   // Expand / collapse states for each section
   const [showAllCities, setShowAllCities] = useState(false);
