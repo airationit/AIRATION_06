@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react";
 import Link from "next/link";
-import { ChevronDown, ChevronUp, MapPin, Briefcase, Layers, Globe, ArrowRight } from "lucide-react";
+import { ChevronDown, ChevronUp } from "lucide-react";
 import { useMasterdataStore } from "@/store/masterdata-store";
 import {
   POPULAR_JOB_ROLES,
@@ -16,7 +16,7 @@ interface JobSeoLinksProps {
 }
 
 export function JobSeoLinks({ currentRoleSlug, currentCitySlug }: JobSeoLinksProps) {
-  const { cities } = useMasterdataStore();
+  const { popularCities: cities } = useMasterdataStore();
 
   // Expand / collapse states for each section
   const [showAllCities, setShowAllCities] = useState(false);
@@ -115,217 +115,153 @@ export function JobSeoLinks({ currentRoleSlug, currentCitySlug }: JobSeoLinksPro
   return (
     <section
       aria-labelledby="career-directory-heading"
-      className="mt-14 sm:mt-20 space-y-5 text-foreground"
+      className="mt-14 sm:mt-20 w-full bg-slate-50/50 dark:bg-slate-900/20 py-10"
     >
-      {/* Directory Section Header */}
-      <div className="flex flex-col gap-1">
-        <h2
-          id="career-directory-heading"
-          className="text-lg sm:text-xl font-bold tracking-tight text-foreground"
-        >
-          Explore Careers & Opportunities
-        </h2>
-        <p className="text-xs sm:text-sm text-muted-foreground">
-          Discover verified job openings across top Indian locations, roles, and domains.
-        </p>
-      </div>
+      <div className="container mx-auto px-4 max-w-6xl flex flex-col gap-10">
 
-      {/* 2x2 Directory Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-5">
-        {/* CARD 1: JOBS BY LOCATION */}
-        <div id="directory-cities" className="flex flex-col justify-between rounded-2xl border border-border/80 bg-card/80 dark:bg-card/40 p-5 sm:p-6 backdrop-blur-md shadow-2xs transition-all duration-200 hover:border-border scroll-mt-32">
-          <div>
-            <div className="flex items-center gap-2.5 pb-3.5 border-b border-border/60">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-500/10 dark:bg-brand-500/20 text-brand-600 dark:text-brand-400 shrink-0">
-                <MapPin className="h-4 w-4" />
-              </div>
-              <h3 className="text-sm sm:text-base font-bold text-foreground">
-                Jobs by Location
-              </h3>
-            </div>
+        {/* SECTION 1: JOBS BY LOCATION (Find Jobs) */}
+        <div id="directory-cities" className="pb-8 border-b border-border/40 scroll-mt-32">
+          <h3 className="text-base sm:text-lg font-bold text-foreground mb-6">
+            Find Jobs
+          </h3>
 
-            <div className="mt-3.5 grid grid-cols-1 sm:grid-cols-2 gap-x-3 gap-y-0.5">
-              {visibleCities.map((city) => {
-                const isActive = currentCitySlug === city.slug;
-                return (
-                  <Link
-                    key={city.slug}
-                    href={`/jobs/jobs-in-${city.slug}`}
-                    className={cn(
-                      "group inline-flex items-center gap-1.5 py-1.5 px-2 rounded-lg text-xs sm:text-sm font-medium transition-all duration-150 w-fit max-w-full",
-                      isActive
-                        ? "font-semibold text-brand-600 dark:text-brand-400 bg-brand-50/80 dark:bg-brand-950/50"
-                        : "text-muted-foreground hover:text-brand-600 dark:hover:text-brand-400 hover:bg-brand-50/40 dark:hover:bg-brand-950/20"
-                    )}
-                  >
-                    <span className="truncate group-hover:translate-x-0.5 transition-transform duration-150">
-                      Jobs in {city.name}
-                    </span>
-                    <ArrowRight className="h-3 w-3 opacity-0 -translate-x-1 transition-all duration-150 group-hover:opacity-100 group-hover:translate-x-0 text-brand-600 dark:text-brand-400 shrink-0" />
-                  </Link>
-                );
-              })}
-            </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-y-5 gap-x-6">
+            {visibleCities.map((city) => {
+              const isActive = currentCitySlug === city.slug;
+              return (
+                <Link
+                  key={city.slug}
+                  href={`/jobs/jobs-in-${city.slug}`}
+                  className={cn(
+                    "text-sm font-medium transition-all duration-150 truncate",
+                    isActive
+                      ? "text-brand-600 dark:text-brand-400 font-semibold"
+                      : "text-muted-foreground hover:text-foreground"
+                  )}
+                >
+                  Jobs in {city.name}
+                </Link>
+              );
+            })}
           </div>
 
           {allCities.length > 10 && (
-            <div className="mt-3.5 pt-3 border-t border-border/50 flex justify-start">
+            <div className="mt-8 flex justify-center">
               <button
                 type="button"
                 onClick={() => setShowAllCities(!showAllCities)}
-                className="inline-flex items-center gap-1.5 rounded-lg border border-border/70 bg-background/50 hover:bg-background px-3 py-1.5 text-xs font-semibold text-muted-foreground hover:text-foreground transition-all cursor-pointer"
+                className="inline-flex items-center gap-1.5 text-sm font-semibold text-muted-foreground hover:text-foreground transition-all cursor-pointer"
               >
-                <span>
-                  {showAllCities
-                    ? "View less"
-                    : `View all cities (${allCities.length})`}
-                </span>
+                <span>{showAllCities ? "View less" : "View more"}</span>
                 {showAllCities ? (
-                  <ChevronUp className="h-3.5 w-3.5" />
+                  <ChevronUp className="h-4 w-4" />
                 ) : (
-                  <ChevronDown className="h-3.5 w-3.5" />
+                  <ChevronDown className="h-4 w-4" />
                 )}
               </button>
             </div>
           )}
         </div>
 
-        {/* CARD 2: POPULAR JOB ROLES */}
-        <div className="flex flex-col justify-between rounded-2xl border border-border/80 bg-card/80 dark:bg-card/40 p-5 sm:p-6 backdrop-blur-md shadow-2xs transition-all duration-200 hover:border-border">
-          <div>
-            <div className="flex items-center gap-2.5 pb-3.5 border-b border-border/60">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-500/10 dark:bg-brand-500/20 text-brand-600 dark:text-brand-400 shrink-0">
-                <Briefcase className="h-4 w-4" />
-              </div>
-              <h3 className="text-sm sm:text-base font-bold text-foreground">
-                Popular Job Roles
-              </h3>
-            </div>
+        {/* SECTION 2: POPULAR JOB ROLES (Popular Jobs) */}
+        <div className="pb-8 border-b border-border/40">
+          <h3 className="text-base sm:text-lg font-bold text-foreground mb-6">
+            Popular Jobs
+          </h3>
 
-            <div className="mt-3.5 grid grid-cols-1 sm:grid-cols-2 gap-x-3 gap-y-0.5">
-              {visiblePopularRoles.map((role) => {
-                const isActive = currentRoleSlug === role.slug;
-                return (
-                  <Link
-                    key={role.slug}
-                    href={`/jobs/${role.slug}`}
-                    className={cn(
-                      "group inline-flex items-center gap-1.5 py-1.5 px-2 rounded-lg text-xs sm:text-sm font-medium transition-all duration-150 w-fit max-w-full",
-                      isActive
-                        ? "font-semibold text-brand-600 dark:text-brand-400 bg-brand-50/80 dark:bg-brand-950/50"
-                        : "text-muted-foreground hover:text-brand-600 dark:hover:text-brand-400 hover:bg-brand-50/40 dark:hover:bg-brand-950/20"
-                    )}
-                  >
-                    <span className="truncate group-hover:translate-x-0.5 transition-transform duration-150">
-                      {role.label}
-                    </span>
-                    <ArrowRight className="h-3 w-3 opacity-0 -translate-x-1 transition-all duration-150 group-hover:opacity-100 group-hover:translate-x-0 text-brand-600 dark:text-brand-400 shrink-0" />
-                  </Link>
-                );
-              })}
-            </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-y-5 gap-x-6">
+            {visiblePopularRoles.map((role) => {
+              const isActive = currentRoleSlug === role.slug;
+              return (
+                <Link
+                  key={role.slug}
+                  href={`/jobs/${role.slug}`}
+                  className={cn(
+                    "text-sm font-medium transition-all duration-150 truncate",
+                    isActive
+                      ? "text-brand-600 dark:text-brand-400 font-semibold"
+                      : "text-muted-foreground hover:text-foreground"
+                  )}
+                >
+                  {role.label}
+                </Link>
+              );
+            })}
           </div>
 
           {popularRolesAndTracks.length > 10 && (
-            <div className="mt-3.5 pt-3 border-t border-border/50 flex justify-start">
+            <div className="mt-8 flex justify-center">
               <button
                 type="button"
                 onClick={() => setShowAllPopular(!showAllPopular)}
-                className="inline-flex items-center gap-1.5 rounded-lg border border-border/70 bg-background/50 hover:bg-background px-3 py-1.5 text-xs font-semibold text-muted-foreground hover:text-foreground transition-all cursor-pointer"
+                className="inline-flex items-center gap-1.5 text-sm font-semibold text-muted-foreground hover:text-foreground transition-all cursor-pointer"
               >
-                <span>
-                  {showAllPopular
-                    ? "View less"
-                    : `View all roles (${popularRolesAndTracks.length})`}
-                </span>
+                <span>{showAllPopular ? "View less" : "View more"}</span>
                 {showAllPopular ? (
-                  <ChevronUp className="h-3.5 w-3.5" />
+                  <ChevronUp className="h-4 w-4" />
                 ) : (
-                  <ChevronDown className="h-3.5 w-3.5" />
+                  <ChevronDown className="h-4 w-4" />
                 )}
               </button>
             </div>
           )}
         </div>
 
-        {/* CARD 3: JOBS BY DEPARTMENT */}
-        <div id="directory-departments" className="flex flex-col justify-between rounded-2xl border border-border/80 bg-card/80 dark:bg-card/40 p-5 sm:p-6 backdrop-blur-md shadow-2xs transition-all duration-200 hover:border-border scroll-mt-32">
-          <div>
-            <div className="flex items-center gap-2.5 pb-3.5 border-b border-border/60">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-500/10 dark:bg-brand-500/20 text-brand-600 dark:text-brand-400 shrink-0">
-                <Layers className="h-4 w-4" />
-              </div>
-              <h3 className="text-sm sm:text-base font-bold text-foreground">
-                Jobs by Department
-              </h3>
-            </div>
+        {/* SECTION 3: JOBS BY DEPARTMENT */}
+        <div id="directory-departments" className="pb-8 border-b border-border/40 scroll-mt-32">
+          <h3 className="text-base sm:text-lg font-bold text-foreground mb-6">
+            Jobs by Department
+          </h3>
 
-            <div className="mt-3.5 grid grid-cols-1 sm:grid-cols-2 gap-x-3 gap-y-0.5">
-              {departments.map((dept) => (
-                <Link
-                  key={dept.slug}
-                  href={`/jobs/${dept.slug}`}
-                  className="group inline-flex items-center gap-1.5 py-1.5 px-2 rounded-lg text-xs sm:text-sm font-medium transition-all duration-150 w-fit max-w-full text-muted-foreground hover:text-brand-600 dark:hover:text-brand-400 hover:bg-brand-50/40 dark:hover:bg-brand-950/20"
-                >
-                  <span className="truncate group-hover:translate-x-0.5 transition-transform duration-150">
-                    {dept.label}
-                  </span>
-                  <ArrowRight className="h-3 w-3 opacity-0 -translate-x-1 transition-all duration-150 group-hover:opacity-100 group-hover:translate-x-0 text-brand-600 dark:text-brand-400 shrink-0" />
-                </Link>
-              ))}
-            </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-y-5 gap-x-6">
+            {departments.map((dept) => (
+              <Link
+                key={dept.slug}
+                href={`/jobs/${dept.slug}`}
+                className="text-sm font-medium text-muted-foreground hover:text-foreground transition-all duration-150 truncate"
+              >
+                {dept.label}
+              </Link>
+            ))}
           </div>
         </div>
 
-        {/* CARD 4: TRENDING CAREER HUBS */}
-        <div className="flex flex-col justify-between rounded-2xl border border-border/80 bg-card/80 dark:bg-card/40 p-5 sm:p-6 backdrop-blur-md shadow-2xs transition-all duration-200 hover:border-border">
-          <div>
-            <div className="flex items-center gap-2.5 pb-3.5 border-b border-border/60">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-500/10 dark:bg-brand-500/20 text-brand-600 dark:text-brand-400 shrink-0">
-                <Globe className="h-4 w-4" />
-              </div>
-              <h3 className="text-sm sm:text-base font-bold text-foreground">
-                Trending Career Hubs
-              </h3>
-            </div>
+        {/* SECTION 4: TRENDING CAREER HUBS */}
+        <div className="pb-4">
+          <h3 className="text-base sm:text-lg font-bold text-foreground mb-6">
+            Trending Career Hubs
+          </h3>
 
-            <div className="mt-3.5 grid grid-cols-1 sm:grid-cols-2 gap-x-3 gap-y-0.5">
-              {visibleTrendingHubs.map((hub) => (
-                <Link
-                  key={hub.slug}
-                  href={`/jobs/${hub.slug}`}
-                  className="group inline-flex items-center gap-1.5 py-1.5 px-2 rounded-lg text-xs sm:text-sm font-medium transition-all duration-150 w-fit max-w-full text-muted-foreground hover:text-brand-600 dark:hover:text-brand-400 hover:bg-brand-50/40 dark:hover:bg-brand-950/20"
-                >
-                  <span className="truncate group-hover:translate-x-0.5 transition-transform duration-150">
-                    {hub.label}
-                  </span>
-                  <ArrowRight className="h-3 w-3 opacity-0 -translate-x-1 transition-all duration-150 group-hover:opacity-100 group-hover:translate-x-0 text-brand-600 dark:text-brand-400 shrink-0" />
-                </Link>
-              ))}
-            </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-y-5 gap-x-6">
+            {visibleTrendingHubs.map((hub) => (
+              <Link
+                key={hub.slug}
+                href={`/jobs/${hub.slug}`}
+                className="text-sm font-medium text-muted-foreground hover:text-foreground transition-all duration-150 truncate"
+              >
+                {hub.label}
+              </Link>
+            ))}
           </div>
 
           {trendingHubs.length > 10 && (
-            <div className="mt-3.5 pt-3 border-t border-border/50 flex justify-start">
+            <div className="mt-8 flex justify-center">
               <button
                 type="button"
                 onClick={() => setShowAllHubs(!showAllHubs)}
-                className="inline-flex items-center gap-1.5 rounded-lg border border-border/70 bg-background/50 hover:bg-background px-3 py-1.5 text-xs font-semibold text-muted-foreground hover:text-foreground transition-all cursor-pointer"
+                className="inline-flex items-center gap-1.5 text-sm font-semibold text-muted-foreground hover:text-foreground transition-all cursor-pointer"
               >
-                <span>
-                  {showAllHubs
-                    ? "View less"
-                    : `View all hubs (${trendingHubs.length})`}
-                </span>
+                <span>{showAllHubs ? "View less" : "View more"}</span>
                 {showAllHubs ? (
-                  <ChevronUp className="h-3.5 w-3.5" />
+                  <ChevronUp className="h-4 w-4" />
                 ) : (
-                  <ChevronDown className="h-3.5 w-3.5" />
+                  <ChevronDown className="h-4 w-4" />
                 )}
               </button>
             </div>
           )}
         </div>
+
       </div>
     </section>
   );
