@@ -3,6 +3,7 @@
 import { ReactNode } from "react";
 import { LenisProvider } from "./lenis-provider";
 import { GsapProvider } from "./gsap-provider";
+import { FirebaseAnalyticsProvider } from "./firebase-analytics-provider";
 
 interface ProvidersProps {
   children: ReactNode;
@@ -10,8 +11,10 @@ interface ProvidersProps {
 
 export function Providers({ children }: ProvidersProps) {
   return (
-    <LenisProvider>
-      <GsapProvider>{children}</GsapProvider>
-    </LenisProvider>
+    <FirebaseAnalyticsProvider>
+      <LenisProvider>
+        <GsapProvider>{children}</GsapProvider>
+      </LenisProvider>
+    </FirebaseAnalyticsProvider>
   );
 }
