@@ -222,18 +222,18 @@ export function HowItWorksContent() {
     reducedMotion
       ? {}
       : {
-          initial: { opacity: 0, y: 20 },
-          whileInView: { opacity: 1, y: 0 },
-          viewport: { once: true, margin: "-50px" },
-          transition: { duration: 0.5, delay, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] },
-        };
+        initial: { opacity: 0, y: 20 },
+        whileInView: { opacity: 1, y: 0 },
+        viewport: { once: true, margin: "-50px" },
+        transition: { duration: 0.5, delay, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] },
+      };
 
   return (
     <main className="relative flex min-h-dvh flex-col overflow-x-clip bg-white dark:bg-background text-foreground">
-      
+
       {/* HERO SECTION */}
       <section className="relative overflow-hidden pt-32 pb-20 sm:pt-40 sm:pb-28">
-        
+
         {/* Pure Light Minimal Background */}
         <div
           className="pointer-events-none absolute inset-0 -z-10 overflow-hidden"
@@ -244,7 +244,7 @@ export function HowItWorksContent() {
         </div>
 
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 text-center relative z-10">
-          
+
           {/* Main Hero Headline */}
           <motion.h1
             {...fadeIn(0.05)}
@@ -299,14 +299,14 @@ export function HowItWorksContent() {
 
       {/* SECTION 1: FOR CANDIDATES */}
       <section id="for-candidates" className="relative py-20 sm:py-28 overflow-hidden border-t border-border/30">
-        
+
         <div className="mx-auto max-w-7xl 2xl:max-w-[1440px] px-4 sm:px-6 lg:px-8 relative z-10">
-          
+
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 xl:gap-12 2xl:gap-14 items-center">
-            
+
             {/* Candidate Content Column */}
             <div className="lg:col-span-6 xl:col-span-5 space-y-6">
-              
+
               <div className="space-y-3">
                 <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-foreground leading-tight">
                   For Candidates
@@ -405,7 +405,7 @@ export function HowItWorksContent() {
                     {idx < 2 && (
                       <div className="hidden md:block absolute top-7 left-[60%] w-[80%] h-0.5 bg-gradient-to-r from-border/80 via-border/40 to-transparent -z-10" />
                     )}
-                    
+
                     {/* Step Number Circle */}
                     <div className={`relative flex h-14 w-14 items-center justify-center rounded-full font-extrabold text-lg border transition-colors duration-300 shadow-sm mb-4 ${step.circleBg}`}>
                       <Icon className="h-6 w-6" />
@@ -431,9 +431,9 @@ export function HowItWorksContent() {
 
       {/* SECTION 2: FOR EMPLOYERS */}
       <section id="for-employers" className="relative py-20 sm:py-28 overflow-hidden border-t border-border/30">
-        
+
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
-          
+
           {/* Section Header */}
           <div className="max-w-3xl mx-auto text-center space-y-4">
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-foreground leading-tight">
@@ -505,7 +505,7 @@ export function HowItWorksContent() {
                     {idx < 2 && (
                       <div className="hidden md:block absolute top-7 left-[60%] w-[80%] h-0.5 bg-gradient-to-r from-border/80 via-border/40 to-transparent -z-10" />
                     )}
-                    
+
                     {/* Step Number Circle */}
                     <div className={`relative flex h-14 w-14 items-center justify-center rounded-full font-extrabold text-lg border transition-colors duration-300 shadow-sm mb-4 ${step.circleBg}`}>
                       <Icon className="h-6 w-6" />
@@ -529,7 +529,7 @@ export function HowItWorksContent() {
           {/* Employer Web Dashboard Showcase (Direct Mockup Display - NO bg card wrapper) */}
           <div className="mt-16 py-6">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-              
+
               <div className="lg:col-span-5 space-y-5">
                 <h3 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
                   Streamlined Employer Dashboard
@@ -583,7 +583,7 @@ export function HowItWorksContent() {
           {/* Employer Interview Showcase (Direct Compact Display - NO bg card wrapper) */}
           <div className="mt-16 py-6 border-t border-border/30 pt-16">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-              
+
               <div className="lg:col-span-5 flex justify-center order-2 lg:order-1">
                 <div className="relative w-full max-w-[460px]">
                   <Image
@@ -624,8 +624,8 @@ export function HowItWorksContent() {
 
       {/* SECTION 3: FREQUENTLY ASKED QUESTIONS */}
       <section id="faq" className="relative py-20 sm:py-28 overflow-hidden border-t border-border/30">
-        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 relative z-10">
-          
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 relative z-10">
+
           {/* Section Header (Clean & Professional, No Chips) */}
           <div className="text-center space-y-3">
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-foreground leading-tight">
@@ -648,36 +648,34 @@ export function HowItWorksContent() {
                   setActiveCategory(cat);
                   setOpenFaq(0);
                 }}
-                className={`rounded-full px-5 py-2 text-xs sm:text-sm font-semibold transition-all duration-200 ${
-                  activeCategory === cat
-                    ? "bg-brand-600 text-white shadow-md shadow-brand-600/20"
-                    : "bg-muted/60 text-muted-foreground hover:bg-muted hover:text-foreground"
-                }`}
+                className={`rounded-full px-5 py-2 text-xs sm:text-sm font-semibold transition-all duration-200 ${activeCategory === cat
+                  ? "bg-brand-600 text-white shadow-md shadow-brand-600/20"
+                  : "bg-muted/60 text-muted-foreground hover:bg-muted hover:text-foreground"
+                  }`}
               >
                 {cat === "All" ? "All Questions" : cat}
               </button>
             ))}
           </div>
 
-          {/* Accordion FAQ Items (Clean Lines, No Cards) */}
-          <div className="mt-10 divide-y divide-border/40 border-y border-border/40">
+          {/* Accordion FAQ Items (4-sided rounded border card) */}
+          <div className="mt-10 divide-y divide-border/40 border border-border/60 rounded-xl px-5 py-3.5 sm:px-8 sm:py-4 shadow-sm">
             {filteredFaqs.map((faq, idx) => {
               const isOpen = openFaq === idx;
               return (
-                <div key={idx} className="py-4 sm:py-5 transition-colors">
+                <div key={idx} className="py-3 sm:py-3.5 first:pt-0 last:pb-0 transition-colors">
                   <button
                     onClick={() => setOpenFaq(isOpen ? null : idx)}
                     aria-expanded={isOpen}
                     aria-controls={`faq-answer-${idx}`}
                     className="flex w-full items-start justify-between gap-4 text-left group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 rounded-lg py-1"
                   >
-                    <span className="text-base sm:text-lg font-bold text-foreground group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">
+                    <span className="text-base font-medium text-foreground group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">
                       {faq.question}
                     </span>
                     <span
-                      className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand-500/10 text-brand-600 dark:text-brand-400 transition-transform duration-200 ${
-                        isOpen ? "rotate-180 bg-brand-600 text-white dark:text-white" : ""
-                      }`}
+                      className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand-500/10 text-brand-600 dark:text-brand-400 transition-transform duration-200 ${isOpen ? "rotate-180 bg-brand-600 text-white dark:text-white" : ""
+                        }`}
                     >
                       <ChevronDown className="h-4 w-4" />
                     </span>

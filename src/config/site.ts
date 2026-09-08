@@ -36,15 +36,30 @@ export const siteConfig = {
       label: "Jobs",
       href: "/jobs",
       subNav: {
-        left: [
-          { label: "Work from Office Jobs", href: "/jobs/work-from-office-jobs" },
-          { label: "Field Jobs", href: "/jobs/field-jobs" },
-          { label: "Work from Home Jobs", href: "/jobs/work-from-home-jobs" },
-          { label: "Full-time Jobs", href: "/jobs/full-time-jobs" },
-          { label: "Part-time Jobs", href: "/jobs/part-time-jobs" },
-          { label: "Day Shift Jobs", href: "/jobs/day-shift-jobs" },
-          { label: "Night Shift Jobs", href: "/jobs/night-shift-jobs" },
-          { label: "Hybrid Jobs", href: "/jobs/hybrid-jobs" },
+        leftSections: [
+          {
+            title: "Work Mode",
+            items: [
+              { label: "Work from Office Jobs", href: "/jobs/work-from-office-jobs" },
+              { label: "Field Jobs", href: "/jobs/field-jobs" },
+              { label: "Work from Home Jobs", href: "/jobs/work-from-home-jobs" },
+            ],
+          },
+          {
+            title: "Job Type",
+            items: [
+              { label: "Full-time Jobs", href: "/jobs/full-time-jobs" },
+              { label: "Part-time Jobs", href: "/jobs/part-time-jobs" },
+            ],
+          },
+          {
+            title: "Work Shift",
+            items: [
+              { label: "Day Shift Jobs", href: "/jobs/day-shift-jobs" },
+              { label: "Night Shift Jobs", href: "/jobs/night-shift-jobs" },
+              { label: "Hybrid Jobs", href: "/jobs/hybrid-jobs" },
+            ],
+          },
         ],
         right: [
           {
@@ -90,13 +105,68 @@ export const siteConfig = {
             href: "/jobs?keyword=Others",
             hasArrow: true,
             flyoutItems: [
-              { label: "Fresher Jobs", href: "/jobs/freshers-jobs" },
-              { label: "Internships with Stipend", href: "/jobs/internship-jobs" },
-              { label: "Free to Apply Jobs", href: "/jobs/free-to-apply-jobs" },
+              { label: "Free Job Alert on WhatsApp / Email", href: "/free-job-alerts" },
+              { label: "Download Hirance App", href: "/download-app" },
+              { label: "Blog", href: "/blog" },
+              { label: "Contact Us", href: "/contact" },
             ],
           },
         ],
       },
+    },
+    {
+      label: "Services",
+      href: "/services",
+      servicesMegaNav: [
+        {
+          sections: [
+            {
+              title: "Resume writing",
+              items: [
+                { label: "Text resume", href: "/services/text-resume" },
+                { label: "Visual resume", href: "/services/visual-resume" },
+                { label: "Resume critique", href: "/services/resume-critique" },
+              ],
+            },
+            {
+              title: "Find Jobs",
+              items: [
+                { label: "Jobs4u", href: "/services/jobs4u" },
+                { label: "Priority applicant", href: "/services/priority-applicant" },
+              ],
+            },
+          ],
+        },
+        {
+          sections: [
+            {
+              title: "Get recruiter's attention",
+              items: [
+                { label: "Resume display", href: "/services/resume-display" },
+              ],
+            },
+            {
+              title: "Monthly subscriptions",
+              items: [
+                { label: "Basic & premium plans", href: "/services/subscription-plans" },
+              ],
+            },
+          ],
+        },
+        {
+          sections: [
+            {
+              title: "Free resume resources",
+              items: [
+                { label: "Resume maker", href: "/services/resume-maker" },
+                { label: "Resume quality score", href: "/services/resume-score" },
+                { label: "Resume samples", href: "/services/resume-samples" },
+                { label: "Job letter samples", href: "/services/cover-letter-samples" },
+              ],
+            },
+          ],
+        },
+      ],
     },
     { label: "How It Works", href: "/how-it-works" },
     { label: "About Us", href: "/about-us" },

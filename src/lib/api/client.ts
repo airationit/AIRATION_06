@@ -33,40 +33,66 @@ export async function apiClient<T>(
   endpoint: string,
   options: FetchOptions = {}
 ): Promise<T> {
-  const { params, timeoutMs = 8000, revalidate = 60, headers = {}, ...fetchOptions } = options;
+  const { params, timeoutMs = 15000, revalidate = 60, headers = {}, signal, ...fetchOptions } = options;
   const queryString = buildQueryString(params);
-  
+
   // Normalize endpoint URL
   const cleanEndpoint = endpoint.startsWith("/") ? endpoint : `/${endpoint}`;
   const fullUrl = `${BASE_URL}${cleanEndpoint}${queryString}`;
 
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+  const isServer = typeof window === "undefined";
+
+  let controller: AbortController | null = null;
+  let timeoutId: NodeJS.Timeout | null = null;
+
+  // Set timeout controller only on server or when explicit timeout requested
+  if (!signal && isServer) {
+    controller = new AbortController();
+    timeoutId = setTimeout(() => controller?.abort(), timeoutMs);
+  }
+
+  const fetchInit: RequestInit = {
+    ...fetchOptions,
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      ...headers,
+    },
+    signal: signal || (controller ? controller.signal : undefined),
+  };
+
+  // Next.js specific cache options are only valid on the server
+  if (isServer) {
+    if (typeof revalidate === "number") {
+      fetchInit.next = { revalidate };
+    }
+    if (revalidate === false) {
+      fetchInit.cache = "no-store";
+    }
+  }
 
   try {
-    const res = await fetch(fullUrl, {
-      ...fetchOptions,
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        ...headers,
-      },
-      signal: controller.signal,
-      next: typeof revalidate === "number" ? { revalidate } : undefined,
-      cache: revalidate === false ? "no-store" : undefined,
-    });
-
-    clearTimeout(timeoutId);
+    const res = await fetch(fullUrl, fetchInit);
+    if (timeoutId) clearTimeout(timeoutId);
 
     if (!res.ok) {
-      throw new Error(`API Error: ${res.status} ${res.statusText} at ${cleanEndpoint}`);
+      let serverErrorMsg = `API Error: ${res.status} ${res.statusText} at ${cleanEndpoint}`;
+      try {
+        const errorJson = (await res.json()) as Record<string, unknown>;
+        if (errorJson && typeof errorJson === "object" && "message" in errorJson) {
+          serverErrorMsg = String(errorJson.message);
+        }
+      } catch {
+        // Ignore json parsing error for non-JSON response bodies
+      }
+      throw new Error(serverErrorMsg);
     }
 
     const json = (await res.json()) as T;
     return json;
   } catch (error) {
-    clearTimeout(timeoutId);
-    if (error instanceof Error && error.name === "AbortError") {
+    if (timeoutId) clearTimeout(timeoutId);
+    if (error instanceof Error && (error.name === "AbortError" || error.message.includes("aborted"))) {
       throw new Error(`Request timeout after ${timeoutMs}ms for ${cleanEndpoint}`);
     }
     throw error;

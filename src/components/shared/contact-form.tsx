@@ -4,6 +4,7 @@ import { useState, type FormEvent, type KeyboardEvent } from "react"
 import { CheckCircle2, Mail, MapPin, Phone } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
+import { submitContactLead } from "@/lib/api/contact"
 
 const CONTACT_CHANNELS = [
   {
@@ -55,17 +56,22 @@ export const ContactForm = () => {
     setForm((prev) => ({ ...prev, [field]: value }))
   }
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     if (submitting) return
 
     setSubmitting(true)
 
-    window.setTimeout(() => {
-      setSubmitting(false)
-      setSubmitted(true)
-      setForm(INITIAL_FORM)
-    }, 600)
+    await submitContactLead({
+      name: form.name,
+      email: form.email,
+      subject: form.topic,
+      message: form.message,
+    })
+
+    setSubmitting(false)
+    setSubmitted(true)
+    setForm(INITIAL_FORM)
   }
 
   const handleReset = () => {

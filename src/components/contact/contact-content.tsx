@@ -20,6 +20,7 @@ import {
   ExternalLink,
 } from "lucide-react";
 import { Footer, InteractiveDots } from "@/components/shared";
+import { submitContactLead } from "@/lib/api/contact";
 
 // 5 Clean & Professional Contact FAQs Data
 const contactFaqs = [
@@ -116,16 +117,25 @@ export function ContactContent() {
     setForm((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (submitting) return;
 
     setSubmitting(true);
-    window.setTimeout(() => {
+    try {
+      await submitContactLead({
+        name: form.name,
+        email: form.email,
+        subject: form.subject,
+        message: form.message,
+      });
+    } catch {
+      // Continue gracefully
+    } finally {
       setSubmitting(false);
       setSubmitted(true);
       setForm(INITIAL_FORM);
-    }, 600);
+    }
   };
 
   return (
@@ -193,7 +203,7 @@ export function ContactContent() {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="space-y-8 lg:col-span-5"
+            className="space-y-8 lg:col-span-5 lg:sticky lg:top-28 lg:self-start"
           >
             {/* Direct Contact Methods */}
             <div>
@@ -304,16 +314,6 @@ export function ContactContent() {
                   </div>
                 </a>
 
-                {/* Coming to App Store Badge */}
-                <div className="inline-flex items-center gap-2 rounded-xl border border-border/80 bg-background/60 px-3.5 py-2.5 text-left opacity-80 backdrop-blur-sm">
-                  <svg className="h-4 w-4 fill-current text-foreground" viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98l-.09.06c-.22.14-2.24 1.31-2.22 3.91.03 3.1 2.72 4.13 2.75 4.15l-.08.56zM13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z" />
-                  </svg>
-                  <div className="flex flex-col">
-                    <span className="text-[9px] font-medium leading-none text-muted-foreground uppercase">Coming to</span>
-                    <span className="text-xs font-bold leading-tight text-foreground">App Store</span>
-                  </div>
-                </div>
               </div>
             </div>
           </motion.div>
@@ -377,11 +377,10 @@ export function ContactContent() {
                           key={type.id}
                           type="button"
                           onClick={() => handleChange("userType", type.id)}
-                          className={`rounded-xl border py-2.5 px-3 text-xs font-semibold transition-all duration-200 ${
-                            form.userType === type.id
-                              ? "border-blue-600 bg-blue-600 text-white shadow-md shadow-blue-600/20"
-                              : "border-border/70 bg-background/60 text-muted-foreground hover:border-blue-500/40 hover:text-foreground hover:bg-background"
-                          }`}
+                          className={`rounded-xl border py-2.5 px-3 text-xs font-semibold transition-all duration-200 ${form.userType === type.id
+                            ? "border-blue-600 bg-blue-600 text-white shadow-md shadow-blue-600/20"
+                            : "border-border/70 bg-background/60 text-muted-foreground hover:border-blue-500/40 hover:text-foreground hover:bg-background"
+                            }`}
                         >
                           {type.label}
                         </button>
@@ -541,7 +540,7 @@ export function ContactContent() {
 
       {/* SECTION: FREQUENTLY ASKED QUESTIONS */}
       <section id="faq" className="border-t border-border/50 py-16 sm:py-24">
-        <div className="mx-auto max-w-4xl px-6">
+        <div className="mx-auto max-w-6xl px-6">
           <div className="text-center space-y-3">
             <h2 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-foreground">
               Frequently Asked{" "}
@@ -554,25 +553,24 @@ export function ContactContent() {
             </p>
           </div>
 
-          {/* Accordion List (Clean Lines, No Excessive Cards) */}
-          <div className="mt-10 divide-y divide-border/40 border-y border-border/40">
+          {/* Accordion List (4-sided rounded border card) */}
+          <div className="mt-10 divide-y divide-border/40 border border-border/60 rounded-xl px-5 py-3.5 sm:px-8 sm:py-4 shadow-sm">
             {contactFaqs.map((faq, idx) => {
               const isOpen = openFaq === idx;
               return (
-                <div key={idx} className="py-4 sm:py-5 transition-colors">
+                <div key={idx} className="py-3 sm:py-3.5 first:pt-0 last:pb-0 transition-colors">
                   <button
                     onClick={() => setOpenFaq(isOpen ? null : idx)}
                     aria-expanded={isOpen}
                     aria-controls={`contact-faq-answer-${idx}`}
                     className="flex w-full items-start justify-between gap-4 text-left group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-lg py-1"
                   >
-                    <span className="text-base sm:text-lg font-bold text-foreground group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                    <span className="text-base font-medium text-foreground group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
                       {faq.question}
                     </span>
                     <span
-                      className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 transition-transform duration-200 ${
-                        isOpen ? "rotate-180 bg-blue-600 text-white dark:text-white" : ""
-                      }`}
+                      className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 transition-transform duration-200 ${isOpen ? "rotate-180 bg-blue-600 text-white dark:text-white" : ""
+                        }`}
                     >
                       <ChevronDown className="h-4 w-4" />
                     </span>

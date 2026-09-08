@@ -118,7 +118,7 @@ export const useMasterdataStore = create<MasterdataState>((set, get) => ({
         isLoading: false,
       });
     } catch (error) {
-      console.error("Failed to load masterdata in store:", error);
+      console.warn("Failed to load masterdata in store:", error);
       set({
         isLoading: false,
         error: error instanceof Error ? error.message : "Failed to load masterdata",
