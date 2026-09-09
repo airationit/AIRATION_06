@@ -17,32 +17,11 @@ const isExternalHref = (href: string) =>
   href.startsWith("http") || href.startsWith("mailto:")
 
 export function Navbar({ className }: NavbarProps) {
-  const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const [mobileJobsOpen, setMobileJobsOpen] = useState(false)
-  const [mobileServicesOpen, setMobileServicesOpen] = useState(false)
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
-  const actionsRef = useRef<HTMLDivElement>(null)
-  const [actionsWidth, setActionsWidth] = useState(0)
 
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20)
-    onScroll()
-    window.addEventListener("scroll", onScroll, { passive: true })
-    return () => window.removeEventListener("scroll", onScroll)
-  }, [])
 
-  useEffect(() => {
-    const el = actionsRef.current
-    if (!el) return
-
-    const measure = () => setActionsWidth(el.offsetWidth)
-    measure()
-
-    const ro = new ResizeObserver(measure)
-    ro.observe(el)
-    return () => ro.disconnect()
-  }, [])
 
   useEffect(() => {
     document.body.style.overflow = menuOpen ? "hidden" : ""
@@ -79,10 +58,7 @@ export function Navbar({ className }: NavbarProps) {
         transition={{ duration: 0.7, ease: [0.25, 0.1, 0.25, 1] }}
         className={cn(
           "w-full transition-all duration-300 ease-out",
-          "fixed inset-x-0 top-0 z-50",
-          scrolled || menuOpen
-            ? "border-b border-border/50 bg-white/95 py-4 shadow-xs backdrop-blur-md"
-            : "border-b border-transparent bg-transparent py-4 sm:py-5",
+          "relative z-50 border-b border-transparent bg-transparent py-4 sm:py-5",
           "px-6 sm:px-10 lg:px-16 xl:px-24",
           className
         )}
@@ -177,51 +153,7 @@ export function Navbar({ className }: NavbarProps) {
                   </Link>
                 )
 
-                const hasServicesMegaNav = "servicesMegaNav" in item && (item as any).servicesMegaNav
 
-                if (hasServicesMegaNav) {
-                  return (
-                    <div
-                      key={item.href}
-                      className="relative group"
-                      onMouseEnter={() => setHoveredIndex(index)}
-                    >
-                      {linkElement}
-                      <div className="absolute top-full left-1/2 -translate-x-1/2 pt-2 hidden group-hover:block z-50">
-                        <div className="flex w-[680px] bg-white rounded-2xl shadow-xl border border-border/50 p-5 divide-x divide-border/40 relative">
-                          {(item as any).servicesMegaNav.map((col: any, colIdx: number) => (
-                            <div
-                              key={colIdx}
-                              className={cn(
-                                "flex-1 flex flex-col gap-4",
-                                colIdx === 0 ? "pr-4" : colIdx === 1 ? "px-4" : "pl-4"
-                              )}
-                            >
-                              {col.sections.map((sec: any, secIdx: number) => (
-                                <div key={secIdx} className="flex flex-col gap-2">
-                                  <h4 className="text-sm font-bold text-slate-900 tracking-tight">
-                                    {sec.title}
-                                  </h4>
-                                  <div className="flex flex-col gap-1.5">
-                                    {sec.items.map((sub: any) => (
-                                      <Link
-                                        key={sub.href}
-                                        href={sub.href}
-                                        className="text-xs font-medium text-slate-600 hover:text-brand-600 hover:translate-x-0.5 transition-all"
-                                      >
-                                        {sub.label}
-                                      </Link>
-                                    ))}
-                                  </div>
-                                </div>
-                              ))}
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  )
-                }
 
                 if (hasSubNav) {
                   return (
@@ -309,11 +241,44 @@ export function Navbar({ className }: NavbarProps) {
             </div>
           </div>
 
-          <div
-            className="hidden h-10 shrink-0 lg:block"
-            style={{ width: actionsWidth || undefined }}
-            aria-hidden="true"
-          />
+          {/* Desktop action buttons */}
+          <div className="hidden items-center gap-2 lg:flex">
+            {candidate && (
+              <a
+                href={candidate.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex h-10 items-center gap-1.5 rounded-full px-3.5 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-brand-500/40"
+                aria-label="Get the Hirance app for candidates on Google Play"
+                tabIndex={0}
+              >
+                {candidate.cta}
+                <ArrowUpRight className="h-3.5 w-3.5 opacity-60" aria-hidden="true" />
+              </a>
+            )}
+            {employer &&
+              (employer.external || isExternalHref(employer.href) ? (
+                <a
+                  href={employer.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex h-10 items-center justify-center rounded-full bg-brand-600 px-5 text-sm font-semibold text-white transition-colors hover:bg-brand-700 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-brand-500/40"
+                  aria-label="Employer login on the Hirance web platform"
+                  tabIndex={0}
+                >
+                  {employer.cta}
+                </a>
+              ) : (
+                <Link
+                  href={employer.href}
+                  className="inline-flex h-10 items-center justify-center rounded-full bg-brand-600 px-5 text-sm font-semibold text-white transition-colors hover:bg-brand-700 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-brand-500/40"
+                  aria-label="Employer login on the Hirance web platform"
+                  tabIndex={0}
+                >
+                  {employer.cta}
+                </Link>
+              ))}
+          </div>
 
           {/* Mobile & Tablet hamburger button inside header to align cleanly with logo */}
           <button
@@ -325,7 +290,7 @@ export function Navbar({ className }: NavbarProps) {
             className={cn(
               "flex h-10 w-10 items-center justify-center rounded-full border text-foreground transition-all duration-300 ease-out lg:hidden",
               "focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-brand-500/40",
-              scrolled || menuOpen
+              menuOpen
                 ? "border-border/50 bg-white/95 shadow-[0_10px_36px_-18px_rgba(15,23,42,0.22)]"
                 : "border-border/40 bg-white/90 hover:bg-muted"
             )}
@@ -403,50 +368,7 @@ export function Navbar({ className }: NavbarProps) {
 
               <div className="mt-3 flex flex-col gap-1 border-t border-border/60 pt-3">
                 {siteConfig.nav.map((item) => {
-                  if ("servicesMegaNav" in item && (item as any).servicesMegaNav) {
-                    return (
-                      <div key={item.href} className="flex flex-col">
-                        <button
-                          type="button"
-                          onClick={() => setMobileServicesOpen((v) => !v)}
-                          className="flex items-center justify-between rounded-xl px-4 py-3 text-base font-medium text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
-                        >
-                          <span>{item.label}</span>
-                          <ChevronDown
-                            className={cn(
-                              "h-4 w-4 transition-transform duration-200",
-                              mobileServicesOpen && "rotate-180 text-brand-600"
-                            )}
-                          />
-                        </button>
-                        {mobileServicesOpen && (
-                          <div className="pl-3 pb-2 flex flex-col gap-3 border-l-2 border-brand-500/20 ml-4 mt-1">
-                            {(item as any).servicesMegaNav.map((col: any, colIdx: number) => (
-                              <div key={colIdx} className="flex flex-col gap-2">
-                                {col.sections.map((sec: any, secIdx: number) => (
-                                  <div key={secIdx} className="flex flex-col gap-1">
-                                    <span className="text-xs font-bold text-slate-900 pt-1 px-3">
-                                      {sec.title}
-                                    </span>
-                                    {sec.items.map((sub: any) => (
-                                      <Link
-                                        key={sub.href}
-                                        href={sub.href}
-                                        onClick={handleMenuClose}
-                                        className="rounded-lg px-3 py-1.5 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors"
-                                      >
-                                        {sub.label}
-                                      </Link>
-                                    ))}
-                                  </div>
-                                ))}
-                              </div>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                    )
-                  }
+
 
                   if ("subNav" in item && item.subNav) {
                     return (
@@ -527,50 +449,7 @@ export function Navbar({ className }: NavbarProps) {
         </AnimatePresence>
       </motion.header>
 
-      {/* Desktop action buttons */}
-      <div
-        ref={actionsRef}
-        className={cn(
-          "pointer-events-auto fixed top-3 sm:top-3.5 right-6 z-[60] hidden items-center gap-2 rounded-full px-2 py-1 transition-all duration-300 ease-out hidden lg:flex lg:right-16 xl:right-24",
-          "border border-transparent bg-transparent shadow-none"
-        )}
-      >
-        {candidate && (
-          <a
-            href={candidate.href}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex h-10 items-center gap-1.5 rounded-full px-3.5 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-brand-500/40"
-            aria-label="Get the Hirance app for candidates on Google Play"
-            tabIndex={0}
-          >
-            {candidate.cta}
-            <ArrowUpRight className="h-3.5 w-3.5 opacity-60" aria-hidden="true" />
-          </a>
-        )}
-        {employer &&
-          (employer.external || isExternalHref(employer.href) ? (
-            <a
-              href={employer.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex h-10 items-center justify-center rounded-full bg-brand-600 px-5 text-sm font-semibold text-white transition-colors hover:bg-brand-700 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-brand-500/40"
-              aria-label="Employer login on the Hirance web platform"
-              tabIndex={0}
-            >
-              {employer.cta}
-            </a>
-          ) : (
-            <Link
-              href={employer.href}
-              className="inline-flex h-10 items-center justify-center rounded-full bg-brand-600 px-5 text-sm font-semibold text-white transition-colors hover:bg-brand-700 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-brand-500/40"
-              aria-label="Employer login on the Hirance web platform"
-              tabIndex={0}
-            >
-              {employer.cta}
-            </Link>
-          ))}
-      </div>
+
     </>
   )
 }

@@ -12,7 +12,7 @@ import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { siteConfig } from "@/config/site";
 import { GooglePlayButton } from "@/components/shared";
-import { JobPostDemo } from "./job-post-demo";
+import { HeroVideoCard } from "./hero-video-card";
 import { cn } from "@/lib/utils";
 
 const headlineWords = ["Swipe.", "Match.", "Get", "Hired."];
@@ -178,18 +178,18 @@ export function Hero() {
         </motion.div>
       </div>
 
-      {/* FULL-SCREEN JOB POST DEMO SECTION (Hidden on mobile devices for clean, fast scrolling) */}
+      {/* FULL-SCREEN VIDEO PLAYING MODERN CARD SECTION */}
       <div
         ref={demoSectionRef}
         className={cn(
-          "relative w-full hidden md:block",
-          "h-[calc(100dvh+4rem)]"
+          "relative w-full",
+          "h-[calc(105dvh+4.2rem)]"
         )}
       >
         {/* Pinned Sticky Viewport (100vh x 100vw) */}
-        <div className="sticky top-0 h-[calc(100dvh+4rem)] w-full overflow-hidden bg-transparent text-white">
-          <div className="relative h-full w-full p-2 pt-20 pb-1 sm:p-3 sm:pt-24 sm:pb-1 md:p-3.5 md:pt-24 md:pb-1">
-            <JobPostDemo className="h-full w-full" />
+        <div className="sticky top-0 h-[calc(105dvh+4.2rem)] w-full overflow-hidden bg-transparent text-white">
+          <div className="relative h-full w-full p-1.5 xs:p-2 sm:p-3 pt-14 xs:pt-16 sm:pt-18 lg:p-3.5 lg:pt-20 xl:pt-24 pb-1">
+            <HeroVideoCard className="h-full w-full" />
           </div>
         </div>
       </div>

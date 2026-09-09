@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import Image from "next/image";
 import {
   motion,
   AnimatePresence,
@@ -16,7 +15,6 @@ import {
   MapPin,
   Briefcase,
   Clock,
-  IndianRupee,
   Check,
   X,
   Bookmark,
@@ -26,11 +24,16 @@ import {
   Layers,
   MessageSquare,
   User,
-  BadgeCheck,
-  Hand,
-  AlertCircle,
+  Wifi,
+  Signal,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+
+export interface JobBreakdownItem {
+  label: string;
+  score: string;
+  status: "high" | "mid" | "low";
+}
 
 export interface JobCardData {
   id: string;
@@ -38,273 +41,243 @@ export interface JobCardData {
   title: string;
   company: string;
   verified: boolean;
+  verifiedText: string;
   matchScore: number;
-  matchGrade: "HIGH MATCH" | "LOW MATCH";
-  aiNote: string;
+  aiNote: React.ReactNode;
   location: string;
   salary: string;
   experience: string;
   type: string;
   tags: string[];
-  breakdown: {
-    skills: string;
-    skillsOk: boolean;
-    exp: string;
-    expOk: boolean;
-    location: string;
-    locationOk: boolean;
-    salary: string;
-    salaryOk: boolean;
-  };
-  logoColor: string;
-  logoLetter: string;
+  breakdown: JobBreakdownItem[];
+  logoType?: "airation" | "nexus" | "pixel" | "cerebra";
+  logoColor?: string;
+  logoLetter?: string;
 }
 
 const JOBS_DATA: JobCardData[] = [
   {
-    id: "it-dept-1",
-    department: "Engineering & Software Development",
-    title: "Senior Full Stack Engineer (Next.js)",
+    id: "job-sales-manager",
+    department: "Sales & Distribution",
+    title: "Area Sales Manager",
+    company: "Airation Softtech P...",
+    verified: false,
+    verifiedText: "Employer Not Verified",
+    matchScore: 33,
+    aiNote: (
+      <>
+        Perfect for Distributor/Dealer Management professionals with{" "}
+        <strong className="font-bold text-indigo-950 dark:text-indigo-200">2-5 Years</strong>{" "}
+        looking for{" "}
+        <strong className="font-bold text-indigo-950 dark:text-indigo-200">Work from Office</strong>{" "}
+        job...
+      </>
+    ),
+    location: "Bareilly",
+    salary: "Not Disclosed",
+    experience: "2-5 Years",
+    type: "Full Time",
+    tags: ["Distributor/Dealer Management", "Regional Market Strategy"],
+    breakdown: [
+      { label: "Skills", score: "0/40", status: "low" },
+      { label: "Experience", score: "5.2/13", status: "low" },
+      { label: "Location", score: "7/7", status: "high" },
+      { label: "Salary", score: "2.5/5", status: "mid" },
+    ],
+    logoType: "airation",
+  },
+  {
+    id: "job-software-engineer",
+    department: "Engineering & Technology",
+    title: "Senior Full Stack Engineer",
     company: "Nexus Cloud Systems",
     verified: true,
-    matchScore: 98,
-    matchGrade: "HIGH MATCH",
-    aiNote: "Strong match for React, TypeScript, Next.js architecture, and Node microservices skillset.",
-    location: "Bengaluru (Hybrid)",
-    salary: "₹ 16 - 24 LPA",
+    verifiedText: "Verified Employer",
+    matchScore: 94,
+    aiNote: (
+      <>
+        High match for Next.js, TypeScript & React microservices with{" "}
+        <strong className="font-bold text-indigo-950 dark:text-indigo-200">3-5 Years</strong>{" "}
+        looking for{" "}
+        <strong className="font-bold text-indigo-950 dark:text-indigo-200">Hybrid / Remote</strong>{" "}
+        job...
+      </>
+    ),
+    location: "Bengaluru",
+    salary: "₹ 18 - 28 LPA",
     experience: "3-5 Years",
     type: "Full Time",
-    tags: ["Next.js", "TypeScript", "Node.js", "Tailwind CSS"],
-    breakdown: {
-      skills: "40/40",
-      skillsOk: true,
-      exp: "13/13",
-      expOk: true,
-      location: "7/7",
-      locationOk: true,
-      salary: "5/5",
-      salaryOk: true,
-    },
-    logoColor: "from-indigo-500 to-purple-600",
+    tags: ["Next.js", "TypeScript", "Node.js"],
+    breakdown: [
+      { label: "Skills", score: "38/40", status: "high" },
+      { label: "Experience", score: "12/13", status: "high" },
+      { label: "Location", score: "7/7", status: "high" },
+      { label: "Salary", score: "5/5", status: "high" },
+    ],
+    logoType: "nexus",
+    logoColor: "from-blue-600 to-indigo-600",
     logoLetter: "N",
   },
   {
-    id: "it-dept-2",
-    department: "Data Science, Analytics & AI",
-    title: "AI / ML Research Engineer",
-    company: "Cerebra AI Labs",
-    verified: true,
-    matchScore: 62,
-    matchGrade: "LOW MATCH",
-    aiNote: "Role demands PyTorch, LLM fine-tuning & CUDA optimizations. Stack gap with application-tier background.",
-    location: "Gurugram (Hybrid)",
-    salary: "₹ 24 - 35 LPA",
-    experience: "4-7 Years",
-    type: "Full Time",
-    tags: ["PyTorch", "LLM Ops", "CUDA", "Deep Learning"],
-    breakdown: {
-      skills: "22/40",
-      skillsOk: false,
-      exp: "9/13",
-      expOk: false,
-      location: "7/7",
-      locationOk: true,
-      salary: "5/5",
-      salaryOk: true,
-    },
-    logoColor: "from-purple-600 to-pink-600",
-    logoLetter: "C",
-  },
-  {
-    id: "it-dept-3",
-    department: "Design, UI/UX & Creative",
+    id: "job-product-designer",
+    department: "Design & Creative",
     title: "Lead Product Designer (UI/UX)",
     company: "PixelCraft Studios",
     verified: true,
-    matchScore: 94,
-    matchGrade: "HIGH MATCH",
-    aiNote: "High synergy for design systems, Figma component architectures, and responsive micro-interactions.",
-    location: "Mumbai (Hybrid)",
-    salary: "₹ 14 - 20 LPA",
+    verifiedText: "Verified Employer",
+    matchScore: 88,
+    aiNote: (
+      <>
+        Strong synergy for mobile UI design systems, Figma workflows with{" "}
+        <strong className="font-bold text-indigo-950 dark:text-indigo-200">3-5 Years</strong>{" "}
+        looking for{" "}
+        <strong className="font-bold text-indigo-950 dark:text-indigo-200">Work from Office</strong>{" "}
+        job...
+      </>
+    ),
+    location: "Mumbai",
+    salary: "₹ 14 - 22 LPA",
     experience: "3-5 Years",
     type: "Full Time",
-    tags: ["Figma", "Design Systems", "UX Research", "Prototyping"],
-    breakdown: {
-      skills: "38/40",
-      skillsOk: true,
-      exp: "12/13",
-      expOk: true,
-      location: "7/7",
-      locationOk: true,
-      salary: "5/5",
-      salaryOk: true,
-    },
+    tags: ["Figma", "Design Systems", "UI/UX"],
+    breakdown: [
+      { label: "Skills", score: "36/40", status: "high" },
+      { label: "Experience", score: "11/13", status: "high" },
+      { label: "Location", score: "7/7", status: "high" },
+      { label: "Salary", score: "4.5/5", status: "high" },
+    ],
+    logoType: "pixel",
     logoColor: "from-rose-500 to-amber-500",
     logoLetter: "P",
   },
   {
-    id: "it-dept-4",
-    department: "Marketing, SEO & Content Growth",
-    title: "Performance & Growth Marketing Lead",
-    company: "Amplifi Media Tech",
+    id: "job-ai-engineer",
+    department: "Data & AI Research",
+    title: "AI / ML Research Engineer",
+    company: "Cerebra AI Labs",
     verified: true,
-    matchScore: 58,
-    matchGrade: "LOW MATCH",
-    aiNote: "Demands 5+ yrs paid ad spend management, CAC/LTV scaling & programmatic SEO funnels.",
-    location: "Delhi NCR (On-site)",
-    salary: "₹ 12 - 18 LPA",
-    experience: "4-6 Years",
-    type: "Full Time",
-    tags: ["SEO", "Performance Ads", "Google Analytics", "Paid Meta"],
-    breakdown: {
-      skills: "20/40",
-      skillsOk: false,
-      exp: "8/13",
-      expOk: false,
-      location: "6/7",
-      locationOk: true,
-      salary: "5/5",
-      salaryOk: true,
-    },
-    logoColor: "from-orange-500 to-red-600",
-    logoLetter: "A",
-  },
-  {
-    id: "it-dept-5",
-    department: "Sales & Business Development",
-    title: "Enterprise B2B Sales Manager",
-    company: "Zenith SaaS Corp",
-    verified: true,
-    matchScore: 92,
-    matchGrade: "HIGH MATCH",
-    aiNote: "Great alignment for enterprise SaaS pipeline generation, contract closing, and key account expansion.",
-    location: "Pune (Hybrid)",
-    salary: "₹ 15 - 25 LPA",
-    experience: "3-6 Years",
-    type: "Full Time",
-    tags: ["B2B Sales", "SaaS Pipeline", "Negotiation", "Closing"],
-    breakdown: {
-      skills: "37/40",
-      skillsOk: true,
-      exp: "12/13",
-      expOk: true,
-      location: "7/7",
-      locationOk: true,
-      salary: "5/5",
-      salaryOk: true,
-    },
-    logoColor: "from-blue-600 to-cyan-600",
-    logoLetter: "Z",
-  },
-  {
-    id: "it-dept-6",
-    department: "Operations, Admin & Back Office",
-    title: "Operations & Logistics Manager",
-    company: "OmniLogix Supply Chain",
-    verified: true,
-    matchScore: 55,
-    matchGrade: "LOW MATCH",
-    aiNote: "Focuses on warehousing logistics, fleet operations & physical supply chain ERPs.",
-    location: "Chennai (On-site)",
-    salary: "₹ 8 - 12 LPA",
-    experience: "3-5 Years",
-    type: "Full Time",
-    tags: ["Supply Chain", "Vendor Mgmt", "Logistics", "ERP"],
-    breakdown: {
-      skills: "21/40",
-      skillsOk: false,
-      exp: "8/13",
-      expOk: false,
-      location: "5/7",
-      locationOk: true,
-      salary: "5/5",
-      salaryOk: true,
-    },
-    logoColor: "from-slate-600 to-slate-800",
-    logoLetter: "O",
-  },
-  {
-    id: "it-dept-7",
-    department: "Human Resources & Talent Acquisition",
-    title: "Senior Talent Acquisition Specialist",
-    company: "TalentHive Global",
-    verified: true,
-    matchScore: 96,
-    matchGrade: "HIGH MATCH",
-    aiNote: "Direct fit for tech hiring, LinkedIn Recruiter sourcing pipelines, and candidate lifecycle management.",
-    location: "Hyderabad (Remote)",
-    salary: "₹ 11 - 16 LPA",
-    experience: "2-5 Years",
-    type: "Full Time",
-    tags: ["Tech Hiring", "LinkedIn Recruiter", "HR Ops", "Screening"],
-    breakdown: {
-      skills: "39/40",
-      skillsOk: true,
-      exp: "13/13",
-      expOk: true,
-      location: "7/7",
-      locationOk: true,
-      salary: "5/5",
-      salaryOk: true,
-    },
-    logoColor: "from-emerald-600 to-teal-700",
-    logoLetter: "T",
-  },
-  {
-    id: "it-dept-8",
-    department: "Accounting, Banking & Finance",
-    title: "Senior Financial Analyst & Accounts",
-    company: "Vortex Capital Advisors",
-    verified: true,
-    matchScore: 50,
-    matchGrade: "LOW MATCH",
-    aiNote: "Requires Chartered Accountant (CA) background, corporate statutory audit & ledger compliance.",
-    location: "Noida (Hybrid)",
-    salary: "₹ 12 - 18 LPA",
+    verifiedText: "Verified Employer",
+    matchScore: 64,
+    aiNote: (
+      <>
+        Demands PyTorch, LLM fine-tuning & CUDA optimizations with{" "}
+        <strong className="font-bold text-indigo-950 dark:text-indigo-200">4-7 Years</strong>{" "}
+        looking for{" "}
+        <strong className="font-bold text-indigo-950 dark:text-indigo-200">Hybrid</strong>{" "}
+        job...
+      </>
+    ),
+    location: "Gurugram",
+    salary: "₹ 24 - 36 LPA",
     experience: "4-7 Years",
     type: "Full Time",
-    tags: ["Financial Analysis", "Taxation", "Auditing", "Compliance"],
-    breakdown: {
-      skills: "18/40",
-      skillsOk: false,
-      exp: "6/13",
-      expOk: false,
-      location: "6/7",
-      locationOk: true,
-      salary: "5/5",
-      salaryOk: true,
-    },
-    logoColor: "from-amber-600 to-yellow-600",
-    logoLetter: "V",
-  },
-  {
-    id: "it-dept-9",
-    department: "Customer Support & Telecalling",
-    title: "Customer Support & Success Specialist",
-    company: "EchoWave Communications",
-    verified: true,
-    matchScore: 91,
-    matchGrade: "HIGH MATCH",
-    aiNote: "Excellent match for omnichannel ticketing, customer satisfaction (CSAT) workflows & escalation resolution.",
-    location: "Jaipur / Remote",
-    salary: "₹ 5 - 8 LPA",
-    experience: "1-3 Years",
-    type: "Full Time",
-    tags: ["Zendesk", "Customer CSAT", "CRM", "Escalations"],
-    breakdown: {
-      skills: "36/40",
-      skillsOk: true,
-      exp: "12/13",
-      expOk: true,
-      location: "7/7",
-      locationOk: true,
-      salary: "5/5",
-      salaryOk: true,
-    },
-    logoColor: "from-cyan-500 to-blue-600",
-    logoLetter: "E",
+    tags: ["PyTorch", "LLM Ops", "CUDA"],
+    breakdown: [
+      { label: "Skills", score: "24/40", status: "mid" },
+      { label: "Experience", score: "9/13", status: "mid" },
+      { label: "Location", score: "7/7", status: "high" },
+      { label: "Salary", score: "5/5", status: "high" },
+    ],
+    logoType: "cerebra",
+    logoColor: "from-purple-600 to-pink-600",
+    logoLetter: "C",
   },
 ];
+
+function AirationSwirlLogo({ className }: { className?: string }) {
+  return (
+    <div
+      className={cn(
+        "h-7 w-7 xs:h-8 xs:w-8 shrink-0 rounded-full bg-sky-50 flex items-center justify-center p-0.5 shadow-2xs border border-sky-100/60 dark:bg-sky-950/40 dark:border-sky-800/40",
+        className
+      )}
+    >
+      <svg
+        viewBox="0 0 100 100"
+        className="h-full w-full"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <g stroke="#38BDF8" strokeWidth="4.5" strokeLinecap="round">
+          {[0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330].map(
+            (angle) => (
+              <path
+                key={angle}
+                d="M50 50 C 48 38, 42 26, 52 18 C 58 13, 66 18, 62 26 C 58 34, 50 50, 50 50"
+                transform={`rotate(${angle} 50 50)`}
+              />
+            )
+          )}
+        </g>
+      </svg>
+    </div>
+  );
+}
+
+function CircularMatchGauge({ score }: { score: number }) {
+  const radius = 17;
+  const strokeWidth = 3.5;
+  const circumference = 2 * Math.PI * radius;
+  const offset = circumference - (score / 100) * circumference;
+
+  return (
+    <div className="relative flex items-center justify-center h-11 w-11 shrink-0">
+      {/* 4-point golden sparkle icon at top-right */}
+      <span className="absolute -top-1 -right-0.5 text-amber-500 font-bold text-xs select-none">
+        ✦
+      </span>
+
+      <svg className="h-11 w-11 -rotate-90" viewBox="0 0 44 44">
+        {/* Background circle track */}
+        <circle
+          cx="22"
+          cy="22"
+          r={radius}
+          fill="none"
+          stroke="#E2E8F0"
+          strokeWidth={strokeWidth}
+          className="dark:stroke-slate-800"
+        />
+        {/* Active progress stroke */}
+        <circle
+          cx="22"
+          cy="22"
+          r={radius}
+          fill="none"
+          stroke="#10B981"
+          strokeWidth={strokeWidth}
+          strokeDasharray={circumference}
+          strokeDashoffset={offset}
+          strokeLinecap="round"
+          className="transition-all duration-700 ease-out"
+        />
+      </svg>
+
+      {/* Center score & label */}
+      <div className="absolute inset-0 flex flex-col items-center justify-center text-center select-none">
+        <span className="text-[11px] font-black text-slate-900 dark:text-white leading-none">
+          {score}%
+        </span>
+        <span className="text-[7.5px] font-medium text-slate-400 dark:text-slate-500 leading-none mt-0.5">
+          Match
+        </span>
+      </div>
+    </div>
+  );
+}
+
+function RupeeCircleIcon({ className }: { className?: string }) {
+  return (
+    <div
+      className={cn(
+        "h-3.5 w-3.5 xs:h-4 xs:w-4 shrink-0 rounded-full border border-emerald-500 flex items-center justify-center text-emerald-600 dark:text-emerald-400 font-bold text-[8.5px] xs:text-[9.5px] leading-none",
+        className
+      )}
+    >
+      ₹
+    </div>
+  );
+}
 
 interface SwipeCardProps {
   job: JobCardData;
@@ -336,7 +309,6 @@ function SwipeCard({
     ["rgba(239, 68, 68, 0)", "rgba(239, 68, 68, 0.14)"]
   );
 
-  const isHighMatch = job.matchScore >= 80;
   const isAnimatingOut = useRef(false);
 
   const performSwipe = useCallback(
@@ -386,6 +358,11 @@ function SwipeCard({
 
   return (
     <motion.div
+      initial={{
+        scale,
+        y: translateY,
+        opacity,
+      }}
       style={{
         position: "absolute",
         inset: 0,
@@ -393,6 +370,10 @@ function SwipeCard({
         rotate: isTop ? rotate : 0,
         zIndex: 30 - indexOffset,
         cursor: isTop ? "grab" : "default",
+        willChange: "transform, opacity",
+        backfaceVisibility: "hidden",
+        WebkitBackfaceVisibility: "hidden",
+        transform: "translate3d(0, 0, 0)",
       }}
       animate={{
         scale,
@@ -412,15 +393,15 @@ function SwipeCard({
       whileDrag={{ cursor: "grabbing" }}
       className="touch-none select-none"
     >
-      {/* Card Body */}
-      <div className="relative h-full w-full rounded-[18px] border border-slate-200/90 bg-white p-2.5 sm:p-3 shadow-lg flex flex-col justify-between dark:border-slate-800 dark:bg-slate-900 overflow-hidden">
+      {/* Card Body with Exact Layout from the App */}
+      <div className="relative h-full w-full rounded-[22px] xs:rounded-[26px] border border-slate-200/90 bg-white p-3 xs:p-3.5 sm:p-4 shadow-lg flex flex-col justify-between dark:border-slate-800 dark:bg-slate-900 overflow-hidden">
         {/* Dynamic Stamp Overlays during manual drag OR programmatic auto-swiping */}
         {isTop && (
           <>
             {/* APPLY Stamp */}
             <motion.div
               style={{ opacity: applyStampOpacity }}
-              className="pointer-events-none absolute left-3 top-3 z-40 rounded-lg border-2 border-emerald-500 bg-emerald-500/15 px-2 py-0.5 text-[10px] font-black uppercase tracking-wider text-emerald-600 shadow-md backdrop-blur-sm -rotate-12 dark:bg-emerald-500/25 dark:text-emerald-400"
+              className="pointer-events-none absolute left-3.5 top-3.5 z-40 rounded-lg border-2 border-emerald-500 bg-emerald-500/15 px-2.5 py-0.5 text-[9.5px] xs:text-[10.5px] font-black uppercase tracking-wider text-emerald-600 shadow-md backdrop-blur-sm -rotate-12 dark:bg-emerald-500/25 dark:text-emerald-400"
             >
               ✓ APPLY
             </motion.div>
@@ -428,7 +409,7 @@ function SwipeCard({
             {/* SKIP Stamp */}
             <motion.div
               style={{ opacity: skipStampOpacity }}
-              className="pointer-events-none absolute right-3 top-3 z-40 rounded-lg border-2 border-rose-500 bg-rose-500/15 px-2 py-0.5 text-[10px] font-black uppercase tracking-wider text-rose-600 shadow-md backdrop-blur-sm rotate-12 dark:bg-rose-500/25 dark:text-rose-400"
+              className="pointer-events-none absolute right-3.5 top-3.5 z-40 rounded-lg border-2 border-rose-500 bg-rose-500/15 px-2.5 py-0.5 text-[9.5px] xs:text-[10.5px] font-black uppercase tracking-wider text-rose-600 shadow-md backdrop-blur-sm rotate-12 dark:bg-rose-500/25 dark:text-rose-400"
             >
               ✕ SKIP
             </motion.div>
@@ -445,123 +426,95 @@ function SwipeCard({
           </>
         )}
 
-        {/* Top Header: Company Row & Match Badge */}
+        {/* Content Container */}
         <div>
-          <div className="flex items-start justify-between gap-1.5">
+          {/* Top Row: Company Info & Circular Match Gauge */}
+          <div className="flex items-start justify-between gap-2">
+            {/* Company Logo & Details */}
             <div className="flex items-center gap-2 min-w-0">
-              <div
-                className={cn(
-                  "h-7 w-7 shrink-0 rounded-lg bg-gradient-to-tr flex items-center justify-center text-white font-black text-xs shadow-xs",
-                  job.logoColor
-                )}
-              >
-                {job.logoLetter}
-              </div>
+              {job.logoType === "airation" ? (
+                <AirationSwirlLogo />
+              ) : (
+                <div
+                  className={cn(
+                    "h-7 w-7 xs:h-8 xs:w-8 shrink-0 rounded-xl bg-gradient-to-tr flex items-center justify-center text-white font-black text-xs shadow-xs",
+                    job.logoColor || "from-blue-600 to-indigo-600"
+                  )}
+                >
+                  {job.logoLetter || "H"}
+                </div>
+              )}
+
               <div className="min-w-0">
-                <p className="truncate text-[11px] font-bold text-slate-800 dark:text-slate-200">
+                <p className="truncate text-xs xs:text-[13px] font-bold text-slate-900 dark:text-slate-100 leading-snug">
                   {job.company}
                 </p>
-                <div className="flex items-center gap-0.5">
-                  <BadgeCheck className="h-3 w-3 text-blue-500 shrink-0" />
-                  <span className="text-[9px] font-medium text-slate-500 dark:text-slate-400 truncate">
-                    Verified Employer
-                  </span>
-                </div>
+                <p className="truncate text-[9.5px] xs:text-[10px] text-slate-500 dark:text-slate-400 font-normal leading-tight">
+                  {job.verifiedText}
+                </p>
               </div>
             </div>
 
-            {/* Match Circle (Green for High Match, Rose/Amber for Low Match) */}
-            <div
-              className={cn(
-                "shrink-0 flex items-center gap-1 rounded-full border px-1.5 py-0.5",
-                isHighMatch
-                  ? "border-emerald-500/30 bg-emerald-50 dark:bg-emerald-950/40"
-                  : "border-rose-500/30 bg-rose-50 dark:bg-rose-950/40"
-              )}
-            >
-              <div
-                className={cn(
-                  "h-1.5 w-1.5 rounded-full animate-pulse",
-                  isHighMatch ? "bg-emerald-500" : "bg-rose-500"
-                )}
-              />
-              <span
-                className={cn(
-                  "text-[9.5px] font-extrabold",
-                  isHighMatch
-                    ? "text-emerald-600 dark:text-emerald-400"
-                    : "text-rose-600 dark:text-rose-400"
-                )}
-              >
-                {job.matchScore}% Match
-              </span>
-            </div>
+            {/* Exact Circular Match Gauge */}
+            <CircularMatchGauge score={job.matchScore} />
           </div>
 
-          {/* Department Category */}
-          <p className="mt-1.5 text-[9px] font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400 truncate">
-            {job.department}
-          </p>
-
           {/* Job Title */}
-          <h4 className="mt-0.5 text-xs sm:text-[13px] font-black tracking-tight text-slate-900 dark:text-white leading-tight">
+          <h3 className="mt-2 text-sm xs:text-base sm:text-[17px] font-black tracking-tight text-slate-900 dark:text-white leading-tight truncate">
             {job.title}
-          </h4>
+          </h3>
 
-          {/* AI Match Insight Box */}
-          <div
-            className={cn(
-              "mt-1.5 rounded-lg border p-1.5 sm:p-2",
-              isHighMatch
-                ? "border-indigo-100 bg-indigo-50/70 dark:border-indigo-950 dark:bg-indigo-950/30"
-                : "border-amber-100 bg-amber-50/70 dark:border-amber-950 dark:bg-amber-950/30"
-            )}
-          >
-            <div className="flex items-start gap-1">
-              {isHighMatch ? (
-                <Sparkles className="h-3 w-3 text-indigo-600 dark:text-indigo-400 shrink-0 mt-0.5" />
-              ) : (
-                <AlertCircle className="h-3 w-3 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
-              )}
-              <p
-                className={cn(
-                  "text-[9.5px] leading-snug font-medium line-clamp-2",
-                  isHighMatch
-                    ? "text-indigo-950 dark:text-indigo-200"
-                    : "text-amber-950 dark:text-amber-200"
-                )}
-              >
+          {/* AI Match Insight Box (Lavender / Soft Purple) */}
+          <div className="mt-2 rounded-xl xs:rounded-2xl border border-purple-200/60 bg-purple-50/40 p-2 xs:p-2.5 dark:border-purple-950 dark:bg-purple-950/20">
+            <div className="flex items-start gap-1.5">
+              <Sparkles className="h-3.5 w-3.5 text-purple-600 dark:text-purple-400 shrink-0 mt-0.5" />
+              <p className="text-[9.5px] xs:text-[10px] leading-snug text-slate-700 dark:text-slate-300 font-medium line-clamp-2">
                 {job.aiNote}
               </p>
             </div>
           </div>
 
-          {/* Meta Grid */}
-          <div className="mt-1.5 grid grid-cols-2 gap-1 text-[9.5px]">
-            <div className="flex items-center gap-1 rounded bg-slate-50 px-1.5 py-1 text-slate-700 dark:bg-slate-800/60 dark:text-slate-300">
-              <MapPin className="h-2.5 w-2.5 text-slate-400 shrink-0" />
-              <span className="truncate">{job.location}</span>
+          {/* Meta Grid (2x2 with colored outlined icons) */}
+          <div className="mt-2 grid grid-cols-2 gap-1.5 xs:gap-2">
+            {/* Location */}
+            <div className="flex items-center gap-2 rounded-xl border border-slate-100 bg-white p-1.5 xs:p-2 shadow-[0_1px_2px_rgba(0,0,0,0.03)] dark:border-slate-800 dark:bg-slate-900 min-w-0">
+              <MapPin className="h-3.5 w-3.5 text-purple-500 stroke-[2] shrink-0" />
+              <span className="truncate text-[10px] xs:text-[10.5px] font-bold text-slate-800 dark:text-slate-200">
+                {job.location}
+              </span>
             </div>
-            <div className="flex items-center gap-1 rounded bg-slate-50 px-1.5 py-1 text-slate-700 dark:bg-slate-800/60 dark:text-slate-300">
-              <IndianRupee className="h-2.5 w-2.5 text-slate-400 shrink-0" />
-              <span className="truncate font-semibold">{job.salary}</span>
+
+            {/* Salary */}
+            <div className="flex items-center gap-2 rounded-xl border border-slate-100 bg-white p-1.5 xs:p-2 shadow-[0_1px_2px_rgba(0,0,0,0.03)] dark:border-slate-800 dark:bg-slate-900 min-w-0">
+              <RupeeCircleIcon />
+              <span className="truncate text-[10px] xs:text-[10.5px] font-bold text-slate-800 dark:text-slate-200">
+                {job.salary}
+              </span>
             </div>
-            <div className="flex items-center gap-1 rounded bg-slate-50 px-1.5 py-1 text-slate-700 dark:bg-slate-800/60 dark:text-slate-300">
-              <Briefcase className="h-2.5 w-2.5 text-slate-400 shrink-0" />
-              <span className="truncate">{job.experience}</span>
+
+            {/* Experience */}
+            <div className="flex items-center gap-2 rounded-xl border border-slate-100 bg-white p-1.5 xs:p-2 shadow-[0_1px_2px_rgba(0,0,0,0.03)] dark:border-slate-800 dark:bg-slate-900 min-w-0">
+              <Briefcase className="h-3.5 w-3.5 text-blue-500 stroke-[2] shrink-0" />
+              <span className="truncate text-[10px] xs:text-[10.5px] font-bold text-slate-800 dark:text-slate-200">
+                {job.experience}
+              </span>
             </div>
-            <div className="flex items-center gap-1 rounded bg-slate-50 px-1.5 py-1 text-slate-700 dark:bg-slate-800/60 dark:text-slate-300">
-              <Clock className="h-2.5 w-2.5 text-slate-400 shrink-0" />
-              <span className="truncate">{job.type}</span>
+
+            {/* Type */}
+            <div className="flex items-center gap-2 rounded-xl border border-slate-100 bg-white p-1.5 xs:p-2 shadow-[0_1px_2px_rgba(0,0,0,0.03)] dark:border-slate-800 dark:bg-slate-900 min-w-0">
+              <Clock className="h-3.5 w-3.5 text-orange-500 stroke-[2] shrink-0" />
+              <span className="truncate text-[10px] xs:text-[10.5px] font-bold text-slate-800 dark:text-slate-200">
+                {job.type}
+              </span>
             </div>
           </div>
 
-          {/* Skills Tags */}
-          <div className="mt-1.5 flex flex-wrap gap-1">
-            {job.tags.slice(0, 3).map((tag) => (
+          {/* Skill Tags */}
+          <div className="mt-2 flex flex-wrap gap-1.5">
+            {job.tags.map((tag) => (
               <span
                 key={tag}
-                className="rounded bg-blue-50/80 px-1.5 py-0.5 text-[8.5px] font-semibold text-blue-700 dark:bg-blue-950/50 dark:text-blue-300"
+                className="rounded-lg bg-blue-50/80 border border-blue-100/50 px-2 xs:px-2.5 py-0.5 xs:py-1 text-[9px] xs:text-[9.5px] font-medium text-slate-800 dark:bg-blue-950/40 dark:border-blue-900/40 dark:text-blue-200"
               >
                 {tag}
               </span>
@@ -570,70 +523,51 @@ function SwipeCard({
         </div>
 
         {/* Why Match Section */}
-        <div className="mt-1.5 pt-1.5 border-t border-slate-100 dark:border-slate-800">
-          <div className="flex items-center justify-between text-[8.5px] text-slate-500 font-bold uppercase tracking-wider mb-1">
-            <span>Why {job.matchScore}% Match?</span>
-            <span
-              className={cn(
-                "font-bold",
-                isHighMatch
-                  ? "text-emerald-600 dark:text-emerald-400"
-                  : "text-rose-600 dark:text-rose-400"
-              )}
-            >
-              {job.matchGrade}
-            </span>
-          </div>
-          <div className="grid grid-cols-4 gap-1 text-center text-[9px]">
-            <div
-              className={cn(
-                "rounded p-0.5",
-                job.breakdown.skillsOk
-                  ? "bg-emerald-50/70 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400"
-                  : "bg-rose-50/70 dark:bg-rose-950/30 text-rose-600 dark:text-rose-400"
-              )}
-            >
-              <span className="block text-[8px] text-slate-500">Skills</span>
-              <span className="font-bold">{job.breakdown.skills}</span>
-            </div>
-            <div
-              className={cn(
-                "rounded p-0.5",
-                job.breakdown.expOk
-                  ? "bg-emerald-50/70 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400"
-                  : "bg-rose-50/70 dark:bg-rose-950/30 text-rose-600 dark:text-rose-400"
-              )}
-            >
-              <span className="block text-[8px] text-slate-500">Exp</span>
-              <span className="font-bold">{job.breakdown.exp}</span>
-            </div>
-            <div
-              className={cn(
-                "rounded p-0.5",
-                job.breakdown.locationOk
-                  ? "bg-emerald-50/70 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400"
-                  : "bg-rose-50/70 dark:bg-rose-950/30 text-rose-600 dark:text-rose-400"
-              )}
-            >
-              <span className="block text-[8px] text-slate-500">Location</span>
-              <span className="font-bold">{job.breakdown.location}</span>
-            </div>
-            <div
-              className={cn(
-                "rounded p-0.5",
-                job.breakdown.salaryOk
-                  ? "bg-emerald-50/70 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400"
-                  : "bg-rose-50/70 dark:bg-rose-950/30 text-rose-600 dark:text-rose-400"
-              )}
-            >
-              <span className="block text-[8px] text-slate-500">Salary</span>
-              <span className="font-bold">{job.breakdown.salary}</span>
-            </div>
+        <div className="mt-2.5 rounded-2xl bg-emerald-50/40 border border-emerald-100/60 p-2 xs:p-2.5 dark:bg-emerald-950/20 dark:border-emerald-900/40">
+          <p className="text-[11px] xs:text-xs font-bold text-emerald-700 dark:text-emerald-400 mb-1.5">
+            Why {job.matchScore}% Match?
+          </p>
+          <div className="grid grid-cols-4 gap-1 xs:gap-1.5">
+            {job.breakdown.map((item) => (
+              <div
+                key={item.label}
+                className="flex items-center gap-1 xs:gap-1.5 min-w-0"
+              >
+                {/* Vertical colored indicator line */}
+                <div
+                  className={cn(
+                    "w-0.5 h-6 rounded-full shrink-0",
+                    item.status === "high"
+                      ? "bg-emerald-500"
+                      : item.status === "mid"
+                      ? "bg-amber-500"
+                      : "bg-rose-500"
+                  )}
+                />
+                <div className="flex flex-col text-left min-w-0">
+                  <span className="text-[8px] xs:text-[8.5px] text-slate-500 dark:text-slate-400 font-medium truncate">
+                    {item.label}
+                  </span>
+                  <span
+                    className={cn(
+                      "text-[10px] xs:text-[10.5px] font-bold leading-tight truncate",
+                      item.status === "high"
+                        ? "text-emerald-600 dark:text-emerald-400"
+                        : item.status === "mid"
+                        ? "text-amber-600 dark:text-amber-400"
+                        : "text-rose-600 dark:text-rose-400"
+                    )}
+                  >
+                    {item.score}
+                  </span>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
 
         {/* Action Buttons on Card */}
-        <div className="mt-2 flex items-center justify-between gap-1.5 pt-0.5">
+        <div className="mt-2.5 flex items-center justify-between gap-2 pt-0.5">
           {/* Skip Button */}
           <button
             type="button"
@@ -642,26 +576,20 @@ function SwipeCard({
               performSwipe("left");
             }}
             aria-label="Skip Job"
-            className="flex-1 flex items-center justify-center gap-1 rounded-full border border-rose-200 bg-rose-50/80 py-1.5 text-[10.5px] font-bold text-rose-600 transition-all hover:bg-rose-100 active:scale-95 dark:border-rose-900/60 dark:bg-rose-950/40 dark:text-rose-400 cursor-pointer"
+            className="flex-1 flex items-center justify-center gap-1.5 rounded-full bg-rose-50/90 border border-rose-200/80 py-2 text-[11px] xs:text-xs font-bold text-rose-800 transition-all hover:bg-rose-100 active:scale-95 dark:bg-rose-950/40 dark:border-rose-900/60 dark:text-rose-300 cursor-pointer shadow-xs"
           >
-            <X className="h-3 w-3" />
+            <X className="h-3.5 w-3.5 text-rose-700 dark:text-rose-300 stroke-[2.5]" />
             <span>Skip</span>
           </button>
 
-          {/* Bookmark / Hirance Logo Button */}
+          {/* Bookmark Button */}
           <button
             type="button"
             onClick={(e) => e.stopPropagation()}
             aria-label="Save Job"
-            className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-slate-200 bg-slate-50 p-1.5 transition-all hover:bg-slate-100 hover:scale-105 active:scale-95 dark:border-slate-800 dark:bg-slate-800 cursor-pointer"
+            className="h-8.5 w-8.5 xs:h-9 xs:w-9 shrink-0 flex items-center justify-center rounded-full border border-slate-200 bg-white text-slate-700 transition-all hover:bg-slate-50 active:scale-95 dark:border-slate-800 dark:bg-slate-800 dark:text-slate-300 cursor-pointer shadow-xs"
           >
-            <Image
-              src="/images/icon.png"
-              alt="Hirance Icon"
-              width={16}
-              height={16}
-              className="h-3.5 w-3.5 object-contain"
-            />
+            <Bookmark className="h-4 w-4 stroke-[2]" />
           </button>
 
           {/* Apply Button */}
@@ -672,9 +600,9 @@ function SwipeCard({
               performSwipe("right");
             }}
             aria-label="Apply to Job"
-            className="flex-1 flex items-center justify-center gap-1 rounded-full bg-emerald-600 py-1.5 text-[10.5px] font-bold text-white shadow-sm shadow-emerald-600/25 transition-all hover:bg-emerald-500 active:scale-95 cursor-pointer"
+            className="flex-1 flex items-center justify-center gap-1.5 rounded-full bg-emerald-600 py-2 text-[11px] xs:text-xs font-bold text-white shadow-md shadow-emerald-600/25 transition-all hover:bg-emerald-500 active:scale-95 cursor-pointer"
           >
-            <Check className="h-3 w-3" strokeWidth={2.8} />
+            <Check className="h-4 w-4 stroke-[3]" />
             <span>Apply</span>
           </button>
         </div>
@@ -724,15 +652,13 @@ export function CandidatePhoneMockup() {
       };
     }
 
-    // Evaluate top card match score for direction:
-    // Low Score (< 80) -> Left (Skip)
-    // High Score (>= 80) -> Right (Apply)
     const currentJob = JOBS_DATA[currentIndex];
+    // High match (>= 80) swipes right, otherwise left
     const targetDirection = currentJob.matchScore >= 80 ? "right" : "left";
 
     timerRef.current = setTimeout(() => {
       setAutoSwipeTarget({ id: currentJob.id, direction: targetDirection });
-    }, 1800);
+    }, 2200);
 
     return () => {
       if (timerRef.current) clearTimeout(timerRef.current);
@@ -751,64 +677,81 @@ export function CandidatePhoneMockup() {
       onTouchEnd={() => setIsPaused(false)}
     >
       {/* Smartphone Chassis */}
-      <div className="relative w-[265px] sm:w-[285px] md:w-[295px] rounded-[38px] sm:rounded-[42px] border-[7px] sm:border-[8px] border-slate-900 bg-slate-900 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.45),0_0_0_1px_rgba(255,255,255,0.1)] ring-1 ring-black/80 dark:border-slate-800 dark:ring-white/10 overflow-hidden">
+      <div
+        className="relative w-[260px] xs:w-[278px] sm:w-[292px] md:w-[305px] lg:w-[295px] xl:w-[310px] 2xl:w-[330px] rounded-[34px] xs:rounded-[38px] sm:rounded-[42px] border-[6px] xs:border-[7px] sm:border-[8px] border-slate-900 bg-slate-900 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.45),0_0_0_1px_rgba(255,255,255,0.1)] ring-1 ring-black/80 dark:border-slate-800 dark:ring-white/10 overflow-hidden"
+        style={{
+          transformStyle: "flat",
+          transform: "translateZ(0)",
+          backfaceVisibility: "hidden",
+          WebkitBackfaceVisibility: "hidden",
+        }}
+      >
         {/* Dynamic Island Notch */}
-        <div className="absolute top-2 left-1/2 -translate-x-1/2 z-50 flex h-3.5 w-20 items-center justify-between rounded-full bg-black px-1.5 py-0.5">
-          <div className="h-2 w-2 rounded-full bg-slate-900 border border-slate-800" />
-          <div className="h-1.5 w-1.5 rounded-full bg-blue-950" />
+        <div className="absolute top-1.5 xs:top-2 left-1/2 -translate-x-1/2 z-50 flex h-3 xs:h-3.5 w-18 xs:w-20 items-center justify-between rounded-full bg-black px-1.5 py-0.5">
+          <div className="h-1.5 xs:h-2 w-1.5 xs:w-2 rounded-full bg-slate-900 border border-slate-800" />
+          <div className="h-1 xs:h-1.5 w-1 xs:w-1.5 rounded-full bg-blue-950" />
         </div>
 
         {/* Screen Area */}
-        <div className="relative flex h-[480px] sm:h-[505px] w-full flex-col justify-between bg-slate-100 dark:bg-slate-950 overflow-hidden pt-5">
-          {/* Status Bar */}
-          <div className="px-4 flex items-center justify-between text-[10px] font-bold text-slate-800 dark:text-slate-200 select-none">
-            <span>9:41</span>
-            <div className="flex items-center gap-1">
-              <div className="flex gap-0.5 items-end h-2">
-                <span className="w-0.5 h-0.5 bg-current rounded-full" />
-                <span className="w-0.5 h-1 bg-current rounded-full" />
-                <span className="w-0.5 h-1.5 bg-current rounded-full" />
-                <span className="w-0.5 h-2 bg-current rounded-full" />
-              </div>
-              <span className="text-[9px]">5G</span>
-              <div className="w-4 h-2 rounded-2xs border border-current p-0.5 flex items-center">
-                <div className="h-full w-3/4 bg-current rounded-3xs" />
+        <div
+          className="relative flex h-[485px] xs:h-[510px] sm:h-[530px] md:h-[545px] lg:h-[525px] xl:h-[550px] 2xl:h-[570px] w-full flex-col justify-between bg-slate-50 dark:bg-slate-950 overflow-hidden pt-4 xs:pt-5"
+          style={{
+            isolation: "isolate",
+            transformStyle: "flat",
+            transform: "translate3d(0, 0, 0)",
+            backfaceVisibility: "hidden",
+            WebkitBackfaceVisibility: "hidden",
+          }}
+        >
+          {/* Status Bar (12:29 & 100% Battery) */}
+          <div className="px-3.5 xs:px-4 flex items-center justify-between text-[9.5px] xs:text-[10px] font-bold text-slate-800 dark:text-slate-200 select-none">
+            <span>12:29</span>
+            <div className="flex items-center gap-1.5 text-slate-700 dark:text-slate-300">
+              <Wifi className="h-3 w-3" />
+              <Signal className="h-3 w-3" />
+              {/* Battery indicator with 100 */}
+              <div className="flex items-center rounded-2xs border border-slate-700 dark:border-slate-300 px-1 py-0.2 text-[8px] font-mono leading-none">
+                <span>100</span>
               </div>
             </div>
           </div>
 
-          {/* App Header */}
-          <div className="px-3.5 py-1.5 flex items-center justify-between select-none">
+          {/* App Header with 99+ notifications badge */}
+          <div className="px-3 xs:px-3.5 py-1 xs:py-1.5 flex items-center justify-between select-none">
             <button
               type="button"
-              className="flex h-7 w-7 items-center justify-center rounded-lg bg-white/90 shadow-2xs border border-slate-200 dark:bg-slate-900 dark:border-slate-800 text-slate-700 dark:text-slate-300"
+              className="flex h-7 w-7 items-center justify-center rounded-lg text-slate-800 dark:text-slate-200 hover:bg-slate-200/50"
               aria-label="Filter Preferences"
             >
-              <SlidersHorizontal className="h-3 w-3" />
+              <SlidersHorizontal className="h-4 w-4 stroke-[2]" />
             </button>
 
-            <div className="flex items-center gap-1">
-              <span className="text-xs font-black text-slate-900 dark:text-white">
-                Get Hired Today
-              </span>
-            </div>
+            <span className="text-xs xs:text-sm font-black text-slate-900 dark:text-white tracking-tight">
+              Get Hired Today
+            </span>
 
             <div className="relative">
               <button
                 type="button"
-                className="flex h-7 w-7 items-center justify-center rounded-lg bg-white/90 shadow-2xs border border-slate-200 dark:bg-slate-900 dark:border-slate-800 text-slate-700 dark:text-slate-300"
+                className="flex h-7 w-7 items-center justify-center rounded-lg text-slate-800 dark:text-slate-200 hover:bg-slate-200/50"
                 aria-label="Notifications"
               >
-                <Bell className="h-3 w-3" />
+                <Bell className="h-4 w-4 stroke-[2]" />
               </button>
-              <span className="absolute -top-1 -right-1 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-rose-500 text-[8px] font-black text-white">
-                9+
+              <span className="absolute -top-1 -right-1 flex items-center justify-center rounded-full bg-blue-600 px-1 py-0.2 text-[7.5px] font-black text-white shadow-xs">
+                99+
               </span>
             </div>
           </div>
 
           {/* Card Stack Playground Area */}
-          <div className="relative mx-2.5 flex-1 min-h-0 my-0.5">
+          <div
+            className="relative mx-2 xs:mx-2.5 flex-1 min-h-0 my-0.5"
+            style={{
+              isolation: "isolate",
+              transformStyle: "flat",
+            }}
+          >
             <AnimatePresence>
               {!isDeckFinished ? (
                 visibleJobs.map((job, idx) => (
@@ -831,15 +774,15 @@ export function CandidatePhoneMockup() {
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.4 }}
-                  className="absolute inset-0 rounded-[18px] border border-slate-200 bg-white p-3.5 sm:p-4 shadow-lg flex flex-col items-center justify-center text-center dark:border-slate-800 dark:bg-slate-900"
+                  className="absolute inset-0 rounded-[22px] xs:rounded-[26px] border border-slate-200 bg-white p-3.5 xs:p-4 shadow-lg flex flex-col items-center justify-center text-center dark:border-slate-800 dark:bg-slate-900"
                 >
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-100 text-emerald-600 dark:bg-emerald-950 dark:text-emerald-400 mb-2 shadow-xs">
-                    <Sparkles className="h-5 w-5" />
+                  <div className="flex h-9 w-9 xs:h-10 xs:w-10 items-center justify-center rounded-full bg-emerald-100 text-emerald-600 dark:bg-emerald-950 dark:text-emerald-400 mb-1.5 xs:mb-2 shadow-xs">
+                    <Sparkles className="h-4 w-4 xs:h-5 xs:w-5" />
                   </div>
-                  <h4 className="text-sm sm:text-base font-black text-slate-900 dark:text-white">
+                  <h4 className="text-xs xs:text-sm sm:text-base font-black text-slate-900 dark:text-white">
                     All Caught Up! 🎉
                   </h4>
-                  <p className="mt-1 text-[10px] sm:text-[10.5px] leading-relaxed text-slate-500 dark:text-slate-400 max-w-[200px]">
+                  <p className="mt-0.5 xs:mt-1 text-[9px] xs:text-[10px] sm:text-[10.5px] leading-relaxed text-slate-500 dark:text-slate-400 max-w-[190px] xs:max-w-[200px]">
                     Ready to get hired? Get the Hirance mobile app on Google Play.
                   </p>
 
@@ -849,9 +792,14 @@ export function CandidatePhoneMockup() {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label="Get Hirance App on Google Play"
-                    className="mt-3.5 flex items-center justify-center gap-2 rounded-full bg-slate-950 px-4 py-2 text-[11px] font-extrabold text-white shadow-md shadow-slate-950/20 transition-all hover:scale-105 active:scale-95 dark:bg-white dark:text-slate-950 border border-slate-800 dark:border-slate-200 w-full max-w-[215px]"
+                    className="mt-2.5 xs:mt-3.5 flex items-center justify-center gap-1.5 xs:gap-2 rounded-full bg-slate-950 px-3.5 xs:px-4 py-1.5 xs:py-2 text-[10px] xs:text-[11px] font-extrabold text-white shadow-md shadow-slate-950/20 transition-all hover:scale-105 active:scale-95 dark:bg-white dark:text-slate-950 border border-slate-800 dark:border-slate-200 w-full max-w-[200px] xs:max-w-[215px]"
                   >
-                    <svg className="h-4 w-4 shrink-0" viewBox="0 0 512 512" fill="none" aria-hidden="true">
+                    <svg
+                      className="h-3.5 w-3.5 xs:h-4 xs:w-4 shrink-0"
+                      viewBox="0 0 512 512"
+                      fill="none"
+                      aria-hidden="true"
+                    >
                       <path
                         d="M47 24.6c-5.2 5.6-8.3 14.2-8.3 25.4v412c0 11.2 3.1 19.8 8.3 25.4l1.4 1.3 230.9-230.9v-5.4L48.4 23.4 47 24.6z"
                         fill="#00D3FF"
@@ -876,64 +824,71 @@ export function CandidatePhoneMockup() {
                   <button
                     type="button"
                     onClick={handleReset}
-                    className="mt-2 flex items-center justify-center gap-1.5 rounded-full border border-slate-200 bg-slate-50 px-3.5 py-1.5 text-[10px] font-bold text-slate-700 transition-all hover:bg-slate-100 active:scale-95 dark:border-slate-800 dark:bg-slate-800/80 dark:text-slate-300 w-full max-w-[215px]"
+                    className="mt-1.5 xs:mt-2 flex items-center justify-center gap-1.5 rounded-full border border-slate-200 bg-slate-50 px-3 xs:px-3.5 py-1 xs:py-1.5 text-[9.5px] xs:text-[10px] font-bold text-slate-700 transition-all hover:bg-slate-100 active:scale-95 dark:border-slate-800 dark:bg-slate-800/80 dark:text-slate-300 w-full max-w-[200px] xs:max-w-[215px]"
                   >
-                    <RotateCcw className="h-3 w-3 text-slate-500" />
+                    <RotateCcw className="h-2.5 w-2.5 xs:h-3 xs:w-3 text-slate-500" />
                     <span>Reset Demo Deck</span>
                   </button>
                 </motion.div>
               )}
             </AnimatePresence>
-
-            {/* Interactive Swipe Hint Indicator */}
-            {!isDeckFinished && (
-              <div className="pointer-events-none absolute -bottom-0.5 inset-x-0 flex items-center justify-center gap-1 text-[9px] font-semibold text-slate-400 dark:text-slate-500">
-                <Hand className="h-2.5 w-2.5 animate-pulse text-blue-500" />
-                <span>Swipe left to Skip • right to Apply</span>
-              </div>
-            )}
           </div>
 
           {/* Bottom App Navigation Bar */}
-          <div className="px-4 py-1.5 bg-white/95 border-t border-slate-200/80 dark:bg-slate-900/95 dark:border-slate-800 flex items-center justify-between select-none">
+          <div className="px-3 xs:px-4 py-1.5 bg-white border-t border-slate-100 dark:bg-slate-900 dark:border-slate-800 flex items-center justify-around select-none">
+            {/* Swipe (Active) */}
             <button
               type="button"
-              className="flex flex-col items-center gap-0.5 text-blue-600 dark:text-blue-400"
+              className="flex flex-col items-center gap-0.5 text-blue-600"
             >
-              <Layers className="h-3.5 w-3.5" />
-              <span className="text-[8px] font-extrabold">Swipe</span>
+              <div className="rounded-2xl bg-blue-100/70 px-3.5 py-0.5 flex items-center justify-center">
+                <Layers className="h-3.5 w-3.5 stroke-[2.5]" />
+              </div>
+              <span className="text-[8.5px] font-extrabold">Swipe</span>
             </button>
+
+            {/* My Jobs */}
             <button
               type="button"
               className="flex flex-col items-center gap-0.5 text-slate-400 hover:text-slate-600 dark:text-slate-500"
             >
-              <Briefcase className="h-3.5 w-3.5" />
-              <span className="text-[8px] font-medium">My Jobs</span>
+              <Briefcase className="h-4 w-4 stroke-[2]" />
+              <span className="text-[8.5px] font-medium">My Jobs</span>
             </button>
+
+            {/* Messages */}
             <div className="relative">
               <button
                 type="button"
                 className="flex flex-col items-center gap-0.5 text-slate-400 hover:text-slate-600 dark:text-slate-500"
               >
-                <MessageSquare className="h-3.5 w-3.5" />
-                <span className="text-[8px] font-medium">Messages</span>
+                <MessageSquare className="h-4 w-4 stroke-[2]" />
+                <span className="text-[8.5px] font-medium">Messages</span>
               </button>
-              <span className="absolute -top-1 -right-1 flex h-3 w-3 items-center justify-center rounded-full bg-blue-500 text-[7px] font-black text-white">
-                60
+              <span className="absolute -top-1 -right-1 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-blue-500 text-[7px] font-black text-white">
+                10
               </span>
             </div>
+
+            {/* Profile */}
             <button
               type="button"
               className="flex flex-col items-center gap-0.5 text-slate-400 hover:text-slate-600 dark:text-slate-500"
             >
-              <User className="h-3.5 w-3.5" />
-              <span className="text-[8px] font-medium">Profile</span>
+              <User className="h-4 w-4 stroke-[2]" />
+              <span className="text-[8.5px] font-medium">Profile</span>
             </button>
           </div>
 
-          {/* iOS Home Indicator Bar */}
-          <div className="flex justify-center pb-1 bg-white/95 dark:bg-slate-900/95">
-            <div className="h-0.5 w-20 rounded-full bg-slate-300 dark:bg-slate-700" />
+          {/* Android System Nav Bar */}
+          <div className="flex items-center justify-around px-8 py-0.5 text-slate-400 dark:text-slate-600 select-none bg-white dark:bg-slate-900 border-t border-slate-50 dark:border-slate-800">
+            <div className="flex flex-col gap-0.5">
+              <div className="w-2.5 h-0.5 bg-current rounded-full" />
+              <div className="w-2.5 h-0.5 bg-current rounded-full" />
+              <div className="w-2.5 h-0.5 bg-current rounded-full" />
+            </div>
+            <div className="w-2 h-2 rounded-2xs border border-current" />
+            <div className="text-[9px] leading-none">⟨</div>
           </div>
         </div>
       </div>
@@ -957,4 +912,3 @@ export function CandidatePhoneMockup() {
     </div>
   );
 }
-
