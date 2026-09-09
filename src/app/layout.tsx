@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { fontSans, fontMono } from "@/lib/fonts";
 import { Providers } from "@/providers";
-import { Navbar, GradientBackground } from "@/components/shared";
+import { Navbar, GradientBackground, LaunchWrapper } from "@/components/shared";
 import { siteConfig } from "@/config/site";
 import "./globals.css";
 
@@ -73,9 +73,11 @@ export default function RootLayout({
         suppressHydrationWarning
       >
         <Providers>
-          <GradientBackground />
-          <Navbar />
-          {children}
+          <LaunchWrapper>
+            <GradientBackground />
+            <Navbar />
+            {children}
+          </LaunchWrapper>
         </Providers>
       </body>
     </html>
