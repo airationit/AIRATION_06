@@ -119,6 +119,5 @@ export const siteConfig = {
     { label: "About Us", href: "/about-us" },
     { label: "Blog", href: "/blog" },
     { label: "Contact", href: "/contact" },
-    { label: "QR-marketing", href: "/qr-marketing" },
   ],
 };

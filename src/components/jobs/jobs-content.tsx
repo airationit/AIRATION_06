@@ -481,7 +481,7 @@ export function JobsContent({
   ]);
 
   return (
-    <main className="relative flex min-h-dvh flex-col overflow-x-clip bg-white dark:bg-background pt-28 sm:pt-32 transition-colors">
+    <main className="relative flex min-h-dvh flex-col overflow-x-clip bg-white dark:bg-background pt-6 sm:pt-8 transition-colors">
       <div className="container mx-auto px-4 sm:px-6 max-w-7xl pb-0">
         {/* Breadcrumb Navigation */}
         <nav
