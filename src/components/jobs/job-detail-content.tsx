@@ -75,7 +75,7 @@ export function JobDetailContent({ job, relatedJobs = [] }: JobDetailContentProp
         <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-border to-transparent" />
       </div>
 
-      <div className="container mx-auto px-4 sm:px-6 max-w-6xl pt-28 pb-24 sm:pt-36">
+      <div className="container mx-auto px-4 sm:px-6 max-w-6xl pt-6 pb-24 sm:pt-8">
         {/* Navigation / Breadcrumb Row */}
         <div className="flex flex-wrap items-center justify-between gap-3 pb-6 border-b border-border/50">
           <nav

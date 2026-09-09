@@ -25,3 +25,5 @@ This version has breaking changes — APIs, conventions, and file structure may 
 9 - dont use too much text content , we have to make it short crisp and professional
 
 10 - this is a proffesional job hiring platform hirance.com , so it should be not looking ai generated , make it humanized and appealing
+
+11- dont check git diff again and again it frustrating , do only when it its related to git or github
