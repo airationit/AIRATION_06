@@ -25,20 +25,30 @@ export function JobSeoLinks({ currentRoleSlug, currentCitySlug }: JobSeoLinksPro
 
   // 1. All Cities List (Tier 1 & Tier 2)
   const allCities = useMemo(() => {
-    if (cities && cities.length > 0) {
-      return cities.map((c) => ({
-        slug: c.name.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
-        name: c.name,
-      }));
+    const rawCities =
+      cities && cities.length > 0
+        ? cities.map((c) => ({
+          slug: (c as { slug?: string }).slug || c.name.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
+          name: c.name,
+        }))
+        : POPULAR_CITIES;
+
+    const seen = new Set<string>();
+    const result: Array<{ slug: string; name: string }> = [];
+    for (const city of rawCities) {
+      if (city.slug && !seen.has(city.slug)) {
+        seen.add(city.slug);
+        result.push(city);
+      }
     }
-    return POPULAR_CITIES;
+    return result;
   }, [cities]);
 
   const visibleCities = showAllCities ? allCities : allCities.slice(0, 10);
 
   // 2. Popular Job Roles & Special Tracks
-  const popularRolesAndTracks = useMemo(
-    () => [
+  const popularRolesAndTracks = useMemo(() => {
+    const items = [
       { label: "Frontend Developer Jobs", slug: "frontend-developer" },
       { label: "Full Stack Developer Jobs", slug: "full-stack-developer" },
       { label: "React Developer Jobs", slug: "react-developer" },
@@ -61,17 +71,22 @@ export function JobSeoLinks({ currentRoleSlug, currentCitySlug }: JobSeoLinksPro
       { label: "DevOps & Cloud Jobs", slug: "devops-engineer" },
       { label: "QA & Software Testing Jobs", slug: "qa-automation-engineer" },
       { label: "Verified Employer Jobs", slug: "verified-jobs" },
-    ],
-    []
-  );
+    ];
+    const seen = new Set<string>();
+    return items.filter((item) => {
+      if (seen.has(item.slug)) return false;
+      seen.add(item.slug);
+      return true;
+    });
+  }, []);
 
   const visiblePopularRoles = showAllPopular
     ? popularRolesAndTracks
     : popularRolesAndTracks.slice(0, 10);
 
   // 3. Jobs by Department / Category
-  const departments = useMemo(
-    () => [
+  const departments = useMemo(() => {
+    const items = [
       { label: "Engineering & Software Development", slug: "software-developer-jobs" },
       { label: "Data Science, Analytics & AI", slug: "data-analyst" },
       { label: "Design, UI/UX & Creative", slug: "ui-ux-designer" },
@@ -81,13 +96,18 @@ export function JobSeoLinks({ currentRoleSlug, currentCitySlug }: JobSeoLinksPro
       { label: "Human Resources & Talent Acquisition", slug: "hr-manager" },
       { label: "Accounting, Banking & Finance", slug: "accountant" },
       { label: "Customer Support & Telecalling", slug: "customer-support-associate" },
-    ],
-    []
-  );
+    ];
+    const seen = new Set<string>();
+    return items.filter((item) => {
+      if (seen.has(item.slug)) return false;
+      seen.add(item.slug);
+      return true;
+    });
+  }, []);
 
   // 4. High-Demand Role & Location Combinations
-  const trendingHubs = useMemo(
-    () => [
+  const trendingHubs = useMemo(() => {
+    const items = [
       { label: "React Developers in Bangalore", slug: "react-developer-in-bangalore" },
       { label: "Remote Frontend Engineers", slug: "remote-frontend-developer" },
       { label: "UI/UX Designers in Mumbai", slug: "ui-ux-designer-in-mumbai" },
@@ -106,18 +126,23 @@ export function JobSeoLinks({ currentRoleSlug, currentCitySlug }: JobSeoLinksPro
       { label: "Sales Executives in Jaipur", slug: "sales-executive-in-jaipur" },
       { label: "HR Executives in Chandigarh", slug: "hr-manager-in-chandigarh" },
       { label: "Software Engineers in Kochi", slug: "full-stack-developer-in-kochi" },
-    ],
-    []
-  );
+    ];
+    const seen = new Set<string>();
+    return items.filter((item) => {
+      if (seen.has(item.slug)) return false;
+      seen.add(item.slug);
+      return true;
+    });
+  }, []);
 
   const visibleTrendingHubs = showAllHubs ? trendingHubs : trendingHubs.slice(0, 10);
 
   return (
     <section
       aria-labelledby="career-directory-heading"
-      className="mt-14 sm:mt-20 w-full bg-slate-50/50 dark:bg-slate-900/20 py-10"
+      className="w-full bg-slate-100/90 dark:bg-slate-900/80 border-t border-border/60 py-8 sm:py-10"
     >
-      <div className="container mx-auto px-4 max-w-6xl flex flex-col gap-10">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 flex flex-col gap-10">
 
         {/* SECTION 1: JOBS BY LOCATION (Find Jobs) */}
         <div id="directory-cities" className="pb-8 border-b border-border/40 scroll-mt-32">
@@ -125,7 +150,7 @@ export function JobSeoLinks({ currentRoleSlug, currentCitySlug }: JobSeoLinksPro
             Find Jobs
           </h3>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-y-5 gap-x-6">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-y-3.5 gap-x-4 sm:gap-x-6">
             {visibleCities.map((city) => {
               const isActive = currentCitySlug === city.slug;
               return (
@@ -133,7 +158,7 @@ export function JobSeoLinks({ currentRoleSlug, currentCitySlug }: JobSeoLinksPro
                   key={city.slug}
                   href={`/jobs/jobs-in-${city.slug}`}
                   className={cn(
-                    "text-sm font-medium transition-all duration-150 truncate",
+                    "text-sm font-medium transition-all duration-150 truncate hover:underline hover:underline-offset-4",
                     isActive
                       ? "text-brand-600 dark:text-brand-400 font-semibold"
                       : "text-muted-foreground hover:text-foreground"
@@ -169,7 +194,7 @@ export function JobSeoLinks({ currentRoleSlug, currentCitySlug }: JobSeoLinksPro
             Popular Jobs
           </h3>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-y-5 gap-x-6">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-y-3.5 gap-x-4 sm:gap-x-6">
             {visiblePopularRoles.map((role) => {
               const isActive = currentRoleSlug === role.slug;
               return (
@@ -177,7 +202,7 @@ export function JobSeoLinks({ currentRoleSlug, currentCitySlug }: JobSeoLinksPro
                   key={role.slug}
                   href={`/jobs/${role.slug}`}
                   className={cn(
-                    "text-sm font-medium transition-all duration-150 truncate",
+                    "text-sm font-medium transition-all duration-150 truncate hover:underline hover:underline-offset-4",
                     isActive
                       ? "text-brand-600 dark:text-brand-400 font-semibold"
                       : "text-muted-foreground hover:text-foreground"
@@ -213,12 +238,12 @@ export function JobSeoLinks({ currentRoleSlug, currentCitySlug }: JobSeoLinksPro
             Jobs by Department
           </h3>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-y-5 gap-x-6">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-y-3.5 gap-x-4 sm:gap-x-6">
             {departments.map((dept) => (
               <Link
                 key={dept.slug}
                 href={`/jobs/${dept.slug}`}
-                className="text-sm font-medium text-muted-foreground hover:text-foreground transition-all duration-150 truncate"
+                className="text-sm font-medium text-muted-foreground hover:text-foreground hover:underline hover:underline-offset-4 transition-all duration-150 truncate"
               >
                 {dept.label}
               </Link>
@@ -232,12 +257,12 @@ export function JobSeoLinks({ currentRoleSlug, currentCitySlug }: JobSeoLinksPro
             Trending Career Hubs
           </h3>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-y-5 gap-x-6">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-y-3.5 gap-x-4 sm:gap-x-6">
             {visibleTrendingHubs.map((hub) => (
               <Link
                 key={hub.slug}
                 href={`/jobs/${hub.slug}`}
-                className="text-sm font-medium text-muted-foreground hover:text-foreground transition-all duration-150 truncate"
+                className="text-sm font-medium text-muted-foreground hover:text-foreground hover:underline hover:underline-offset-4 transition-all duration-150 truncate"
               >
                 {hub.label}
               </Link>

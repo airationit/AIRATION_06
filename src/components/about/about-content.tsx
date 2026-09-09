@@ -394,7 +394,7 @@ export function AboutContent() {
 
       {/* FAQ Section (Clean & Professional Accordion) */}
       <section id="faq" className="relative border-t border-border/50 py-16 sm:py-24">
-        <div className="mx-auto max-w-4xl px-6">
+        <div className="mx-auto max-w-6xl px-6">
           <div className="text-center space-y-3">
             <h2 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-foreground">
               Frequently Asked{" "}
@@ -416,36 +416,34 @@ export function AboutContent() {
                   setActiveCategory(cat);
                   setOpenFaq(0);
                 }}
-                className={`rounded-full px-5 py-2 text-xs sm:text-sm font-semibold transition-all duration-200 ${
-                  activeCategory === cat
-                    ? "bg-blue-600 text-white shadow-md shadow-blue-600/20 dark:bg-blue-600 dark:text-white"
-                    : "bg-muted/60 text-muted-foreground hover:bg-muted hover:text-foreground"
-                }`}
+                className={`rounded-full px-5 py-2 text-xs sm:text-sm font-semibold transition-all duration-200 ${activeCategory === cat
+                  ? "bg-blue-600 text-white shadow-md shadow-blue-600/20 dark:bg-blue-600 dark:text-white"
+                  : "bg-muted/60 text-muted-foreground hover:bg-muted hover:text-foreground"
+                  }`}
               >
                 {cat === "All" ? "All Questions" : cat}
               </button>
             ))}
           </div>
 
-          {/* Accordion FAQ List (Clean Lines, No Cards) */}
-          <div className="mt-10 divide-y divide-border/40 border-y border-border/40">
+          {/* Accordion FAQ List (4-sided rounded border card) */}
+          <div className="mt-10 divide-y divide-border/40 border border-border/60 rounded-xl px-5 py-3.5 sm:px-8 sm:py-4 shadow-sm">
             {filteredFaqs.map((faq, idx) => {
               const isOpen = openFaq === idx;
               return (
-                <div key={idx} className="py-4 sm:py-5 transition-colors">
+                <div key={idx} className="py-3 sm:py-3.5 first:pt-0 last:pb-0 transition-colors">
                   <button
                     onClick={() => setOpenFaq(isOpen ? null : idx)}
                     aria-expanded={isOpen}
                     aria-controls={`about-faq-answer-${idx}`}
                     className="flex w-full items-start justify-between gap-4 text-left group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-lg py-1"
                   >
-                    <span className="text-base sm:text-lg font-bold text-foreground group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                    <span className="text-base font-medium text-foreground group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
                       {faq.question}
                     </span>
                     <span
-                      className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 transition-transform duration-200 ${
-                        isOpen ? "rotate-180 bg-blue-600 text-white dark:text-white" : ""
-                      }`}
+                      className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 transition-transform duration-200 ${isOpen ? "rotate-180 bg-blue-600 text-white dark:text-white" : ""
+                        }`}
                     >
                       <ChevronDown className="h-4 w-4" />
                     </span>

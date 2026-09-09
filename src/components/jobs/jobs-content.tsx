@@ -70,11 +70,11 @@ export function JobsContent({
   initialSearch = "",
 }: JobsContentProps) {
   const reducedMotion = useReducedMotion();
-  
+
   // FAQ state management (matching how-it-works format)
   const [openFaq, setOpenFaq] = useState<number | null>(0);
   const [activeCategory, setActiveCategory] = useState<string>("All Questions");
-  
+
   const filteredFaqs = faqs.filter(
     (faq) => activeCategory === "All Questions" || faq.category === activeCategory
   );
@@ -83,11 +83,11 @@ export function JobsContent({
     reducedMotion
       ? {}
       : {
-          initial: { opacity: 0, y: 20 },
-          whileInView: { opacity: 1, y: 0 },
-          viewport: { once: true, margin: "-50px" },
-          transition: { duration: 0.5, delay, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] },
-        };
+        initial: { opacity: 0, y: 20 },
+        whileInView: { opacity: 1, y: 0 },
+        viewport: { once: true, margin: "-50px" },
+        transition: { duration: 0.5, delay, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] },
+      };
 
   const {
     loadMasterdata,
@@ -257,6 +257,7 @@ export function JobsContent({
   }, [initialSearch]);
 
   const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
+  const [isLocationExpanded, setIsLocationExpanded] = useState(false);
 
   // Fetch jobs dynamically from backend on page or filter changes
   const executeSearch = useCallback(
@@ -266,9 +267,9 @@ export function JobsContent({
         const skillsQuery =
           activeFilters.selectedSkillIds.length > 0
             ? skills
-                .filter((s) => activeFilters.selectedSkillIds.includes(s.id))
-                .map((s) => s.name)
-                .join(",")
+              .filter((s) => activeFilters.selectedSkillIds.includes(s.id))
+              .map((s) => s.name)
+              .join(",")
             : undefined;
 
         const res = await getJobs({
@@ -376,10 +377,10 @@ export function JobsContent({
         (filters.workModeId === "585ed3ae-c9eb-4f89-a715-33544efa1c07" || filters.workModeId === "onsite"
           ? "Work from Office"
           : filters.workModeId === "8c974af2-6d8b-49c8-b891-0a5ce9847024" || filters.workModeId === "field"
-          ? "Field Job"
-          : filters.workModeId === "bf5f80ba-b651-47c0-be52-9978569789d7" || filters.workModeId === "remote"
-          ? "Work from Home"
-          : filters.workModeId);
+            ? "Field Job"
+            : filters.workModeId === "bf5f80ba-b651-47c0-be52-9978569789d7" || filters.workModeId === "remote"
+              ? "Work from Home"
+              : filters.workModeId);
       tags.push({
         id: "mode",
         label,
@@ -394,10 +395,10 @@ export function JobsContent({
         (filters.jobTypeId === "c2e13590-f69f-4bd4-9545-09cf81daae9e" || filters.jobTypeId === "full-time"
           ? "Full Time"
           : filters.jobTypeId === "fdde7c2d-88e6-4ecf-9fb5-596ca7f81c69" || filters.jobTypeId === "part-time"
-          ? "Part Time"
-          : filters.jobTypeId === "28ecf748-85c0-4deb-9133-8f24ec85fc11" || filters.jobTypeId === "both"
-          ? "Both (Full-Time/Part-Time)"
-          : filters.jobTypeId);
+            ? "Part Time"
+            : filters.jobTypeId === "28ecf748-85c0-4deb-9133-8f24ec85fc11" || filters.jobTypeId === "both"
+              ? "Both (Full-Time/Part-Time)"
+              : filters.jobTypeId);
       tags.push({
         id: "type",
         label,
@@ -412,10 +413,10 @@ export function JobsContent({
         (filters.workShiftId === "f7d70b0b-57c0-4014-8002-7d170de4c299" || filters.workShiftId === "day"
           ? "Day Shift"
           : filters.workShiftId === "6e9a009a-35af-4bfe-baa9-a77b56ca443b" || filters.workShiftId === "night"
-          ? "Night Shift"
-          : filters.workShiftId === "8a5eafb2-daef-4246-9e58-5331a2c94dcd" || filters.workShiftId === "hybrid"
-          ? "Hybrid"
-          : filters.workShiftId);
+            ? "Night Shift"
+            : filters.workShiftId === "8a5eafb2-daef-4246-9e58-5331a2c94dcd" || filters.workShiftId === "hybrid"
+              ? "Hybrid"
+              : filters.workShiftId);
       tags.push({
         id: "shift",
         label,
@@ -480,8 +481,8 @@ export function JobsContent({
   ]);
 
   return (
-    <main className="min-h-dvh bg-white dark:bg-background pt-28 sm:pt-32 transition-colors flex flex-col justify-between">
-      <div className="container mx-auto px-4 sm:px-6 max-w-7xl pb-20 flex-1">
+    <main className="relative flex min-h-dvh flex-col overflow-x-clip bg-white dark:bg-background pt-28 sm:pt-32 transition-colors">
+      <div className="container mx-auto px-4 sm:px-6 max-w-7xl pb-0">
         {/* Breadcrumb Navigation */}
         <nav
           aria-label="Breadcrumb"
@@ -508,7 +509,7 @@ export function JobsContent({
         <div className="mt-6 mb-6 sm:mt-8 sm:mb-8">
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
             <div>
-              <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl lg:text-5xl">
+              <h1 className="text-[1.8rem] font-bold tracking-tight text-foreground">
                 {heading}
               </h1>
               <p className="mt-2.5 max-w-2xl text-sm sm:text-base text-muted-foreground leading-relaxed">
@@ -818,6 +819,7 @@ export function JobsContent({
               totalJobsCount={totalJobs}
               isMobileDrawerOpen={isMobileDrawerOpen}
               onCloseMobileDrawer={() => setIsMobileDrawerOpen(false)}
+              onLocationToggle={setIsLocationExpanded}
             />
           </div>
 
@@ -1012,41 +1014,74 @@ export function JobsContent({
               </div>
             )}
 
-            {/* Mobile App Callout Banner */}
-            <div className="mt-12 overflow-hidden rounded-3xl border border-brand-500/20 bg-gradient-to-br from-brand-50 via-card to-indigo-50/70 dark:from-brand-950/30 dark:via-card dark:to-indigo-950/30 p-6 sm:p-8 backdrop-blur-md shadow-xs">
-              <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-                <div className="space-y-2 text-center md:text-left">
-                  <div className="inline-flex items-center gap-1.5 rounded-full border border-brand-200 bg-brand-50 dark:border-brand-500/20 dark:bg-brand-500/10 px-3 py-1 text-xs font-semibold text-brand-700 dark:text-brand-400">
-                    <Sparkles className="h-3.5 w-3.5" />
-                    <span>Swipe-Based Hiring</span>
+            {/* Mobile App Callout Banner (when location filter is expanded) */}
+            {isLocationExpanded && (
+              <div className="mt-12 overflow-hidden rounded-3xl border border-brand-500/20 bg-gradient-to-br from-brand-50 via-card to-indigo-50/70 dark:from-brand-950/30 dark:via-card dark:to-indigo-950/30 p-6 sm:p-8 backdrop-blur-md shadow-xs">
+                <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+                  <div className="space-y-2 text-center md:text-left">
+                    <div className="inline-flex items-center gap-1.5 rounded-full border border-brand-200 bg-brand-50 dark:border-brand-500/20 dark:bg-brand-500/10 px-3 py-1 text-xs font-semibold text-brand-700 dark:text-brand-400">
+                      <Sparkles className="h-3.5 w-3.5" />
+                      <span>Swipe-Based Hiring</span>
+                    </div>
+                    <h3 className="text-xl font-bold tracking-tight text-foreground sm:text-2xl">
+                      Get interviewed 3x faster with the Hirance App
+                    </h3>
+                    <p className="max-w-xl text-xs sm:text-sm text-muted-foreground">
+                      Skip long application forms. Swipe right on roles you like and chat directly with verified hiring teams.
+                    </p>
                   </div>
-                  <h3 className="text-xl font-bold tracking-tight text-foreground sm:text-2xl">
-                    Get interviewed 3x faster with the Hirance App
-                  </h3>
-                  <p className="max-w-xl text-xs sm:text-sm text-muted-foreground">
-                    Skip long application forms. Swipe right on roles you like and chat directly with verified hiring teams.
-                  </p>
-                </div>
 
-                <a
-                  href={siteConfig.links.playStore}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 rounded-xl bg-brand-600 px-5 py-3 text-sm font-bold text-white shadow-md transition-all hover:bg-brand-500 hover:shadow-lg shrink-0"
-                >
-                  <Smartphone className="h-4 w-4" />
-                  <span>Download Hirance App</span>
-                  <ArrowUpRight className="h-4 w-4" />
-                </a>
+                  <a
+                    href={siteConfig.links.playStore}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 rounded-xl bg-brand-600 px-5 py-3 text-sm font-bold text-white shadow-md transition-all hover:bg-brand-500 hover:shadow-lg shrink-0"
+                  >
+                    <Smartphone className="h-4 w-4" />
+                    <span>Download Hirance App</span>
+                    <ArrowUpRight className="h-4 w-4" />
+                  </a>
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
 
+        {/* Mobile App Callout Banner (Full width when location filter is not expanded) */}
+        {!isLocationExpanded && (
+          <div className="mt-10 overflow-hidden rounded-3xl border border-brand-500/20 bg-gradient-to-br from-brand-50 via-card to-indigo-50/70 dark:from-brand-950/30 dark:via-card dark:to-indigo-950/30 p-6 sm:p-8 backdrop-blur-md shadow-xs">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+              <div className="space-y-2 text-center md:text-left">
+                <div className="inline-flex items-center gap-1.5 rounded-full border border-brand-200 bg-brand-50 dark:border-brand-500/20 dark:bg-brand-500/10 px-3 py-1 text-xs font-semibold text-brand-700 dark:text-brand-400">
+                  <Sparkles className="h-3.5 w-3.5" />
+                  <span>Swipe-Based Hiring</span>
+                </div>
+                <h3 className="text-xl font-bold tracking-tight text-foreground sm:text-2xl">
+                  Get interviewed 3x faster with the Hirance App
+                </h3>
+                <p className="max-w-xl text-xs sm:text-sm text-muted-foreground">
+                  Skip long application forms. Swipe right on roles you like and chat directly with verified hiring teams.
+                </p>
+              </div>
+
+              <a
+                href={siteConfig.links.playStore}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-xl bg-brand-600 px-5 py-3 text-sm font-bold text-white shadow-md transition-all hover:bg-brand-500 hover:shadow-lg shrink-0"
+              >
+                <Smartphone className="h-4 w-4" />
+                <span>Download Hirance App</span>
+                <ArrowUpRight className="h-4 w-4" />
+              </a>
+            </div>
+          </div>
+        )}
+
         {/* FAQ Section - Matching How It Works Page Style */}
-        <section id="faq" className="relative py-20 sm:py-28 overflow-hidden border-t border-border/30">
-          <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 relative z-10">
-            
+        <section id="faq" className="relative pt-14 pb-8 sm:pt-16 sm:pb-10 overflow-hidden border-t border-border/30">
+          <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 relative z-10">
+
             {/* Section Header (Clean & Professional) */}
             <div className="text-center space-y-3">
               <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-foreground leading-tight">
@@ -1069,36 +1104,34 @@ export function JobsContent({
                     setActiveCategory(cat);
                     setOpenFaq(0);
                   }}
-                  className={`rounded-full px-5 py-2 text-xs sm:text-sm font-semibold transition-all duration-200 ${
-                    activeCategory === cat
-                      ? "bg-brand-600 text-white shadow-md shadow-brand-600/20"
-                      : "bg-muted/60 text-muted-foreground hover:bg-muted hover:text-foreground"
-                  }`}
+                  className={`rounded-full px-5 py-2 text-xs sm:text-sm font-semibold transition-all duration-200 ${activeCategory === cat
+                    ? "bg-brand-600 text-white shadow-md shadow-brand-600/20"
+                    : "bg-muted/60 text-muted-foreground hover:bg-muted hover:text-foreground"
+                    }`}
                 >
                   {cat}
                 </button>
               ))}
             </div>
 
-            {/* Accordion FAQ Items (Clean Lines, No Cards) */}
-            <div className="mt-10 divide-y divide-border/40 border-y border-border/40">
+            {/* Accordion FAQ Items (4-sided rounded border card) */}
+            <div className="mt-10 divide-y divide-border/40 border border-border/60 rounded-xl px-5 py-3.5 sm:px-8 sm:py-4 shadow-sm">
               {filteredFaqs.map((faq, idx) => {
                 const isOpen = openFaq === idx;
                 return (
-                  <div key={idx} className="py-4 sm:py-5 transition-colors">
+                  <div key={idx} className="py-3 sm:py-3.5 first:pt-0 last:pb-0 transition-colors">
                     <button
                       onClick={() => setOpenFaq(isOpen ? null : idx)}
                       aria-expanded={isOpen}
                       aria-controls={`faq-answer-${idx}`}
                       className="flex w-full items-start justify-between gap-4 text-left group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 rounded-lg py-1"
                     >
-                      <span className="text-base sm:text-lg font-bold text-foreground group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">
+                      <span className="text-base font-medium text-foreground group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">
                         {faq.question}
                       </span>
                       <span
-                        className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand-500/10 text-brand-600 dark:text-brand-400 transition-transform duration-200 ${
-                          isOpen ? "rotate-180 bg-brand-600 text-white dark:text-white" : ""
-                        }`}
+                        className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand-500/10 text-brand-600 dark:text-brand-400 transition-transform duration-200 ${isOpen ? "rotate-180 bg-brand-600 text-white dark:text-white" : ""
+                          }`}
                       >
                         <ChevronDown className="h-4 w-4" />
                       </span>
@@ -1127,10 +1160,10 @@ export function JobsContent({
 
           </div>
         </section>
-
-        {/* Full-Width Programmatic SEO Career Hubs */}
-        <JobSeoLinks currentRoleSlug={roleSlug} currentCitySlug={citySlug} />
       </div>
+
+      {/* Full-Width Programmatic SEO Career Hubs */}
+      <JobSeoLinks currentRoleSlug={roleSlug} currentCitySlug={citySlug} />
 
       {/* Footer */}
       <Footer />

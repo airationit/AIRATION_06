@@ -20,6 +20,7 @@ export function Navbar({ className }: NavbarProps) {
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const [mobileJobsOpen, setMobileJobsOpen] = useState(false)
+  const [mobileServicesOpen, setMobileServicesOpen] = useState(false)
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
   const actionsRef = useRef<HTMLDivElement>(null)
   const [actionsWidth, setActionsWidth] = useState(0)
@@ -78,9 +79,9 @@ export function Navbar({ className }: NavbarProps) {
         transition={{ duration: 0.7, ease: [0.25, 0.1, 0.25, 1] }}
         className={cn(
           "w-full transition-all duration-300 ease-out",
-          "fixed inset-x-0 top-0 z-50 md:absolute",
+          "fixed inset-x-0 top-0 z-50",
           scrolled || menuOpen
-            ? "border-b border-border/50 bg-white/95 py-3 shadow-xs backdrop-blur-md md:border-transparent md:bg-transparent md:py-4 md:shadow-none md:backdrop-blur-none sm:md:pt-5"
+            ? "border-b border-border/50 bg-white/95 py-4 shadow-xs backdrop-blur-md"
             : "border-b border-transparent bg-transparent py-4 sm:py-5",
           "px-6 sm:px-10 lg:px-16 xl:px-24",
           className
@@ -176,6 +177,52 @@ export function Navbar({ className }: NavbarProps) {
                   </Link>
                 )
 
+                const hasServicesMegaNav = "servicesMegaNav" in item && (item as any).servicesMegaNav
+
+                if (hasServicesMegaNav) {
+                  return (
+                    <div
+                      key={item.href}
+                      className="relative group"
+                      onMouseEnter={() => setHoveredIndex(index)}
+                    >
+                      {linkElement}
+                      <div className="absolute top-full left-1/2 -translate-x-1/2 pt-2 hidden group-hover:block z-50">
+                        <div className="flex w-[680px] bg-white rounded-2xl shadow-xl border border-border/50 p-5 divide-x divide-border/40 relative">
+                          {(item as any).servicesMegaNav.map((col: any, colIdx: number) => (
+                            <div
+                              key={colIdx}
+                              className={cn(
+                                "flex-1 flex flex-col gap-4",
+                                colIdx === 0 ? "pr-4" : colIdx === 1 ? "px-4" : "pl-4"
+                              )}
+                            >
+                              {col.sections.map((sec: any, secIdx: number) => (
+                                <div key={secIdx} className="flex flex-col gap-2">
+                                  <h4 className="text-sm font-bold text-slate-900 tracking-tight">
+                                    {sec.title}
+                                  </h4>
+                                  <div className="flex flex-col gap-1.5">
+                                    {sec.items.map((sub: any) => (
+                                      <Link
+                                        key={sub.href}
+                                        href={sub.href}
+                                        className="text-xs font-medium text-slate-600 hover:text-brand-600 hover:translate-x-0.5 transition-all"
+                                      >
+                                        {sub.label}
+                                      </Link>
+                                    ))}
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  )
+                }
+
                 if (hasSubNav) {
                   return (
                     <div 
@@ -185,63 +232,67 @@ export function Navbar({ className }: NavbarProps) {
                     >
                       {linkElement}
                       <div className="absolute top-full left-0 pt-2 hidden group-hover:block z-50">
-                        <div className="flex w-[480px] bg-white rounded-2xl shadow-xl border border-border/50 p-3.5 relative">
-                          <div className="flex-1 flex flex-col gap-0.5 pr-3 border-r border-border/40">
-                            <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/80 px-3 py-1">
-                              Working Preference
-                            </span>
-                            {item.subNav.left.map((subItem: any) => (
-                              <Link 
-                                key={subItem.href} 
-                                href={subItem.href} 
-                                className={cn(
-                                  "text-sm font-medium py-1.5 px-3 rounded-lg transition-all",
-                                  subItem.isPrimary
-                                    ? "mt-1 bg-brand-50/80 text-brand-700 font-semibold hover:bg-brand-100/90 flex items-center justify-between border border-brand-200/50"
-                                    : "text-muted-foreground hover:text-brand-600 hover:bg-brand-50/50"
-                                )}
-                              >
-                                <span>{subItem.label}</span>
-                                {subItem.isPrimary && <ArrowUpRight className="h-3.5 w-3.5 text-brand-600" />}
-                              </Link>
-                            ))}
-                          </div>
-                          <div className="flex-1 flex flex-col gap-0.5 pl-3">
-                            <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/80 px-3 py-1">
-                              Browse Directories
-                            </span>
-                            {item.subNav.right.map((subItem: any) => (
-                              <div key={subItem.href} className="relative group/rightItem">
-                                <Link 
-                                  href={subItem.href} 
-                                  className="flex items-center justify-between text-sm font-medium text-muted-foreground hover:text-brand-600 py-1.5 px-3 rounded-lg hover:bg-brand-50/50 transition-colors"
-                                >
-                                  <span>{subItem.label}</span>
-                                  {subItem.hasArrow && (
-                                    <ChevronRight className="h-4 w-4 opacity-50 group-hover/rightItem:opacity-100 group-hover/rightItem:translate-x-0.5 transition-all" />
-                                  )}
-                                </Link>
-
-                                {subItem.flyoutItems && (
-                                  <div className="absolute top-0 left-full ml-1.5 hidden group-hover/rightItem:block z-50">
-                                    <div className="w-[210px] bg-white rounded-xl shadow-xl border border-border/50 p-2 flex flex-col gap-0.5">
-                                      <span className="text-[10px] font-semibold text-muted-foreground uppercase px-2 py-1">
-                                        Popular {subItem.label.replace(/^Jobs By /, "")}
-                                      </span>
-                                      {subItem.flyoutItems.map((flyItem: any) => (
-                                        <Link
-                                          key={flyItem.href}
-                                          href={flyItem.href}
-                                          className="text-xs font-medium text-muted-foreground hover:text-brand-600 hover:bg-brand-50/60 py-1.5 px-2.5 rounded-md transition-colors"
-                                        >
-                                          {flyItem.label}
-                                        </Link>
-                                      ))}
-                                    </div>
+                        <div className="flex w-[500px] bg-white rounded-2xl shadow-xl border border-border/50 p-5 divide-x divide-border/40 relative">
+                          <div className="flex-1 flex flex-col gap-3.5 pr-4">
+                            {item.subNav.leftSections ? (
+                              item.subNav.leftSections.map((sec: any, secIdx: number) => (
+                                <div key={secIdx} className="flex flex-col gap-1.5">
+                                  <h4 className="text-sm font-bold text-slate-900 tracking-tight">
+                                    {sec.title}
+                                  </h4>
+                                  <div className="flex flex-col gap-1">
+                                    {sec.items.map((subItem: any) => (
+                                      <Link 
+                                        key={subItem.href} 
+                                        href={subItem.href} 
+                                        className="text-xs font-medium text-slate-600 hover:text-brand-600 hover:translate-x-0.5 transition-all flex items-center justify-between"
+                                      >
+                                        <span>{subItem.label}</span>
+                                      </Link>
+                                    ))}
                                   </div>
-                                )}
-                              </div>
-                            ))}
+                                </div>
+                              ))
+                            ) : null}
+                          </div>
+                          <div className="flex-1 flex flex-col gap-2 pl-4">
+                            <h4 className="text-sm font-bold text-slate-900 tracking-tight mb-1">
+                              Browse Directories
+                            </h4>
+                            <div className="flex flex-col gap-1.5">
+                              {item.subNav.right.map((subItem: any) => (
+                                <div key={subItem.href} className="relative group/rightItem">
+                                  <Link 
+                                    href={subItem.href} 
+                                    className="flex items-center justify-between text-xs font-medium text-slate-600 hover:text-brand-600 hover:translate-x-0.5 transition-all"
+                                  >
+                                    <span>{subItem.label}</span>
+                                    {subItem.hasArrow && (
+                                      <ChevronRight className="h-3.5 w-3.5 opacity-50 group-hover/rightItem:opacity-100 group-hover/rightItem:translate-x-0.5 transition-all text-slate-400" />
+                                    )}
+                                  </Link>
+
+                                  {subItem.flyoutItems && (
+                                    <div className="absolute top-0 left-full pl-2 hidden group-hover/rightItem:block z-50">
+                                      <div className="w-[220px] bg-white rounded-xl shadow-xl border border-border/50 p-3 flex flex-col gap-1.5">
+                                        <h5 className="text-xs font-bold text-slate-900 tracking-tight mb-0.5">
+                                          Popular {subItem.label.replace(/^Jobs By /, "")}
+                                        </h5>
+                                        {subItem.flyoutItems.map((flyItem: any) => (
+                                          <Link
+                                            key={flyItem.href}
+                                            href={flyItem.href}
+                                            className="text-xs font-medium text-slate-600 hover:text-brand-600 hover:translate-x-0.5 transition-all py-0.5"
+                                          >
+                                            {flyItem.label}
+                                          </Link>
+                                        ))}
+                                      </div>
+                                    </div>
+                                  )}
+                                </div>
+                              ))}
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -259,12 +310,12 @@ export function Navbar({ className }: NavbarProps) {
           </div>
 
           <div
-            className="hidden h-10 shrink-0 md:block"
+            className="hidden h-10 shrink-0 lg:block"
             style={{ width: actionsWidth || undefined }}
             aria-hidden="true"
           />
 
-          {/* Mobile hamburger button inside header to align cleanly with logo */}
+          {/* Mobile & Tablet hamburger button inside header to align cleanly with logo */}
           <button
             type="button"
             onClick={handleMenuToggle}
@@ -272,7 +323,7 @@ export function Navbar({ className }: NavbarProps) {
             aria-expanded={menuOpen}
             tabIndex={0}
             className={cn(
-              "flex h-10 w-10 items-center justify-center rounded-full border text-foreground transition-all duration-300 ease-out md:hidden",
+              "flex h-10 w-10 items-center justify-center rounded-full border text-foreground transition-all duration-300 ease-out lg:hidden",
               "focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-brand-500/40",
               scrolled || menuOpen
                 ? "border-border/50 bg-white/95 shadow-[0_10px_36px_-18px_rgba(15,23,42,0.22)]"
@@ -290,7 +341,7 @@ export function Navbar({ className }: NavbarProps) {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -12 }}
               transition={{ duration: 0.25, ease: "easeOut" }}
-              className="mt-2 w-full max-h-[calc(100dvh-5.5rem)] overflow-y-auto rounded-2xl border border-border/50 bg-white p-4 shadow-[0_12px_40px_-20px_rgba(15,23,42,0.25)] md:hidden"
+              className="mt-2 w-full max-h-[calc(100dvh-5.5rem)] overflow-y-auto rounded-2xl border border-border/50 bg-white p-4 shadow-[0_12px_40px_-20px_rgba(15,23,42,0.25)] lg:hidden"
             >
               <p className="px-3 pb-2 text-[11px] font-semibold tracking-[0.14em] text-muted-foreground uppercase">
                 Choose your path
@@ -352,6 +403,51 @@ export function Navbar({ className }: NavbarProps) {
 
               <div className="mt-3 flex flex-col gap-1 border-t border-border/60 pt-3">
                 {siteConfig.nav.map((item) => {
+                  if ("servicesMegaNav" in item && (item as any).servicesMegaNav) {
+                    return (
+                      <div key={item.href} className="flex flex-col">
+                        <button
+                          type="button"
+                          onClick={() => setMobileServicesOpen((v) => !v)}
+                          className="flex items-center justify-between rounded-xl px-4 py-3 text-base font-medium text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+                        >
+                          <span>{item.label}</span>
+                          <ChevronDown
+                            className={cn(
+                              "h-4 w-4 transition-transform duration-200",
+                              mobileServicesOpen && "rotate-180 text-brand-600"
+                            )}
+                          />
+                        </button>
+                        {mobileServicesOpen && (
+                          <div className="pl-3 pb-2 flex flex-col gap-3 border-l-2 border-brand-500/20 ml-4 mt-1">
+                            {(item as any).servicesMegaNav.map((col: any, colIdx: number) => (
+                              <div key={colIdx} className="flex flex-col gap-2">
+                                {col.sections.map((sec: any, secIdx: number) => (
+                                  <div key={secIdx} className="flex flex-col gap-1">
+                                    <span className="text-xs font-bold text-slate-900 pt-1 px-3">
+                                      {sec.title}
+                                    </span>
+                                    {sec.items.map((sub: any) => (
+                                      <Link
+                                        key={sub.href}
+                                        href={sub.href}
+                                        onClick={handleMenuClose}
+                                        className="rounded-lg px-3 py-1.5 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors"
+                                      >
+                                        {sub.label}
+                                      </Link>
+                                    ))}
+                                  </div>
+                                ))}
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    )
+                  }
+
                   if ("subNav" in item && item.subNav) {
                     return (
                       <div key={item.href} className="flex flex-col">
@@ -369,26 +465,27 @@ export function Navbar({ className }: NavbarProps) {
                           />
                         </button>
                         {mobileJobsOpen && (
-                          <div className="pl-3 pb-2 flex flex-col gap-1 border-l-2 border-brand-500/20 ml-4 mt-1">
-                            <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground pt-1 px-3">
-                              Working Preference
-                            </span>
-                            {item.subNav.left.map((sub: any) => (
-                              <Link
-                                key={sub.href}
-                                href={sub.href}
-                                onClick={handleMenuClose}
-                                className={cn(
-                                  "rounded-lg px-3 py-2 text-sm font-medium transition-colors",
-                                  sub.isPrimary
-                                    ? "text-brand-600 font-semibold bg-brand-50/50"
-                                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
-                                )}
-                              >
-                                {sub.label}
-                              </Link>
-                            ))}
-                            <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground pt-2 px-3">
+                          <div className="pl-3 pb-2 flex flex-col gap-2 border-l-2 border-brand-500/20 ml-4 mt-1">
+                            {item.subNav.leftSections ? (
+                              item.subNav.leftSections.map((sec: any, secIdx: number) => (
+                                <div key={secIdx} className="flex flex-col gap-1 pt-1">
+                                  <span className="text-xs font-bold text-slate-900 px-3">
+                                    {sec.title}
+                                  </span>
+                                  {sec.items.map((sub: any) => (
+                                    <Link
+                                      key={sub.href}
+                                      href={sub.href}
+                                      onClick={handleMenuClose}
+                                      className="rounded-lg px-3 py-1.5 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors"
+                                    >
+                                      {sub.label}
+                                    </Link>
+                                  ))}
+                                </div>
+                              ))
+                            ) : null}
+                            <span className="text-xs font-bold text-slate-900 pt-2 px-3">
                               Browse Directories
                             </span>
                             {item.subNav.right.map((sub: any) => (
@@ -434,10 +531,8 @@ export function Navbar({ className }: NavbarProps) {
       <div
         ref={actionsRef}
         className={cn(
-          "pointer-events-auto fixed top-4 right-6 z-[60] hidden items-center gap-2 rounded-full px-2 py-1.5 transition-all duration-300 ease-out sm:top-5 sm:right-10 md:flex lg:right-16 xl:right-24",
-          scrolled
-            ? "border border-border/50 bg-white/95 shadow-[0_10px_36px_-18px_rgba(15,23,42,0.22)] backdrop-blur-md"
-            : "border border-transparent bg-transparent shadow-none"
+          "pointer-events-auto fixed top-3 sm:top-3.5 right-6 z-[60] hidden items-center gap-2 rounded-full px-2 py-1 transition-all duration-300 ease-out hidden lg:flex lg:right-16 xl:right-24",
+          "border border-transparent bg-transparent shadow-none"
         )}
       >
         {candidate && (

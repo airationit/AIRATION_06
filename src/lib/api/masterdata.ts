@@ -93,7 +93,7 @@ export async function fetchCities(stateId?: string): Promise<City[]> {
     });
     return res.data || [];
   } catch (error) {
-    console.error("fetchCities error:", error);
+    console.warn("fetchCities error:", error);
     return [
       { id: "city-bangalore", name: "Bangalore", state: "Karnataka" },
       { id: "city-mumbai", name: "Mumbai", state: "Maharashtra" },

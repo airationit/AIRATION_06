@@ -43,6 +43,7 @@ interface JobFiltersSidebarProps {
   totalJobsCount?: number;
   isMobileDrawerOpen?: boolean;
   onCloseMobileDrawer?: () => void;
+  onLocationToggle?: (isExpanded: boolean) => void;
 }
 
 export function JobFiltersSidebar({
@@ -52,6 +53,7 @@ export function JobFiltersSidebar({
   totalJobsCount,
   isMobileDrawerOpen,
   onCloseMobileDrawer,
+  onLocationToggle,
 }: JobFiltersSidebarProps) {
   const {
     jobRoles,
@@ -78,7 +80,11 @@ export function JobFiltersSidebar({
   });
 
   const toggleSection = (section: keyof typeof expandedSections) => {
-    setExpandedSections((prev) => ({ ...prev, [section]: !prev[section] }));
+    const nextState = !expandedSections[section];
+    setExpandedSections((prev) => ({ ...prev, [section]: nextState }));
+    if (section === "location" && onLocationToggle) {
+      onLocationToggle(nextState);
+    }
   };
 
   // 1. Job Roles list from /masterdata/job-roles/
