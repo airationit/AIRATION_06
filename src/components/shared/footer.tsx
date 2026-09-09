@@ -75,26 +75,8 @@ const COLS: FooterColumn[] = [
     title: "Company",
     links: [
       { label: "About Us", href: "/about-us" },
-      { label: "How Hirance Works", href: "/how-it-works" },
       { label: "Blog", href: "/blog" },
       { label: "Contact", href: "/contact" },
-    ],
-  },
-  {
-    title: "Legal & Sitemap",
-    links: [
-      { label: "Privacy Policy", href: "/privacy" },
-      { label: "Terms & Conditions", href: "/terms" },
-      { label: "Sitemap", href: "/sitemap.xml" },
-    ],
-  },
-  {
-    title: "Trust & Safety",
-    links: [
-      { label: "Trust & Safety", href: "/trust-and-safety" },
-      { label: "Fraud Alert", href: "/fraud-alert" },
-      { label: "Grievances", href: "/grievances" },
-      { label: "Vulnerability Disclosure", href: "/vulnerability-disclosure" },
     ],
   },
 ];
@@ -193,7 +175,7 @@ export function Footer() {
 
           {/* Navigation Links Columns */}
           <nav
-            className="lg:col-span-7 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-7 lg:gap-5"
+            className="lg:col-span-7 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 gap-7 lg:gap-8"
             aria-label="Footer Quick Links"
           >
             {COLS.map((col) => (
@@ -241,15 +223,17 @@ export function Footer() {
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
           <p>© {currentYear} Hirance. All Rights Reserved.</p>
           <div className="flex items-center flex-wrap justify-center gap-x-4 gap-y-1">
-            <Link href="/privacy" className="hover:text-slate-400 transition-colors">Privacy</Link>
+            <Link href="/privacy" className="hover:text-slate-400 transition-colors">Privacy Policy</Link>
             <span>·</span>
-            <Link href="/terms" className="hover:text-slate-400 transition-colors">Terms</Link>
+            <Link href="/terms" className="hover:text-slate-400 transition-colors">Terms & Conditions</Link>
             <span>·</span>
             <Link href="/trust-and-safety" className="hover:text-slate-400 transition-colors">Trust & Safety</Link>
             <span>·</span>
             <Link href="/fraud-alert" className="hover:text-slate-400 transition-colors">Fraud Alert</Link>
             <span>·</span>
             <Link href="/grievances" className="hover:text-slate-400 transition-colors">Grievances</Link>
+            <span>·</span>
+            <Link href="/vulnerability-disclosure" className="hover:text-slate-400 transition-colors">Vulnerability Disclosure</Link>
             <span>·</span>
             <Link href="/sitemap.xml" className="hover:text-slate-400 transition-colors">Sitemap</Link>
           </div>
