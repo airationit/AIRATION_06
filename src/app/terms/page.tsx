@@ -13,6 +13,13 @@ export const metadata: Metadata = {
     "Employer terms Hirance",
     "Copyright takedown policy",
     "Indian Law hiring terms",
+    " Hirance terms and conditions",
+    "Hirance legal terms",
+    "Hirance user agreement",
+    "Hirance copyright notice",
+    "Hirance intellectual property",
+    "Hirance user license",
+    "Hirance acceptable use policy",
   ],
   alternates: {
     canonical: "https://hirance.com/terms",

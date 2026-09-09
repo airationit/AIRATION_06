@@ -1,4 +1,5 @@
 export { Navbar } from "./navbar";
+export { Logo } from "./logo";
 export { GradientBackground } from "./gradient-background";
 export { Footer } from "./footer";
 export { GooglePlayButton } from "./google-play-button";
@@ -15,4 +16,6 @@ export {
   StackedFooterWrapper,
   StackedPagesContainer,
 } from "./stacked-scroll";
+export { FloatingAppBanner } from "./floating-app-banner";
+
 

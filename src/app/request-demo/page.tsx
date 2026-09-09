@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     url: "https://hirance.com/request-demo",
     title: "Request a Demo | Hirance",
     description:
-      "Schedule a personalized walkthrough of India's 1st swipe-based hiring platform built for speed and quality.",
+      "Schedule a personalized walkthrough of India's swipe-based hiring platform built for speed and quality.",
     siteName: "Hirance",
     images: [
       {

@@ -23,12 +23,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "hourly",
       priority: 0.95,
     },
-    {
-      url: `${baseUrl}/how-it-works`,
-      lastModified: now,
-      changeFrequency: "weekly",
-      priority: 0.8,
-    },
+
     {
       url: `${baseUrl}/about-us`,
       lastModified: now,
@@ -48,6 +43,26 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.6,
     },
     {
+      url: `${baseUrl}/qr-marketing`,
+      lastModified: now,
+      changeFrequency: "daily",
+      priority: 0.85,
+
+    },
+    {
+      url: `${baseUrl}/free-job-alerts`,
+      lastModified: now,
+      changeFrequency: "daily",
+      priority: 0.85,
+    },
+    {
+      url: `${baseUrl}/download-app`,
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.85,
+    },
+
+    {
       url: `${baseUrl}/privacy-policy`,
       lastModified: now,
       changeFrequency: "yearly",
@@ -59,9 +74,85 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "yearly",
       priority: 0.3,
     },
+    {
+      url: `${baseUrl}/trust-and-safety`,
+      lastModified: now,
+      changeFrequency: "monthly",
+      priority: 0.65,
+    },
+    {
+      url: `${baseUrl}/fraud-alert`,
+      lastModified: now,
+      changeFrequency: "monthly",
+      priority: 0.65,
+    },
+    {
+      url: `${baseUrl}/grievances`,
+      lastModified: now,
+      changeFrequency: "monthly",
+      priority: 0.6,
+    },
+    {
+      url: `${baseUrl}/vulnerability-disclosure`,
+      lastModified: now,
+      changeFrequency: "yearly",
+      priority: 0.4,
+    },
   ];
 
-  // 2. Programmatic SEO Routes (Roles, Cities, Combinations, Freshers, and Remote)
+  // 2. Working Preference Category Hubs (High SEO Intent)
+  const categoryPreferenceRoutes: MetadataRoute.Sitemap = [
+    {
+      url: `${baseUrl}/jobs/work-from-office-jobs`,
+      lastModified: now,
+      changeFrequency: "daily",
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/jobs/field-jobs`,
+      lastModified: now,
+      changeFrequency: "daily",
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/jobs/work-from-home-jobs`,
+      lastModified: now,
+      changeFrequency: "daily",
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/jobs/full-time-jobs`,
+      lastModified: now,
+      changeFrequency: "daily",
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/jobs/part-time-jobs`,
+      lastModified: now,
+      changeFrequency: "daily",
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/jobs/day-shift-jobs`,
+      lastModified: now,
+      changeFrequency: "daily",
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/jobs/night-shift-jobs`,
+      lastModified: now,
+      changeFrequency: "daily",
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/jobs/hybrid-jobs`,
+      lastModified: now,
+      changeFrequency: "daily",
+      priority: 0.9,
+    },
+  ];
+
+  // 3. Programmatic SEO Routes (Roles, Cities, Combinations, Freshers, and Remote)
   const popularCities = POPULAR_CITIES.filter((c) => c.isPopular && c.slug !== "remote");
   const programmaticRoutes: MetadataRoute.Sitemap = [];
 
@@ -152,5 +243,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     console.error("Error generating dynamic blog sitemap:", error);
   }
 
-  return [...staticRoutes, ...programmaticRoutes, ...liveJobRoutes, ...liveBlogRoutes];
+  return [
+    ...staticRoutes,
+    ...categoryPreferenceRoutes,
+    ...programmaticRoutes,
+    ...liveJobRoutes,
+    ...liveBlogRoutes,
+  ];
 }

@@ -12,6 +12,13 @@ export interface ParsedJobSlug {
   cityName?: string;
   experienceSlug?: string;
   experienceLabel?: string;
+  workModeSlug?: string;
+  workModeLabel?: string;
+  jobTypeSlug?: string;
+  jobTypeLabel?: string;
+  workShiftSlug?: string;
+  workShiftLabel?: string;
+  searchKeyword?: string;
   companyName?: string;
   isRemote?: boolean;
   rawSlug: string;
@@ -169,7 +176,118 @@ export function parseJobSlug(slug: string): ParsedJobSlug {
     }
   }
 
-  // Check 6: Special Global Categories (e.g. freshers-jobs, remote-jobs, part-time-jobs)
+  // Check 6: Special Category Slugs (Work from Office, Field, Work from Home, Full-time, Part-time, Shifts, Freshers)
+  if (
+    lowerSlug === "work-from-office-jobs" ||
+    lowerSlug === "work-from-office" ||
+    lowerSlug === "office-jobs" ||
+    lowerSlug === "in-office-jobs"
+  ) {
+    return {
+      pattern: "work-from-office",
+      workModeSlug: "585ed3ae-c9eb-4f89-a715-33544efa1c07",
+      workModeLabel: "Work from Office",
+      rawSlug: slug,
+    };
+  }
+
+  if (
+    lowerSlug === "field-jobs" ||
+    lowerSlug === "field-job" ||
+    lowerSlug === "field-work-jobs"
+  ) {
+    return {
+      pattern: "field-jobs",
+      workModeSlug: "8c974af2-6d8b-49c8-b891-0a5ce9847024",
+      workModeLabel: "Field Job",
+      rawSlug: slug,
+    };
+  }
+
+  if (
+    lowerSlug === "work-from-home-jobs" ||
+    lowerSlug === "work-from-home" ||
+    lowerSlug === "wfh-jobs" ||
+    lowerSlug === "remote-jobs" ||
+    lowerSlug === "remote"
+  ) {
+    return {
+      pattern: "work-from-home",
+      workModeSlug: "bf5f80ba-b651-47c0-be52-9978569789d7",
+      workModeLabel: "Work from Home",
+      citySlug: "remote",
+      cityName: "Remote",
+      isRemote: true,
+      rawSlug: slug,
+    };
+  }
+
+  if (
+    lowerSlug === "full-time-jobs" ||
+    lowerSlug === "full-time" ||
+    lowerSlug === "fulltime-jobs"
+  ) {
+    return {
+      pattern: "full-time",
+      jobTypeSlug: "c2e13590-f69f-4bd4-9545-09cf81daae9e",
+      jobTypeLabel: "Full Time",
+      rawSlug: slug,
+    };
+  }
+
+  if (
+    lowerSlug === "part-time-jobs" ||
+    lowerSlug === "part-time" ||
+    lowerSlug === "parttime-jobs"
+  ) {
+    return {
+      pattern: "part-time",
+      jobTypeSlug: "fdde7c2d-88e6-4ecf-9fb5-596ca7f81c69",
+      jobTypeLabel: "Part Time",
+      rawSlug: slug,
+    };
+  }
+
+  if (
+    lowerSlug === "day-shift-jobs" ||
+    lowerSlug === "day-shift" ||
+    lowerSlug === "day-jobs"
+  ) {
+    return {
+      pattern: "day-shift",
+      workShiftSlug: "f7d70b0b-57c0-4014-8002-7d170de4c299",
+      workShiftLabel: "Day Shift",
+      rawSlug: slug,
+    };
+  }
+
+  if (
+    lowerSlug === "night-shift-jobs" ||
+    lowerSlug === "night-shift" ||
+    lowerSlug === "night-jobs"
+  ) {
+    return {
+      pattern: "night-shift",
+      workShiftSlug: "6e9a009a-35af-4bfe-baa9-a77b56ca443b",
+      workShiftLabel: "Night Shift",
+      rawSlug: slug,
+    };
+  }
+
+  if (
+    lowerSlug === "hybrid-jobs" ||
+    lowerSlug === "hybrid" ||
+    lowerSlug === "hybrid-shift-jobs" ||
+    lowerSlug === "hybrid-shift"
+  ) {
+    return {
+      pattern: "hybrid",
+      workShiftSlug: "8a5eafb2-daef-4246-9e58-5331a2c94dcd",
+      workShiftLabel: "Hybrid",
+      rawSlug: slug,
+    };
+  }
+
   if (lowerSlug === "freshers-jobs" || lowerSlug === "freshers") {
     return {
       pattern: "freshers-city",
@@ -178,15 +296,7 @@ export function parseJobSlug(slug: string): ParsedJobSlug {
       rawSlug: slug,
     };
   }
-  if (lowerSlug === "remote-jobs" || lowerSlug === "work-from-home-jobs" || lowerSlug === "wfh-jobs") {
-    return {
-      pattern: "city",
-      citySlug: "remote",
-      cityName: "Remote / Work From Home",
-      isRemote: true,
-      rawSlug: slug,
-    };
-  }
+
   if (lowerSlug === "free-to-apply-jobs" || lowerSlug === "free-jobs") {
     return {
       pattern: "role",
@@ -195,19 +305,12 @@ export function parseJobSlug(slug: string): ParsedJobSlug {
       rawSlug: slug,
     };
   }
+
   if (lowerSlug === "internship-jobs" || lowerSlug === "internships") {
     return {
       pattern: "role",
       roleSlug: "internship",
       roleLabel: "Internships with Stipend",
-      rawSlug: slug,
-    };
-  }
-  if (lowerSlug === "part-time-jobs" || lowerSlug === "part-time") {
-    return {
-      pattern: "role",
-      roleSlug: "part-time",
-      roleLabel: "Part-Time & Flexible",
       rawSlug: slug,
     };
   }

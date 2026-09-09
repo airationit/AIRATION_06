@@ -36,7 +36,7 @@ export const CARD_COLOR_PALETTE: CardColorTheme[] = [
   { bg: "#0A2540", isLight: false, textColor: "#FFFFFF", glow: "rgba(10, 37, 64, 0.3)" }, // Deep Navy Blue (USPS style)
 ];
 
-export const companies: Company[] = companiesData.slice(0, 48).map((c) => ({
+export const companies: Company[] = companiesData.map((c) => ({
   name: c.name,
   logoUrl: c.logo_url,
   url: c.url,

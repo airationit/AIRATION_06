@@ -17,7 +17,9 @@ import {
   Briefcase,
   MapPin,
   Loader2,
+  ChevronDown,
 } from "lucide-react";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { Job, getJobs } from "@/lib/jobs-data";
 import { JobCard } from "./job-card";
 import { JobCardSkeleton } from "./job-card-skeleton";
@@ -29,6 +31,8 @@ import { POPULAR_CITIES } from "@/config/jobs-taxonomy";
 import { cn } from "@/lib/utils";
 import { isCityMatch, normalizeCitySlug } from "@/lib/city-normalizer";
 import { Footer } from "@/components/shared";
+import { faqs } from "./jobs-faq-data";
+
 
 // Helper to match jobs with selected city/location supporting all Indian aliases & variations
 function isLocationMatch(job: Job, targetSlugOrId: string): boolean {
@@ -45,6 +49,10 @@ interface JobsContentProps {
   roleSlug?: string;
   citySlug?: string;
   experienceSlug?: string;
+  workModeSlug?: string;
+  jobTypeSlug?: string;
+  workShiftSlug?: string;
+  initialSearch?: string;
 }
 
 export function JobsContent({
@@ -56,7 +64,31 @@ export function JobsContent({
   roleSlug = "",
   citySlug = "all",
   experienceSlug = "",
+  workModeSlug,
+  jobTypeSlug,
+  workShiftSlug,
+  initialSearch = "",
 }: JobsContentProps) {
+  const reducedMotion = useReducedMotion();
+
+  // FAQ state management (matching how-it-works format)
+  const [openFaq, setOpenFaq] = useState<number | null>(0);
+  const [activeCategory, setActiveCategory] = useState<string>("All Questions");
+
+  const filteredFaqs = faqs.filter(
+    (faq) => activeCategory === "All Questions" || faq.category === activeCategory
+  );
+
+  const fadeIn = (delay = 0) =>
+    reducedMotion
+      ? {}
+      : {
+        initial: { opacity: 0, y: 20 },
+        whileInView: { opacity: 1, y: 0 },
+        viewport: { once: true, margin: "-50px" },
+        transition: { duration: 0.5, delay, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] },
+      };
+
   const {
     loadMasterdata,
     jobRoles,
@@ -88,12 +120,12 @@ export function JobsContent({
 
   // Comprehensive filter state strictly matching jobs_browse.md query parameters
   const [filters, setFilters] = useState<JobFilterValues>({
-    search: "",
+    search: initialSearch || "",
     roleId: "",
     roleSlug: roleSlug,
-    workModeId: "",
-    jobTypeId: "",
-    workShiftId: "",
+    workModeId: workModeSlug || "",
+    jobTypeId: jobTypeSlug || "",
+    workShiftId: workShiftSlug || "",
     experienceId: experienceSlug || "",
     salaryRangeId: "",
     cityId: "",
@@ -104,7 +136,7 @@ export function JobsContent({
     ordering: "-published_at",
   });
 
-  const prevPropsRef = useRef({ roleSlug, citySlug, experienceSlug });
+  const prevPropsRef = useRef({ roleSlug, citySlug, experienceSlug, workModeSlug, jobTypeSlug, workShiftSlug, initialSearch });
 
   // Sync props on route changes only when props actually change
   useEffect(() => {
@@ -112,20 +144,120 @@ export function JobsContent({
     if (
       prev.citySlug !== citySlug ||
       prev.roleSlug !== roleSlug ||
-      prev.experienceSlug !== experienceSlug
+      prev.experienceSlug !== experienceSlug ||
+      prev.workModeSlug !== workModeSlug ||
+      prev.jobTypeSlug !== jobTypeSlug ||
+      prev.workShiftSlug !== workShiftSlug ||
+      prev.initialSearch !== initialSearch
     ) {
-      prevPropsRef.current = { roleSlug, citySlug, experienceSlug };
+      prevPropsRef.current = { roleSlug, citySlug, experienceSlug, workModeSlug, jobTypeSlug, workShiftSlug, initialSearch };
       setFilters((f) => ({
         ...f,
         citySlug: citySlug || "all",
         roleSlug: roleSlug || "",
         experienceId: experienceSlug || "",
+        workModeId: workModeSlug || "",
+        jobTypeId: jobTypeSlug || "",
+        workShiftId: workShiftSlug || "",
+        search: initialSearch || "",
       }));
       setCurrentPage(1);
     }
-  }, [citySlug, roleSlug, experienceSlug]);
+  }, [citySlug, roleSlug, experienceSlug, workModeSlug, jobTypeSlug, workShiftSlug, initialSearch]);
+
+  // Synchronize slug-based filters with masterdata store once loaded
+  useEffect(() => {
+    if (!workModeSlug && !jobTypeSlug && !workShiftSlug) return;
+
+    setFilters((prev) => {
+      let updatedModeId = prev.workModeId;
+      let updatedTypeId = prev.jobTypeId;
+      let updatedShiftId = prev.workShiftId;
+
+      if (workModeSlug) {
+        const direct = workModes.find((x) => x.id === workModeSlug);
+        if (direct) {
+          updatedModeId = direct.id;
+        } else if (workModeSlug === "remote" || workModeSlug.includes("home")) {
+          const m = workModes.find((x) => x.name.toLowerCase().includes("home") || x.name.toLowerCase().includes("remote") || x.id.includes("remote"));
+          if (m) updatedModeId = m.id;
+        } else if (workModeSlug === "onsite" || workModeSlug.includes("office") || workModeSlug.includes("site")) {
+          const m = workModes.find((x) => x.name.toLowerCase().includes("office") || x.name.toLowerCase().includes("site") || x.id.includes("onsite"));
+          if (m) updatedModeId = m.id;
+        } else if (workModeSlug === "field" || workModeSlug.includes("field")) {
+          const m = workModes.find((x) => x.name.toLowerCase().includes("field") || x.id.includes("field"));
+          if (m) updatedModeId = m.id;
+        }
+      }
+
+      if (jobTypeSlug) {
+        const direct = jobTypes.find((x) => x.id === jobTypeSlug);
+        if (direct) {
+          updatedTypeId = direct.id;
+        } else if (jobTypeSlug === "full-time" || jobTypeSlug.includes("full")) {
+          const t = jobTypes.find((x) => x.name.toLowerCase().includes("full") || x.id.includes("full"));
+          if (t) updatedTypeId = t.id;
+        } else if (jobTypeSlug === "part-time" || jobTypeSlug.includes("part")) {
+          const t = jobTypes.find((x) => x.name.toLowerCase().includes("part") || x.id.includes("part"));
+          if (t) updatedTypeId = t.id;
+        } else if (jobTypeSlug === "both" || jobTypeSlug.includes("both")) {
+          const t = jobTypes.find((x) => x.name.toLowerCase().includes("both") || x.id.includes("both"));
+          if (t) updatedTypeId = t.id;
+        }
+      }
+
+      if (workShiftSlug) {
+        const direct = workShifts.find((x) => x.id === workShiftSlug);
+        if (direct) {
+          updatedShiftId = direct.id;
+        } else if (workShiftSlug === "day" || workShiftSlug.includes("day")) {
+          const s = workShifts.find((x) => x.name.toLowerCase().includes("day") || x.id.includes("day"));
+          if (s) updatedShiftId = s.id;
+        } else if (workShiftSlug === "night" || workShiftSlug.includes("night")) {
+          const s = workShifts.find((x) => x.name.toLowerCase().includes("night") || x.id.includes("night"));
+          if (s) updatedShiftId = s.id;
+        } else if (workShiftSlug === "hybrid" || workShiftSlug.includes("hybrid")) {
+          const s = workShifts.find((x) => x.name.toLowerCase().includes("hybrid") || x.id.includes("hybrid"));
+          if (s) updatedShiftId = s.id;
+        }
+      }
+
+      if (
+        updatedModeId === prev.workModeId &&
+        updatedTypeId === prev.jobTypeId &&
+        updatedShiftId === prev.workShiftId
+      ) {
+        return prev;
+      }
+
+      return {
+        ...prev,
+        workModeId: updatedModeId,
+        jobTypeId: updatedTypeId,
+        workShiftId: updatedShiftId,
+      };
+    });
+  }, [workModeSlug, jobTypeSlug, workShiftSlug, workModes, jobTypes, workShifts]);
+
+  // Smooth scroll into directory section if keyword is searching for directory
+  useEffect(() => {
+    if (!initialSearch) return;
+    const lower = initialSearch.toLowerCase();
+    if (lower.includes("city") || lower.includes("location")) {
+      const el = document.getElementById("directory-cities");
+      if (el) {
+        setTimeout(() => el.scrollIntoView({ behavior: "smooth", block: "center" }), 450);
+      }
+    } else if (lower.includes("department") || lower.includes("role") || lower.includes("category")) {
+      const el = document.getElementById("directory-departments");
+      if (el) {
+        setTimeout(() => el.scrollIntoView({ behavior: "smooth", block: "center" }), 450);
+      }
+    }
+  }, [initialSearch]);
 
   const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
+  const [isLocationExpanded, setIsLocationExpanded] = useState(false);
 
   // Fetch jobs dynamically from backend on page or filter changes
   const executeSearch = useCallback(
@@ -135,9 +267,9 @@ export function JobsContent({
         const skillsQuery =
           activeFilters.selectedSkillIds.length > 0
             ? skills
-                .filter((s) => activeFilters.selectedSkillIds.includes(s.id))
-                .map((s) => s.name)
-                .join(",")
+              .filter((s) => activeFilters.selectedSkillIds.includes(s.id))
+              .map((s) => s.name)
+              .join(",")
             : undefined;
 
         const res = await getJobs({
@@ -240,27 +372,54 @@ export function JobsContent({
 
     if (filters.workModeId) {
       const modeObj = workModes.find((m) => m.id === filters.workModeId);
+      const label =
+        modeObj?.name ||
+        (filters.workModeId === "585ed3ae-c9eb-4f89-a715-33544efa1c07" || filters.workModeId === "onsite"
+          ? "Work from Office"
+          : filters.workModeId === "8c974af2-6d8b-49c8-b891-0a5ce9847024" || filters.workModeId === "field"
+            ? "Field Job"
+            : filters.workModeId === "bf5f80ba-b651-47c0-be52-9978569789d7" || filters.workModeId === "remote"
+              ? "Work from Home"
+              : filters.workModeId);
       tags.push({
         id: "mode",
-        label: modeObj?.name || filters.workModeId,
+        label,
         onRemove: () => setFilters((f) => ({ ...f, workModeId: "" })),
       });
     }
 
     if (filters.jobTypeId) {
       const typeObj = jobTypes.find((t) => t.id === filters.jobTypeId);
+      const label =
+        typeObj?.name ||
+        (filters.jobTypeId === "c2e13590-f69f-4bd4-9545-09cf81daae9e" || filters.jobTypeId === "full-time"
+          ? "Full Time"
+          : filters.jobTypeId === "fdde7c2d-88e6-4ecf-9fb5-596ca7f81c69" || filters.jobTypeId === "part-time"
+            ? "Part Time"
+            : filters.jobTypeId === "28ecf748-85c0-4deb-9133-8f24ec85fc11" || filters.jobTypeId === "both"
+              ? "Both (Full-Time/Part-Time)"
+              : filters.jobTypeId);
       tags.push({
         id: "type",
-        label: typeObj?.name || filters.jobTypeId,
+        label,
         onRemove: () => setFilters((f) => ({ ...f, jobTypeId: "" })),
       });
     }
 
     if (filters.workShiftId) {
       const shiftObj = workShifts.find((s) => s.id === filters.workShiftId);
+      const label =
+        shiftObj?.name ||
+        (filters.workShiftId === "f7d70b0b-57c0-4014-8002-7d170de4c299" || filters.workShiftId === "day"
+          ? "Day Shift"
+          : filters.workShiftId === "6e9a009a-35af-4bfe-baa9-a77b56ca443b" || filters.workShiftId === "night"
+            ? "Night Shift"
+            : filters.workShiftId === "8a5eafb2-daef-4246-9e58-5331a2c94dcd" || filters.workShiftId === "hybrid"
+              ? "Hybrid"
+              : filters.workShiftId);
       tags.push({
         id: "shift",
-        label: shiftObj?.name || filters.workShiftId,
+        label,
         onRemove: () => setFilters((f) => ({ ...f, workShiftId: "" })),
       });
     }
@@ -322,8 +481,8 @@ export function JobsContent({
   ]);
 
   return (
-    <main className="min-h-dvh bg-white dark:bg-background pt-28 sm:pt-32 transition-colors flex flex-col justify-between">
-      <div className="container mx-auto px-4 sm:px-6 max-w-7xl pb-20 flex-1">
+    <main className="relative flex min-h-dvh flex-col overflow-x-clip bg-white dark:bg-background pt-28 sm:pt-32 transition-colors">
+      <div className="container mx-auto px-4 sm:px-6 max-w-7xl pb-0">
         {/* Breadcrumb Navigation */}
         <nav
           aria-label="Breadcrumb"
@@ -350,7 +509,7 @@ export function JobsContent({
         <div className="mt-6 mb-6 sm:mt-8 sm:mb-8">
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
             <div>
-              <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl lg:text-5xl">
+              <h1 className="text-[1.8rem] font-bold tracking-tight text-foreground">
                 {heading}
               </h1>
               <p className="mt-2.5 max-w-2xl text-sm sm:text-base text-muted-foreground leading-relaxed">
@@ -660,6 +819,7 @@ export function JobsContent({
               totalJobsCount={totalJobs}
               isMobileDrawerOpen={isMobileDrawerOpen}
               onCloseMobileDrawer={() => setIsMobileDrawerOpen(false)}
+              onLocationToggle={setIsLocationExpanded}
             />
           </div>
 
@@ -854,40 +1014,156 @@ export function JobsContent({
               </div>
             )}
 
-            {/* Mobile App Callout Banner */}
-            <div className="mt-12 overflow-hidden rounded-3xl border border-brand-500/20 bg-gradient-to-br from-brand-50 via-card to-indigo-50/70 dark:from-brand-950/30 dark:via-card dark:to-indigo-950/30 p-6 sm:p-8 backdrop-blur-md shadow-xs">
-              <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-                <div className="space-y-2 text-center md:text-left">
-                  <div className="inline-flex items-center gap-1.5 rounded-full border border-brand-200 bg-brand-50 dark:border-brand-500/20 dark:bg-brand-500/10 px-3 py-1 text-xs font-semibold text-brand-700 dark:text-brand-400">
-                    <Sparkles className="h-3.5 w-3.5" />
-                    <span>Swipe-Based Hiring</span>
+            {/* Mobile App Callout Banner (when location filter is expanded) */}
+            {isLocationExpanded && (
+              <div className="mt-12 overflow-hidden rounded-3xl border border-brand-500/20 bg-gradient-to-br from-brand-50 via-card to-indigo-50/70 dark:from-brand-950/30 dark:via-card dark:to-indigo-950/30 p-6 sm:p-8 backdrop-blur-md shadow-xs">
+                <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+                  <div className="space-y-2 text-center md:text-left">
+                    <div className="inline-flex items-center gap-1.5 rounded-full border border-brand-200 bg-brand-50 dark:border-brand-500/20 dark:bg-brand-500/10 px-3 py-1 text-xs font-semibold text-brand-700 dark:text-brand-400">
+                      <Sparkles className="h-3.5 w-3.5" />
+                      <span>Swipe-Based Hiring</span>
+                    </div>
+                    <h3 className="text-xl font-bold tracking-tight text-foreground sm:text-2xl">
+                      Get interviewed 3x faster with the Hirance App
+                    </h3>
+                    <p className="max-w-xl text-xs sm:text-sm text-muted-foreground">
+                      Skip long application forms. Swipe right on roles you like and chat directly with verified hiring teams.
+                    </p>
                   </div>
-                  <h3 className="text-xl font-bold tracking-tight text-foreground sm:text-2xl">
-                    Get interviewed 3x faster with the Hirance App
-                  </h3>
-                  <p className="max-w-xl text-xs sm:text-sm text-muted-foreground">
-                    Skip long application forms. Swipe right on roles you like and chat directly with verified hiring teams.
-                  </p>
-                </div>
 
-                <a
-                  href={siteConfig.links.playStore}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 rounded-xl bg-brand-600 px-5 py-3 text-sm font-bold text-white shadow-md transition-all hover:bg-brand-500 hover:shadow-lg shrink-0"
-                >
-                  <Smartphone className="h-4 w-4" />
-                  <span>Download Hirance App</span>
-                  <ArrowUpRight className="h-4 w-4" />
-                </a>
+                  <a
+                    href={siteConfig.links.playStore}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 rounded-xl bg-brand-600 px-5 py-3 text-sm font-bold text-white shadow-md transition-all hover:bg-brand-500 hover:shadow-lg shrink-0"
+                  >
+                    <Smartphone className="h-4 w-4" />
+                    <span>Download Hirance App</span>
+                    <ArrowUpRight className="h-4 w-4" />
+                  </a>
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
 
-        {/* Full-Width Programmatic SEO Career Hubs */}
-        <JobSeoLinks currentRoleSlug={roleSlug} currentCitySlug={citySlug} />
+        {/* Mobile App Callout Banner (Full width when location filter is not expanded) */}
+        {!isLocationExpanded && (
+          <div className="mt-10 overflow-hidden rounded-3xl border border-brand-500/20 bg-gradient-to-br from-brand-50 via-card to-indigo-50/70 dark:from-brand-950/30 dark:via-card dark:to-indigo-950/30 p-6 sm:p-8 backdrop-blur-md shadow-xs">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+              <div className="space-y-2 text-center md:text-left">
+                <div className="inline-flex items-center gap-1.5 rounded-full border border-brand-200 bg-brand-50 dark:border-brand-500/20 dark:bg-brand-500/10 px-3 py-1 text-xs font-semibold text-brand-700 dark:text-brand-400">
+                  <Sparkles className="h-3.5 w-3.5" />
+                  <span>Swipe-Based Hiring</span>
+                </div>
+                <h3 className="text-xl font-bold tracking-tight text-foreground sm:text-2xl">
+                  Get interviewed 3x faster with the Hirance App
+                </h3>
+                <p className="max-w-xl text-xs sm:text-sm text-muted-foreground">
+                  Skip long application forms. Swipe right on roles you like and chat directly with verified hiring teams.
+                </p>
+              </div>
+
+              <a
+                href={siteConfig.links.playStore}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-xl bg-brand-600 px-5 py-3 text-sm font-bold text-white shadow-md transition-all hover:bg-brand-500 hover:shadow-lg shrink-0"
+              >
+                <Smartphone className="h-4 w-4" />
+                <span>Download Hirance App</span>
+                <ArrowUpRight className="h-4 w-4" />
+              </a>
+            </div>
+          </div>
+        )}
+
+        {/* FAQ Section - Matching How It Works Page Style */}
+        <section id="faq" className="relative pt-14 pb-8 sm:pt-16 sm:pb-10 overflow-hidden border-t border-border/30">
+          <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 relative z-10">
+
+            {/* Section Header (Clean & Professional) */}
+            <div className="text-center space-y-3">
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-foreground leading-tight">
+                Frequently Asked{" "}
+                <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-brand-600 dark:from-brand-400 dark:via-indigo-300 dark:to-sky-300 bg-clip-text text-transparent">
+                  Questions
+                </span>
+              </h2>
+              <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto">
+                Everything you need to know about finding jobs on Hirance.
+              </p>
+            </div>
+
+            {/* Category Filter Pills */}
+            <div className="mt-8 flex items-center justify-center gap-2 sm:gap-3 flex-wrap">
+              {["All Questions", "Candidates", "Employers", "General"].map((cat) => (
+                <button
+                  key={cat}
+                  onClick={() => {
+                    setActiveCategory(cat);
+                    setOpenFaq(0);
+                  }}
+                  className={`rounded-full px-5 py-2 text-xs sm:text-sm font-semibold transition-all duration-200 ${activeCategory === cat
+                    ? "bg-brand-600 text-white shadow-md shadow-brand-600/20"
+                    : "bg-muted/60 text-muted-foreground hover:bg-muted hover:text-foreground"
+                    }`}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
+
+            {/* Accordion FAQ Items (4-sided rounded border card) */}
+            <div className="mt-10 divide-y divide-border/40 border border-border/60 rounded-xl px-5 py-3.5 sm:px-8 sm:py-4 shadow-sm">
+              {filteredFaqs.map((faq, idx) => {
+                const isOpen = openFaq === idx;
+                return (
+                  <div key={idx} className="py-3 sm:py-3.5 first:pt-0 last:pb-0 transition-colors">
+                    <button
+                      onClick={() => setOpenFaq(isOpen ? null : idx)}
+                      aria-expanded={isOpen}
+                      aria-controls={`faq-answer-${idx}`}
+                      className="flex w-full items-start justify-between gap-4 text-left group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 rounded-lg py-1"
+                    >
+                      <span className="text-base font-medium text-foreground group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">
+                        {faq.question}
+                      </span>
+                      <span
+                        className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand-500/10 text-brand-600 dark:text-brand-400 transition-transform duration-200 ${isOpen ? "rotate-180 bg-brand-600 text-white dark:text-white" : ""
+                          }`}
+                      >
+                        <ChevronDown className="h-4 w-4" />
+                      </span>
+                    </button>
+
+                    <AnimatePresence initial={false}>
+                      {isOpen && (
+                        <motion.div
+                          id={`faq-answer-${idx}`}
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: "auto" }}
+                          exit={{ opacity: 0, height: 0 }}
+                          transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                          className="overflow-hidden"
+                        >
+                          <p className="pt-3 pb-1 text-sm sm:text-base leading-relaxed text-muted-foreground">
+                            {faq.answer}
+                          </p>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                );
+              })}
+            </div>
+
+          </div>
+        </section>
       </div>
+
+      {/* Full-Width Programmatic SEO Career Hubs */}
+      <JobSeoLinks currentRoleSlug={roleSlug} currentCitySlug={citySlug} />
 
       {/* Footer */}
       <Footer />

@@ -7,7 +7,7 @@ import {
 } from "@/lib/api/blogs";
 
 export const metadata: Metadata = {
-  title: "Blog & Hiring Insights | Hirance - India's 1st Swipe-Based Hiring Platform",
+  title: "Blog & Hiring Insights | Hirance - India's Swipe-Based Hiring Platform",
   description:
     "Explore the latest insights on swipe-based hiring, candidate Smart Scores, 60-second job postings, tech industry salary trends, and recruitment strategies.",
   keywords: [
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     url: "https://hirance.com/blog",
     title: "Blog & Hiring Insights | Hirance",
     description:
-      "Actionable insights, hiring trends, candidate guides, and tech recruitment strategies on India's 1st swipe-based hiring platform.",
+      "Actionable insights, hiring trends, candidate guides, and tech recruitment strategies on India's swipe-based hiring platform.",
     siteName: "Hirance",
     images: [
       {
@@ -62,7 +62,7 @@ export default async function BlogIndexPage() {
     name: "Hirance Blog & Insights",
     url: "https://hirance.com/blog",
     description:
-      "Articles, guides, and hiring benchmarks from India's 1st swipe-based recruitment platform.",
+      "Articles, guides, and hiring benchmarks from India's swipe-based recruitment platform.",
     publisher: {
       "@type": "Organization",
       name: "Hirance",

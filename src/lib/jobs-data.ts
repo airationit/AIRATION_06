@@ -295,6 +295,7 @@ export async function getJobs(params: {
   jobTypeId?: string;
   workMode?: string;
   workModeId?: string;
+  workShift?: string;
   workShiftId?: string;
   salaryRangeId?: string;
   skills?: string;
@@ -324,9 +325,9 @@ export async function getJobs(params: {
       job_role: params.roleId || undefined,
       city: params.cityId || undefined,
       state: params.stateId || undefined,
-      job_type: params.jobTypeId || undefined,
-      work_mode: params.workModeId || undefined,
-      work_shift: params.workShiftId || undefined,
+      job_type: params.jobTypeId || params.jobType || undefined,
+      work_mode: params.workModeId || params.workMode || undefined,
+      work_shift: params.workShiftId || params.workShift || undefined,
       experience_level: params.experienceId || undefined,
       salary_range: params.salaryRangeId || undefined,
       skills: params.skills || undefined,

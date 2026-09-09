@@ -33,6 +33,7 @@ interface MasterdataState {
   salaryRanges: SalaryRange[];
   states: State[];
   cities: City[];
+  popularCities: City[];
   experienceRanges: ExperienceRange[];
   jobTypes: JobType[];
   workModes: WorkMode[];
@@ -53,6 +54,7 @@ export const useMasterdataStore = create<MasterdataState>((set, get) => ({
   salaryRanges: [],
   states: [],
   cities: [],
+  popularCities: [],
   experienceRanges: [],
   jobTypes: [],
   workModes: [],
@@ -97,10 +99,13 @@ export const useMasterdataStore = create<MasterdataState>((set, get) => ({
         fetchSkills(),
       ]);
 
+      const popularCities = cities.filter((city) => city.featured);
+
       set({
         currencies,
         salaryRanges,
         cities,
+        popularCities,
         states,
         experienceRanges,
         jobTypes,
@@ -113,7 +118,7 @@ export const useMasterdataStore = create<MasterdataState>((set, get) => ({
         isLoading: false,
       });
     } catch (error) {
-      console.error("Failed to load masterdata in store:", error);
+      console.warn("Failed to load masterdata in store:", error);
       set({
         isLoading: false,
         error: error instanceof Error ? error.message : "Failed to load masterdata",

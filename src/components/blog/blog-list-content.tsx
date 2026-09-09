@@ -167,7 +167,7 @@ export function BlogListContent({
             transition={{ duration: 0.5, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
             className="mx-auto mt-4 max-w-2xl text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg"
           >
-            Actionable recruitment guides, candidate Smart Score benchmarks, and tech hiring speed strategies from India&apos;s 1st swipe-based platform.
+            Actionable recruitment guides, candidate Smart Score benchmarks, and tech hiring speed strategies from India&apos;s swipe-based platform.
           </motion.p>
 
           {/* Sleek Search Bar */}

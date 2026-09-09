@@ -1,18 +1,18 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef, useEffect } from "react";
 import {
   motion,
   useReducedMotion,
   useScroll,
   useTransform,
-  useSpring,
   useMotionValueEvent,
 } from "framer-motion";
-import { ArrowRight, Play, Pause, Volume2, VolumeX } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { siteConfig } from "@/config/site";
 import { GooglePlayButton } from "@/components/shared";
+import { JobPostDemo } from "./job-post-demo";
 import { cn } from "@/lib/utils";
 
 const headlineWords = ["Swipe.", "Match.", "Get", "Hired."];
@@ -20,20 +20,8 @@ const headlineWords = ["Swipe.", "Match.", "Get", "Hired."];
 export function Hero() {
   const sectionRef = useRef<HTMLElement>(null);
   const copyRef = useRef<HTMLDivElement>(null);
-  const videoSectionRef = useRef<HTMLDivElement>(null);
-  const video1Ref = useRef<HTMLVideoElement>(null);
-  const video2Ref = useRef<HTMLVideoElement>(null);
+  const demoSectionRef = useRef<HTMLDivElement>(null);
   const reducedMotion = useReducedMotion();
-
-  const [activeSlide, setActiveSlide] = useState<0 | 1>(0);
-
-  // Video 1 controls state
-  const [isPlaying1, setIsPlaying1] = useState(true);
-  const [isMuted1, setIsMuted1] = useState(true);
-
-  // Video 2 controls state
-  const [isPlaying2, setIsPlaying2] = useState(true);
-  const [isMuted2, setIsMuted2] = useState(true);
 
   // Smooth scroll animations for Copy Text section (natural scale, elevation, fade & blur, 0% pinning jitter)
   const { scrollYProgress: copyScrollProgress } = useScroll({
@@ -46,128 +34,6 @@ export function Hero() {
   const copyY = useTransform(copyScrollProgress, [0, 0.8], [0, -50]);
   const copyBlurNum = useTransform(copyScrollProgress, [0, 0.75], [0, 10]);
   const copyFilter = useTransform(copyBlurNum, (v) => `blur(${v}px)`);
-
-  // Track scroll progress across the 2-video horizontal carousel section (320vh height for ultra-smooth scroll travel)
-  const { scrollYProgress: videoScrollProgress } = useScroll({
-    target: videoSectionRef,
-    offset: ["start start", "end end"],
-  });
-
-  const springVideoProgress = useSpring(videoScrollProgress, {
-    stiffness: 65,
-    damping: 24,
-    mass: 0.8,
-    restDelta: 0.001,
-  });
-
-  // Ultra-Smooth Continuous Horizontal Carousel Translation:
-  // 0.00 -> 0.20: Video 1 pinned full screen for comfortable reading
-  // 0.20 -> 0.80: Smooth, gradual continuous slide-over from Video 1 (-50%) to Video 2 (0%)
-  // 0.80 -> 1.00: Video 2 pinned full screen before passing to next section
-  const trackX = useTransform(
-    springVideoProgress,
-    [0.0, 0.20, 0.50, 0.80, 1.0],
-    ["-50%", "-50%", "-25%", "0%", "0%"]
-  );
-
-  // Motion depth and blur effects for content inside Slide 1 & Slide 2 text overlays
-  const slide1TextY = useTransform(springVideoProgress, [0.20, 0.50], [0, -30]);
-  const slide1TextOpacity = useTransform(springVideoProgress, [0.20, 0.45], [1, 0]);
-  const slide1BlurNum = useTransform(springVideoProgress, [0.20, 0.45], [0, 8]);
-  const slide1TextFilter = useTransform(slide1BlurNum, (v) => `blur(${v}px)`);
-
-  const slide2TextY = useTransform(springVideoProgress, [0.50, 0.80], [40, 0]);
-  const slide2TextOpacity = useTransform(springVideoProgress, [0.55, 0.80], [0, 1]);
-  const slide2BlurNum = useTransform(springVideoProgress, [0.55, 0.80], [8, 0]);
-  const slide2TextFilter = useTransform(slide2BlurNum, (v) => `blur(${v}px)`);
-
-  // Manage video 1 auto play/pause when active slide changes or component mounts
-  useEffect(() => {
-    const v1 = video1Ref.current;
-    if (!v1) return;
-    if (activeSlide === 0) {
-      v1.play().catch(() => {});
-      setIsPlaying1(true);
-    } else {
-      v1.pause();
-      setIsPlaying1(false);
-    }
-  }, [activeSlide]);
-
-  // Manage video 2 auto play/pause when active slide changes
-  useEffect(() => {
-    const v2 = video2Ref.current;
-    if (!v2) return;
-    if (activeSlide === 1) {
-      v2.play().catch(() => {});
-      setIsPlaying2(true);
-    } else {
-      v2.pause();
-      setIsPlaying2(false);
-    }
-  }, [activeSlide]);
-
-  // Update active slide state based on scroll
-  useMotionValueEvent(springVideoProgress, "change", (latest) => {
-    if (latest >= 0.5 && activeSlide !== 1) {
-      setActiveSlide(1);
-    } else if (latest < 0.5 && activeSlide !== 0) {
-      setActiveSlide(0);
-    }
-  });
-
-  const toggleMute1 = () => {
-    const v = video1Ref.current;
-    if (!v) return;
-    v.muted = !isMuted1;
-    setIsMuted1(!isMuted1);
-  };
-
-  const togglePlay1 = () => {
-    const v = video1Ref.current;
-    if (!v) return;
-    if (isPlaying1) {
-      v.pause();
-      setIsPlaying1(false);
-    } else {
-      v.play();
-      setIsPlaying1(true);
-    }
-  };
-
-  const toggleMute2 = () => {
-    const v = video2Ref.current;
-    if (!v) return;
-    v.muted = !isMuted2;
-    setIsMuted2(!isMuted2);
-  };
-
-  const togglePlay2 = () => {
-    const v = video2Ref.current;
-    if (!v) return;
-    if (isPlaying2) {
-      v.pause();
-      setIsPlaying2(false);
-    } else {
-      v.play();
-      setIsPlaying2(true);
-    }
-  };
-
-  // Scroll smoothly to Video 1 or Video 2
-  const scrollToSlide = (slideIndex: number) => {
-    const container = videoSectionRef.current;
-    if (!container) return;
-    const rect = container.getBoundingClientRect();
-    const scrollTop = window.scrollY || document.documentElement.scrollTop;
-    const containerTop = rect.top + scrollTop;
-    const totalHeight = container.offsetHeight - window.innerHeight;
-
-    const targetFraction = slideIndex === 0 ? 0.1 : 0.9;
-    const targetScroll = containerTop + targetFraction * totalHeight;
-
-    window.scrollTo({ top: targetScroll, behavior: "smooth" });
-  };
 
   return (
     <section ref={sectionRef} className="relative overflow-x-clip">
@@ -184,8 +50,8 @@ export function Hero() {
       {/* HERO COPY TEXT SECTION (Natural smooth Framer Motion scaling, elevation, fade & blur) */}
       <div
         className={cn(
-          "relative z-0 flex items-center justify-center px-6 py-16 sm:py-24",
-          reducedMotion ? "min-h-auto" : "min-h-[85dvh]"
+          "relative z-0 flex items-center justify-center px-6 pt-28 pb-16 sm:pt-36 sm:pb-20 lg:pt-44 lg:pb-24",
+          reducedMotion ? "min-h-auto" : "min-h-[72dvh] sm:min-h-[76dvh]"
         )}
       >
         <motion.div
@@ -217,7 +83,7 @@ export function Hero() {
             }}
             className="mb-4 text-xs sm:text-sm font-semibold tracking-wider uppercase text-brand-600 dark:text-brand-400"
           >
-            India&apos;s 1st Swipe-Based Hiring Platform
+            India&apos;s Swipe-Based Hiring Platform
           </motion.p>
 
           {/* Headline Words with 3D perspective entrance */}
@@ -258,9 +124,9 @@ export function Hero() {
               delay: reducedMotion ? 0 : 0.48,
               ease: [0.16, 1, 0.3, 1],
             }}
-            className="mx-auto mt-6 max-w-2xl text-pretty text-lg sm:text-xl font-semibold text-foreground/90 leading-snug"
+            className="mx-auto mt-6 max-w-4xl text-base sm:text-lg md:text-xl font-semibold text-foreground/90 leading-snug"
           >
-            Fastest way to Post &amp; Apply for jobs—
+            Fastest way to Post &amp; Apply for jobs—{" "}
             <span className="text-brand-600 dark:text-brand-400 font-bold">
               No forms, No scrolling, No waiting.
             </span>
@@ -279,7 +145,7 @@ export function Hero() {
             }}
             className="mx-auto mt-4 max-w-2xl text-pretty text-sm sm:text-base text-muted-foreground leading-relaxed font-normal"
           >
-            Hirance is India&apos;s first swipe-based hiring platform, built to solve the
+            Hirance is India&apos;s swipe-based hiring platform, built to solve the
             biggest problem in job hunting and recruitment—speed. No more long forms,
             resume uploads, or endless job scrolling. Candidates swipe right to apply and
             left to skip, based on an AI-calculated match score for every job. Employers
@@ -312,177 +178,19 @@ export function Hero() {
         </motion.div>
       </div>
 
-      {/* FULL-SCREEN HORIZONTAL VIDEO CAROUSEL SECTION (Side-by-Side Track: Slide 1 moves left, Slide 2 takes its place) */}
+      {/* FULL-SCREEN JOB POST DEMO SECTION (Hidden on mobile devices for clean, fast scrolling) */}
       <div
-        ref={videoSectionRef}
+        ref={demoSectionRef}
         className={cn(
-          "relative w-full",
-          reducedMotion ? "min-h-screen" : "h-[320vh]"
+          "relative w-full hidden md:block",
+          "h-[calc(100dvh+4rem)]"
         )}
       >
         {/* Pinned Sticky Viewport (100vh x 100vw) */}
-        <div className="sticky top-0 w-full h-screen overflow-hidden bg-transparent text-white">
-          
-          {/* Horizontal Track (200% width containing Video 1 & Video 2 side by side) */}
-          <motion.div
-            style={{ x: trackX }}
-            className="flex flex-row w-[200%] h-full"
-          >
-            
-            {/* SLIDE 2: Video 2 (Positioned on Left, enters from Left on scroll) */}
-            <div className="relative w-1/2 h-full flex-shrink-0 p-2 sm:p-3 md:p-3.5">
-              <div className="relative w-full h-full flex flex-col justify-between overflow-hidden rounded-xl sm:rounded-2xl border border-white/20 bg-black/30 backdrop-blur-sm shadow-2xl">
-                <video
-                  ref={video2Ref}
-                  src="/videos/hero_video2.mp4"
-                  className="absolute inset-0 h-full w-full object-cover object-center opacity-100 scale-[1.01]"
-                  autoPlay
-                  muted={isMuted2}
-                  loop
-                  playsInline
-                  aria-label="Next generation hiring intelligence video showcase 2"
-                />
-                {/* Subtle bottom shadow gradient for text contrast */}
-                <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
-
-                {/* Slide 2 Header Bar */}
-                <div className="relative z-20 w-full flex items-center justify-end p-6 sm:p-10 pt-12 sm:pt-16">
-
-                  {/* Video 2 Controls */}
-                  <div className="flex items-center gap-3">
-                    <button
-                      onClick={toggleMute2}
-                      className="flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-full border border-white/20 bg-slate-900/60 text-white backdrop-blur-md transition-all hover:bg-white/20 active:scale-95 shadow-lg"
-                      aria-label={isMuted2 ? "Unmute video 2" : "Mute video 2"}
-                    >
-                      {isMuted2 ? <VolumeX className="h-4 w-4 text-slate-300" /> : <Volume2 className="h-4 w-4 text-brand-400 animate-pulse" />}
-                    </button>
-                    <button
-                      onClick={togglePlay2}
-                      className="flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-full border border-white/20 bg-slate-900/60 text-white backdrop-blur-md transition-all hover:bg-white/20 active:scale-95 shadow-lg"
-                      aria-label={isPlaying2 ? "Pause video 2" : "Play video 2"}
-                    >
-                      {isPlaying2 ? <Pause className="h-4 w-4 text-white" /> : <Play className="h-4 w-4 text-brand-400 fill-brand-400 ml-0.5" />}
-                    </button>
-                  </div>
-                </div>
-
-                {/* Slide 2 Bottom Info (Motion entrance as Slide 2 takes place of Slide 1) */}
-                <motion.div
-                  style={
-                    reducedMotion
-                      ? {}
-                      : {
-                          y: slide2TextY,
-                          opacity: slide2TextOpacity,
-                          filter: slide2TextFilter,
-                        }
-                  }
-                  className="relative z-20 w-full p-6 sm:p-10 flex flex-col sm:flex-row sm:items-end justify-between gap-6"
-                >
-                  <div className="max-w-xl">
-                    <h2 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white leading-tight">
-                      Post in 60s,{" "}
-                      <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-400 via-sky-300 to-indigo-300">
-                        Hire Instantly
-                      </span>
-                    </h2>
-                    <p className="mt-2 text-xs sm:text-sm text-slate-300 font-medium max-w-md">
-                      No forms, no scrolling, no waiting — pre-filtered talent on demand.
-                    </p>
-                  </div>
-
-                  <div className="shrink-0">
-                    <Link
-                      href={siteConfig.links.employer}
-                      className="group inline-flex h-11 sm:h-12 items-center justify-center gap-2 rounded-full bg-gradient-to-r from-brand-600 to-sky-600 px-6 sm:px-7 text-xs sm:text-sm font-semibold text-white transition-all duration-300 hover:shadow-[0_0_20px_rgba(37,99,235,0.5)] hover:scale-[1.02]"
-                    >
-                      Explore Platform
-                      <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                    </Link>
-                  </div>
-                </motion.div>
-              </div>
-            </div>
-
-            {/* SLIDE 1: Video 1 (Positioned on Right, shown initially at scroll top) */}
-            <div className="relative w-1/2 h-full flex-shrink-0 p-2 sm:p-3 md:p-3.5">
-              <div className="relative w-full h-full flex flex-col justify-between overflow-hidden rounded-xl sm:rounded-2xl border border-white/20 bg-black/30 backdrop-blur-sm shadow-2xl">
-                <video
-                  ref={video1Ref}
-                  src="/videos/hero_video.mp4"
-                  className="absolute inset-0 h-full w-full object-cover object-center opacity-100 scale-[1.01]"
-                  autoPlay
-                  muted={isMuted1}
-                  loop
-                  playsInline
-                  aria-label="Hirance platform showcase video 1"
-                />
-                {/* Subtle bottom shadow gradient for text contrast */}
-                <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
-
-                {/* Slide 1 Header Bar */}
-                <div className="relative z-20 w-full flex items-center justify-end p-6 sm:p-10 pt-12 sm:pt-16">
-
-                  {/* Video 1 Controls */}
-                  <div className="flex items-center gap-3">
-                    <button
-                      onClick={toggleMute1}
-                      className="flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-full border border-white/20 bg-slate-900/60 text-white backdrop-blur-md transition-all hover:bg-white/20 active:scale-95 shadow-lg"
-                      aria-label={isMuted1 ? "Unmute video 1" : "Mute video 1"}
-                    >
-                      {isMuted1 ? <VolumeX className="h-4 w-4 text-slate-300" /> : <Volume2 className="h-4 w-4 text-brand-400 animate-pulse" />}
-                    </button>
-                    <button
-                      onClick={togglePlay1}
-                      className="flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-full border border-white/20 bg-slate-900/60 text-white backdrop-blur-md transition-all hover:bg-white/20 active:scale-95 shadow-lg"
-                      aria-label={isPlaying1 ? "Pause video 1" : "Play video 1"}
-                    >
-                      {isPlaying1 ? <Pause className="h-4 w-4 text-white" /> : <Play className="h-4 w-4 text-brand-400 fill-brand-400 ml-0.5" />}
-                    </button>
-                  </div>
-                </div>
-
-                {/* Slide 1 Bottom Info */}
-                <motion.div
-                  style={
-                    reducedMotion
-                      ? {}
-                      : {
-                          opacity: slide1TextOpacity,
-                          y: slide1TextY,
-                          filter: slide1TextFilter,
-                        }
-                  }
-                  className="relative z-20 w-full p-6 sm:p-10 flex flex-col sm:flex-row sm:items-end justify-between gap-6"
-                >
-                  <div className="max-w-xl">
-                    <h2 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white leading-tight">
-                      Swipe. Match.{" "}
-                      <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-400 via-sky-300 to-indigo-300">
-                        Get Hired.
-                      </span>
-                    </h2>
-                    <p className="mt-2 text-xs sm:text-sm text-slate-300 font-medium max-w-md">
-                      India&apos;s 1st swipe-based hiring platform. Instant AI match scoring with zero forms.
-                    </p>
-                  </div>
-
-                  <div className="shrink-0">
-                    <Link
-                      href={siteConfig.links.employer}
-                      className="group inline-flex h-11 sm:h-12 items-center justify-center gap-2 rounded-full bg-brand-600 px-6 sm:px-7 text-xs sm:text-sm font-semibold text-white transition-all duration-300 hover:bg-brand-500 hover:shadow-[0_0_20px_rgba(37,99,235,0.5)]"
-                    >
-                      Get Started
-                      <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                    </Link>
-                  </div>
-                </motion.div>
-              </div>
-            </div>
-
-          </motion.div>
-
+        <div className="sticky top-0 h-[calc(100dvh+4rem)] w-full overflow-hidden bg-transparent text-white">
+          <div className="relative h-full w-full p-2 pt-20 pb-1 sm:p-3 sm:pt-24 sm:pb-1 md:p-3.5 md:pt-24 md:pb-1">
+            <JobPostDemo className="h-full w-full" />
+          </div>
         </div>
       </div>
     </section>

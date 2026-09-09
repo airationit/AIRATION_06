@@ -44,14 +44,19 @@ export async function fetchBlogs(
     });
 
     if (res && res.success && Array.isArray(res.data)) {
-      return res;
+      // If backend has full dataset (or if searching/filtering), return API response.
+      // If backend has only partial data (less than local dataset), fall through to local fallback.
+      const isFiltered = params?.search || (params?.category && params.category !== "all") || params?.tag;
+      if (isFiltered || (res.pagination?.count ?? res.data.length) >= FALLBACK_BLOG_LIST_ITEMS.length) {
+        return res;
+      }
     }
 
-    throw new Error(res?.message || "Invalid response format from blogs API");
+    throw new Error(res?.message || "API returned incomplete dataset, using local static blogs");
   } catch (error) {
-    console.warn("fetchBlogs API failed, falling back to local dataset:", error);
+    console.warn("fetchBlogs API failed or is not fully populated, using local dataset:", error);
 
-    // Filter fallback data accurately
+    // ── Local fallback: filter, sort & paginate FALLBACK_BLOG_LIST_ITEMS ──
     let filtered = [...FALLBACK_BLOG_LIST_ITEMS];
 
     if (params) {
@@ -89,7 +94,7 @@ export async function fetchBlogs(
       } else if (params.ordering === "published_at") {
         filtered.sort((a, b) => new Date(a.published_at).getTime() - new Date(b.published_at).getTime());
       } else {
-        // default -published_at
+        // default: newest first
         filtered.sort((a, b) => new Date(b.published_at).getTime() - new Date(a.published_at).getTime());
       }
     }
@@ -103,7 +108,7 @@ export async function fetchBlogs(
 
     return {
       success: true,
-      message: "Blogs fetched successfully (fallback)",
+      message: "Blogs fetched successfully (local dataset)",
       data: paginatedItems,
       pagination: {
         count: totalCount,
