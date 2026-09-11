@@ -80,7 +80,7 @@ export default function QrMarketingPage() {
         priceCurrency: "INR",
       },
       description:
-        "India's swipe-based hiring platform with instant AI match scores, direct HR chat, and one-tap application.",
+        "Next-generation swipe-based hiring platform with instant AI match scores, direct HR chat, and one-tap application.",
       url: siteConfig.links.playStore,
       aggregateRating: {
         "@type": "AggregateRating",

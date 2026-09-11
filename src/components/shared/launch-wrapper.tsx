@@ -154,14 +154,6 @@ export function LaunchWrapper({ children }: LaunchWrapperProps) {
                 className="hidden h-6 w-auto object-contain dark:block transition-transform duration-300 group-hover:scale-105"
               />
             </Link>
-
-            <span className="hidden md:inline-flex items-center gap-2.5 text-xs sm:text-sm font-medium text-slate-500 dark:text-slate-400">
-              <span>Swipe</span>
-              <span className="text-slate-300 dark:text-slate-600">•</span>
-              <span>Match</span>
-              <span className="text-slate-300 dark:text-slate-600">•</span>
-              <span>Get Hired</span>
-            </span>
           </div>
 
           {/* Status & Support */}

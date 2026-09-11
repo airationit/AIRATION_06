@@ -161,7 +161,7 @@ export function AboutContent() {
             transition={{ duration: 0.5, delay: 0.05, ease: [0.25, 0.1, 0.25, 1] }}
             className="text-3xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl text-foreground"
           >
-            India's Swipe-Based{" "}
+            Next-Gen Swipe-Based{" "}
             <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-sky-500 bg-clip-text text-transparent">
               Hiring Platform
             </span>
@@ -480,7 +480,7 @@ export function AboutContent() {
             Smarter hiring starts here
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-base text-muted-foreground">
-            Join thousands of candidates and employers experiencing India's swipe-based job platform.
+            Join thousands of candidates and employers experiencing the next-gen swipe-based job platform.
           </p>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
             <GooglePlayButton />

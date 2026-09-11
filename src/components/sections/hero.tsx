@@ -83,7 +83,7 @@ export function Hero() {
             }}
             className="mb-4 text-xs sm:text-sm font-semibold tracking-wider uppercase text-brand-600 dark:text-brand-400"
           >
-            India&apos;s Swipe-Based Hiring Platform
+            Next-Gen Swipe-Based Hiring Platform
           </motion.p>
 
           {/* Headline Words with 3D perspective entrance */}
@@ -145,7 +145,7 @@ export function Hero() {
             }}
             className="mx-auto mt-4 max-w-2xl text-pretty text-sm sm:text-base text-muted-foreground leading-relaxed font-normal"
           >
-            Hirance is India&apos;s swipe-based hiring platform, built to solve the
+            Hirance is the next-generation swipe-based hiring platform, built to solve the
             biggest problem in job hunting and recruitment—speed. No more long forms,
             resume uploads, or endless job scrolling. Candidates swipe right to apply and
             left to skip, based on an AI-calculated match score for every job. Employers

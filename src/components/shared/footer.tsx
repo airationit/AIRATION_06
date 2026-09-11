@@ -106,7 +106,7 @@ export function Footer() {
           <div className="lg:col-span-5 flex flex-col justify-start">
             <Logo dark />
             <p className="mt-3.5 text-sm max-w-sm leading-relaxed text-slate-400">
-              India&apos;s Swipe-Based Hiring Platform. Fast, transparent, and direct matchmaking for candidates and employers.
+              Next-Gen Swipe-Based Hiring Platform. Fast, transparent, and direct matchmaking for candidates and employers.
             </p>
 
             {/* QR Code (Left) + Google Play & Socials Stack (Right) */}
