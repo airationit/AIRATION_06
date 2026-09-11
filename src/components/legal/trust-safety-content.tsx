@@ -183,7 +183,7 @@ export function TrustSafetyContent() {
 
             <SectionHeading id="sec-mission">Our Mission</SectionHeading>
             <Para>
-              Hirance is India&apos;s swipe-based hiring platform, connecting candidates with verified employers through a transparent and direct process. Our mission is to make job searching safe, honest, and efficient for everyone.
+              Hirance is a next-generation swipe-based hiring platform, connecting candidates with verified employers through a transparent and direct process. Our mission is to make job searching safe, honest, and efficient for everyone.
             </Para>
             <Para>
               We invest deeply in trust and safety measures — from employer verification to data protection — because we understand that your career decisions depend on the integrity of our platform.

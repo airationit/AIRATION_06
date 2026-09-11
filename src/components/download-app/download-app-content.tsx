@@ -81,7 +81,7 @@ export function DownloadAppContent() {
             <div className="lg:col-span-7 space-y-6 text-center lg:text-left">
               <div className="inline-flex items-center gap-2 rounded-full border border-brand-500/20 bg-brand-50/80 dark:bg-brand-950/40 px-3.5 py-1.5 text-xs font-bold text-brand-700 dark:text-brand-300 shadow-xs">
                 <Smartphone className="h-4 w-4 text-brand-600 dark:text-brand-400" />
-                <span>India's #1 Swipe Hiring App</span>
+                <span>The #1 Swipe Hiring App</span>
               </div>
 
               <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-foreground leading-[1.15]">

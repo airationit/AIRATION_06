@@ -351,7 +351,7 @@ export function LaunchWrapper({ children }: LaunchWrapperProps) {
          ───────────────────────────────────────────────────────────── */}
       <header className="relative z-20 w-full border-b border-border/50 bg-background/70 backdrop-blur-xl px-6 py-4 sm:px-10 lg:px-16 transition-colors">
         <div className="mx-auto flex max-w-7xl items-center justify-between">
-          {/* Logo & Subtitle */}
+          {/* Logo */}
           <div className="flex items-center gap-3 sm:gap-4">
             <Link href="/" className="flex items-center gap-2.5 group">
               <Image
@@ -379,14 +379,6 @@ export function LaunchWrapper({ children }: LaunchWrapperProps) {
                 className="hidden h-5.5 w-auto object-contain dark:block transition-transform duration-300 group-hover:scale-105"
               />
             </Link>
-
-            <span className="hidden md:inline-flex items-center gap-2 text-xs font-medium text-muted-foreground border-l border-border/70 pl-4">
-              <span>Swipe</span>
-              <span className="text-brand-500">•</span>
-              <span>Match</span>
-              <span className="text-brand-500">•</span>
-              <span>Get Hired</span>
-            </span>
           </div>
 
           {/* Status & Support Contact */}
@@ -447,7 +439,7 @@ export function LaunchWrapper({ children }: LaunchWrapperProps) {
           transition={{ duration: 0.7, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
           className="mx-auto mt-4 max-w-2xl text-base sm:text-lg text-muted-foreground leading-relaxed font-normal"
         >
-          India&apos;s swipe-based hiring platform is almost here. Fastest way to Post &amp; Apply for jobs—{" "}
+          The next-generation swipe-based hiring platform is almost here. Fastest way to Post &amp; Apply for jobs—{" "}
           <span className="font-semibold text-foreground">
             No forms, No scrolling, No waiting.
           </span>

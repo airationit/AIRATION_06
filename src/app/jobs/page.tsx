@@ -115,7 +115,7 @@ export default async function JobsPage({ searchParams }: JobsPageProps) {
         initialJobs={data.jobs}
         totalJobs={data.totalJobs}
         heading={keyword ? `Jobs matching "${keyword}"` : "Find Your Next Career Move"}
-        subheading={keyword ? "Explore verified openings matching your search criteria." : "Search verified job openings across India's fastest-growing startups and enterprises. Apply with one swipe."}
+        subheading={keyword ? "Explore verified openings matching your search criteria." : "Search verified job openings across leading startups and enterprises. Apply with one swipe."}
         breadcrumbLabel={keyword || "All Jobs"}
         initialSearch={keyword}
         workModeSlug={workModeSlug}
