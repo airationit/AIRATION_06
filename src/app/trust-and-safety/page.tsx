@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     "Hirance candidate data protection",
     "job platform safety India",
     "Hirance security measures",
-    "Airation Softtech safety",
+    "Hirance platform safety",
     "Hirance zero fee candidates",
     "trusted hiring platform India",
     "secure job portal India 2026",
@@ -49,9 +49,10 @@ export default function TrustSafetyPage() {
       "Hirance's Trust & Safety page outlining employer verification, candidate data protection, content standards, and platform safety commitments.",
     publisher: {
       "@type": "Organization",
-      name: "Airation Softtech Private Limited",
+      name: "Hirance Private Limited",
       url: "https://hirance.com",
       email: "hello@hirance.com",
+      telephone: "+91-9793780913",
       address: {
         "@type": "PostalAddress",
         streetAddress: "8/4, Sector-4, Jankipuram",

@@ -50,7 +50,7 @@ export interface JobCardData {
   type: string;
   tags: string[];
   breakdown: JobBreakdownItem[];
-  logoType?: "airation" | "nexus" | "pixel" | "cerebra";
+  logoType?: "hirance" | "nexus" | "pixel" | "cerebra";
   logoColor?: string;
   logoLetter?: string;
 }
@@ -60,7 +60,7 @@ const JOBS_DATA: JobCardData[] = [
     id: "job-sales-manager",
     department: "Sales & Distribution",
     title: "Area Sales Manager",
-    company: "Airation Softtech P...",
+    company: "Hirance Private L...",
     verified: false,
     verifiedText: "Employer Not Verified",
     matchScore: 33,
@@ -84,7 +84,7 @@ const JOBS_DATA: JobCardData[] = [
       { label: "Location", score: "7/7", status: "high" },
       { label: "Salary", score: "2.5/5", status: "mid" },
     ],
-    logoType: "airation",
+    logoType: "hirance",
   },
   {
     id: "job-software-engineer",
@@ -184,7 +184,7 @@ const JOBS_DATA: JobCardData[] = [
   },
 ];
 
-function AirationSwirlLogo({ className }: { className?: string }) {
+function HiranceSwirlLogo({ className }: { className?: string }) {
   return (
     <div
       className={cn(
@@ -432,8 +432,8 @@ function SwipeCard({
           <div className="flex items-start justify-between gap-2">
             {/* Company Logo & Details */}
             <div className="flex items-center gap-2 min-w-0">
-              {job.logoType === "airation" ? (
-                <AirationSwirlLogo />
+              {job.logoType === "hirance" ? (
+                <HiranceSwirlLogo />
               ) : (
                 <div
                   className={cn(

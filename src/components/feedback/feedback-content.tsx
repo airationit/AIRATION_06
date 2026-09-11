@@ -39,7 +39,7 @@ export const DUMMY_FEEDBACKS: FeedbackItem[] = [
     name: "Aarav Sharma",
     role: "candidate",
     designation: "Full Stack Developer",
-    company: "Airation Tech",
+    company: "Apex Tech Labs",
     rating: 5,
     headline: "No 5-page forms. Applied in 1 swipe and closed my offer!",
     comment:

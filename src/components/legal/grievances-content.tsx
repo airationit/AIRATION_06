@@ -164,7 +164,7 @@ export function GrievancesContent() {
 
             <SectionHeading id="sec-overview">Overview</SectionHeading>
             <Para>
-              Airation Softtech Private Limited (&quot;Hirance&quot;) has established a formal grievance redressal mechanism in compliance with the Information Technology Act, 2000, the Information Technology (Intermediary Guidelines and Digital Media Ethics Code) Rules, 2021, and the Digital Personal Data Protection Act, 2023.
+              Hirance Private Limited (&quot;Hirance&quot;) has established a formal grievance redressal mechanism in compliance with the Information Technology Act, 2000, the Information Technology (Intermediary Guidelines and Digital Media Ethics Code) Rules, 2021, and the Digital Personal Data Protection Act, 2023.
             </Para>
             <Para>
               Any user — candidate, employer, or visitor — who has a complaint regarding the content on the Platform, a violation of their data rights, an account issue, or any other concern may raise a formal grievance using the channels listed below.
@@ -182,13 +182,14 @@ export function GrievancesContent() {
                 </span>
                 <div>
                   <p className="font-bold text-[15px] text-slate-900 dark:text-white">Grievance Officer</p>
-                  <p className="text-[13px] text-slate-500 dark:text-slate-400">Airation Softtech Private Limited</p>
+                  <p className="text-[13px] text-slate-500 dark:text-slate-400">Hirance Private Limited</p>
                 </div>
               </div>
               <div className="space-y-2 text-[14px] text-slate-600 dark:text-slate-300 border-t border-slate-100 dark:border-slate-800 pt-4">
                 <p>Name: <span className="font-semibold text-slate-800 dark:text-slate-200">Grievance Officer, Hirance</span></p>
                 <p>Email: <a href="mailto:grievance@hirance.com" className="text-blue-600 dark:text-blue-400 font-medium hover:underline">grievance@hirance.com</a></p>
-                <p>Alternate: <a href="mailto:airation.it@gmail.com" className="text-blue-600 dark:text-blue-400 font-medium hover:underline">airation.it@gmail.com</a></p>
+                <p>Alternate: <a href="mailto:hello@hirance.com" className="text-blue-600 dark:text-blue-400 font-medium hover:underline">hello@hirance.com</a></p>
+                <p>Phone: <a href="tel:+919793780913" className="text-blue-600 dark:text-blue-400 font-medium hover:underline">+91 9793780913</a></p>
                 <p>Address: 8/4, Sector-4, Jankipuram, Lucknow – 226021, Uttar Pradesh, India</p>
                 <p>Working hours: Monday – Friday, 10:00 AM – 6:00 PM IST</p>
               </div>

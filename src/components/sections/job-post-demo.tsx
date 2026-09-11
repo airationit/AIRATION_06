@@ -176,7 +176,7 @@ const SignInScreen = ({ reducedMotion }: { reducedMotion: boolean }) => {
           </div>
           <div>
             <p className="text-xs leading-tight font-bold text-slate-900">
-              Airation Softtech
+              Hirance Private Limited
             </p>
             <div className="mt-1.5 h-1.5 w-14 rounded-full bg-slate-100" />
           </div>

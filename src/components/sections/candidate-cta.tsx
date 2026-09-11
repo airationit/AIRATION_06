@@ -16,7 +16,7 @@ const DECK_CARDS = [
   {
     id: "card-1",
     title: "Senior React Developer",
-    company: "Airation Softtech",
+    company: "Hirance Technologies",
     match: "96%",
     tags: ["React", "Node", "TypeScript"],
     color: "from-cyan-400 to-blue-600",

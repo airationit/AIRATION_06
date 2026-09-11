@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     "how to identify fake recruiter",
     "job portal fraud India",
     "protect yourself from job scam",
-    "Airation Softtech fraud",
+    "Hirance fraud protection",
     "report fake job offer India",
     "cybercrime helpline 1930",
     "is Hirance legitimate",
@@ -47,12 +47,13 @@ export default function FraudAlertPage() {
     name: "Fraud Alert | Hirance",
     url: "https://hirance.com/fraud-alert",
     description:
-      "Official fraud alert page from Hirance (Airation Softtech). Educates job seekers on identifying fake job offers, impersonation scams, and how to report fraud.",
+      "Official fraud alert page from Hirance Private Limited. Educates job seekers on identifying fake job offers, impersonation scams, and how to report fraud.",
     publisher: {
       "@type": "Organization",
-      name: "Airation Softtech Private Limited",
+      name: "Hirance Private Limited",
       url: "https://hirance.com",
       email: "fraud@hirance.com",
+      telephone: "+91-9793780913",
       address: {
         "@type": "PostalAddress",
         streetAddress: "8/4, Sector-4, Jankipuram",

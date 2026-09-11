@@ -219,7 +219,7 @@ const tocSections = [
   { id: "sec-legal", label: "Legal Basis" },
   { id: "sec-1", label: "1. Definitions" },
   { id: "sec-2", label: "2. Content Ownership" },
-  { id: "sec-3", label: "3. License to Airation" },
+  { id: "sec-3", label: "3. License to Hirance" },
   { id: "sec-4", label: "4. Restrictions on Use" },
   { id: "sec-5", label: "5. Platform IP" },
   { id: "sec-6", label: "6. Copyright & Takedown" },
@@ -360,7 +360,7 @@ export function TermsContent() {
 
             <div className="flex flex-wrap items-center gap-3">
               <span className="inline-flex items-center px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-[12px] font-semibold text-slate-700 dark:text-slate-300">
-                Airation Softtech Pvt. Ltd.
+                Hirance Private Limited
               </span>
               <span className="inline-flex items-center px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-950/60 text-[12px] font-semibold text-blue-600 dark:text-blue-400">
                 v1.0
@@ -387,15 +387,15 @@ export function TermsContent() {
               &quot;) governs the ownership, use, protection, and enforcement of
               intellectual property rights and user-generated content on the digital
               platform (&quot;<strong>Platform</strong>&quot;) operated by{" "}
-              <strong>Airation Softech Private Limited</strong>, a company
+              <strong>Hirance Private Limited</strong>, a company
               incorporated under the Companies Act, 2013, with its registered office
               at 8/4, Sector-4, Jankipuram, Lucknow – 226021, Uttar Pradesh, India
-              (&quot;<strong>Airation</strong>&quot;, &quot;
+              (&quot;<strong>Hirance</strong>&quot;, &quot;
               <strong>Company</strong>&quot;, &quot;<strong>we</strong>&quot;, &quot;
               <strong>our</strong>&quot;, or &quot;<strong>us</strong>&quot;).
             </Para>
             <Para>
-              These Terms form a legally binding agreement between Airation and
+              These Terms form a legally binding agreement between Hirance and
               every individual or entity accessing or using the Platform, whether
               as a candidate, employer, recruiter, or any other user (&quot;
               <strong>User</strong>&quot;, &quot;<strong>you</strong>&quot;, &quot;
@@ -437,7 +437,7 @@ export function TermsContent() {
               rows={[
                 [
                   '"Platform"',
-                  "The website, mobile application, software, APIs, and all digital services operated by Airation Softech Private Limited, including all current and future features, tools, and functionalities.",
+                  "The website, mobile application, software, APIs, and all digital services operated by Hirance Private Limited, including all current and future features, tools, and functionalities.",
                 ],
                 [
                   '"User Content"',
@@ -453,15 +453,15 @@ export function TermsContent() {
                 ],
                 [
                   '"Platform IP"',
-                  "All intellectual property owned by or licensed to Airation, including but not limited to the Platform design, code, algorithms, databases, trademarks, trade secrets, and all other proprietary materials.",
+                  "All intellectual property owned by or licensed to Hirance, including but not limited to the Platform design, code, algorithms, databases, trademarks, trade secrets, and all other proprietary materials.",
                 ],
                 [
                   '"License"',
-                  "The limited, non-exclusive, royalty-free, revocable right granted by a User to Airation to use User Content as described in these Terms.",
+                  "The limited, non-exclusive, royalty-free, revocable right granted by a User to Hirance to use User Content as described in these Terms.",
                 ],
                 [
                   '"Infringing Content"',
-                  "Any User Content that violates or is alleged to violate the intellectual property rights, privacy rights, or other legal rights of any third party or of Airation.",
+                  "Any User Content that violates or is alleged to violate the intellectual property rights, privacy rights, or other legal rights of any third party or of Hirance.",
                 ],
                 [
                   '"Takedown Request"',
@@ -481,7 +481,7 @@ export function TermsContent() {
             {/* Section 2 */}
             <SectionHeading id="sec-2">2. Ownership of User Content</SectionHeading>
             <Para>
-              Airation recognises and respects the intellectual property rights of
+              Hirance recognises and respects the intellectual property rights of
               its Users. Subject to the License granted under Section 3 of these Terms
               and any applicable laws, Users retain ownership of the content they
               create and submit to the Platform.
@@ -536,11 +536,11 @@ export function TermsContent() {
             <Para>
               Users acknowledge and expressly agree that, while ownership of User
               Content remains with the respective User, by submitting such content to
-              the Platform, they grant Airation the License described in Section 3
+              the Platform, they grant Hirance the License described in Section 3
               below.
             </Para>
             <Callout type="important" label="Important">
-              Ownership of User Content does not restrict Airation&apos;s right to use
+              Ownership of User Content does not restrict Hirance&apos;s right to use
               such content in accordance with the License granted under these Terms.
               Users should not submit content to the Platform that they do not wish
               to be used, processed, or displayed in accordance with this License.
@@ -548,18 +548,18 @@ export function TermsContent() {
 
             {/* Section 3 */}
             <SectionHeading id="sec-3">
-              3. License Granted to Airation
+              3. License Granted to Hirance
             </SectionHeading>
             <SubHeading>3.1 Scope of License</SubHeading>
             <Para>
               By submitting, uploading, publishing, or otherwise making available
-              any User Content on the Platform, each User grants Airation a limited,
+              any User Content on the Platform, each User grants Hirance a limited,
               non-exclusive, royalty-free, sub-licensable, transferable, and
               worldwide license to:
             </Para>
             <BulletList
               items={[
-                "Store, host, cache, and back up the content on Airation's servers or those of its authorised cloud infrastructure partners;",
+                "Store, host, cache, and back up the content on Hirance's servers or those of its authorised cloud infrastructure partners;",
                 "Access, retrieve, process, and analyse such content using automated and manual means;",
                 "Display, transmit, or make the content available to other authorised Users in accordance with applicable visibility and privacy settings;",
                 "Format, resize, compress, or otherwise technically adapt the content to ensure compatibility with the Platform's systems;",
@@ -580,7 +580,7 @@ export function TermsContent() {
 
             <SubHeading>3.3 Moral Rights</SubHeading>
             <Para>
-              Airation acknowledges and respects the moral rights of Users in their
+              Hirance acknowledges and respects the moral rights of Users in their
               original content under the Copyright Act, 1957. The License granted
               under this Section does not constitute a waiver of any moral rights.
             </Para>
@@ -594,9 +594,9 @@ export function TermsContent() {
             </Para>
             <BulletList
               items={[
-                "Residual copies that may exist in backup or archival systems, which will be purged in accordance with Airation's data retention schedule;",
+                "Residual copies that may exist in backup or archival systems, which will be purged in accordance with Hirance's data retention schedule;",
                 "Content that has already been shared with or accessed by third-party Users prior to deletion;",
-                "Content required to be retained by Airation to comply with applicable legal obligations or ongoing legal proceedings.",
+                "Content required to be retained by Hirance to comply with applicable legal obligations or ongoing legal proceedings.",
               ]}
             />
 
@@ -604,7 +604,7 @@ export function TermsContent() {
             <Para>
               For the avoidance of doubt, the License granted under this Section
               does not constitute a transfer, assignment, or sale of any intellectual
-              property rights in the User Content. Airation acquires no ownership
+              property rights in the User Content. Hirance acquires no ownership
               interest in User Content by virtue of this License.
             </Para>
 
@@ -615,7 +615,7 @@ export function TermsContent() {
             <SubHeading>4.1 Prohibited Activities</SubHeading>
             <Para>
               All Users agree that they shall not engage in any of the following
-              activities without the prior express written permission of Airation or
+              activities without the prior express written permission of Hirance or
               the relevant rights holder:
             </Para>
             <BulletList
@@ -626,7 +626,7 @@ export function TermsContent() {
                 "Using candidate profiles, resumes, or employer job postings for any purpose unrelated to legitimate recruitment activities;",
                 "Republishing, reselling, licensing, or redistributing any content obtained through the Platform;",
                 "Framing, mirroring, or linking to any portion of the Platform in a misleading or deceptive manner;",
-                "Using any content from the Platform to train or develop AI/ML models without prior written consent of Airation.",
+                "Using any content from the Platform to train or develop AI/ML models without prior written consent of Hirance.",
               ]}
             />
 
@@ -644,7 +644,7 @@ export function TermsContent() {
               Unauthorised data scraping, harvesting, or bulk extraction of content
               from the Platform constitutes a violation of the Information Technology
               Act, 2000, and may attract criminal liability under Section 43 and Section
-              66 thereof, in addition to civil remedies available to Airation.
+              66 thereof, in addition to civil remedies available to Hirance.
             </Callout>
 
             {/* Section 5 */}
@@ -654,8 +654,8 @@ export function TermsContent() {
             <SubHeading>5.1 Ownership of Platform IP</SubHeading>
             <Para>
               All intellectual property rights in and to the Platform and its
-              constituent elements are exclusively owned by or licensed to Airation
-              Softech Private Limited, including, without limitation:
+              constituent elements are exclusively owned by or licensed to Hirance
+              Private Limited, including, without limitation:
             </Para>
             <BulletList
               items={[
@@ -679,16 +679,16 @@ export function TermsContent() {
               items={[
                 "Reverse engineering, decompiling, disassembling, or otherwise attempting to derive the source code of the Platform;",
                 "Copying, reproducing, modifying, or creating derivative works based on the Platform's design, layout, code, or functionality;",
-                "Registering any trademark or domain name identical or confusingly similar to Airation's trademarks;",
+                "Registering any trademark or domain name identical or confusingly similar to Hirance's trademarks;",
                 "Removing, altering, or obscuring any copyright notices, trademark symbols, or proprietary legends displayed on the Platform.",
               ]}
             />
 
             <SubHeading>5.3 Trademarks and Brand Identity</SubHeading>
             <Para>
-              The name &quot;Airation&quot;, the Airation logo, and all related
-              marks are the exclusive trademarks or registered trademarks of Airation
-              Softech Private Limited. No User or third party may use Airation&apos;s
+              The name &quot;Hirance&quot;, the Hirance logo, and all related
+              marks are the exclusive trademarks or registered trademarks of Hirance
+              Private Limited. No User or third party may use Hirance&apos;s
               trademarks in any manner without prior express written authorisation.
             </Para>
 
@@ -696,9 +696,9 @@ export function TermsContent() {
             <SectionHeading id="sec-6">
               6. Copyright Infringement &amp; Content Takedown
             </SectionHeading>
-            <SubHeading>6.1 Airation&apos;s Policy on Copyright</SubHeading>
+            <SubHeading>6.1 Hirance&apos;s Policy on Copyright</SubHeading>
             <Para>
-              Airation is committed to protecting the intellectual property rights of
+              Hirance is committed to protecting the intellectual property rights of
               third parties and will respond to valid notices of alleged copyright
               infringement that comply with applicable law. Repeat infringers may
               have their accounts permanently terminated.
@@ -718,10 +718,10 @@ export function TermsContent() {
                 <p>
                   Email:{" "}
                   <a
-                    href="mailto:airation.it@gmail.com"
+                    href="mailto:hello@hirance.com"
                     className="text-blue-600 dark:text-blue-400 hover:underline font-medium"
                   >
-                    airation.it@gmail.com
+                    hello@hirance.com
                   </a>
                 </p>
               </div>
@@ -742,10 +742,10 @@ export function TermsContent() {
               Takedown Requests that are incomplete, frivolous, or submitted in bad
               faith may be disregarded. Persons submitting false or misleading
               Takedown Requests may be held liable under applicable law for damages
-              caused to the accused User and to Airation.
+              caused to the accused User and to Hirance.
             </Callout>
 
-            <SubHeading>6.4 Airation&apos;s Response to Takedown Requests</SubHeading>
+            <SubHeading>6.4 Hirance&apos;s Response to Takedown Requests</SubHeading>
             <BulletList
               items={[
                 "Acknowledge receipt of the complaint within a reasonable time;",
@@ -763,7 +763,7 @@ export function TermsContent() {
                 "Permanently remove or disable the infringing content from the Platform;",
                 "Suspend or terminate the account responsible for uploading the infringing content;",
                 "Maintain a record of the infringement for the purpose of identifying repeat infringers;",
-                "Take such additional legal, administrative, or regulatory action as Airation deems appropriate.",
+                "Take such additional legal, administrative, or regulatory action as Hirance deems appropriate.",
               ]}
             />
 
@@ -774,7 +774,7 @@ export function TermsContent() {
             <SubHeading>7.1 Representations by All Users</SubHeading>
             <Para>
               By uploading or submitting any User Content, each User unconditionally
-              represents and warrants to Airation:
+              represents and warrants to Hirance:
             </Para>
             <BulletList
               items={[
@@ -799,8 +799,8 @@ export function TermsContent() {
 
             <SubHeading>7.3 Indemnification</SubHeading>
             <Para>
-              Each User agrees to indemnify, defend, and hold harmless Airation
-              Softech Private Limited, its directors, officers, employees, agents, and
+              Each User agrees to indemnify, defend, and hold harmless Hirance
+              Private Limited, its directors, officers, employees, agents, and
               licensors from and against any and all claims, demands, losses,
               liabilities, damages, costs, and expenses arising out of or in connection
               with any breach of these representations or warranties.
@@ -810,7 +810,7 @@ export function TermsContent() {
             <SectionHeading id="sec-8">
               8. Enforcement, Remedies, and Dispute Resolution
             </SectionHeading>
-            <SubHeading>8.1 Airation&apos;s Enforcement Rights</SubHeading>
+            <SubHeading>8.1 Hirance&apos;s Enforcement Rights</SubHeading>
             <BulletList
               items={[
                 "Immediate removal of infringing or violating User Content from the Platform;",
@@ -843,7 +843,7 @@ export function TermsContent() {
 
             <SubHeading>8.4 Arbitration</SubHeading>
             <Para>
-              Airation reserves the right to elect to resolve any dispute by binding
+              Hirance reserves the right to elect to resolve any dispute by binding
               arbitration in accordance with the Arbitration and Conciliation Act,
               1996, as amended. The seat and venue of arbitration shall be Lucknow,
               Uttar Pradesh, India. The proceedings shall be conducted in English.
@@ -856,7 +856,7 @@ export function TermsContent() {
             <SubHeading>9.1 Third-Party Content</SubHeading>
             <Para>
               The Platform may contain or provide access to content, materials, or
-              information originating from third parties. Airation does not own,
+              information originating from third parties. Hirance does not own,
               control, endorse, or assume any responsibility for any third-party
               content accessible through the Platform.
             </Para>
@@ -864,7 +864,7 @@ export function TermsContent() {
             <SubHeading>9.2 Third-Party Links</SubHeading>
             <Para>
               The Platform may contain hyperlinks to external websites or resources
-              operated by third parties. Airation does not endorse the content of
+              operated by third parties. Hirance does not endorse the content of
               any linked website and is not responsible for the availability,
               accuracy, or legality of any content on such third-party websites.
             </Para>
@@ -875,10 +875,10 @@ export function TermsContent() {
               subject to their own licence terms. A list of open-source components and
               their applicable licences is available upon written request to{" "}
               <a
-                href="mailto:airation.it@gmail.com"
+                href="mailto:hello@hirance.com"
                 className="text-blue-600 dark:text-blue-400 hover:underline font-medium"
               >
-                airation.it@gmail.com
+                hello@hirance.com
               </a>
               .
             </Para>
@@ -891,7 +891,7 @@ export function TermsContent() {
               To the fullest extent permitted by applicable law, the Platform, its
               content, and all features and services provided through it are made
               available on an &quot;as is&quot; and &quot;as available&quot; basis,
-              without any representation or warranty of any kind. Airation expressly
+              without any representation or warranty of any kind. Hirance expressly
               disclaims all implied warranties, including but not limited to implied
               warranties of merchantability, fitness for a particular purpose,
               non-infringement, and accuracy.
@@ -903,16 +903,16 @@ export function TermsContent() {
             </SectionHeading>
             <Para>
               To the fullest extent permitted under applicable Indian law, in no event
-              shall Airation Softech Private Limited, its directors, officers,
+              shall Hirance Private Limited, its directors, officers,
               employees, agents, or licensors be liable for any indirect, incidental,
               special, consequential, punitive, or exemplary damages arising out of
               or in connection with the use or inability to use the Platform or any
               content thereon.
             </Para>
             <Para>
-              Airation&apos;s total aggregate liability to any User for any claim
+              Hirance&apos;s total aggregate liability to any User for any claim
               arising under or in connection with these Terms shall not exceed the total
-              fees paid by such User to Airation in the three (3) months immediately
+              fees paid by such User to Hirance in the three (3) months immediately
               preceding the event giving rise to the claim.
             </Para>
 
@@ -921,7 +921,7 @@ export function TermsContent() {
               12. Modifications to These Terms
             </SectionHeading>
             <Para>
-              Airation reserves the right to modify, update, or replace any part of
+              Hirance reserves the right to modify, update, or replace any part of
               these Terms at any time, at its sole discretion. Updated Terms will be
               published on the Platform with a revised effective date. Your continued
               use of the Platform following the publication of updated Terms constitutes
@@ -952,7 +952,7 @@ export function TermsContent() {
               </p>
               <div className="space-y-1 text-[14px] text-slate-600 dark:text-slate-300 leading-relaxed">
                 <p className="font-semibold text-slate-800 dark:text-slate-100">
-                  Airation Softech Private Limited
+                  Hirance Private Limited
                 </p>
                 <p>
                   Address: 8/4, Sector-4, Jankipuram, Lucknow – 226021, Uttar Pradesh,
@@ -961,17 +961,26 @@ export function TermsContent() {
                 <p>
                   Email:{" "}
                   <a
-                    href="mailto:airation.it@gmail.com"
+                    href="mailto:hello@hirance.com"
                     className="text-blue-600 dark:text-blue-400 hover:underline font-medium"
                   >
-                    airation.it@gmail.com
+                    hello@hirance.com
+                  </a>
+                </p>
+                <p>
+                  Phone:{" "}
+                  <a
+                    href="tel:+919793780913"
+                    className="text-blue-600 dark:text-blue-400 hover:underline font-medium"
+                  >
+                    +91 9793780913
                   </a>
                 </p>
               </div>
             </div>
 
             <Callout type="response" label="Response Commitment">
-              Airation will endeavour to respond to all intellectual property-related
+              Hirance will endeavour to respond to all intellectual property-related
               enquiries and Takedown Requests within 15 (fifteen) business days of
               receipt. For urgent matters involving ongoing infringement, please mark
               your email as &apos;URGENT – IP Matter&apos; to ensure expedited
