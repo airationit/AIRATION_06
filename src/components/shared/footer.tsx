@@ -77,6 +77,8 @@ const COLS: FooterColumn[] = [
       { label: "About Us", href: "/about-us" },
       { label: "Blog", href: "/blog" },
       { label: "Contact", href: "/contact" },
+      { label: "Mobile Privacy", href: "/mobile-privacy-policy" },
+      { label: "Delete Account", href: "/delete-account" },
     ],
   },
 ];
@@ -225,7 +227,11 @@ export function Footer() {
           <div className="flex items-center flex-wrap justify-center gap-x-4 gap-y-1">
             <Link href="/privacy" className="hover:text-slate-400 transition-colors">Privacy Policy</Link>
             <span>·</span>
+            <Link href="/mobile-privacy-policy" className="hover:text-slate-400 transition-colors">Mobile Privacy Policy</Link>
+            <span>·</span>
             <Link href="/terms" className="hover:text-slate-400 transition-colors">Terms & Conditions</Link>
+            <span>·</span>
+            <Link href="/delete-account" className="hover:text-slate-400 transition-colors">Delete Account</Link>
             <span>·</span>
             <Link href="/trust-and-safety" className="hover:text-slate-400 transition-colors">Trust & Safety</Link>
             <span>·</span>
