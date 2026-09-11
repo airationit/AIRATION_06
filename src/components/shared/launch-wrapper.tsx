@@ -3,6 +3,7 @@
 import React, { useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Sparkles,
@@ -26,8 +27,19 @@ interface LaunchWrapperProps {
 }
 
 export function LaunchWrapper({ children }: LaunchWrapperProps) {
+  const pathname = usePathname();
   const { hasLaunched, launchDateStr, timeLeft, isLoading } =
     useLaunchConfig();
+
+  // Allow access to /delete-account (and legal routes) even during launch countdown
+  const isExemptRoute =
+    pathname === "/delete-account" ||
+    pathname?.startsWith("/delete-account/") ||
+    pathname === "/privacy" ||
+    pathname?.startsWith("/privacy-policy") ||
+    pathname?.startsWith("/mobile-privacy-policy") ||
+    pathname === "/terms" ||
+    pathname?.startsWith("/terms-and-conditions");
 
   // Formatted date (e.g. "21 September 2026")
   const formattedDate = useMemo(() => {
@@ -41,8 +53,8 @@ export function LaunchWrapper({ children }: LaunchWrapperProps) {
         });
   }, [launchDateStr]);
 
-  // If already launched, render full website
-  if (!isLoading && hasLaunched) {
+  // If already launched or viewing an exempt page like /delete-account, render full page
+  if ((!isLoading && hasLaunched) || isExemptRoute) {
     return <>{children}</>;
   }
 
@@ -609,6 +621,14 @@ export function LaunchWrapper({ children }: LaunchWrapperProps) {
             <span className="text-border">•</span>
             <Link href="/privacy" className="hover:text-foreground transition-colors">
               Privacy Policy
+            </Link>
+            <span className="text-border">•</span>
+            <Link href="/mobile-privacy-policy" className="hover:text-foreground transition-colors">
+              Mobile Privacy
+            </Link>
+            <span className="text-border">•</span>
+            <Link href="/delete-account" className="hover:text-foreground transition-colors">
+              Delete Account
             </Link>
           </div>
         </div>

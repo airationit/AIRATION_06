@@ -664,6 +664,30 @@
   .prose-job blockquote {
     @apply my-4 border-l-2 border-brand-500 pl-4 italic text-muted-foreground;
   }
+
+  /* ── Policy & Account Deletion Page Utilities ─────────── */
+  .text-fluid-sm {
+    @apply text-sm;
+  }
+  .text-fluid-xs {
+    @apply text-xs;
+  }
+  .nav-dropdown-wrapper {
+    @apply relative;
+  }
+  .nav-dropdown-menu {
+    @apply absolute top-full left-0 mt-2 w-64 rounded-2xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 p-2 shadow-xl shadow-slate-200/50 dark:shadow-none z-50;
+  }
+  .sidebar-overlay {
+    @apply fixed inset-0 bg-slate-900/60 z-50 backdrop-blur-xs transition-opacity;
+  }
+  .sidebar-panel {
+    @apply fixed top-0 right-0 bottom-0 w-80 max-w-[85vw] bg-white dark:bg-slate-900 z-50 shadow-2xl overflow-y-auto flex flex-col;
+  }
+  .sidebar-submenu-enter {
+    @apply transition-all duration-150;
+  }
 }
+
 
 
