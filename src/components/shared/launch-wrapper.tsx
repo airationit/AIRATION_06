@@ -239,7 +239,7 @@ export function LaunchWrapper({ children }: LaunchWrapperProps) {
 
           {/* Subtitle */}
           <p className="mt-4 sm:mt-5 text-center text-sm sm:text-base md:text-lg text-slate-600 dark:text-slate-300 max-w-2xl mx-auto leading-relaxed">
-            India’s swipe-based hiring platform is almost here. Fastest way to Post &amp; Apply for jobs —{" "}
+            The next-gen swipe-based hiring platform is almost here. Fastest way to Post &amp; Apply for jobs —{" "}
             <span className="font-bold text-blue-600 dark:text-blue-400 block sm:inline">
               No forms, No scrolling, No waiting.
             </span>
