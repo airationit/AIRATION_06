@@ -7,14 +7,26 @@ import { motion } from "framer-motion";
 import { Mail, Rocket } from "lucide-react";
 import { useLaunchConfig } from "@/hooks/use-launch-config";
 import { siteConfig } from "@/config/site";
-
+import { usePathname } from "next/navigation";
 interface LaunchWrapperProps {
   children: React.ReactNode;
 }
 
 export function LaunchWrapper({ children }: LaunchWrapperProps) {
+    const pathname = usePathname();
   const { hasLaunched, launchDateStr, timeLeft, isLoading } =
     useLaunchConfig();
+
+    // Allow access to /delete-account (and legal routes) even during launch countdown
+  const isExemptRoute =
+    pathname === "/delete-account" ||
+    pathname?.startsWith("/delete-account/") ||
+    pathname === "/privacy" ||
+    pathname?.startsWith("/privacy-policy") ||
+    pathname?.startsWith("/mobile-privacy-policy") ||
+    pathname === "/terms" ||
+    pathname?.startsWith("/terms-and-conditions");
+
 
   // Formatted date (e.g. "September 21, 2026")
   const formattedDate = useMemo(() => {
@@ -28,8 +40,8 @@ export function LaunchWrapper({ children }: LaunchWrapperProps) {
         });
   }, [launchDateStr]);
 
-  // If already launched, render full website
-  if (!isLoading && hasLaunched) {
+   // If already launched or viewing an exempt page like /delete-account, render full page
+  if ((!isLoading && hasLaunched) || isExemptRoute) {
     return <>{children}</>;
   }
 
@@ -274,6 +286,14 @@ export function LaunchWrapper({ children }: LaunchWrapperProps) {
             <span className="text-slate-300 dark:text-slate-700">•</span>
             <Link href="/privacy" className="hover:text-slate-900 dark:hover:text-white transition-colors">
               Privacy Policy
+            </Link>
+             <span className="text-border">•</span>
+            <Link href="/mobile-privacy-policy" className="hover:text-foreground transition-colors">
+              Mobile Privacy
+            </Link>
+            <span className="text-border">•</span>
+            <Link href="/delete-account" className="hover:text-foreground transition-colors">
+              Delete Account
             </Link>
           </div>
         </div>
