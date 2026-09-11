@@ -17,7 +17,7 @@ export function LaunchWrapper({ children }: LaunchWrapperProps) {
   const { hasLaunched, launchDateStr, timeLeft, isLoading } =
     useLaunchConfig();
 
-    // Allow access to /delete-account (and legal routes) even during launch countdown
+    // Allow access to /delete-account (and legal routes) and deep linking / domain verification files even during launch countdown
   const isExemptRoute =
     pathname === "/delete-account" ||
     pathname?.startsWith("/delete-account/") ||
@@ -25,7 +25,12 @@ export function LaunchWrapper({ children }: LaunchWrapperProps) {
     pathname?.startsWith("/privacy-policy") ||
     pathname?.startsWith("/mobile-privacy-policy") ||
     pathname === "/terms" ||
-    pathname?.startsWith("/terms-and-conditions");
+    pathname?.startsWith("/terms-and-conditions") ||
+    pathname === "/.well-known/assetlinks.json" ||
+    pathname?.startsWith("/.well-known/") ||
+    pathname?.startsWith("/well-known/") ||
+    pathname === "/apple-app-site-association" ||
+    pathname?.startsWith("/apple-app-site-association");
 
 
   // Formatted date (e.g. "September 21, 2026")
