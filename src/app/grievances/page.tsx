@@ -11,7 +11,7 @@ export const metadata: Metadata = {
     "file complaint Hirance",
     "IT Act 2000 grievance",
     "DPDP Act complaint India",
-    "Airation Softtech grievance",
+    "Hirance grievance redressal",
     "job platform complaint India",
     "data rights complaint Hirance",
     "how to complain Hirance",
@@ -45,12 +45,13 @@ export default function GrievancesPage() {
     name: "Grievances & Complaint Redressal | Hirance",
     url: "https://hirance.com/grievances",
     description:
-      "Formal grievance and complaint redressal page for Hirance (Airation Softtech), compliant with IT Act 2000 and DPDP Act 2023.",
+      "Formal grievance and complaint redressal page for Hirance Private Limited, compliant with IT Act 2000 and DPDP Act 2023.",
     publisher: {
       "@type": "Organization",
-      name: "Airation Softtech Private Limited",
+      name: "Hirance Private Limited",
       url: "https://hirance.com",
       email: "grievance@hirance.com",
+      telephone: "+91-9793780913",
       address: {
         "@type": "PostalAddress",
         streetAddress: "8/4, Sector-4, Jankipuram",

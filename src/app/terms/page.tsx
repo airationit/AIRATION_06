@@ -4,10 +4,10 @@ import { TermsContent } from "@/components/terms/terms-content"
 export const metadata: Metadata = {
   title: "Terms & Conditions | Hirance - Intellectual Property & User Content",
   description:
-    "Official Terms and Conditions for Hirance (Airation Softech Pvt. Ltd.). Detailed terms governing platform usage, content ownership, intellectual property, takedown procedures, and legal disclaimers under Indian Law.",
+    "Official Terms and Conditions for Hirance Private Limited. Detailed terms governing platform usage, content ownership, intellectual property, takedown procedures, and legal disclaimers under Indian Law.",
   keywords: [
     "Hirance Terms and Conditions",
-    "Airation Softech Terms of Service",
+    "Hirance Terms of Service",
     "Hirance IP Policy",
     "Candidate content ownership",
     "Employer terms Hirance",
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     url: "https://hirance.com/terms",
     title: "Terms & Conditions | Hirance Platform & IP Guidelines",
     description:
-      "Comprehensive Terms & Conditions for Airation Softech Private Limited (Hirance), covering user content licenses, IP protection, and acceptable use.",
+      "Comprehensive Terms & Conditions for Hirance Private Limited, covering user content licenses, IP protection, and acceptable use.",
     siteName: "Hirance",
     images: [
       {
@@ -56,12 +56,13 @@ export default function TermsPage() {
     name: "Terms & Conditions | Hirance",
     url: "https://hirance.com/terms",
     description:
-      "Official Terms and Conditions of Airation Softech Private Limited (Hirance), governing intellectual property rights, user content, acceptable use, and dispute resolution.",
+      "Official Terms and Conditions of Hirance Private Limited, governing intellectual property rights, user content, acceptable use, and dispute resolution.",
     publisher: {
       "@type": "Organization",
-      name: "Airation Softech Private Limited",
+      name: "Hirance Private Limited",
       url: "https://hirance.com",
-      email: "airation.it@gmail.com",
+      email: "hello@hirance.com",
+      telephone: "+91-9793780913",
       address: {
         "@type": "PostalAddress",
         streetAddress: "8/4, Sector-4, Jankipuram",

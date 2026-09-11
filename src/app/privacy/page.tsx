@@ -7,7 +7,7 @@ export const metadata: Metadata = {
     "Read Hirance's Privacy Policy to learn how we collect, use, and protect your personal data as a job seeker or employer. Fully compliant with India's DPDP Act 2023 and IT Act 2000.",
   keywords: [
     "Hirance Privacy Policy",
-    "Airation Softtech Privacy Policy",
+    "Hirance Private Limited Privacy Policy",
     "DPDP Act 2023 compliance",
     "Candidate data protection",
     "Job seeker privacy India",
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
     url: "https://hirance.com/privacy",
     title: "Privacy Policy | Hirance Candidate & Job Seeker Protection",
     description:
-      "Comprehensive Privacy Policy of Hirance (Airation Softtech Pvt. Ltd.), compliant with DPDP Act 2023 & IT Act 2000.",
+      "Comprehensive Privacy Policy of Hirance Private Limited, compliant with DPDP Act 2023 & IT Act 2000.",
     siteName: "Hirance",
     images: [
       {
@@ -57,12 +57,13 @@ export default function PrivacyPage() {
     name: "Privacy Policy | Hirance",
     url: "https://hirance.com/privacy",
     description:
-      "Official Privacy Policy of Airation Softtech Private Limited (Hirance), detailing personal data collection, legal bases, security measures, and candidate rights under the DPDP Act 2023.",
+      "Official Privacy Policy of Hirance Private Limited, detailing personal data collection, legal bases, security measures, and candidate rights under the DPDP Act 2023.",
     publisher: {
       "@type": "Organization",
-      name: "Airation Softtech Private Limited",
+      name: "Hirance Private Limited",
       url: "https://hirance.com",
-      email: "airation.it@gmail.com",
+      email: "hello@hirance.com",
+      telephone: "+91-9793780913",
       address: {
         "@type": "PostalAddress",
         streetAddress: "8/4, Sector-4, Jankipuram",

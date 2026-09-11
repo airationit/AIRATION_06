@@ -364,7 +364,7 @@ export function PrivacyPolicyContent() {
 
             <div className="flex flex-wrap items-center gap-3">
               <span className="inline-flex items-center px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-[12px] font-semibold text-slate-700 dark:text-slate-300">
-                Airation Softtech Pvt. Ltd.
+                Hirance Private Limited
               </span>
               <span className="inline-flex items-center px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-950/60 text-[12px] font-semibold text-blue-600 dark:text-blue-400">
                 v1.0
@@ -388,10 +388,10 @@ export function PrivacyPolicyContent() {
             {/* Intro */}
             <Para>
               This Privacy Policy (&quot;<strong>Privacy Policy</strong>&quot;) is
-              published by <strong>Airation Softtech Private Limited</strong>, a
+              published by <strong>Hirance Private Limited</strong>, a
               company incorporated under the Companies Act, 2013, with its
               registered office at 8/4, Sector-4, Jankipuram, Lucknow – 226021,
-              Uttar Pradesh, India (&quot;<strong>Airation</strong>&quot;,&quot;
+              Uttar Pradesh, India (&quot;<strong>Hirance</strong>&quot;,&quot;
               <strong>we</strong>&quot;, &quot;<strong>us</strong>&quot;, or &quot;
               <strong>our</strong>&quot;). This Privacy Policy governs the
               collection, use, storage, processing, disclosure, and protection of
@@ -440,7 +440,7 @@ export function PrivacyPolicyContent() {
               </p>
               <div className="space-y-1 text-[14px] text-slate-600 dark:text-slate-300 leading-relaxed">
                 <p className="font-medium text-slate-800 dark:text-slate-200">
-                  Airation Softtech Private Limited
+                  Hirance Private Limited
                 </p>
                 <p>
                   8/4, Sector-4, Jankipuram, Lucknow – 226021, Uttar Pradesh, India
@@ -448,10 +448,19 @@ export function PrivacyPolicyContent() {
                 <p>
                   Email:{" "}
                   <a
-                    href="mailto:airation.it@gmail.com"
+                    href="mailto:hello@hirance.com"
                     className="text-blue-600 dark:text-blue-400 hover:underline font-medium"
                   >
-                    airation.it@gmail.com
+                    hello@hirance.com
+                  </a>
+                </p>
+                <p>
+                  Phone:{" "}
+                  <a
+                    href="tel:+919793780913"
+                    className="text-blue-600 dark:text-blue-400 hover:underline font-medium"
+                  >
+                    +91 9793780913
                   </a>
                 </p>
               </div>
@@ -459,7 +468,7 @@ export function PrivacyPolicyContent() {
 
             <Callout type="warning" label="Consent Declaration">
               BY ACCESSING OR USING THE PLATFORM AND SERVICES, YOU EXPRESSLY AND
-              FREELY CONSENT TO AIRATION SOFTTECH PRIVATE LIMITED&apos;S
+              FREELY CONSENT TO HIRANCE PRIVATE LIMITED&apos;S
               COLLECTION, RETENTION, ANALYSIS, PROCESSING, USE, AND DISCLOSURE OF
               YOUR PERSONAL DATA IN ACCORDANCE WITH THIS PRIVACY POLICY. CONSENT
               OBTAINED UNDER THIS POLICY IS SPECIFIC, INFORMED, UNCONDITIONAL, AND
@@ -474,7 +483,7 @@ export function PrivacyPolicyContent() {
             <Para>
               The following terms shall have the meanings set out below and shall
               apply throughout this Privacy Policy and all related policies of
-              Airation.
+              Hirance.
             </Para>
             <DataTable
               headers={["Term", "Definition"]}
@@ -493,11 +502,11 @@ export function PrivacyPolicyContent() {
                 ],
                 [
                   '"Data Fiduciary"',
-                  "Airation Softtech Private Limited, in its capacity as the entity that determines the purpose and means of processing your Personal Data, as defined under the DPDP Act, 2023.",
+                  "Hirance Private Limited, in its capacity as the entity that determines the purpose and means of processing your Personal Data, as defined under the DPDP Act, 2023.",
                 ],
                 [
                   '"Data Principal"',
-                  "You, the candidate or job seeker whose Personal Data is being processed by Airation.",
+                  "You, the candidate or job seeker whose Personal Data is being processed by Hirance.",
                 ],
                 [
                   '"Consent Manager"',
@@ -505,15 +514,15 @@ export function PrivacyPolicyContent() {
                 ],
                 [
                   '"Data Processor"',
-                  "Any third party engaged by Airation to process Personal Data on Airation's behalf, including cloud infrastructure providers, payment gateways, KYC verification vendors, and analytics partners.",
+                  "Any third party engaged by Hirance to process Personal Data on Hirance's behalf, including cloud infrastructure providers, payment gateways, KYC verification vendors, and analytics partners.",
                 ],
                 [
                   '"Platform"',
-                  "The website, mobile application, APIs, and all digital services operated by Airation Softtech Private Limited.",
+                  "The website, mobile application, APIs, and all digital services operated by Hirance Private Limited.",
                 ],
                 [
                   '"Services"',
-                  "All services offered by Airation to candidates through the Platform, including job matching, profile management, employer communication, identity verification, and related features.",
+                  "All services offered by Hirance to candidates through the Platform, including job matching, profile management, employer communication, identity verification, and related features.",
                 ],
                 [
                   '"Cookies"',
@@ -535,17 +544,17 @@ export function PrivacyPolicyContent() {
               2. Objective and Scope of This Policy
             </SectionHeading>
             <Para>
-              Airation is committed to maintaining the highest standards of data
+              Hirance is committed to maintaining the highest standards of data
               privacy and security for all candidates using its Platform. The
               objective of this Privacy Policy is to:
             </Para>
             <BulletList
               items={[
-                "Provide you with a clear, transparent, and comprehensive understanding of how your Personal Data is collected, used, stored, and shared by Airation;",
+                "Provide you with a clear, transparent, and comprehensive understanding of how your Personal Data is collected, used, stored, and shared by Hirance;",
                 "Ensure full compliance with the Digital Personal Data Protection Act, 2023, the IT Act, 2000, and all other applicable Indian data protection legislation;",
-                "Establish your rights as a Data Principal and Airation's obligations as a Data Fiduciary;",
-                "Describe the technical and organizational safeguards implemented by Airation to protect your Personal Data against loss, misuse, unauthorized access, disclosure, alteration, and destruction;",
-                "Set out the legal bases upon which Airation processes each category of your Personal Data.",
+                "Establish your rights as a Data Principal and Hirance's obligations as a Data Fiduciary;",
+                "Describe the technical and organizational safeguards implemented by Hirance to protect your Personal Data against loss, misuse, unauthorized access, disclosure, alteration, and destruction;",
+                "Set out the legal bases upon which Hirance processes each category of your Personal Data.",
               ]}
             />
             <Para>
@@ -563,7 +572,7 @@ export function PrivacyPolicyContent() {
               3. Categories of Personal Data We Collect
             </SectionHeading>
             <Para>
-              Airation collects Personal Data that is adequate, relevant, and
+              Hirance collects Personal Data that is adequate, relevant, and
               limited to what is strictly necessary for the purposes described in
               this Privacy Policy (the principle of data minimization). The categories
               of Personal Data we collect, and the specific details of how we collect,
@@ -588,11 +597,11 @@ export function PrivacyPolicyContent() {
                 ],
                 [
                   "Why we process it",
-                  "To perform the contract between you and Airation for the provision of candidate services; to operate the candidate account; and to facilitate the job-seeking process. Phone and email are also used for two-factor authentication and account security.",
+                  "To perform the contract between you and Hirance for the provision of candidate services; to operate the candidate account; and to facilitate the job-seeking process. Phone and email are also used for two-factor authentication and account security.",
                 ],
                 [
                   "Legal basis",
-                  "Performance of a contract (Article 6(1)(b) equivalent under DPDP Act, 2023); legitimate interests of Airation in operating a secure and functional recruitment platform.",
+                  "Performance of a contract (Article 6(1)(b) equivalent under DPDP Act, 2023); legitimate interests of Hirance in operating a secure and functional recruitment platform.",
                 ],
                 [
                   "Retention Period",
@@ -615,7 +624,7 @@ export function PrivacyPolicyContent() {
                 ],
                 [
                   "How we use it",
-                  "To power Airation's proprietary AI-assisted job matching and candidate ranking algorithms; to generate personalised job recommendations and recruiter-facing candidate summaries; to enable verified employers to search, filter, and evaluate candidate profiles; to improve the Platform's recommendation accuracy through behavioural feedback loops; and to provide candidates with career insights and job market analytics.",
+                  "To power Hirance's proprietary AI-assisted job matching and candidate ranking algorithms; to generate personalised job recommendations and recruiter-facing candidate summaries; to enable verified employers to search, filter, and evaluate candidate profiles; to improve the Platform's recommendation accuracy through behavioural feedback loops; and to provide candidates with career insights and job market analytics.",
                 ],
                 [
                   "Why we process it",
@@ -623,7 +632,7 @@ export function PrivacyPolicyContent() {
                 ],
                 [
                   "Legal basis",
-                  "Performance of a contract; legitimate interests of Airation in providing an effective recruitment platform; your explicit consent where applicable.",
+                  "Performance of a contract; legitimate interests of Hirance in providing an effective recruitment platform; your explicit consent where applicable.",
                 ],
                 [
                   "Retention Period",
@@ -642,7 +651,7 @@ export function PrivacyPolicyContent() {
                 ],
                 [
                   "How we collect it",
-                  "Directly from you when you opt into identity verification or when verification is required to access certain features. Identity document uploads and selfie/liveness checks are processed through Airation's authorised KYC verification partner.",
+                  "Directly from you when you opt into identity verification or when verification is required to access certain features. Identity document uploads and selfie/liveness checks are processed through Hirance's authorised KYC verification partner.",
                 ],
                 [
                   "How we use it",
@@ -650,7 +659,7 @@ export function PrivacyPolicyContent() {
                 ],
                 [
                   "Why we process it",
-                  "Fraud prevention and platform security constitute legitimate interests of Airation. Processing of government-issued ID and biometric data for identity verification purposes is subject to your explicit prior consent, which may be withdrawn at any time (with the consequence that verified status will be revoked).",
+                  "Fraud prevention and platform security constitute legitimate interests of Hirance. Processing of government-issued ID and biometric data for identity verification purposes is subject to your explicit prior consent, which may be withdrawn at any time (with the consequence that verified status will be revoked).",
                 ],
                 [
                   "Legal basis",
@@ -669,7 +678,7 @@ export function PrivacyPolicyContent() {
               (SPDI) Rules, 2011, and Sensitive Data under the DPDP Act, 2023. This
               data is processed only with your explicit, freely given, informed, and
               specific consent. You may withdraw consent at any time by contacting
-              airation.it@gmail.com, which will result in the revocation of your
+              hello@hirance.com, which will result in the revocation of your
               verified status on the Platform.
             </Callout>
 
@@ -679,15 +688,15 @@ export function PrivacyPolicyContent() {
               rows={[
                 [
                   "What we collect",
-                  "UPI ID or VPA (Virtual Payment Address); transaction reference numbers and transaction history for premium subscriptions or paid services; billing name, billing address, and GST number (if applicable); bank account details where required for candidate payouts or refunds. Airation does NOT store full debit/credit card numbers, CVV/CVC codes, or net banking passwords.",
+                  "UPI ID or VPA (Virtual Payment Address); transaction reference numbers and transaction history for premium subscriptions or paid services; billing name, billing address, and GST number (if applicable); bank account details where required for candidate payouts or refunds. Hirance does NOT store full debit/credit card numbers, CVV/CVC codes, or net banking passwords.",
                 ],
                 [
                   "How we collect it",
-                  "Collected at the time of initiating a payment transaction through the Platform's integrated payment interface. Full card details are transmitted directly to Airation's PCI-DSS compliant third-party payment gateway and are never stored on Airation's servers.",
+                  "Collected at the time of initiating a payment transaction through the Platform's integrated payment interface. Full card details are transmitted directly to Hirance's PCI-DSS compliant third-party payment gateway and are never stored on Hirance's servers.",
                 ],
                 [
                   "How we use it",
-                  "To process payments for premium subscriptions, job application boosts, or other paid features; to generate transaction receipts and invoices; to manage subscription renewals and cancellations; to process refunds in accordance with Airation's Refund Policy; and to comply with financial and tax record-keeping obligations.",
+                  "To process payments for premium subscriptions, job application boosts, or other paid features; to generate transaction receipts and invoices; to manage subscription renewals and cancellations; to process refunds in accordance with Hirance's Refund Policy; and to comply with financial and tax record-keeping obligations.",
                 ],
                 [
                   "Why we process it",
@@ -722,7 +731,7 @@ export function PrivacyPolicyContent() {
                 ],
                 [
                   "Why we process it",
-                  "Legitimate interests of Airation in operating a secure, functional, and optimised digital platform. Where processing involves targeted analytics or profiling, Airation relies on your consent obtained via the Cookie Consent mechanism.",
+                  "Legitimate interests of Hirance in operating a secure, functional, and optimised digital platform. Where processing involves targeted analytics or profiling, Hirance relies on your consent obtained via the Cookie Consent mechanism.",
                 ],
                 [
                   "Legal basis",
@@ -741,7 +750,7 @@ export function PrivacyPolicyContent() {
               rows={[
                 [
                   "What we collect",
-                  "Messages sent between candidates and employers through the Platform's in-app messaging system; emails and support tickets submitted to Airation's customer support team; feedback, ratings, or reviews submitted through the Platform; responses to surveys or research studies (where you voluntarily participate).",
+                  "Messages sent between candidates and employers through the Platform's in-app messaging system; emails and support tickets submitted to Hirance's customer support team; feedback, ratings, or reviews submitted through the Platform; responses to surveys or research studies (where you voluntarily participate).",
                 ],
                 [
                   "How we collect it",
@@ -753,7 +762,7 @@ export function PrivacyPolicyContent() {
                 ],
                 [
                   "Why we process it",
-                  "Legitimate interests of Airation in maintaining a safe, functional communication environment; performance of a support contract; legal obligations to retain records of certain communications.",
+                  "Legitimate interests of Hirance in maintaining a safe, functional communication environment; performance of a support contract; legal obligations to retain records of certain communications.",
                 ],
                 [
                   "Legal basis",
@@ -771,17 +780,17 @@ export function PrivacyPolicyContent() {
               4. Legal Bases for Processing Personal Data
             </SectionHeading>
             <Para>
-              Airation processes your Personal Data only where a valid legal basis
+              Hirance processes your Personal Data only where a valid legal basis
               exists under applicable Indian law, including the DPDP Act, 2023. The
-              primary legal bases relied upon by Airation are:
+              primary legal bases relied upon by Hirance are:
             </Para>
             <BulletList
               items={[
                 "Consent: Where you have given free, specific, informed, unconditional, and unambiguous consent to the processing of your Personal Data for a stated purpose. You may withdraw consent at any time. Withdrawal of consent does not affect the lawfulness of processing carried out prior to withdrawal, but may limit your ability to use certain features of the Platform.",
-                "Performance of a Contract: Where processing is necessary to perform the candidate services agreement between you and Airation, including account creation, job matching, profile management, and payment processing for premium services.",
-                "Legitimate Interests: Where processing is necessary for Airation's legitimate business interests, provided such interests are not overridden by your fundamental rights and freedoms. Legitimate interests relied upon include platform security, fraud prevention, product improvement, and analytics.",
+                "Performance of a Contract: Where processing is necessary to perform the candidate services agreement between you and Hirance, including account creation, job matching, profile management, and payment processing for premium services.",
+                "Legitimate Interests: Where processing is necessary for Hirance's legitimate business interests, provided such interests are not overridden by your fundamental rights and freedoms. Legitimate interests relied upon include platform security, fraud prevention, product improvement, and analytics.",
                 "Legal Obligation: Where processing is necessary to comply with a legal obligation under Indian law, including tax record retention, KYC compliance, compliance with court orders, and reporting obligations to regulatory authorities.",
-                "Vital Interests: In exceptional circumstances, Airation may process Personal Data to protect the vital interests of you or another natural person, including in life-threatening situations or emergencies.",
+                "Vital Interests: In exceptional circumstances, Hirance may process Personal Data to protect the vital interests of you or another natural person, including in life-threatening situations or emergencies.",
               ]}
             />
 
@@ -791,7 +800,7 @@ export function PrivacyPolicyContent() {
             </SectionHeading>
             <Para>
               In addition to the specific uses described for each data category in
-              Section 3, Airation uses Personal Data collected from candidates for
+              Section 3, Hirance uses Personal Data collected from candidates for
               overarching purposes such as job matching, identity verification,
               account security, and service improvement.
             </Para>
@@ -812,14 +821,14 @@ export function PrivacyPolicyContent() {
               6. Automated Decision-Making and Profiling
             </SectionHeading>
             <Para>
-              Airation uses automated processing, including machine-learning-based
+              Hirance uses automated processing, including machine-learning-based
               profiling, to facilitate job matching and candidate ranking. This
               involves creating a candidate &apos;match score&apos; that determines the
               order in which your profile appears in employer search results and the
               job recommendations you receive.
             </Para>
             <Para>
-              Airation provides safeguards such as the right to human review of
+              Hirance provides safeguards such as the right to human review of
               significant automated decisions and the ability to opt out of
               algorithmic profiling for job matching.
             </Para>
@@ -829,7 +838,7 @@ export function PrivacyPolicyContent() {
             </SectionHeading>
             <SubHeading>7.1 Visibility Settings</SubHeading>
             <Para>
-              Airation provides candidates with granular controls over the
+              Hirance provides candidates with granular controls over the
               visibility of their profile. The default visibility settings and
               available options are as follows:
             </Para>
@@ -847,8 +856,8 @@ export function PrivacyPolicyContent() {
             </SectionHeading>
             <Para>
               All payment transactions on the Platform are processed exclusively
-              through Airation&apos;s authorised third-party payment gateway
-              partners. Airation does not process, store, or have access to your full
+              through Hirance&apos;s authorised third-party payment gateway
+              partners. Hirance does not process, store, or have access to your full
               debit or credit card number, CVV/CVC code, net banking credentials, or
               UPI PIN.
             </Para>
@@ -949,25 +958,34 @@ export function PrivacyPolicyContent() {
               </p>
               <div className="space-y-1 text-[14px] text-slate-600 dark:text-slate-300 leading-relaxed">
                 <p className="font-semibold text-slate-800 dark:text-slate-100">
-                  Airation Softtech Private Limited
+                  Hirance Private Limited
                 </p>
                 <p>
                   Email:{" "}
                   <a
-                    href="mailto:airation.it@gmail.com"
+                    href="mailto:hello@hirance.com"
                     className="text-blue-600 dark:text-blue-400 hover:underline font-medium"
                   >
-                    airation.it@gmail.com
+                    hello@hirance.com
                   </a>
                 </p>
                 <p>
-                  8/4, Sector-4, Jankipuram, Lucknow – 226021, Uttar Pradesh, India
+                  Phone:{" "}
+                  <a
+                    href="tel:+919793780913"
+                    className="text-blue-600 dark:text-blue-400 hover:underline font-medium"
+                  >
+                    +91 9793780913
+                  </a>
+                </p>
+                <p>
+                  Address: 8/4, Sector-4, Jankipuram, Lucknow – 226021, Uttar Pradesh, India
                 </p>
               </div>
             </div>
 
             <Callout type="response" label="Response Commitment">
-              Airation&apos;s Grievance Officer will acknowledge all complaints and
+              Hirance&apos;s Grievance Officer will acknowledge all complaints and
               requests within 72 hours of receipt and provide a substantive response
               within 15 (fifteen) business days.
             </Callout>

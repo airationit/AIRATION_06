@@ -173,7 +173,7 @@ export function FraudAlertContent() {
 
             <SectionHeading id="sec-intro">Introduction</SectionHeading>
             <Para>
-              We are aware that fraudsters sometimes impersonate Hirance or Airation Softtech to deceive job seekers. These scammers may use fake websites, WhatsApp messages, phone calls, or emails to lure candidates with false promises of employment.
+              We are aware that fraudsters sometimes impersonate Hirance or claim to represent our platform to deceive job seekers. These scammers may use fake websites, WhatsApp messages, phone calls, or emails to lure candidates with false promises of employment.
             </Para>
             <Para>
               Hirance is committed to your safety. We will never ask you for money to process job applications, guarantee placement, or conduct interviews. Please read this page carefully to protect yourself.
@@ -249,7 +249,8 @@ export function FraudAlertContent() {
               </div>
               <div className="space-y-2 text-[14px] text-slate-600 dark:text-slate-300 border-t border-slate-100 dark:border-slate-800 pt-4">
                 <p>Email: <a href="mailto:fraud@hirance.com" className="text-blue-600 dark:text-blue-400 font-medium hover:underline">fraud@hirance.com</a></p>
-                <p>General: <a href="mailto:airation.it@gmail.com" className="text-blue-600 dark:text-blue-400 font-medium hover:underline">airation.it@gmail.com</a></p>
+                <p>General: <a href="mailto:hello@hirance.com" className="text-blue-600 dark:text-blue-400 font-medium hover:underline">hello@hirance.com</a></p>
+                <p>Phone: <a href="tel:+919793780913" className="text-blue-600 dark:text-blue-400 font-medium hover:underline">+91 9793780913</a></p>
                 <p>Contact form: <Link href="/contact" className="text-blue-600 dark:text-blue-400 font-medium hover:underline">hirance.com/contact</Link></p>
               </div>
               <p className="mt-4 text-[13px] text-slate-500 dark:text-slate-400">
