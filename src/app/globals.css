@@ -689,5 +689,7 @@
   }
 }
 
-
-
+/* Zero-FOUC Launch Overlay: Instantly hide before paint if target time has passed */
+html.hirance-launched #hirance-launch-overlay {
+  display: none !important;
+}
