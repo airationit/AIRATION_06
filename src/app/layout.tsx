@@ -68,6 +68,14 @@ export default function RootLayout({
       className={`${fontSans.variable} ${fontMono.variable}`}
       suppressHydrationWarning
     >
+      <head>
+        <script
+          id="hirance-launch-check"
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var d=localStorage.getItem("hirance_web_date");if(d){var t=Date.parse(d.trim().replace(" ","T"));if(t&&Date.now()>=t){document.documentElement.classList.add("hirance-launched");}}}catch(e){}})();`,
+          }}
+        />
+      </head>
       <body
         className="min-h-dvh overflow-x-clip antialiased"
         suppressHydrationWarning

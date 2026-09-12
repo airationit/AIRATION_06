@@ -1,23 +1,32 @@
 "use client";
 
-import React, { useMemo } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Mail, Rocket } from "lucide-react";
-import { useLaunchConfig } from "@/hooks/use-launch-config";
+import { useLaunchConfig, parseLaunchDate } from "@/hooks/use-launch-config";
 import { siteConfig } from "@/config/site";
 import { usePathname } from "next/navigation";
+import { CelebrationOverlay } from "./celebration-overlay";
+
 interface LaunchWrapperProps {
   children: React.ReactNode;
 }
 
 export function LaunchWrapper({ children }: LaunchWrapperProps) {
-    const pathname = usePathname();
-  const { hasLaunched, launchDateStr, timeLeft, isLoading } =
-    useLaunchConfig();
+  const pathname = usePathname();
+  const {
+    isLaunched,
+    hasJustCompleted,
+    webDateStr,
+    timeLeft,
+    isMounted,
+    isLoading,
+  } = useLaunchConfig();
+  const [isCelebrationActive, setIsCelebrationActive] = useState<boolean>(false);
 
-    // Allow access to /delete-account (and legal routes) and deep linking / domain verification files even during launch countdown
+  // Allow access to /delete-account (and legal routes) and deep linking / domain verification files even during launch countdown
   const isExemptRoute =
     pathname === "/delete-account" ||
     pathname?.startsWith("/delete-account/") ||
@@ -32,24 +41,161 @@ export function LaunchWrapper({ children }: LaunchWrapperProps) {
     pathname === "/apple-app-site-association" ||
     pathname?.startsWith("/apple-app-site-association");
 
-
-  // Formatted date (e.g. "September 21, 2026")
+  // Formatted date strictly from Remote Config web_date
   const formattedDate = useMemo(() => {
-    const d = new Date(launchDateStr);
+    if (!webDateStr) return "";
+    const timestamp = parseLaunchDate(webDateStr);
+    if (timestamp <= 0) return "";
+    const d = new Date(timestamp);
     return isNaN(d.getTime())
-      ? "September 21, 2026"
+      ? ""
       : d.toLocaleDateString("en-US", {
           month: "long",
           day: "numeric",
           year: "numeric",
         });
-  }, [launchDateStr]);
+  }, [webDateStr]);
 
-   // If already launched or viewing an exempt page like /delete-account, render full page
-  if ((!isLoading && hasLaunched) || isExemptRoute) {
+  // Check URL param ?celebrate=true or ?celebrate=1 for instant testing/preview
+  useEffect(() => {
+    if (!isMounted) return;
+    try {
+      const searchParams = new URLSearchParams(window.location.search);
+      if (
+        searchParams.get("celebrate") === "true" ||
+        searchParams.get("celebrate") === "1"
+      ) {
+        setIsCelebrationActive(true);
+      }
+    } catch {
+      // ignore
+    }
+  }, [isMounted]);
+
+  // When live countdown ticker hits 00 in real time
+  useEffect(() => {
+    if (hasJustCompleted) {
+      setIsCelebrationActive(true);
+      try {
+        sessionStorage.setItem("hirance_celebrated", "true");
+      } catch {
+        // ignore
+      }
+    }
+  }, [hasJustCompleted]);
+
+  // If page loads right after launch occurred (within 12 seconds) and user hasn't celebrated yet
+  useEffect(() => {
+    if (!isMounted || !webDateStr) return;
+    try {
+      const hasCelebrated = sessionStorage.getItem("hirance_celebrated");
+      if (!hasCelebrated) {
+        const target = parseLaunchDate(webDateStr);
+        if (target > 0) {
+          const diffPast = Date.now() - target;
+          if (diffPast >= 0 && diffPast < 20000) {
+            setIsCelebrationActive(true);
+            sessionStorage.setItem("hirance_celebrated", "true");
+          }
+        }
+      }
+    } catch {
+      // ignore
+    }
+  }, [isMounted, webDateStr]);
+
+  const handleCelebrationComplete = React.useCallback(() => {
+    setIsCelebrationActive(false);
+    try {
+      const url = new URL(window.location.href);
+      if (url.searchParams.has("celebrate")) {
+        url.searchParams.delete("celebrate");
+        const cleanUrl = url.pathname + (url.search ? url.search : "");
+        window.history.replaceState({}, "", cleanUrl);
+      }
+    } catch {
+      // ignore
+    }
+  }, []);
+
+  // 1. Exempt routes: directly show platform
+  if (isExemptRoute) {
     return <>{children}</>;
   }
 
+  // 2. While determining status / loading: modern, beautiful branded loader MUST display first
+  if (!isMounted || isLoading) {
+    return (
+      <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-gradient-to-b from-[#f8faff] via-[#ffffff] to-[#eef6ff] dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 select-none font-sans">
+        <div className="relative flex flex-col items-center">
+          {/* Soft ambient halo */}
+          <div className="absolute -top-12 h-36 w-36 rounded-full bg-blue-500/10 dark:bg-blue-400/15 blur-2xl pointer-events-none" />
+
+          {/* Branded Icon */}
+          <motion.div
+            animate={{ scale: [1, 1.05, 1], y: [0, -3, 0] }}
+            transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
+            className="relative flex items-center justify-center mb-4"
+          >
+            <Image
+              src="/images/icon.png"
+              alt={`${siteConfig.name} Icon`}
+              width={48}
+              height={48}
+              priority
+              className="h-11 w-auto object-contain drop-shadow-sm"
+            />
+          </motion.div>
+
+          {/* Wordmark logo */}
+          <div className="relative h-6 w-auto flex items-center justify-center">
+            <Image
+              src="/images/wordmark-navy.png"
+              alt={siteConfig.name}
+              width={106}
+              height={26}
+              priority
+              className="h-5 sm:h-6 w-auto object-contain dark:hidden"
+            />
+            <Image
+              src="/images/wordmark-white.png"
+              alt={siteConfig.name}
+              width={106}
+              height={26}
+              priority
+              className="hidden h-5 sm:h-6 w-auto object-contain dark:block"
+            />
+          </div>
+
+          {/* Modern progress shimmer line */}
+          <div className="mt-6 w-32 sm:w-36 h-1 rounded-full bg-blue-100/80 dark:bg-slate-800 overflow-hidden relative">
+            <motion.div
+              animate={{ x: ["-100%", "150%"] }}
+              transition={{ duration: 1.15, repeat: Infinity, ease: "easeInOut" }}
+              className="absolute top-0 bottom-0 w-1/2 rounded-full bg-gradient-to-r from-blue-500 via-blue-600 to-indigo-600"
+            />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // 3. When launch time has passed: directly show website (+ celebration overlay if active)
+  if (isLaunched) {
+    return (
+      <>
+        {children}
+        {isCelebrationActive && (
+          <CelebrationOverlay
+            duration={15}
+            onComplete={handleCelebrationComplete}
+          />
+        )}
+      </>
+    );
+  }
+
+  // 4. When launch time has NOT passed: render strictly the countdown screen (never render children here!)
   const countdownUnits = [
     { label: "DAYS", val: timeLeft.days },
     { label: "HOURS", val: timeLeft.hours },
@@ -57,6 +203,7 @@ export function LaunchWrapper({ children }: LaunchWrapperProps) {
     { label: "SECONDS", val: timeLeft.seconds },
   ];
 
+  // 5. When launch time has NOT passed: render strictly the countdown screen (never render children here!)
   return (
     <div className="relative min-h-dvh flex flex-col justify-between overflow-x-clip bg-gradient-to-b from-[#eef6ff] via-[#f7faff] to-[#ffffff] dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 text-slate-900 dark:text-white select-none font-sans">
       {/* ─────────────────────────────────────────────────────────────
@@ -232,9 +379,14 @@ export function LaunchWrapper({ children }: LaunchWrapperProps) {
           {/* Headline */}
           <h1 className="text-center font-black tracking-tight text-slate-900 dark:text-white text-3xl sm:text-5xl md:text-6xl lg:text-[64px] leading-[1.08] max-w-4xl mx-auto">
             We Are Launching
-            <span className="block text-blue-600 dark:text-blue-500 mt-1 sm:mt-2">
-              On {formattedDate}
-            </span>
+            {formattedDate && (
+              <span
+                suppressHydrationWarning
+                className="block text-blue-600 dark:text-blue-500 mt-1 sm:mt-2"
+              >
+                On {formattedDate}
+              </span>
+            )}
           </h1>
 
           {/* Subtitle */}
@@ -254,7 +406,10 @@ export function LaunchWrapper({ children }: LaunchWrapperProps) {
                   className="flex flex-col items-center justify-center rounded-2xl bg-[#f4f8fe] dark:bg-slate-950/60 border border-blue-100/50 dark:border-slate-800/80 py-5 px-3 sm:py-7 sm:px-5 md:py-8 md:px-6 transition-all duration-300 hover:bg-[#eef5fd] hover:border-blue-200/80 hover:scale-[1.02] shadow-2xs group"
                 >
                   {/* Value */}
-                  <span className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-slate-900 dark:text-white tracking-tight leading-none">
+                  <span
+                    suppressHydrationWarning
+                    className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-slate-900 dark:text-white tracking-tight leading-none"
+                  >
                     {String(unit.val).padStart(2, "0")}
                   </span>
 
