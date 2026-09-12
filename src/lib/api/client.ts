@@ -1,4 +1,6 @@
-export const BASE_URL = "https://api.hirance.com";
+// export const BASE_URL = "https://api.hirance.com";
+export const BASE_URL = "https://prod.hirance.com";
+
 
 interface FetchOptions extends Omit<RequestInit, "headers"> {
   headers?: Record<string, string>;
