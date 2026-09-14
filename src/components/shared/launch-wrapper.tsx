@@ -4,7 +4,7 @@ import React, { useMemo, useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Mail, Rocket } from "lucide-react";
+import { Mail, Rocket, ArrowUpRight } from "lucide-react";
 import { useLaunchConfig, parseLaunchDate } from "@/hooks/use-launch-config";
 import { siteConfig } from "@/config/site";
 import { usePathname } from "next/navigation";
@@ -303,22 +303,26 @@ export function LaunchWrapper({ children }: LaunchWrapperProps) {
             </Link>
           </div>
 
-          {/* Status & Support */}
-          <div className="flex items-center gap-3 sm:gap-6">
-            <div className="hidden sm:flex items-center gap-2 text-xs font-semibold text-slate-600 dark:text-slate-300">
-              <span className="relative flex h-2.5 w-2.5 items-center justify-center">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
-                <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
-              </span>
-              <span className="tracking-wide">Countdown Synchronized</span>
-            </div>
-
+          {/* Actions: Support & Employer Login */}
+          <div className="flex items-center gap-2.5 sm:gap-3.5">
             <a
               href="mailto:support@hirance.com"
-              className="inline-flex items-center gap-2 rounded-full border border-blue-200/90 dark:border-blue-900 bg-white/90 dark:bg-slate-900/90 px-4 py-2 text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-200 hover:text-blue-600 dark:hover:text-blue-400 hover:border-blue-400 transition-all shadow-xs"
+              className="inline-flex h-10 sm:h-11 items-center gap-2 rounded-full border border-blue-200/90 dark:border-blue-900 bg-white/90 dark:bg-slate-900/90 px-3.5 sm:px-4 text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-200 hover:text-blue-600 dark:hover:text-blue-400 hover:border-blue-400 transition-all shadow-xs"
             >
               <Mail className="h-4 w-4 text-blue-500" />
-              <span>Contact Support</span>
+              <span>
+                <span className="hidden sm:inline">Contact </span>Support
+              </span>
+            </a>
+
+            <a
+              href={siteConfig.links.employer || "https://employer.hirance.com/"}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group inline-flex h-10 sm:h-11 items-center justify-center gap-1.5 sm:gap-2 rounded-full bg-gradient-to-r from-brand-600 to-blue-600 hover:from-brand-500 hover:to-blue-500 px-4 sm:px-6 text-xs sm:text-sm font-semibold text-white shadow-md shadow-brand-500/25 hover:shadow-lg hover:shadow-brand-500/35 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/50"
+            >
+              <span>Employer Login</span>
+              <ArrowUpRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
             </a>
           </div>
         </div>
