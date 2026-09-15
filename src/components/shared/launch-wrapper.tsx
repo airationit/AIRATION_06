@@ -271,18 +271,22 @@ export function LaunchWrapper({ children }: LaunchWrapperProps) {
       {/* ─────────────────────────────────────────────────────────────
           HEADER / TOP NAVIGATION
          ───────────────────────────────────────────────────────────── */}
-      <header className="relative z-20 w-full px-6 py-5 sm:px-10 lg:px-16 transition-colors">
-        <div className="mx-auto flex max-w-7xl items-center justify-between">
+      <header className="relative z-20 w-full px-4 py-3.5 sm:px-8 sm:py-5 lg:px-16 transition-colors">
+        <div className="mx-auto flex max-w-7xl items-center justify-between gap-2 sm:gap-4">
           {/* Logo & Tagline */}
-          <div className="flex items-center gap-4 sm:gap-6">
-            <Link href="/" className="flex items-center gap-2.5 group">
+          <div className="flex shrink-0 items-center">
+            <Link
+              href="/"
+              className="group flex shrink-0 items-center gap-2 sm:gap-2.5 select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/40"
+              aria-label={`${siteConfig.name} home`}
+            >
               <Image
                 src="/images/icon.png"
                 alt={`${siteConfig.name} icon`}
                 width={36}
                 height={36}
                 priority
-                className="h-8 sm:h-9 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
+                className="h-7 sm:h-8 md:h-9 w-auto shrink-0 object-contain transition-transform duration-300 group-hover:scale-105"
               />
               <Image
                 src="/images/wordmark-navy.png"
@@ -290,7 +294,7 @@ export function LaunchWrapper({ children }: LaunchWrapperProps) {
                 width={116}
                 height={28}
                 priority
-                className="h-6 w-auto object-contain dark:hidden transition-transform duration-300 group-hover:scale-105"
+                className="h-5 sm:h-5.5 md:h-6 w-auto shrink-0 object-contain dark:hidden transition-transform duration-300 group-hover:scale-105"
               />
               <Image
                 src="/images/wordmark-white.png"
@@ -298,20 +302,22 @@ export function LaunchWrapper({ children }: LaunchWrapperProps) {
                 width={116}
                 height={28}
                 priority
-                className="hidden h-6 w-auto object-contain dark:block transition-transform duration-300 group-hover:scale-105"
+                className="hidden h-5 sm:h-5.5 md:h-6 w-auto shrink-0 object-contain dark:block transition-transform duration-300 group-hover:scale-105"
               />
             </Link>
           </div>
 
           {/* Actions: Support & Employer Login */}
-          <div className="flex items-center gap-2.5 sm:gap-3.5">
+          <div className="flex shrink-0 items-center gap-1.5 sm:gap-2.5 md:gap-3">
             <a
               href="mailto:support@hirance.com"
-              className="inline-flex h-10 sm:h-11 items-center gap-2 rounded-full border border-blue-200/90 dark:border-blue-900 bg-white/90 dark:bg-slate-900/90 px-3.5 sm:px-4 text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-200 hover:text-blue-600 dark:hover:text-blue-400 hover:border-blue-400 transition-all shadow-xs"
+              aria-label="Contact Support"
+              title="Contact Support"
+              className="inline-flex h-9 sm:h-10 md:h-11 items-center justify-center gap-1.5 sm:gap-2 rounded-full border border-blue-200/90 dark:border-blue-900 bg-white/90 dark:bg-slate-900/90 px-2.5 sm:px-3.5 md:px-4 text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-200 hover:text-blue-600 dark:hover:text-blue-400 hover:border-blue-400 transition-all shadow-xs shrink-0 whitespace-nowrap"
             >
-              <Mail className="h-4 w-4 text-blue-500" />
-              <span>
-                <span className="hidden sm:inline">Contact </span>Support
+              <Mail className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-blue-500 shrink-0" />
+              <span className="hidden sm:inline">
+                <span className="hidden lg:inline">Contact </span>Support
               </span>
             </a>
 
@@ -319,10 +325,10 @@ export function LaunchWrapper({ children }: LaunchWrapperProps) {
               href={siteConfig.links.employer || "https://employer.hirance.com/"}
               target="_blank"
               rel="noopener noreferrer"
-              className="group inline-flex h-10 sm:h-11 items-center justify-center gap-1.5 sm:gap-2 rounded-full bg-gradient-to-r from-brand-600 to-blue-600 hover:from-brand-500 hover:to-blue-500 px-4 sm:px-6 text-xs sm:text-sm font-semibold text-white shadow-md shadow-brand-500/25 hover:shadow-lg hover:shadow-brand-500/35 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/50"
+              className="group inline-flex h-9 sm:h-10 md:h-11 items-center justify-center gap-1 sm:gap-1.5 md:gap-2 rounded-full bg-gradient-to-r from-brand-600 to-blue-600 hover:from-brand-500 hover:to-blue-500 px-3 sm:px-4.5 md:px-6 text-xs sm:text-sm font-semibold text-white shadow-md shadow-brand-500/25 hover:shadow-lg hover:shadow-brand-500/35 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/50 shrink-0 whitespace-nowrap"
             >
               <span>Employer Login</span>
-              <ArrowUpRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              <ArrowUpRight className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
             </a>
           </div>
         </div>
@@ -431,24 +437,24 @@ export function LaunchWrapper({ children }: LaunchWrapperProps) {
       {/* ─────────────────────────────────────────────────────────────
           FOOTER
          ───────────────────────────────────────────────────────────── */}
-      <footer className="relative z-20 w-full border-t border-blue-100/60 dark:border-slate-800/60 bg-white/40 dark:bg-slate-950/40 px-6 py-6 text-center text-xs text-slate-500 dark:text-slate-400 backdrop-blur-md">
-        <div className="mx-auto flex max-w-7xl flex-col sm:flex-row items-center justify-between gap-3">
+      <footer className="relative z-20 w-full border-t border-blue-100/60 dark:border-slate-800/60 bg-white/40 dark:bg-slate-950/40 px-4 py-5 sm:px-8 sm:py-6 text-center text-xs text-slate-500 dark:text-slate-400 backdrop-blur-md">
+        <div className="mx-auto flex max-w-7xl flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
           <p>© {new Date().getFullYear()} Hirance Pvt Ltd. All rights reserved.</p>
 
-          <div className="flex items-center gap-6">
+          <div className="flex flex-wrap items-center justify-center gap-x-3.5 sm:gap-x-5 gap-y-1.5">
             <Link href="/terms" className="hover:text-slate-900 dark:hover:text-white transition-colors">
               Terms &amp; Conditions
             </Link>
-            <span className="text-slate-300 dark:text-slate-700">•</span>
+            <span className="text-slate-300 dark:text-slate-700" aria-hidden="true">•</span>
             <Link href="/privacy" className="hover:text-slate-900 dark:hover:text-white transition-colors">
               Privacy Policy
             </Link>
-             <span className="text-border">•</span>
-            <Link href="/mobile-privacy-policy" className="hover:text-foreground transition-colors">
+            <span className="text-slate-300 dark:text-slate-700" aria-hidden="true">•</span>
+            <Link href="/mobile-privacy-policy" className="hover:text-slate-900 dark:hover:text-white transition-colors">
               Mobile Privacy
             </Link>
-            <span className="text-border">•</span>
-            <Link href="/delete-account" className="hover:text-foreground transition-colors">
+            <span className="text-slate-300 dark:text-slate-700" aria-hidden="true">•</span>
+            <Link href="/delete-account" className="hover:text-slate-900 dark:hover:text-white transition-colors">
               Delete Account
             </Link>
           </div>
