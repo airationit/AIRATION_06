@@ -89,18 +89,25 @@ export function JobFiltersSidebar({
 
   // 1. Job Roles list from /masterdata/job-roles/
   const availableRoles = useMemo(() => {
-    if (jobRoles && jobRoles.length > 0) {
-      return jobRoles.map((r) => ({
-        id: r.id,
-        name: r.name,
-        slug: r.name.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
-      }));
-    }
-    return POPULAR_JOB_ROLES.map((r) => ({
-      id: r.slug,
-      name: r.label,
-      slug: r.slug,
-    }));
+    const rawList =
+      jobRoles && jobRoles.length > 0
+        ? jobRoles.map((r) => ({
+            id: r.id,
+            name: r.name,
+            slug: r.name.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
+          }))
+        : POPULAR_JOB_ROLES.map((r) => ({
+            id: r.slug,
+            name: r.label,
+            slug: r.slug,
+          }));
+
+    const seen = new Set<string>();
+    return rawList.filter((r) => {
+      if (!r.slug || seen.has(r.slug)) return false;
+      seen.add(r.slug);
+      return true;
+    });
   }, [jobRoles]);
 
   const filteredRoles = useMemo(() => {
@@ -188,18 +195,25 @@ export function JobFiltersSidebar({
 
   // 6. Cities list from /masterdata/cities/
   const availableCities = useMemo(() => {
-    if (cities && cities.length > 0) {
-      return cities.map((c) => ({
-        id: c.id,
-        name: c.name,
-        slug: c.name.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
-      }));
-    }
-    return POPULAR_CITIES.map((c) => ({
-      id: c.slug,
-      name: c.name,
-      slug: c.slug,
-    }));
+    const rawList =
+      cities && cities.length > 0
+        ? cities.map((c) => ({
+            id: c.id,
+            name: c.name,
+            slug: c.name.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
+          }))
+        : POPULAR_CITIES.map((c) => ({
+            id: c.slug,
+            name: c.name,
+            slug: c.slug,
+          }));
+
+    const seen = new Set<string>();
+    return rawList.filter((c) => {
+      if (!c.slug || seen.has(c.slug)) return false;
+      seen.add(c.slug);
+      return true;
+    });
   }, [cities]);
 
   const filteredCities = useMemo(() => {
@@ -721,7 +735,7 @@ export function JobFiltersSidebar({
                 const isChecked = filters.citySlug === city.slug || filters.cityId === city.id;
                 return (
                   <label
-                    key={city.slug}
+                    key={city.id ? `${city.id}-${city.slug}` : city.slug}
                     className="flex items-center gap-2.5 cursor-pointer select-none group/opt py-1"
                   >
                     <div

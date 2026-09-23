@@ -770,6 +770,60 @@ export function JobsContent({
             >
               Hyderabad
             </button>
+            <button
+              type="button"
+              onClick={() => {
+                setFilters((f) => ({
+                  ...f,
+                  citySlug: f.citySlug === "lucknow" ? "all" : "lucknow",
+                }));
+                setCurrentPage(1);
+              }}
+              className={cn(
+                "rounded-lg border px-2.5 py-1 font-medium transition-colors cursor-pointer",
+                filters.citySlug === "lucknow"
+                  ? "border-brand-500 bg-brand-50 text-brand-700 dark:bg-brand-950/40 dark:text-brand-300 font-semibold"
+                  : "border-border/70 bg-background/60 text-muted-foreground hover:border-brand-500/40 hover:text-foreground"
+              )}
+            >
+              Lucknow
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setFilters((f) => ({
+                  ...f,
+                  citySlug: f.citySlug === "noida" ? "all" : "noida",
+                }));
+                setCurrentPage(1);
+              }}
+              className={cn(
+                "rounded-lg border px-2.5 py-1 font-medium transition-colors cursor-pointer",
+                filters.citySlug === "noida"
+                  ? "border-brand-500 bg-brand-50 text-brand-700 dark:bg-brand-950/40 dark:text-brand-300 font-semibold"
+                  : "border-border/70 bg-background/60 text-muted-foreground hover:border-brand-500/40 hover:text-foreground"
+              )}
+            >
+              Noida
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setFilters((f) => ({
+                  ...f,
+                  citySlug: f.citySlug === "gurgaon" ? "all" : "gurgaon",
+                }));
+                setCurrentPage(1);
+              }}
+              className={cn(
+                "rounded-lg border px-2.5 py-1 font-medium transition-colors cursor-pointer",
+                filters.citySlug === "gurgaon"
+                  ? "border-brand-500 bg-brand-50 text-brand-700 dark:bg-brand-950/40 dark:text-brand-300 font-semibold"
+                  : "border-border/70 bg-background/60 text-muted-foreground hover:border-brand-500/40 hover:text-foreground"
+              )}
+            >
+              Gurgaon
+            </button>
           </div>
 
           {/* Active Filter Tags */}
