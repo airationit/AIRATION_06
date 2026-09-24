@@ -33,6 +33,9 @@ export const metadata: Metadata = {
     ],
   },
   manifest: "/favicons/site.webmanifest",
+  verification: {
+    google: "HP5f-A9xsE3BbEcZivBbpi8Y216lFE5NdibG1AOnPF8",
+  },
   openGraph: {
     type: "website",
     locale: "en_US",
