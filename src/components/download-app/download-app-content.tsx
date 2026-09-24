@@ -92,7 +92,7 @@ export function DownloadAppContent() {
               </h1>
 
               <p className="text-base sm:text-lg text-muted-foreground leading-relaxed max-w-2xl mx-auto lg:mx-0">
-                Skip long job application forms. Discover top verified jobs in Bangalore, Mumbai, Delhi NCR, and remote. Swipe right to get interviewed 3x faster.
+                Skip long job application forms. Discover top verified jobs in Bangalore, Lucknow, Mumbai, Delhi NCR, and remote. Swipe right to get interviewed 3x faster.
               </p>
 
               {/* CTAs */}

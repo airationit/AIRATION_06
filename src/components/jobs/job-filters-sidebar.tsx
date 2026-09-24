@@ -189,7 +189,20 @@ export function JobFiltersSidebar({
   // 6. Cities list from /masterdata/cities/
   const availableCities = useMemo(() => {
     if (cities && cities.length > 0) {
-      return cities.map((c) => ({
+      const topPriority = ["bangalore", "bengaluru", "lucknow", "delhi-ncr", "delhi", "mumbai", "pune", "hyderabad", "noida", "gurgaon"];
+      const sorted = [...cities].sort((a, b) => {
+        const aSlug = a.name.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+        const bSlug = b.name.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+        const aIdx = topPriority.indexOf(aSlug);
+        const bIdx = topPriority.indexOf(bSlug);
+        if (aIdx !== -1 && bIdx !== -1) return aIdx - bIdx;
+        if (aIdx !== -1) return -1;
+        if (bIdx !== -1) return 1;
+        if (a.featured && !b.featured) return -1;
+        if (!a.featured && b.featured) return 1;
+        return a.name.localeCompare(b.name);
+      });
+      return sorted.map((c) => ({
         id: c.id,
         name: c.name,
         slug: c.name.toLowerCase().replace(/[^a-z0-9]+/g, "-"),

@@ -84,11 +84,9 @@ export default function RootLayout({
         suppressHydrationWarning
       >
         <Providers>
-          <LaunchWrapper>
             <GradientBackground />
             <Navbar />
             {children}
-          </LaunchWrapper>
         </Providers>
       </body>
     </html>

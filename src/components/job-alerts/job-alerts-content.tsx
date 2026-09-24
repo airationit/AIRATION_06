@@ -124,6 +124,7 @@ const POPULAR_ROLES = [
 
 const POPULAR_CITIES = [
   "Bangalore",
+  "Lucknow",
   "Mumbai",
   "Delhi NCR",
   "Pune",

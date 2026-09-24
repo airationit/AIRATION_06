@@ -162,6 +162,8 @@ function resolveCityFromLocation(cityNameRaw?: string, locationRaw?: string): { 
       cityName = "Ahmedabad";
     } else if (locLower.includes("jaipur")) {
       cityName = "Jaipur";
+    } else if (locLower.includes("lucknow") || locLower.includes("lko")) {
+      cityName = "Lucknow";
     } else if (locLower.includes("remote") || locLower.includes("wfh")) {
       cityName = "Remote";
     } else {
@@ -260,7 +262,11 @@ export function normalizeJobItem(raw: JobListItem | JobDetail): Job {
     requiredSkills: raw.required_skills || [],
     matchScore,
     postedDate: raw.published_at || raw.created_at || new Date().toISOString(),
-    isVerified: true,
+    isVerified: Boolean(
+      raw.badge_active ??
+      (raw as Record<string, unknown>).is_verified ??
+      (raw as Record<string, unknown>).isVerified
+    ),
     canApply: raw.can_apply,
     viewsCount: raw.views_count,
     applicationsCount: raw.applications_count,
