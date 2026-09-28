@@ -19,7 +19,7 @@ export const siteConfig = {
       label: "Employers",
       href: "https://employer.hirance.com/",
       hint: "Web platform",
-      cta: "Employer login",
+      cta: "Employer Dashboard",
       external: true,
     },
     {
@@ -27,7 +27,7 @@ export const siteConfig = {
       label: "Candidates",
       href: "https://play.google.com/store/apps/details?id=com.hirance",
       hint: "Mobile app",
-      cta: "Get the app",
+      cta: "Candidate App",
       external: true,
     },
   ],

@@ -270,7 +270,7 @@ export function Navbar({ className }: NavbarProps) {
           {/* Spacer to reserve layout space for the fixed desktop action buttons */}
           <div
             className="hidden h-10 shrink-0 lg:block"
-            style={{ width: actionsWidth || 270 }}
+            style={{ width: actionsWidth || 300 }}
             aria-hidden="true"
           />
 
@@ -295,7 +295,7 @@ export function Navbar({ className }: NavbarProps) {
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex h-10 items-center gap-1.5 rounded-full px-3.5 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-brand-500/40"
-            aria-label="Get the Hirance app for candidates on Google Play"
+            aria-label="Hirance Candidate App on Google Play"
             tabIndex={0}
           >
             {candidate.cta}
@@ -309,7 +309,7 @@ export function Navbar({ className }: NavbarProps) {
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex h-10 items-center justify-center rounded-full bg-brand-600 px-5 text-sm font-semibold text-white transition-colors hover:bg-brand-700 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-brand-500/40"
-              aria-label="Employer login on the Hirance web platform"
+              aria-label="Employer dashboard on the Hirance web platform"
               tabIndex={0}
             >
               {employer.cta}
@@ -318,7 +318,7 @@ export function Navbar({ className }: NavbarProps) {
             <Link
               href={employer.href}
               className="inline-flex h-10 items-center justify-center rounded-full bg-brand-600 px-5 text-sm font-semibold text-white transition-colors hover:bg-brand-700 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-brand-500/40"
-              aria-label="Employer login on the Hirance web platform"
+              aria-label="Employer dashboard on the Hirance web platform"
               tabIndex={0}
             >
               {employer.cta}

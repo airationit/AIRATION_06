@@ -448,7 +448,7 @@ export function BlogDetailContent({ post }: BlogDetailContentProps) {
                 rel="noopener noreferrer"
                 className="inline-flex h-12 items-center justify-center rounded-full border border-border/80 bg-background/80 px-6 text-sm font-semibold text-foreground transition-all hover:bg-muted"
               >
-                Employer Login
+                Employer Dashboard
               </a>
             </div>
           </div>

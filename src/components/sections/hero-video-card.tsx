@@ -3,7 +3,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { Volume2, VolumeX, ArrowRight } from "lucide-react";
-import Link from "next/link";
 import { siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
 import { useMediaQuery } from "@/hooks";
@@ -152,13 +151,6 @@ export function HeroVideoCard({ className }: HeroVideoCardProps) {
                 <span>Start Swiping</span>
                 <ArrowRight className="h-3.5 w-3.5 xs:h-4 xs:w-4 transition-transform group-hover:translate-x-1" />
               </a>
-
-              <Link
-                href={siteConfig.links.employer}
-                className="inline-flex h-9 xs:h-10 sm:h-11 lg:h-10 xl:h-11 items-center justify-center gap-1.5 xs:gap-2 rounded-full border border-white/25 bg-slate-900/60 px-4 xs:px-5 sm:px-6 lg:px-5 xl:px-6 text-xs sm:text-sm font-semibold text-white backdrop-blur-md transition-all duration-200 hover:bg-white/20 hover:scale-[1.02] active:scale-[0.98] shadow-sm"
-              >
-                <span>Post a Job</span>
-              </Link>
             </div>
           </motion.div>
 
