@@ -264,8 +264,8 @@ export function normalizeJobItem(raw: JobListItem | JobDetail): Job {
     postedDate: raw.published_at || raw.created_at || new Date().toISOString(),
     isVerified: Boolean(
       raw.badge_active ??
-      (raw as Record<string, unknown>).is_verified ??
-      (raw as Record<string, unknown>).isVerified
+      raw.is_verified ??
+      raw.isVerified
     ),
     canApply: raw.can_apply,
     viewsCount: raw.views_count,
