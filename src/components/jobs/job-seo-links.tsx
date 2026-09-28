@@ -109,12 +109,14 @@ export function JobSeoLinks({ currentRoleSlug, currentCitySlug }: JobSeoLinksPro
   const trendingHubs = useMemo(() => {
     const items = [
       { label: "React Developers in Bangalore", slug: "react-developer-in-bangalore" },
+      { label: "Fresher Jobs in Lucknow", slug: "freshers-jobs-in-lucknow" },
       { label: "Remote Frontend Engineers", slug: "remote-frontend-developer" },
       { label: "UI/UX Designers in Mumbai", slug: "ui-ux-designer-in-mumbai" },
       { label: "Python & AI Jobs in Hyderabad", slug: "python-developer-in-hyderabad" },
       { label: "Full Stack Developers in Pune", slug: "full-stack-developer-in-pune" },
       { label: "Inside Sales / Telecallers in Delhi NCR", slug: "telecaller-in-delhi-ncr" },
       { label: "Fresher Jobs in Bangalore", slug: "freshers-jobs-in-bangalore" },
+      { label: "Sales Executives in Lucknow", slug: "sales-executive-in-lucknow" },
       { label: "Remote Product Designers", slug: "remote-product-designer" },
       { label: "DevOps & Cloud Engineers in Chennai", slug: "devops-engineer-in-chennai" },
       { label: "Data Analysts in Gurgaon", slug: "data-analyst-in-gurgaon" },

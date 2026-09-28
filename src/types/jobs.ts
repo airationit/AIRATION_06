@@ -51,6 +51,8 @@ export interface JobListItem {
   can_apply?: boolean;
   reason?: string | null;
   badge_active?: boolean;
+  is_verified?: boolean;
+  isVerified?: boolean;
   applied?: boolean;
   status: string;
   published_at: string;
@@ -104,6 +106,8 @@ export interface JobDetail {
   can_apply?: boolean;
   reason?: string | null;
   badge_active?: boolean;
+  is_verified?: boolean;
+  isVerified?: boolean;
   applied?: boolean;
   status: string;
   published_at: string;

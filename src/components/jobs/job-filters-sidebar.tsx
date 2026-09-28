@@ -195,25 +195,31 @@ export function JobFiltersSidebar({
 
   // 6. Cities list from /masterdata/cities/
   const availableCities = useMemo(() => {
-    const rawList =
-      cities && cities.length > 0
-        ? cities.map((c) => ({
-            id: c.id,
-            name: c.name,
-            slug: c.name.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
-          }))
-        : POPULAR_CITIES.map((c) => ({
-            id: c.slug,
-            name: c.name,
-            slug: c.slug,
-          }));
-
-    const seen = new Set<string>();
-    return rawList.filter((c) => {
-      if (!c.slug || seen.has(c.slug)) return false;
-      seen.add(c.slug);
-      return true;
-    });
+    if (cities && cities.length > 0) {
+      const topPriority = ["bangalore", "bengaluru", "lucknow", "delhi-ncr", "delhi", "mumbai", "pune", "hyderabad", "noida", "gurgaon"];
+      const sorted = [...cities].sort((a, b) => {
+        const aSlug = a.name.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+        const bSlug = b.name.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+        const aIdx = topPriority.indexOf(aSlug);
+        const bIdx = topPriority.indexOf(bSlug);
+        if (aIdx !== -1 && bIdx !== -1) return aIdx - bIdx;
+        if (aIdx !== -1) return -1;
+        if (bIdx !== -1) return 1;
+        if (a.featured && !b.featured) return -1;
+        if (!a.featured && b.featured) return 1;
+        return a.name.localeCompare(b.name);
+      });
+      return sorted.map((c) => ({
+        id: c.id,
+        name: c.name,
+        slug: c.name.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
+      }));
+    }
+    return POPULAR_CITIES.map((c) => ({
+      id: c.slug,
+      name: c.name,
+      slug: c.slug,
+    }));
   }, [cities]);
 
   const filteredCities = useMemo(() => {

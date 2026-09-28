@@ -443,10 +443,12 @@ export function JobsContent({
     }
 
     if (filters.citySlug && filters.citySlug !== "all") {
-      const cityObj = cities.find((c) => c.id === filters.cityId);
+      const cityObj = cities.find(
+        (c) => c.id === filters.cityId || c.name.toLowerCase().replace(/[^a-z0-9]+/g, "-") === filters.citySlug
+      );
       tags.push({
         id: "city",
-        label: cityObj?.name || filters.citySlug.replace(/-/g, " "),
+        label: cityObj?.name || (filters.citySlug === "delhi-ncr" ? "Delhi NCR" : filters.citySlug.charAt(0).toUpperCase() + filters.citySlug.slice(1).replace(/-/g, " ")),
         onRemove: () =>
           setFilters((f) => ({ ...f, cityId: "", citySlug: "all" })),
       });
@@ -650,6 +652,7 @@ export function JobsContent({
                 setFilters((f) => ({
                   ...f,
                   citySlug: f.citySlug === "remote" ? "all" : "remote",
+                  cityId: "",
                 }));
                 setCurrentPage(1);
               }}
@@ -683,10 +686,17 @@ export function JobsContent({
             <button
               type="button"
               onClick={() => {
-                setFilters((f) => ({
-                  ...f,
-                  citySlug: f.citySlug === "bangalore" ? "all" : "bangalore",
-                }));
+                setFilters((f) => {
+                  const next = f.citySlug === "bangalore" ? "all" : "bangalore";
+                  const match = cities.find(
+                    (c) => c.name.toLowerCase().replace(/[^a-z0-9]+/g, "-") === next
+                  );
+                  return {
+                    ...f,
+                    citySlug: next,
+                    cityId: match?.id || "",
+                  };
+                });
                 setCurrentPage(1);
               }}
               className={cn(
@@ -701,10 +711,42 @@ export function JobsContent({
             <button
               type="button"
               onClick={() => {
-                setFilters((f) => ({
-                  ...f,
-                  citySlug: f.citySlug === "delhi-ncr" ? "all" : "delhi-ncr",
-                }));
+                setFilters((f) => {
+                  const next = f.citySlug === "lucknow" ? "all" : "lucknow";
+                  const match = cities.find(
+                    (c) => c.name.toLowerCase().replace(/[^a-z0-9]+/g, "-") === next
+                  );
+                  return {
+                    ...f,
+                    citySlug: next,
+                    cityId: match?.id || "",
+                  };
+                });
+                setCurrentPage(1);
+              }}
+              className={cn(
+                "rounded-lg border px-2.5 py-1 font-medium transition-colors cursor-pointer",
+                filters.citySlug === "lucknow"
+                  ? "border-brand-500 bg-brand-50 text-brand-700 dark:bg-brand-950/40 dark:text-brand-300 font-semibold"
+                  : "border-border/70 bg-background/60 text-muted-foreground hover:border-brand-500/40 hover:text-foreground"
+              )}
+            >
+              Lucknow
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setFilters((f) => {
+                  const next = f.citySlug === "delhi-ncr" ? "all" : "delhi-ncr";
+                  const match = cities.find(
+                    (c) => c.name.toLowerCase().replace(/[^a-z0-9]+/g, "-") === next
+                  );
+                  return {
+                    ...f,
+                    citySlug: next,
+                    cityId: match?.id || "",
+                  };
+                });
                 setCurrentPage(1);
               }}
               className={cn(
@@ -719,10 +761,17 @@ export function JobsContent({
             <button
               type="button"
               onClick={() => {
-                setFilters((f) => ({
-                  ...f,
-                  citySlug: f.citySlug === "mumbai" ? "all" : "mumbai",
-                }));
+                setFilters((f) => {
+                  const next = f.citySlug === "mumbai" ? "all" : "mumbai";
+                  const match = cities.find(
+                    (c) => c.name.toLowerCase().replace(/[^a-z0-9]+/g, "-") === next
+                  );
+                  return {
+                    ...f,
+                    citySlug: next,
+                    cityId: match?.id || "",
+                  };
+                });
                 setCurrentPage(1);
               }}
               className={cn(
@@ -737,10 +786,17 @@ export function JobsContent({
             <button
               type="button"
               onClick={() => {
-                setFilters((f) => ({
-                  ...f,
-                  citySlug: f.citySlug === "pune" ? "all" : "pune",
-                }));
+                setFilters((f) => {
+                  const next = f.citySlug === "pune" ? "all" : "pune";
+                  const match = cities.find(
+                    (c) => c.name.toLowerCase().replace(/[^a-z0-9]+/g, "-") === next
+                  );
+                  return {
+                    ...f,
+                    citySlug: next,
+                    cityId: match?.id || "",
+                  };
+                });
                 setCurrentPage(1);
               }}
               className={cn(
@@ -755,10 +811,17 @@ export function JobsContent({
             <button
               type="button"
               onClick={() => {
-                setFilters((f) => ({
-                  ...f,
-                  citySlug: f.citySlug === "hyderabad" ? "all" : "hyderabad",
-                }));
+                setFilters((f) => {
+                  const next = f.citySlug === "hyderabad" ? "all" : "hyderabad";
+                  const match = cities.find(
+                    (c) => c.name.toLowerCase().replace(/[^a-z0-9]+/g, "-") === next
+                  );
+                  return {
+                    ...f,
+                    citySlug: next,
+                    cityId: match?.id || "",
+                  };
+                });
                 setCurrentPage(1);
               }}
               className={cn(

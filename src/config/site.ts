@@ -68,6 +68,7 @@ export const siteConfig = {
             hasArrow: true,
             flyoutItems: [
               { label: "Jobs in Bangalore", href: "/jobs/jobs-in-bangalore" },
+              { label: "Jobs in Lucknow", href: "/jobs/jobs-in-lucknow" },
               { label: "Jobs in Mumbai", href: "/jobs/jobs-in-mumbai" },
               { label: "Jobs in Delhi NCR", href: "/jobs/jobs-in-delhi-ncr" },
               { label: "Jobs in Pune", href: "/jobs/jobs-in-pune" },

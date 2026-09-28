@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { BlogCategory, BlogListItem, BlogTag } from "@/types/blogs";
 import { useBlogsStore } from "@/store/blogs-store";
+import { formatBlogReadTime } from "@/lib/api/blogs";
 import { Footer, InteractiveDots, GooglePlayButton } from "@/components/shared";
 
 interface BlogListContentProps {
@@ -103,13 +104,11 @@ export function BlogListContent({
     return () => clearTimeout(timer);
   }, [searchInput, filters.search, setSearch, loadBlogs]);
 
-  // Display list (excluding featured post on first page if default view)
   const isDefaultView =
     filters.category === "all" && !filters.tag && !filters.search && currentPage === 1;
 
-  const displayPosts = isDefaultView && featuredBlog
-    ? blogs.filter((b) => b.id !== featuredBlog.id)
-    : blogs;
+  // In the all tab and category views, show all matching blogs in the grid
+  const displayPosts = blogs;
 
   const handleShare = (post: BlogListItem) => {
     const url = typeof window !== "undefined" ? `${window.location.origin}/blog/${post.slug}` : "";
@@ -187,7 +186,6 @@ export function BlogListContent({
               }}
               className="relative flex items-center w-full"
             >
-              {/* Search Icon (explicit z-10 so it renders on top of input background) */}
               <div className="pointer-events-none absolute left-4 z-10 flex items-center justify-center text-muted-foreground">
                 <Search className="h-5 w-5 text-muted-foreground/80" aria-hidden="true" />
               </div>
@@ -270,15 +268,28 @@ export function BlogListContent({
                   </p>
 
                   <div className="mt-6 flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
-                    <span className="font-semibold text-foreground">
-                      {featuredBlog.author?.name}
-                    </span>
+                    <div className="flex items-center gap-2">
+                      {featuredBlog.author?.avatar ? (
+                        <img
+                          src={featuredBlog.author.avatar}
+                          alt={featuredBlog.author.name}
+                          className="h-6 w-6 rounded-full object-cover border border-blue-500/20 shadow-xs"
+                        />
+                      ) : (
+                        <div className="h-6 w-6 rounded-full bg-blue-600/10 border border-blue-500/20 flex items-center justify-center text-blue-600 dark:text-blue-400 text-xs font-bold">
+                          {featuredBlog.author?.name ? featuredBlog.author.name.charAt(0) : "H"}
+                        </div>
+                      )}
+                      <span className="font-semibold text-foreground">
+                        {featuredBlog.author?.name || "Hirance Editorial"}
+                      </span>
+                    </div>
                     <span>•</span>
                     <span>{formatDate(featuredBlog.published_at)}</span>
                     <span>•</span>
                     <span className="inline-flex items-center gap-1">
                       <Clock className="h-3.5 w-3.5 text-blue-600 dark:text-blue-400" />
-                      {featuredBlog.read_time}
+                      {formatBlogReadTime(featuredBlog.read_time)}
                     </span>
                     {featuredBlog.views_count > 0 && (
                       <>
@@ -312,32 +323,26 @@ export function BlogListContent({
 
                 {/* Right Visual Spotlight Banner */}
                 <div className="hidden lg:col-span-5 lg:block">
-                  <div className="relative aspect-[4/3] overflow-hidden rounded-2xl border border-border/60 bg-gradient-to-br from-blue-600/10 via-indigo-600/5 to-transparent p-6 flex flex-col justify-between backdrop-blur-md shadow-sm">
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400 flex items-center gap-1.5">
-                        <TrendingUp className="h-3.5 w-3.5" />
-                        Trending Topic
-                      </span>
-                      <span className="text-xs text-muted-foreground font-medium">
-                        {featuredBlog.read_time}
-                      </span>
-                    </div>
-
-                    <div className="space-y-2 rounded-xl border border-border/60 bg-background/90 p-4 shadow-sm backdrop-blur-md">
-                      <p className="text-xs font-semibold text-foreground">
-                        Key Discussion Tags
-                      </p>
-                      <div className="flex flex-wrap gap-1.5 pt-1">
-                        {featuredBlog.tags.slice(0, 3).map((tag) => (
-                          <span
-                            key={tag}
-                            className="rounded-md bg-blue-500/10 px-2 py-0.5 text-[11px] font-medium text-blue-600 dark:text-blue-400"
-                          >
-                            #{tag}
+                  <div className="relative aspect-[4/3] overflow-hidden rounded-2xl border border-border/60 bg-muted/20 shadow-sm">
+                    {featuredBlog.cover_image?.url ? (
+                      <img
+                        src={featuredBlog.cover_image.url}
+                        alt={featuredBlog.cover_image.alt || featuredBlog.title}
+                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                    ) : (
+                      <div className="h-full w-full bg-gradient-to-br from-blue-600/10 via-indigo-600/5 to-transparent p-6 flex flex-col justify-between backdrop-blur-md">
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400 flex items-center gap-1.5">
+                            <TrendingUp className="h-3.5 w-3.5" />
+                            Trending Topic
                           </span>
-                        ))}
+                          <span className="text-xs text-muted-foreground font-medium">
+                            {formatBlogReadTime(featuredBlog.read_time)}
+                          </span>
+                        </div>
                       </div>
-                    </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -409,7 +414,7 @@ export function BlogListContent({
               <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mr-1">
                 Topics:
               </span>
-              {tags.slice(0, 8).map((t) => {
+              {tags.slice(0, 10).map((t) => {
                 const isSelected = filters.tag === t.slug || filters.tag === t.name;
                 return (
                   <button
@@ -505,20 +510,33 @@ export function BlogListContent({
                   transition={{ duration: 0.35, delay: idx * 0.04 }}
                   className="group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-border/70 bg-white/80 dark:bg-card/40 shadow-[0_8px_30px_rgb(0,0,0,0.03)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.15)] backdrop-blur-xl transition-all duration-300 hover:border-blue-500/40 hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(37,99,235,0.08)]"
                 >
-                  {/* Visual Header Banner */}
-                  <div className="relative aspect-[16/8] w-full overflow-hidden bg-gradient-to-br from-blue-600/10 via-indigo-600/5 to-sky-500/5 p-4 flex items-start justify-between border-b border-border/50">
-                    <span className="text-xs font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400">
-                      {post.category?.name || "Article"}
-                    </span>
-                    <span className="inline-flex items-center gap-1 text-[11px] font-medium text-muted-foreground">
-                      <Clock className="h-3 w-3 text-blue-600 dark:text-blue-400" />
-                      <span>{post.read_time}</span>
-                    </span>
+                  {/* Visual Image / Banner Header */}
+                  <div className="relative aspect-[16/9] w-full overflow-hidden bg-muted/30 border-b border-border/50">
+                    {post.cover_image?.url ? (
+                      <img
+                        src={post.cover_image.url}
+                        alt={post.cover_image.alt || post.title}
+                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <div className="h-full w-full bg-gradient-to-br from-blue-600/10 via-indigo-600/5 to-sky-500/5" />
+                    )}
                   </div>
 
                   {/* Body Content */}
                   <div className="p-6 flex flex-col justify-between flex-1">
                     <div>
+                      <div className="flex items-center justify-between text-xs text-muted-foreground mb-3">
+                        <span className="font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400">
+                          {post.category?.name || "Article"}
+                        </span>
+                        <span className="inline-flex items-center gap-1 text-[11px] font-medium">
+                          <Clock className="h-3 w-3 text-blue-600 dark:text-blue-400" />
+                          <span>{formatBlogReadTime(post.read_time)}</span>
+                        </span>
+                      </div>
+
                       <h3 className="text-lg font-bold tracking-tight text-foreground group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-2 leading-snug">
                         <Link href={`/blog/${post.slug}`}>
                           {post.title}
@@ -533,9 +551,17 @@ export function BlogListContent({
                     {/* Footer Row */}
                     <div className="mt-6 pt-4 border-t border-border/50 flex items-center justify-between">
                       <div className="flex items-center gap-2.5">
-                        <div className="h-7 w-7 rounded-full bg-blue-600/10 border border-blue-500/20 flex items-center justify-center text-blue-600 dark:text-blue-400 text-xs font-bold">
-                          {post.author?.name ? post.author.name.charAt(0) : "H"}
-                        </div>
+                        {post.author?.avatar ? (
+                          <img
+                            src={post.author.avatar}
+                            alt={post.author.name}
+                            className="h-7 w-7 rounded-full object-cover border border-blue-500/20 shadow-xs"
+                          />
+                        ) : (
+                          <div className="h-7 w-7 rounded-full bg-blue-600/10 border border-blue-500/20 flex items-center justify-center text-blue-600 dark:text-blue-400 text-xs font-bold">
+                            {post.author?.name ? post.author.name.charAt(0) : "H"}
+                          </div>
+                        )}
                         <div className="flex flex-col text-xs">
                           <span className="font-semibold text-foreground leading-tight">
                             {post.author?.name || "Hirance Editorial"}
@@ -572,7 +598,7 @@ export function BlogListContent({
 
           {/* Empty State */}
           {!isLoading && displayPosts.length === 0 && (
-            <div className="py-20 text-center">
+            <div className="py-16 text-center">
               <p className="text-lg font-bold text-foreground">
                 No matching articles found
               </p>
@@ -692,7 +718,7 @@ export function BlogListContent({
                   <span className="text-muted-foreground">•</span>
                   <span className="inline-flex items-center text-muted-foreground">
                     <Clock className="mr-1 h-3.5 w-3.5 text-blue-600" />
-                    {activeModalPost.read_time}
+                    {formatBlogReadTime(activeModalPost.read_time)}
                   </span>
                 </div>
 
@@ -706,12 +732,29 @@ export function BlogListContent({
                 </button>
               </div>
 
+              {activeModalPost.cover_image?.url && (
+                <div className="relative aspect-[16/8] w-full overflow-hidden bg-muted/30 border-b border-border/50">
+                  <img
+                    src={activeModalPost.cover_image.url}
+                    alt={activeModalPost.cover_image.alt || activeModalPost.title}
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+              )}
+
               <div className="overflow-y-auto p-6 sm:p-8 space-y-5">
                 <h2 className="text-xl sm:text-2xl font-extrabold tracking-tight text-foreground leading-snug">
                   {activeModalPost.title}
                 </h2>
 
                 <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground border-b border-border/50 pb-4">
+                  {activeModalPost.author?.avatar ? (
+                    <img
+                      src={activeModalPost.author.avatar}
+                      alt={activeModalPost.author.name}
+                      className="h-5 w-5 rounded-full object-cover border border-blue-500/20"
+                    />
+                  ) : null}
                   <span className="font-semibold text-foreground">
                     {activeModalPost.author?.name}
                   </span>

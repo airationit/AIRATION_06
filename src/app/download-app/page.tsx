@@ -4,7 +4,7 @@ import { DownloadAppContent } from "@/components/download-app/download-app-conte
 export const metadata: Metadata = {
   title: "Download Hirance Mobile App | Swipe. Match. Get Hired.",
   description:
-    "Download the Hirance Android App to swipe right on verified jobs in Bangalore, Mumbai, Delhi NCR, and remote. Apply in 1 second with instant AI match scores.",
+    "Download the Hirance Android App to swipe right on verified jobs in Bangalore, Lucknow, Mumbai, Delhi NCR, and remote. Apply in 1 second with instant AI match scores.",
   keywords: [
     "download Hirance app",
     "Hirance Android app download",

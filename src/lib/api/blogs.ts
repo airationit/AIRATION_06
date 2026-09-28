@@ -8,16 +8,21 @@ import {
   BlogSitemapData,
   BlogTag,
 } from "@/types/blogs";
-import {
-  FALLBACK_BLOG_CATEGORIES,
-  FALLBACK_BLOG_LIST_ITEMS,
-  FALLBACK_BLOG_TAGS,
-  FALLBACK_BLOGS,
-} from "@/data/blogs";
+
+/**
+ * Format read_time string cleanly ("5" -> "5 min read", "5 min read" -> "5 min read")
+ */
+export function formatBlogReadTime(readTime?: string | number | null): string {
+  if (!readTime) return "3 min read";
+  const str = String(readTime).trim();
+  if (str.toLowerCase().includes("min")) return str;
+  return `${str} min read`;
+}
 
 /**
  * Fetch candidate/public-facing blogs list with filtering, search, and pagination
  * Endpoint: GET /api/v1/blogs/
+ * Reference: BLOGAPI.md Section 2
  */
 export async function fetchBlogs(
   params?: BlogSearchParams,
@@ -40,83 +45,39 @@ export async function fetchBlogs(
 
     const res = await apiClient<PaginatedResponse<BlogListItem>>("/api/v1/blogs/", {
       params: queryParams,
-      revalidate: options?.revalidate ?? 60, // 60s ISR cache
+      revalidate: options?.revalidate ?? 60, // 60s cache
     });
 
     if (res && res.success && Array.isArray(res.data)) {
-      // If backend has full dataset (or if searching/filtering), return API response.
-      // If backend has only partial data (less than local dataset), fall through to local fallback.
-      const isFiltered = params?.search || (params?.category && params.category !== "all") || params?.tag;
-      if (isFiltered || (res.pagination?.count ?? res.data.length) >= FALLBACK_BLOG_LIST_ITEMS.length) {
-        return res;
-      }
+      return res;
     }
-
-    throw new Error(res?.message || "API returned incomplete dataset, using local static blogs");
-  } catch (error) {
-    console.warn("fetchBlogs API failed or is not fully populated, using local dataset:", error);
-
-    // ── Local fallback: filter, sort & paginate FALLBACK_BLOG_LIST_ITEMS ──
-    let filtered = [...FALLBACK_BLOG_LIST_ITEMS];
-
-    if (params) {
-      if (params.category && params.category !== "all") {
-        filtered = filtered.filter(
-          (b) =>
-            b.category.slug.toLowerCase() === params.category!.toLowerCase() ||
-            b.category.name.toLowerCase() === params.category!.toLowerCase()
-        );
-      }
-
-      if (params.tag) {
-        const tagLower = params.tag.toLowerCase();
-        filtered = filtered.filter((b) =>
-          b.tags.some((t) => t.toLowerCase() === tagLower || t.toLowerCase().replace(/\s+/g, "-") === tagLower)
-        );
-      }
-
-      if (params.search) {
-        const q = params.search.toLowerCase().trim();
-        filtered = filtered.filter(
-          (b) =>
-            b.title.toLowerCase().includes(q) ||
-            b.excerpt.toLowerCase().includes(q) ||
-            b.tags.some((t) => t.toLowerCase().includes(q))
-        );
-      }
-
-      if (params.featured !== undefined) {
-        filtered = filtered.filter((b) => b.featured === params.featured);
-      }
-
-      if (params.ordering === "-views_count") {
-        filtered.sort((a, b) => b.views_count - a.views_count);
-      } else if (params.ordering === "published_at") {
-        filtered.sort((a, b) => new Date(a.published_at).getTime() - new Date(b.published_at).getTime());
-      } else {
-        // default: newest first
-        filtered.sort((a, b) => new Date(b.published_at).getTime() - new Date(a.published_at).getTime());
-      }
-    }
-
-    const page = params?.page || 1;
-    const pageSize = params?.page_size || 10;
-    const totalCount = filtered.length;
-    const totalPages = Math.ceil(totalCount / pageSize) || 1;
-    const startIndex = (page - 1) * pageSize;
-    const paginatedItems = filtered.slice(startIndex, startIndex + pageSize);
 
     return {
       success: true,
-      message: "Blogs fetched successfully (local dataset)",
-      data: paginatedItems,
+      message: res?.message || "No blogs found",
+      data: [],
+      pagination: res?.pagination || {
+        count: 0,
+        total_pages: 1,
+        current_page: params?.page || 1,
+        page_size: params?.page_size || 10,
+        next: null,
+        previous: null,
+      },
+    };
+  } catch (error) {
+    console.error("fetchBlogs API error:", error);
+    return {
+      success: false,
+      message: error instanceof Error ? error.message : "Failed to load blogs",
+      data: [],
       pagination: {
-        count: totalCount,
-        total_pages: totalPages,
-        current_page: page,
-        page_size: pageSize,
-        next: page < totalPages ? `?page=${page + 1}` : null,
-        previous: page > 1 ? `?page=${page - 1}` : null,
+        count: 0,
+        total_pages: 1,
+        current_page: params?.page || 1,
+        page_size: params?.page_size || 10,
+        next: null,
+        previous: null,
       },
     };
   }
@@ -125,6 +86,7 @@ export async function fetchBlogs(
 /**
  * Fetch a single blog post by slug
  * Endpoint: GET /api/v1/blogs/{slug}/
+ * Reference: BLOGAPI.md Section 3
  */
 export async function fetchBlogBySlug(
   slug: string,
@@ -133,25 +95,26 @@ export async function fetchBlogBySlug(
   if (!slug) return null;
 
   try {
-    const res = await apiClient<ApiResponse<BlogDetail>>(`/api/v1/blogs/${slug}/`, {
-      revalidate: options?.revalidate ?? 120, // 2m ISR cache
+    const cleanSlug = encodeURIComponent(slug.trim());
+    const res = await apiClient<ApiResponse<BlogDetail>>(`/api/v1/blogs/${cleanSlug}/`, {
+      revalidate: options?.revalidate ?? 120, // 2m cache
     });
 
     if (res && res.success && res.data) {
       return res.data;
     }
 
-    throw new Error(res?.message || `Post with slug '${slug}' not found`);
+    return null;
   } catch (error) {
-    console.warn(`fetchBlogBySlug for '${slug}' failed, checking fallback dataset:`, error);
-    const fallback = FALLBACK_BLOGS.find((b) => b.slug === slug);
-    return fallback || null;
+    console.error(`fetchBlogBySlug for '${slug}' failed:`, error);
+    return null;
   }
 }
 
 /**
  * Fetch active blog categories with post counts
  * Endpoint: GET /api/v1/blogs/categories/
+ * Reference: BLOGAPI.md Section 4
  */
 export async function fetchBlogCategories(
   options?: { revalidate?: number | false }
@@ -165,16 +128,17 @@ export async function fetchBlogCategories(
       return res.data;
     }
 
-    throw new Error(res?.message || "Invalid category response");
+    return [{ id: null, name: "All", slug: "all", post_count: 0 }];
   } catch (error) {
-    console.warn("fetchBlogCategories failed, using fallback:", error);
-    return FALLBACK_BLOG_CATEGORIES;
+    console.error("fetchBlogCategories failed:", error);
+    return [{ id: null, name: "All", slug: "all", post_count: 0 }];
   }
 }
 
 /**
  * Fetch trending blog tags
  * Endpoint: GET /api/v1/blogs/tags/
+ * Reference: BLOGAPI.md Section 5
  */
 export async function fetchBlogTags(
   options?: { revalidate?: number | false }
@@ -184,20 +148,21 @@ export async function fetchBlogTags(
       revalidate: options?.revalidate ?? 3600,
     });
 
-    if (res && res.success && Array.isArray(res.data) && res.data.length > 0) {
+    if (res && res.success && Array.isArray(res.data)) {
       return res.data;
     }
 
-    throw new Error(res?.message || "Invalid tags response");
+    return [];
   } catch (error) {
-    console.warn("fetchBlogTags failed, using fallback:", error);
-    return FALLBACK_BLOG_TAGS;
+    console.error("fetchBlogTags failed:", error);
+    return [];
   }
 }
 
 /**
  * Fetch sitemap listing for blog articles
  * Endpoint: GET /api/v1/blogs/sitemap/
+ * Reference: BLOGAPI.md Section 6
  */
 export async function fetchBlogSitemap(
   options?: { revalidate?: number | false }
@@ -211,39 +176,31 @@ export async function fetchBlogSitemap(
       return res.data;
     }
 
-    throw new Error(res?.message || "Invalid sitemap response");
+    return { total: 0, items: [] };
   } catch (error) {
-    console.warn("fetchBlogSitemap failed, generating from fallback:", error);
-    return {
-      total: FALLBACK_BLOGS.length,
-      items: FALLBACK_BLOGS.map((b) => ({
-        slug: b.slug,
-        url: `https://hirance.com/blog/${b.slug}`,
-        published_at: b.published_at,
-        updated_at: b.updated_at || b.published_at,
-        change_freq: "monthly",
-        priority: b.featured ? 0.9 : 0.8,
-      })),
-    };
+    console.error("fetchBlogSitemap failed:", error);
+    return { total: 0, items: [] };
   }
 }
 
 /**
  * Record a blog view count increment
  * Endpoint: POST /api/v1/blogs/{slug}/view/
+ * Reference: BLOGAPI.md Section 7
  */
 export async function recordBlogView(slug: string): Promise<boolean> {
   if (!slug) return false;
 
   try {
-    const res = await apiClient<ApiResponse<null>>(`/api/v1/blogs/${slug}/view/`, {
+    const cleanSlug = encodeURIComponent(slug.trim());
+    const res = await apiClient<ApiResponse<null>>(`/api/v1/blogs/${cleanSlug}/view/`, {
       method: "POST",
       revalidate: false,
     });
 
     return res?.success ?? false;
   } catch (error) {
-    console.warn(`recordBlogView for '${slug}' failed:`, error);
+    console.error(`recordBlogView for '${slug}' failed:`, error);
     return false;
   }
 }

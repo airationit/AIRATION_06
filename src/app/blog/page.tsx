@@ -78,7 +78,7 @@ export default async function BlogIndexPage() {
       datePublished: post.published_at,
       author: {
         "@type": "Person",
-        name: post.author.name,
+        name: post.author?.name || "Hirance Editorial",
       },
     })),
   };

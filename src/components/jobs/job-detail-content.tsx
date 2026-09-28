@@ -388,10 +388,16 @@ export function JobDetailContent({ job, relatedJobs = [] }: JobDetailContentProp
 
                 <div className="flex items-center justify-between pt-1">
                   <span className="text-muted-foreground">Verification</span>
-                  <span className="font-semibold text-brand-600 dark:text-brand-400 flex items-center gap-1">
-                    <CheckCircle2 className="h-3.5 w-3.5" />
-                    Verified Employer
-                  </span>
+                  {job.isVerified ? (
+                    <span className="font-semibold text-brand-600 dark:text-brand-400 flex items-center gap-1">
+                      <CheckCircle2 className="h-3.5 w-3.5" />
+                      Verified Employer
+                    </span>
+                  ) : (
+                    <span className="font-medium text-muted-foreground">
+                      Standard Employer
+                    </span>
+                  )}
                 </div>
               </div>
             </div>
