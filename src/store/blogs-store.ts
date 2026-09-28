@@ -181,10 +181,10 @@ export const useBlogsStore = create<BlogsStoreState>((set, get) => ({
           : get().featuredBlog;
 
         set({
-          blogs: response.data,
-          totalBlogs: response.pagination.count,
-          totalPages: response.pagination.total_pages,
-          currentPage: response.pagination.current_page,
+          blogs: response.data || [],
+          totalBlogs: response.pagination?.count ?? (response.data?.length || 0),
+          totalPages: response.pagination?.total_pages ?? 1,
+          currentPage: response.pagination?.current_page ?? currentPage,
           featuredBlog: newFeatured,
           isLoading: false,
         });

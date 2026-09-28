@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { motion } from "framer-motion";
 import {
   ArrowLeft,
@@ -17,7 +16,7 @@ import {
   Eye,
 } from "lucide-react";
 import { BlogDetail, BlogSection } from "@/types/blogs";
-import { recordBlogView } from "@/lib/api/blogs";
+import { recordBlogView, formatBlogReadTime } from "@/lib/api/blogs";
 import { Footer, InteractiveDots, GooglePlayButton } from "@/components/shared";
 
 interface BlogDetailContentProps {
@@ -44,9 +43,13 @@ function SectionBlockRenderer({ section, index }: { section: BlogSection; index:
   switch (section.type) {
     case "paragraph":
       return (
-        <p key={index} className="my-5 text-base leading-relaxed text-muted-foreground sm:text-lg">
-          {section.content}
-        </p>
+        <div key={index} className="my-5 space-y-4">
+          {section.content.split("\n\n").map((para, pIdx) => (
+            <p key={pIdx} className="text-base leading-relaxed text-muted-foreground sm:text-lg">
+              {para}
+            </p>
+          ))}
+        </div>
       );
 
     case "heading":
@@ -73,12 +76,11 @@ function SectionBlockRenderer({ section, index }: { section: BlogSection; index:
       return (
         <figure key={index} className="my-8 overflow-hidden rounded-3xl border border-border/70 bg-card/60 shadow-sm">
           <div className="relative aspect-[16/9] w-full overflow-hidden bg-muted/40">
-            <Image
+            <img
               src={section.url}
               alt={section.alt || "Article illustration"}
-              fill
-              className="object-cover"
-              sizes="(max-width: 768px) 100vw, 800px"
+              className="h-full w-full object-cover"
+              loading="lazy"
             />
           </div>
           {section.caption && (
@@ -117,7 +119,7 @@ function SectionBlockRenderer({ section, index }: { section: BlogSection; index:
                   {parts.length > 1 ? (
                     <>
                       <strong className="font-semibold text-foreground">{parts[1]}</strong>
-                      {parts[2]}
+                      {parts.slice(2).join("**")}
                     </>
                   ) : (
                     item
@@ -204,7 +206,7 @@ export function BlogDetailContent({ post }: BlogDetailContentProps) {
       </div>
 
       {/* Top Header Banner */}
-      <section className="relative pt-32 pb-10 sm:pt-40 sm:pb-14">
+      <section className="relative pt-32 pb-8 sm:pt-40 sm:pb-12">
         <div
           className="pointer-events-none absolute inset-0 -z-10"
           aria-hidden="true"
@@ -230,7 +232,7 @@ export function BlogDetailContent({ post }: BlogDetailContentProps) {
             <span className="text-muted-foreground">•</span>
             <span className="inline-flex items-center text-muted-foreground">
               <Clock className="mr-1 h-3.5 w-3.5 text-blue-600" />
-              {post.read_time}
+              {formatBlogReadTime(post.read_time)}
             </span>
             <span className="text-muted-foreground">•</span>
             <span className="text-muted-foreground">
@@ -263,9 +265,17 @@ export function BlogDetailContent({ post }: BlogDetailContentProps) {
           {/* Author info & share bar */}
           <div className="mt-8 flex flex-wrap items-center justify-between gap-4 border-y border-border/60 py-4">
             <div className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded-full bg-blue-600/10 border border-blue-500/20 flex items-center justify-center text-blue-600 dark:text-blue-400 text-sm font-bold shadow-sm">
-                {post.author?.name ? post.author.name.charAt(0) : "H"}
-              </div>
+              {post.author?.avatar ? (
+                <img
+                  src={post.author.avatar}
+                  alt={post.author.name}
+                  className="h-10 w-10 rounded-full object-cover border border-blue-500/20 shadow-sm"
+                />
+              ) : (
+                <div className="h-10 w-10 rounded-full bg-blue-600/10 border border-blue-500/20 flex items-center justify-center text-blue-600 dark:text-blue-400 text-sm font-bold shadow-sm">
+                  {post.author?.name ? post.author.name.charAt(0) : "H"}
+                </div>
+              )}
               <div>
                 <p className="text-sm font-bold text-foreground">
                   {post.author?.name || "Hirance Editorial"}
@@ -287,6 +297,28 @@ export function BlogDetailContent({ post }: BlogDetailContentProps) {
           </div>
         </div>
       </section>
+
+      {/* Main Cover Image */}
+      {post.cover_image?.url && (
+        <section className="relative pb-10">
+          <div className="mx-auto max-w-4xl px-6">
+            <div className="overflow-hidden rounded-3xl border border-border/70 bg-card/60 shadow-lg">
+              <div className="relative aspect-[16/9] w-full overflow-hidden bg-muted/30">
+                <img
+                  src={post.cover_image.url}
+                  alt={post.cover_image.alt || post.title}
+                  className="h-full w-full object-cover"
+                />
+              </div>
+              {post.cover_image.caption && (
+                <p className="p-3.5 text-center text-xs text-muted-foreground italic border-t border-border/50">
+                  {post.cover_image.caption}
+                </p>
+              )}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Main Body Article */}
       <section className="relative pb-16">
@@ -325,9 +357,17 @@ export function BlogDetailContent({ post }: BlogDetailContentProps) {
           {/* Author Bio Box */}
           {post.author?.bio && (
             <div className="mt-12 rounded-3xl border border-border/70 bg-white/80 dark:bg-card/40 p-6 sm:p-7 backdrop-blur-sm shadow-sm flex items-start gap-4">
-              <div className="h-12 w-12 shrink-0 rounded-full bg-blue-600/10 border border-blue-500/20 flex items-center justify-center text-blue-600 dark:text-blue-400 text-base font-bold">
-                {post.author.name.charAt(0)}
-              </div>
+              {post.author?.avatar ? (
+                <img
+                  src={post.author.avatar}
+                  alt={post.author.name}
+                  className="h-12 w-12 shrink-0 rounded-full object-cover border border-blue-500/20"
+                />
+              ) : (
+                <div className="h-12 w-12 shrink-0 rounded-full bg-blue-600/10 border border-blue-500/20 flex items-center justify-center text-blue-600 dark:text-blue-400 text-base font-bold">
+                  {post.author.name.charAt(0)}
+                </div>
+              )}
               <div>
                 <p className="text-sm font-bold text-foreground">
                   About {post.author.name}
@@ -443,19 +483,31 @@ export function BlogDetailContent({ post }: BlogDetailContentProps) {
                     key={relPost.id}
                     className="group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-border/70 bg-white/80 dark:bg-card/40 shadow-[0_8px_30px_rgb(0,0,0,0.03)] backdrop-blur-xl transition-all duration-300 hover:border-blue-500/40 hover:-translate-y-1"
                   >
-                    {/* Banner Header */}
-                    <div className="relative aspect-[16/8] w-full overflow-hidden bg-gradient-to-br from-blue-600/10 via-indigo-600/5 to-sky-500/5 p-3.5 flex items-start justify-between border-b border-border/50">
-                      <span className="text-xs font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400">
-                        {categoryName}
-                      </span>
-                      <span className="inline-flex items-center gap-1 text-[11px] font-medium text-muted-foreground">
-                        <Clock className="h-3 w-3 text-blue-600" />
-                        <span>{relPost.read_time}</span>
-                      </span>
+                    {/* Banner Header with Image or Gradient */}
+                    <div className="relative aspect-[16/9] w-full overflow-hidden bg-muted/30 border-b border-border/50">
+                      {relPost.cover_image?.url ? (
+                        <img
+                          src={relPost.cover_image.url}
+                          alt={relPost.cover_image.alt || relPost.title}
+                          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                          loading="lazy"
+                        />
+                      ) : (
+                        <div className="h-full w-full bg-gradient-to-br from-blue-600/10 via-indigo-600/5 to-sky-500/5" />
+                      )}
                     </div>
 
                     <div className="p-5 flex flex-col justify-between flex-1">
                       <div>
+                        <div className="flex items-center justify-between text-xs text-muted-foreground mb-2">
+                          <span className="font-semibold uppercase tracking-wider text-blue-600 dark:text-blue-400">
+                            {categoryName}
+                          </span>
+                          <span className="inline-flex items-center gap-1 text-[11px] font-medium">
+                            <Clock className="h-3 w-3 text-blue-600" />
+                            <span>{formatBlogReadTime(relPost.read_time)}</span>
+                          </span>
+                        </div>
                         <h3 className="text-base font-bold text-foreground group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-2 leading-snug">
                           <Link href={`/blog/${relPost.slug}`}>
                             {relPost.title}
@@ -490,4 +542,3 @@ export function BlogDetailContent({ post }: BlogDetailContentProps) {
     </main>
   );
 }
-
