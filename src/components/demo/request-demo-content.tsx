@@ -173,12 +173,12 @@ export function RequestDemoContent() {
 
               <div className="relative mt-3.5 flex flex-col gap-2 text-xs font-medium">
                 <a
-                  href="tel:+919793780913"
+                  href="tel:+917309510718"
                   className="group inline-flex items-center justify-between rounded-xl border border-border/60 bg-background/60 px-3.5 py-2.5 text-foreground transition-all duration-200 hover:border-blue-500/40 hover:bg-background hover:text-blue-600 dark:hover:text-blue-400 backdrop-blur-sm"
                 >
                   <span className="flex items-center gap-2">
                     <Phone className="h-3.5 w-3.5 text-blue-600 dark:text-blue-400" />
-                    <span>+91 9793780913</span>
+                    <span>+91 7309510718, +91 9151410718</span>
                   </span>
                   <ArrowUpRight className="h-3.5 w-3.5 opacity-60 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:opacity-100" />
                 </a>

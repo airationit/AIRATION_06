@@ -61,6 +61,7 @@ const COLS: FooterColumn[] = [
       { label: "Find Jobs", href: "/jobs" },
       { label: "Download App", href: siteConfig.links.playStore },
       { label: "Candidate Feedback", href: "/feedback?role=candidate" },
+      { label: "Mobile Privacy Policy", href: "/mobile-privacy-policy" },
     ],
   },
   {
@@ -69,6 +70,7 @@ const COLS: FooterColumn[] = [
       { label: "Post a Job", href: siteConfig.links.employer },
       { label: "Employer Dashboard", href: siteConfig.links.employer },
       { label: "Employer Feedback", href: "/feedback?role=employer" },
+      { label: "Fraud Alert", href: "/fraud-alert" },
     ],
   },
   {
@@ -77,17 +79,26 @@ const COLS: FooterColumn[] = [
       { label: "About Us", href: "/about-us" },
       { label: "Blog", href: "/blog" },
       { label: "Contact", href: "/contact" },
-      { label: "Mobile Privacy", href: "/mobile-privacy-policy" },
-      { label: "Delete Account", href: "/delete-account" },
+      { label: "Trust & Safety", href: "/trust-and-safety" },
     ],
   },
 ];
 
 const SOCIALS = [
-  { icon: IconLinkedin, label: "LinkedIn", href: "https://linkedin.com/company/hirance" },
-  { icon: IconInstagram, label: "Instagram", href: "https://instagram.com/hirance" },
-  { icon: IconFacebook, label: "Facebook", href: "https://facebook.com/hirance" },
+  { icon: IconLinkedin, label: "LinkedIn", href: "https://www.linkedin.com/company/hirance/" },
+  { icon: IconInstagram, label: "Instagram", href: "https://www.instagram.com/hirance_official/" },
+  { icon: IconFacebook, label: "Facebook", href: "https://www.facebook.com/people/Hirance-Jobs/61589977845589/" },
   { icon: IconYoutube, label: "YouTube", href: "https://youtube.com/@hirance" },
+];
+
+const LEGAL_LINKS = [
+  { label: "Privacy Policy", href: "/privacy" },
+  { label: "Terms & Conditions", href: "/terms" },
+  { label: "Delete Account", href: "/delete-account" },
+  { label: "Grievances", href: "/grievances" },
+  { label: "Vulnerability Disclosure", href: "/vulnerability-disclosure" },
+  { label: "Gallery", href: "/gallery" },
+  { label: "Sitemap", href: "/sitemap.xml" },
 ];
 
 export function Footer() {
@@ -96,12 +107,12 @@ export function Footer() {
   return (
     <footer
       id="global-footer"
-      className="bg-[#060c18] text-slate-400 pt-16 pb-8 border-t border-white/10"
+      className="bg-[#060c18] text-slate-400 pt-12 pb-6 border-t border-white/10"
       data-testid="footer"
       aria-label="Hirance Global Footer"
     >
       <div className="max-w-7xl mx-auto px-5 sm:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 pb-12 border-b border-white/10">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 pb-6 border-b border-white/10">
           {/* Brand & App Download Column */}
           <div className="lg:col-span-5 flex flex-col justify-start">
             <Logo dark />
@@ -222,26 +233,24 @@ export function Footer() {
         </div>
 
         {/* Bottom Copyright & Legal Links Bar */}
-        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+        <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
           <p>© {currentYear} Hirance. All Rights Reserved.</p>
-          <div className="flex items-center flex-wrap justify-center gap-x-4 gap-y-1">
-            <Link href="/privacy" className="hover:text-slate-400 transition-colors">Privacy Policy</Link>
-            <span>·</span>
-            <Link href="/mobile-privacy-policy" className="hover:text-slate-400 transition-colors">Mobile Privacy Policy</Link>
-            <span>·</span>
-            <Link href="/terms" className="hover:text-slate-400 transition-colors">Terms & Conditions</Link>
-            <span>·</span>
-            <Link href="/delete-account" className="hover:text-slate-400 transition-colors">Delete Account</Link>
-            <span>·</span>
-            <Link href="/trust-and-safety" className="hover:text-slate-400 transition-colors">Trust & Safety</Link>
-            <span>·</span>
-            <Link href="/fraud-alert" className="hover:text-slate-400 transition-colors">Fraud Alert</Link>
-            <span>·</span>
-            <Link href="/grievances" className="hover:text-slate-400 transition-colors">Grievances</Link>
-            <span>·</span>
-            <Link href="/vulnerability-disclosure" className="hover:text-slate-400 transition-colors">Vulnerability Disclosure</Link>
-            <span>·</span>
-            <Link href="/sitemap.xml" className="hover:text-slate-400 transition-colors">Sitemap</Link>
+          <div className="flex items-center flex-wrap justify-center gap-x-3 gap-y-2 text-xs text-slate-400">
+            {LEGAL_LINKS.map((link, index) => (
+              <React.Fragment key={link.href}>
+                {index > 0 && (
+                  <span className="text-slate-600 font-light select-none px-0.5" aria-hidden="true">
+                    |
+                  </span>
+                )}
+                <Link
+                  href={link.href}
+                  className="hover:text-cyan-300 transition-colors text-slate-400"
+                >
+                  {link.label}
+                </Link>
+              </React.Fragment>
+            ))}
           </div>
         </div>
       </div>

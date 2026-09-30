@@ -4,7 +4,7 @@ import { ContactContent } from "@/components/contact/contact-content";
 export const metadata: Metadata = {
   title: "Contact Us | Hirance - Next-Gen Swipe-Based Hiring Platform",
   description:
-    "Contact Hirance for employer support, job seeker help, press, or partnerships. Call +91 9793780913 or email hello@hirance.com. We reply within 24 hours.",
+    "Contact Hirance for employer support, job seeker help, press, or partnerships. Call +91 7309510718, +91 9151410718 or email hello@hirance.com. We reply within 24 hours.",
   keywords: [
     "Hirance contact us",
     "Hirance support phone number",
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     url: "https://hirance.com/contact",
     title: "Contact Us | Hirance - Next-Gen Swipe-Based Hiring Platform",
     description:
-      "Have questions about hiring or job searching on Hirance? Reach out to our team at +91 9793780913.",
+      "Have questions about hiring or job searching on Hirance? Reach out to our team at +91 7309510718, +91 9151410718.",
     siteName: "Hirance",
     images: [
       {
@@ -86,7 +86,7 @@ export default function ContactPage() {
           "https://www.google.com/maps?ll=26.923114,80.95313&z=15&t=m&hl=en&gl=IN&mapclient=embed&q=Jankipuram+Lucknow,+Uttar+Pradesh",
         contactPoint: {
           "@type": "ContactPoint",
-          telephone: "+91-9793780913",
+          telephone: "+91-7309510718",
           email: "hello@hirance.com",
           contactType: "customer support",
           areaServed: "IN",
@@ -103,7 +103,7 @@ export default function ContactPage() {
           name: "How fast does the Hirance support team respond?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Our support team typically responds within 24 hours. For urgent employer queries, you can call or WhatsApp us directly at +91 9793780913.",
+            text: "Our support team typically responds within 24 hours. For urgent employer queries, you can call or WhatsApp us directly at +91 7309510718, +91 9151410718.",
           },
         },
         {
