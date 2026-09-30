@@ -60,6 +60,11 @@ export type BlogSection =
       items: string[];
     }
   | {
+      type: "table";
+      headers?: string[];
+      rows: string[][];
+    }
+  | {
       type: "quote";
       quote: string;
       author?: string;
@@ -134,6 +139,8 @@ export interface BlogDetail {
   seo?: BlogSEO;
   cta?: BlogCTA | null;
   related_posts?: BlogRelatedPost[];
+  previous_post?: BlogRelatedPost | null;
+  next_post?: BlogRelatedPost | null;
 }
 
 export interface BlogSearchParams {
