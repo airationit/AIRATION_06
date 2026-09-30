@@ -138,6 +138,7 @@ export interface BlogDetail {
   sections: BlogSection[];
   seo?: BlogSEO;
   cta?: BlogCTA | null;
+  faq?: { question: string; answer: string }[];
   related_posts?: BlogRelatedPost[];
   previous_post?: BlogRelatedPost | null;
   next_post?: BlogRelatedPost | null;

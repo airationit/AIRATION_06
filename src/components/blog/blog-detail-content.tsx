@@ -231,7 +231,31 @@ function SectionBlockRenderer({ section, index }: { section: BlogSection; index:
   }
 }
 
-
+function FAQItem({ item }: { item: { question: string; answer: string } }) {
+  const [isOpen, setIsOpen] = useState(false);
+  return (
+    <div className="border border-border/60 rounded-2xl mb-4 overflow-hidden bg-white/40 dark:bg-card/40 transition-all hover:border-blue-500/30 shadow-sm">
+      <button onClick={() => setIsOpen(!isOpen)} className="w-full flex items-center justify-between p-5 text-left">
+        <span className="font-bold text-sm sm:text-base text-foreground">{item.question}</span>
+        <ChevronDown className={`h-5 w-5 text-muted-foreground transition-transform ${isOpen ? "rotate-180" : ""}`} />
+      </button>
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.2 }}
+          >
+            <div className="px-5 pb-5 text-sm text-muted-foreground leading-relaxed border-t border-border/30 pt-3 whitespace-pre-line">
+              {item.answer}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
 
 export function BlogDetailContent({ post, featuredJobs = [] }: BlogDetailContentProps) {
   const [copied, setCopied] = useState(false);
@@ -604,28 +628,25 @@ export function BlogDetailContent({ post, featuredJobs = [] }: BlogDetailContent
                 </h3>
               </div>
               <div className="space-y-4">
-                <div className="rounded-[18px] border border-border/50 bg-white dark:bg-background p-5 flex justify-between items-center hover:border-blue-500/40 hover:shadow-md transition-all cursor-pointer group">
-                  <span className="text-[13px] font-bold text-foreground group-hover:text-blue-600 transition-colors">Lead Python Engineer @ Swiggy</span>
-                  <ChevronRight className="h-4 w-4 text-blue-600 transition-colors" strokeWidth={2.5} />
-                </div>
-                  
-                <div className="rounded-[18px] border border-border/50 bg-white dark:bg-background p-5 flex flex-col justify-between hover:border-blue-500/40 hover:shadow-md transition-all cursor-pointer group">
-                  <div className="flex justify-between items-center w-full">
-                    <span className="text-[13px] font-bold text-foreground group-hover:text-blue-600 transition-colors">Senior Product Designer @ Zomato</span>
-                    <ChevronRight className="h-4 w-4 text-blue-600 transition-colors" strokeWidth={2.5} />
-                  </div>
-                  <div className="flex gap-2.5 mt-4 items-center">
-                    {/* Swiggy Logo */}
-                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12.0344 24C11.6584 23.589 9.9594 21.416 8.0844 18.487C7.5374 17.571 7.1834 16.857 7.2514 16.673C7.4294 16.193 10.6064 15.93 11.5844 16.365C11.8824 16.497 11.8744 16.672 11.8744 16.774C11.8744 17.214 11.8524 18.393 11.8524 18.393C11.8525 18.451 11.8641 18.5084 11.8864 18.5619C11.9087 18.6154 11.9413 18.664 11.9824 18.7049C12.0235 18.7458 12.0723 18.7782 12.1259 18.8003C12.1795 18.8224 12.2369 18.8336 12.2949 18.8335C12.3529 18.8334 12.4103 18.8218 12.4638 18.7995C12.5173 18.7772 12.5659 18.7446 12.6068 18.7035C12.6477 18.6624 12.6801 18.6137 12.7022 18.56C12.7242 18.5064 12.7355 18.449 12.7354 18.391L12.7304 15.452C12.7304 15.197 12.4524 15.133 12.3994 15.123C11.8884 15.121 10.8514 15.117 9.7384 15.117C7.2814 15.117 6.7324 15.218 6.3154 14.945C5.4114 14.354 3.9324 10.368 3.8984 8.12602C3.8494 4.96402 5.7234 2.22502 8.3624 0.868016C9.49859 0.29488 10.7538 -0.0024873 12.0264 1.56706e-05C16.2034 1.56706e-05 19.6434 3.15302 20.1014 7.20902L20.1024 7.22002C20.1864 8.20102 14.7814 8.40901 13.7124 8.12401C13.5484 8.08001 13.5064 7.91202 13.5064 7.84002L13.5004 4.99602C13.5001 4.87879 13.4533 4.76647 13.3702 4.68377C13.2872 4.60106 13.1746 4.55475 13.0574 4.55502C12.9402 4.55528 12.8279 4.6021 12.7452 4.68518C12.6624 4.76826 12.6161 4.88079 12.6164 4.99802L12.6254 8.86402C12.6264 8.94007 12.6535 9.01346 12.7024 9.07177C12.7512 9.13008 12.8187 9.16973 12.8934 9.18402L16.2474 9.18301C18.0374 9.18301 18.7894 9.39002 19.2894 9.77102C19.6224 10.025 19.7504 10.51 19.6384 11.141C18.6334 16.755 12.2734 23.71 12.0344 24Z" fill="#FC8019"/></svg>
-                    {/* Google Logo */}
-                    <svg width="26" height="26" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg"><path fill="#FFC107" d="M43.611 20.083H42V20H24v8h11.303c-1.649 4.657-6.08 8-11.303 8-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 12.955 4 4 12.955 4 24s8.955 20 20 20 20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z"/><path fill="#FF3D00" d="M6.306 14.691l6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 16.318 4 9.656 8.337 6.306 14.691z"/><path fill="#4CAF50" d="M24 44c5.166 0 9.86-1.977 13.409-5.192l-6.19-5.238C29.211 35.091 26.715 36 24 36c-5.202 0-9.619-3.317-11.283-7.946l-6.522 5.025C9.505 39.556 16.227 44 24 44z"/><path fill="#1976D2" d="M43.611 20.083H42V20H24v8h11.303c-.792 2.237-2.231 4.166-4.087 5.571.001-.001.002-.001.003-.002l6.19 5.238C36.971 39.205 44 34 44 24c0-1.341-.138-2.65-.389-3.917z"/></svg>
-                    {/* Tata Logo */}
-                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.774 11.5684C9.967 10.2464 9.942 9.55537 8.006 9.66237C5.783 9.78637 3.53 9.92737 0.157 10.6894C0.0531516 11.1187 0.000452066 11.5587 0 12.0004C0 13.5204 0.618 14.9904 1.787 16.2544C2.847 17.3984 4.343 18.3494 6.113 19.0064C6.77028 19.2476 7.44316 19.4441 8.127 19.5944C8.257 19.0674 9.086 15.6874 9.743 11.7714L9.773 11.5694M23.843 10.6894C20.471 9.92737 18.219 9.78737 15.997 9.66337C14.06 9.55637 14.035 10.2474 14.229 11.5694L14.275 11.8674C14.925 15.7154 15.733 19.0274 15.873 19.5874C20.595 18.5084 24 15.5164 24 12.0004C23.9993 11.557 23.947 11.12 23.843 10.6894ZM23.352 9.36537C23.0483 8.77613 22.6647 8.23166 22.212 7.74738C21.152 6.60338 19.657 5.65237 17.887 4.99537C16.103 4.33337 14.067 3.98438 12 3.98438C9.932 3.98438 7.897 4.33437 6.113 4.99437C4.343 5.65237 2.847 6.60438 1.787 7.74738C1.3346 8.23203 0.951316 8.77684 0.648 9.36637C2.952 8.80937 6.893 8.07338 10.552 7.99638C10.905 7.98838 11.148 8.10138 11.308 8.30338C11.504 8.55138 11.488 9.43137 11.483 9.82537L11.379 20.0054C11.7936 20.019 12.2084 20.019 12.623 20.0054L12.519 9.82537C12.514 9.43137 12.499 8.55138 12.694 8.30338C12.854 8.10138 13.097 7.98837 13.45 7.99537C17.108 8.07337 21.047 8.80837 23.352 9.36537Z" fill="#486AAE"/></svg>
-                  </div>
-                </div>
+                {featuredJobs && featuredJobs.slice(0, 3).map((job) => (
+                  <Link href={`/jobs/${job.id}`} key={job.id} className="rounded-[18px] border border-border/50 bg-white dark:bg-background p-4 flex items-center gap-3 hover:border-blue-500/40 hover:shadow-md transition-all group">
+                    <div className="h-10 w-10 shrink-0 overflow-hidden rounded-xl border border-border/50 bg-white dark:bg-muted/20 flex items-center justify-center shadow-xs">
+                      {job.company_logo ? (
+                        <img src={job.company_logo} alt={job.company_name} className="h-full w-full object-contain p-1.5" />
+                      ) : (
+                        <span className="text-[14px] font-extrabold text-muted-foreground">{job.company_name.charAt(0).toUpperCase()}</span>
+                      )}
+                    </div>
+                    <div className="flex-1 min-w-0 flex flex-col justify-center">
+                      <span className="text-[12.5px] font-bold text-foreground group-hover:text-blue-600 transition-colors truncate">{job.title}</span>
+                      <span className="text-[10px] uppercase tracking-wider font-semibold text-muted-foreground mt-0.5 truncate">{job.company_name}</span>
+                    </div>
+                    <ChevronRight className="h-4 w-4 text-blue-600 transition-colors shrink-0" strokeWidth={2.5} />
+                  </Link>
+                ))}
               </div>
-              <Link href="https://employer.hirance.com/" target="_blank" className="mt-6 flex w-full items-center justify-center rounded-[18px] bg-[#0f172a] dark:bg-blue-900 py-3.5 text-[15px] font-semibold text-white hover:bg-black dark:hover:bg-blue-800 transition-colors shadow-sm">
-                Apply Now
+              <Link href="/jobs" className="mt-6 flex w-full items-center justify-center rounded-[18px] bg-[#0f172a] dark:bg-blue-900 py-3.5 text-[15px] font-semibold text-white hover:bg-black dark:hover:bg-blue-800 transition-colors shadow-sm">
+                View all
               </Link>
             </div>
           )}
@@ -634,7 +655,24 @@ export function BlogDetailContent({ post, featuredJobs = [] }: BlogDetailContent
 
       {/* Dynamic CTA Section Removed as requested */}
 
-
+      {/* Dynamic Frequently Asked Questions from Backend */}
+      {post.faq && post.faq.length > 0 && (
+        <section className="relative border-t border-border/50 py-16">
+          <div className="mx-auto max-w-3xl px-6">
+            <div className="text-center mb-10">
+              <span className="text-xs font-bold uppercase tracking-wider text-blue-600 mb-2 block">Quick Answers</span>
+              <h2 className="text-2xl font-extrabold tracking-tight text-foreground sm:text-3xl">
+                Frequently Asked <span className="text-blue-600">Questions</span>
+              </h2>
+            </div>
+            <div className="mx-auto mt-8">
+              {post.faq.map((item, idx) => (
+                <FAQItem key={idx} item={item} />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Related Posts Section */}
       {relatedPosts.length > 0 && (
