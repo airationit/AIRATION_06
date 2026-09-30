@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   MapPin,
   Briefcase,
@@ -11,7 +12,6 @@ import {
   ArrowUpRight,
   Clock,
   Smartphone,
-  Share2,
   Copy,
   Check,
   Building2,
@@ -22,6 +22,7 @@ import {
   IndianRupee,
   Users,
   Layers,
+  ChevronDown,
 } from "lucide-react";
 import { Job } from "@/lib/jobs-data";
 import { siteConfig } from "@/config/site";
@@ -36,17 +37,40 @@ interface JobDetailContentProps {
 
 export function JobDetailContent({ job, relatedJobs = [] }: JobDetailContentProps) {
   const [copied, setCopied] = useState(false);
+  const [openFaq, setOpenFaq] = useState<number | null>(0);
   const [imgError, setImgError] = useState(false);
+
+  const [showFloatingHeader, setShowFloatingHeader] = useState(false);
+  const heroRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const currentHero = heroRef.current;
+    if (!currentHero) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        // Show floating header bar when hero card is NOT visible in viewport
+        setShowFloatingHeader(!entry.isIntersecting);
+      },
+      { threshold: 0.1 }
+    );
+
+    observer.observe(currentHero);
+
+    return () => {
+      observer.unobserve(currentHero);
+    };
+  }, []);
 
   // Fallback company initials
   const initials = job.company
     ? job.company
-        .split(" ")
-        .map((w) => w[0])
-        .filter(Boolean)
-        .slice(0, 2)
-        .join("")
-        .toUpperCase()
+      .split(" ")
+      .map((w) => w[0])
+      .filter(Boolean)
+      .slice(0, 2)
+      .join("")
+      .toUpperCase()
     : "HI";
 
   // Share handler
@@ -67,6 +91,69 @@ export function JobDetailContent({ job, relatedJobs = [] }: JobDetailContentProp
       <div className="pointer-events-none absolute inset-0 -z-10">
         <InteractiveDots />
       </div>
+
+      {/* Floating Compact Full-Width Header Bar — Appears when Hero Card scrolls out of view */}
+      <AnimatePresence>
+        {showFloatingHeader && (
+          <motion.div
+            initial={{ y: -80, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: -80, opacity: 0 }}
+            transition={{ duration: 0.25, ease: "easeOut" }}
+            className="fixed top-0 inset-x-0 z-[100] border-b border-border/80 bg-background/98 backdrop-blur-md px-4 sm:px-8 py-2.5 shadow-md"
+          >
+            <div className="container mx-auto max-w-6xl flex items-center justify-between gap-4">
+              <div className="flex items-center gap-3 sm:gap-4 min-w-0">
+                <div className="flex h-10 w-10 sm:h-11 sm:w-11 shrink-0 items-center justify-center rounded-xl border border-border/80 bg-muted/50 font-mono text-xs font-bold text-brand-600 dark:text-brand-400 overflow-hidden">
+                  {job.companyLogo && !imgError ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={job.companyLogo}
+                      alt={job.company}
+                      onError={() => setImgError(true)}
+                      className="h-full w-full object-contain p-1.5"
+                    />
+                  ) : (
+                    <span>{initials}</span>
+                  )}
+                </div>
+
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-medium text-muted-foreground truncate">
+                      {job.company}
+                    </span>
+                    {job.isVerified && (
+                      <span className="inline-flex items-center text-xs text-brand-600 dark:text-brand-400">
+                        <CheckCircle2 className="h-3 w-3" />
+                      </span>
+                    )}
+                  </div>
+                  <h3 className="text-sm sm:text-base font-semibold text-foreground truncate leading-tight">
+                    {job.title}
+                  </h3>
+                  {job.department && (
+                    <p className="text-[11px] text-muted-foreground truncate hidden sm:block">
+                      {job.department}
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              <a
+                href={siteConfig.links.playStore}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 rounded-xl bg-brand-600 px-4 py-2 text-xs sm:text-sm font-bold text-white shadow-xs transition-all hover:bg-brand-500 active:scale-95 shrink-0 cursor-pointer"
+              >
+                <Smartphone className="h-4 w-4" />
+                <span>Swipe to Apply</span>
+                <ArrowUpRight className="h-4 w-4" />
+              </a>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Top Subtle Ambient Glow */}
       <div
@@ -117,8 +204,8 @@ export function JobDetailContent({ job, relatedJobs = [] }: JobDetailContentProp
           </Link>
         </div>
 
-        {/* Hero Header Card */}
-        <div className="mt-6 rounded-2xl sm:rounded-3xl border border-border/80 bg-card/90 p-6 sm:p-8 backdrop-blur-md shadow-xs">
+        {/* Hero Header Card (Non-sticky, attached ref for observer) */}
+        <div ref={heroRef} className="mt-6 rounded-2xl sm:rounded-3xl border border-border/80 bg-card/90 p-6 sm:p-8 backdrop-blur-md shadow-xs">
           <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-6">
             <div className="flex items-start gap-4 sm:gap-5 flex-1 min-w-0">
               {/* Company Logo / Avatar */}
@@ -151,12 +238,10 @@ export function JobDetailContent({ job, relatedJobs = [] }: JobDetailContentProp
                       <span className="text-[11px]">Verified</span>
                     </span>
                   )}
-                  <span className="text-xs text-muted-foreground">
-                    • {formatRelativeTime(job.postedDate)}
-                  </span>
+
                 </div>
 
-                <h1 className="mt-1 text-2xl font-bold tracking-tight text-foreground sm:text-3xl lg:text-4xl leading-tight">
+                <h1 className="mt-1 text-2xl font-semibold tracking-tight text-foreground sm:text-3xl lg:text-2xl leading-tight">
                   {job.title}
                 </h1>
 
@@ -180,278 +265,195 @@ export function JobDetailContent({ job, relatedJobs = [] }: JobDetailContentProp
                 <span>Swipe to Apply</span>
                 <ArrowUpRight className="h-4 w-4" />
               </a>
-
-              {/* Share Ribbon */}
-              <div className="flex items-center gap-2 pt-0.5">
-                <button
-                  type="button"
-                  onClick={handleCopyLink}
-                  className="inline-flex items-center gap-1.5 rounded-full border border-border/70 bg-card px-3 py-1.5 text-xs font-semibold text-foreground hover:bg-muted transition-colors shadow-2xs cursor-pointer"
-                >
-                  {copied ? (
-                    <>
-                      <Check className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
-                      <span className="text-emerald-600 dark:text-emerald-400 font-bold">Link Copied</span>
-                    </>
-                  ) : (
-                    <>
-                      <Copy className="h-3.5 w-3.5 text-muted-foreground" />
-                      <span>Copy Link</span>
-                    </>
-                  )}
-                </button>
-
-                <a
-                  href={`https://api.whatsapp.com/send?text=${encodeURIComponent(`${shareText} ${shareUrl}`)}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Share on WhatsApp"
-                  title="Share on WhatsApp"
-                  className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-border/70 bg-card text-[#25D366] hover:bg-[#25D366]/10 hover:border-[#25D366]/40 transition-colors shadow-2xs cursor-pointer"
-                >
-                  <WhatsAppIcon className="h-4 w-4" />
-                </a>
-
-                <a
-                  href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Share on LinkedIn"
-                  title="Share on LinkedIn"
-                  className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-border/70 bg-card text-[#0A66C2] hover:bg-[#0A66C2]/10 hover:border-[#0A66C2]/40 transition-colors shadow-2xs cursor-pointer"
-                >
-                  <LinkedInIcon className="h-4 w-4" />
-                </a>
-              </div>
             </div>
           </div>
 
-          {/* Quick Meta Ribbon */}
-          <div className="mt-6 sm:mt-8 grid grid-cols-2 gap-y-5 gap-x-4 border-t border-border/60 pt-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-7">
-            <div>
-              <span className="text-xs text-muted-foreground font-medium">Offered Salary</span>
-              <p className="mt-1 font-mono text-sm sm:text-base font-bold text-foreground flex items-center gap-0.5">
-                <IndianRupee className="h-3.5 w-3.5 shrink-0 text-foreground/70" />
-                <span>{job.salaryRange.replace(/^₹\s*/, "")}</span>
-              </p>
+          {/* Quick Meta Ribbon — Above the horizontal line */}
+          <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-foreground">
+            <span className="flex items-center gap-1.5 font-medium">
+              <Briefcase className="h-4 w-4 text-muted-foreground shrink-0" />
+              {job.experience}
+            </span>
+            <span className="text-border/80 hidden sm:inline">|</span>
+            <span className="flex items-center gap-1 font-medium font-mono">
+              <IndianRupee className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+              {job.salaryRange.replace(/^₹\s*/, "")}
+            </span>
+            <span className="text-border/80 hidden sm:inline">|</span>
+            <span className="flex items-center gap-1.5 font-medium">
+              <Building2 className="h-4 w-4 text-muted-foreground shrink-0" />
+              {job.workMode || "Work from Office"}
+            </span>
+            <span className="text-border/80 hidden sm:inline">|</span>
+            <span className="flex items-center gap-1.5 font-medium">
+              <Clock className="h-4 w-4 text-muted-foreground shrink-0" />
+              {job.jobType}
+            </span>
+            <span className="text-border/80 hidden sm:inline">|</span>
+            <span className="flex items-center gap-1.5 font-medium">
+              <MapPin className="h-4 w-4 text-muted-foreground shrink-0" />
+              {job.location}
+            </span>
+          </div>
+
+          {/* Horizontal Line Divider & Bottom Row — Compact Spacing */}
+          <div className="mt-3 border-t border-border/60 pt-2.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            {/* Left: Posted | Openings */}
+            <div className="flex flex-wrap items-center gap-x-3 text-sm text-muted-foreground">
+              <span>
+                Posted: <span className="font-semibold text-foreground">{formatRelativeTime(job.postedDate)}</span>
+              </span>
+              <span className="text-border/80">|</span>
+              <span>
+                Openings: <span className="font-semibold text-foreground">{job.openings || 1}</span>
+              </span>
             </div>
 
-            <div>
-              <span className="text-xs text-muted-foreground font-medium">Job Location</span>
-              <p className="mt-1 text-sm sm:text-[15px] font-medium text-foreground flex items-center gap-1 truncate">
-                <MapPin className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
-                <span className="truncate">{job.location}</span>
-              </p>
-            </div>
+            {/* Right: Share Buttons aligned with Swipe to Apply (Transparent & Icon-Only) */}
+            <div className="flex items-center gap-1.5 shrink-0">
+              <button
+                type="button"
+                onClick={handleCopyLink}
+                aria-label="Copy Link"
+                title={copied ? "Copied!" : "Copy Link"}
+                className="inline-flex h-9 w-9 items-center justify-center rounded-full text-foreground hover:bg-muted/70 transition-colors cursor-pointer"
+              >
+                {copied ? (
+                  <Check className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
+                ) : (
+                  <Copy className="h-5 w-5 text-muted-foreground hover:text-foreground" />
+                )}
+              </button>
 
-            <div>
-              <span className="text-xs text-muted-foreground font-medium">Work Mode & Type</span>
-              <p className="mt-1 text-sm sm:text-[15px] font-medium text-foreground flex items-center gap-1 truncate">
-                <Building2 className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
-                <span className="truncate">{job.workMode || job.jobType}</span>
-              </p>
-            </div>
+              <a
+                href={`https://api.whatsapp.com/send?text=${encodeURIComponent(`${shareText} ${shareUrl}`)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Share on WhatsApp"
+                title="Share on WhatsApp"
+                className="inline-flex h-9 w-9 items-center justify-center rounded-full text-[#25D366] hover:bg-[#25D366]/10 transition-colors cursor-pointer"
+              >
+                <WhatsAppIcon className="h-5 w-5" />
+              </a>
 
-            <div>
-              <span className="text-xs text-muted-foreground font-medium">Experience Needed</span>
-              <p className="mt-1 text-sm sm:text-[15px] font-medium text-foreground flex items-center gap-1">
-                <Briefcase className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
-                <span>{job.experience}</span>
-              </p>
-            </div>
-
-            <div>
-              <span className="text-xs text-muted-foreground font-medium">Openings</span>
-              <p className="mt-1 text-sm sm:text-[15px] font-medium text-foreground flex items-center gap-1">
-                <Users className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
-                <span>{job.openings || 1} position(s)</span>
-              </p>
-            </div>
-
-            {job.department && (
-              <div>
-                <span className="text-xs text-muted-foreground font-medium">Department</span>
-                <p className="mt-1 text-sm sm:text-[15px] font-medium text-foreground flex items-center gap-1 truncate">
-                  <Layers className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
-                  <span className="truncate">{job.department}</span>
-                </p>
-              </div>
-            )}
-
-            <div>
-              <span className="text-xs text-muted-foreground font-medium">Verification</span>
-              <p className="mt-1 text-sm sm:text-[15px] font-medium text-foreground flex items-center gap-1 truncate">
-                <ShieldCheck className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
-                <span className="truncate">
-                  {job.isVerified ? "Verified Employer" : "Standard Employer"}
-                </span>
-              </p>
+              <a
+                href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Share on LinkedIn"
+                title="Share on LinkedIn"
+                className="inline-flex h-9 w-9 items-center justify-center rounded-full text-[#0A66C2] hover:bg-[#0A66C2]/10 transition-colors cursor-pointer"
+              >
+                <LinkedInIcon className="h-5 w-5" />
+              </a>
             </div>
           </div>
         </div>
 
         {/* Main 2-Column Content Grid */}
-        <div className="mt-8 grid grid-cols-1 lg:grid-cols-12 gap-8">
-          {/* Main Details (Left Column) */}
-          <div className="lg:col-span-8 space-y-8">
-            {/* Required Skills & Tech Stack */}
-            {job.skills && job.skills.length > 0 && (
-              <section className="rounded-2xl border border-border/80 bg-card p-6 sm:p-7 shadow-2xs">
-                <h2 className="text-lg font-bold tracking-tight text-foreground">
-                  Required Skills & Technologies
-                </h2>
-                <div className="mt-4 flex flex-wrap gap-2">
-                  {job.skills.map((skill) => (
-                    <span
-                      key={skill}
-                      className="rounded-lg border border-border/70 bg-secondary/70 px-3 py-1.5 text-xs sm:text-sm font-semibold text-foreground/90 transition-colors hover:border-brand-500/40"
-                    >
-                      {skill}
-                    </span>
-                  ))}
-                </div>
-              </section>
-            )}
-
-            {/* About the Role / Description */}
-            <section className="rounded-2xl border border-border/80 bg-card p-6 sm:p-7 shadow-2xs">
-              <h2 className="text-lg font-bold tracking-tight text-foreground">
-                About the Role
-              </h2>
-              <div className="mt-4">
-                <RichDescription
-                  content={job.description}
-                  fallbackText={`We are hiring a ${job.title} to join ${job.company}. You will collaborate with the team on key objectives, deliver quality outcomes, and advance your career in a dynamic environment.`}
-                />
-              </div>
-            </section>
-
-            {/* Key Responsibilities (if available) */}
-            {job.responsibilities && (
-              <section className="rounded-2xl border border-border/80 bg-card p-6 sm:p-7 shadow-2xs">
-                <h2 className="text-lg font-bold tracking-tight text-foreground">
-                  Key Responsibilities
+        <div className="mt-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          {/* Main Details (Left Column - Unified Single Card Container) */}
+          <div className="lg:col-span-8">
+            <div className="rounded-2xl sm:rounded-3xl border border-border/80 bg-card p-6 sm:p-8 shadow-2xs space-y-8">
+              {/* About the Role / Description */}
+              <section>
+                <h2 className="text-base font-medium tracking-tight text-foreground">
+                  Job description
                 </h2>
                 <div className="mt-4">
-                  <RichDescription content={job.responsibilities} />
+                  <RichDescription
+                    content={job.description}
+                    fallbackText={`We are hiring a ${job.title} to join ${job.company}. You will collaborate with the team on key objectives, deliver quality outcomes, and advance your career in a dynamic environment.`}
+                  />
                 </div>
               </section>
-            )}
 
-            {/* Candidate Eligibility & Requirements */}
-            <section className="rounded-2xl border border-border/80 bg-card p-6 sm:p-7 shadow-2xs">
-              <h2 className="text-lg font-bold tracking-tight text-foreground">
-                Candidate Profile & Eligibility
-              </h2>
-              <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-                <div className="rounded-xl border border-border/60 bg-muted/30 p-3.5">
-                  <span className="text-xs text-muted-foreground font-medium">Education</span>
-                  <p className="mt-1 font-semibold text-foreground flex items-center gap-1.5">
-                    <GraduationCap className="h-4 w-4 text-brand-600 dark:text-brand-400" />
-                    <span>
-                      {job.educationLevel || "Graduation / Diploma or equivalent"}
-                      {job.educationSpecialization ? ` (${job.educationSpecialization})` : ""}
-                    </span>
-                  </p>
-                </div>
+              {/* Key Responsibilities (if available) */}
+              {job.responsibilities && (
+                <section className="pt-8 border-t border-border/60">
+                  <h2 className="text-base font-medium tracking-tight text-foreground">
+                    Key Responsibilities
+                  </h2>
+                  <div className="mt-4">
+                    <RichDescription content={job.responsibilities} />
+                  </div>
+                </section>
+              )}
 
-                <div className="rounded-xl border border-border/60 bg-muted/30 p-3.5">
-                  <span className="text-xs text-muted-foreground font-medium">Work Shift</span>
-                  <p className="mt-1 font-semibold text-foreground flex items-center gap-1.5">
-                    <Clock className="h-4 w-4 text-brand-600 dark:text-brand-400" />
-                    <span>{job.workShift || "Standard Day Shift"}</span>
-                  </p>
-                </div>
-
-                {job.englishProficiency && (
+              {/* Candidate Eligibility & Requirements */}
+              <section className="pt-8 border-t border-border/60">
+                <h2 className="text-base font-medium tracking-tight text-foreground">
+                  Candidate Profile & Eligibility
+                </h2>
+                <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
                   <div className="rounded-xl border border-border/60 bg-muted/30 p-3.5">
-                    <span className="text-xs text-muted-foreground font-medium">Language Skills</span>
+                    <span className="text-xs text-muted-foreground font-medium">Education</span>
                     <p className="mt-1 font-semibold text-foreground flex items-center gap-1.5">
-                      <MessageSquare className="h-4 w-4 text-brand-600 dark:text-brand-400" />
-                      <span>{job.englishProficiency}</span>
+                      <GraduationCap className="h-4 w-4 text-brand-600 dark:text-brand-400" />
+                      <span>
+                        {job.educationLevel || "Graduation / Diploma or equivalent"}
+                        {job.educationSpecialization ? ` (${job.educationSpecialization})` : ""}
+                      </span>
                     </p>
                   </div>
-                )}
 
-                <div className="rounded-xl border border-border/60 bg-muted/30 p-3.5">
-                  <span className="text-xs text-muted-foreground font-medium">Hiring Process</span>
-                  <p className="mt-1 font-semibold text-foreground flex items-center gap-1.5">
-                    <ShieldCheck className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
-                    <span>{job.isWalkIn ? "Walk-In Drive Available" : "Direct Online Screening & Chat"}</span>
-                  </p>
+                  <div className="rounded-xl border border-border/60 bg-muted/30 p-3.5">
+                    <span className="text-xs text-muted-foreground font-medium">Work Shift</span>
+                    <p className="mt-1 font-semibold text-foreground flex items-center gap-1.5">
+                      <Clock className="h-4 w-4 text-brand-600 dark:text-brand-400" />
+                      <span>{job.workShift || "Standard Day Shift"}</span>
+                    </p>
+                  </div>
+
+                  {job.englishProficiency && (
+                    <div className="rounded-xl border border-border/60 bg-muted/30 p-3.5">
+                      <span className="text-xs text-muted-foreground font-medium">Language Skills</span>
+                      <p className="mt-1 font-semibold text-foreground flex items-center gap-1.5">
+                        <MessageSquare className="h-4 w-4 text-brand-600 dark:text-brand-400" />
+                        <span>{job.englishProficiency}</span>
+                      </p>
+                    </div>
+                  )}
+
+                  <div className="rounded-xl border border-border/60 bg-muted/30 p-3.5">
+                    <span className="text-xs text-muted-foreground font-medium">Hiring Process</span>
+                    <p className="mt-1 font-semibold text-foreground flex items-center gap-1.5">
+                      <ShieldCheck className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
+                      <span>{job.isWalkIn ? "Walk-In Drive Available" : "Direct Online Screening & Chat"}</span>
+                    </p>
+                  </div>
                 </div>
-              </div>
-            </section>
+              </section>
 
-            {/* How Hiring Works on Hirance */}
-            <section className="rounded-3xl border border-brand-500/20 bg-gradient-to-br from-brand-50/80 via-card to-indigo-50/50 dark:from-brand-950/20 dark:via-card dark:to-indigo-950/20 p-6 sm:p-8 backdrop-blur-md shadow-xs">
-              <div className="flex items-center gap-2.5">
-                <Sparkles className="h-5 w-5 text-brand-600 dark:text-brand-400" />
-                <h3 className="text-lg font-bold text-foreground">
-                  How Fast Hiring Works on Hirance
-                </h3>
-              </div>
-              <p className="mt-2 text-xs sm:text-sm text-muted-foreground leading-relaxed">
-                No long application forms or ignored resumes. On Hirance, candidates and employers connect directly.
-              </p>
-
-              <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div className="rounded-xl border border-border/60 bg-card/80 p-4">
-                  <span className="font-mono text-xs font-bold text-brand-600 dark:text-brand-400">01</span>
-                  <h4 className="mt-1 text-sm font-bold text-foreground">Swipe to Apply</h4>
-                  <p className="mt-1 text-xs text-muted-foreground">
-                    1-tap application with your verified profile.
-                  </p>
-                </div>
-
-                <div className="rounded-xl border border-border/60 bg-card/80 p-4">
-                  <span className="font-mono text-xs font-bold text-brand-600 dark:text-brand-400">02</span>
-                  <h4 className="mt-1 text-sm font-bold text-foreground">Direct Recruiter Chat</h4>
-                  <p className="mt-1 text-xs text-muted-foreground">
-                    Chat directly with the hiring team without middlemen.
-                  </p>
-                </div>
-
-                <div className="rounded-xl border border-border/60 bg-card/80 p-4">
-                  <span className="font-mono text-xs font-bold text-brand-600 dark:text-brand-400">03</span>
-                  <h4 className="mt-1 text-sm font-bold text-foreground">Fast-Track Interview</h4>
-                  <p className="mt-1 text-xs text-muted-foreground">
-                    Schedule your interview and receive quick updates.
-                  </p>
-                </div>
-              </div>
-            </section>
+              {/* Required Skills & Tech Stack */}
+              {job.skills && job.skills.length > 0 && (
+                <section className="pt-8 border-t border-border/60">
+                  <h2 className="text-base font-medium tracking-tight text-foreground">
+                    Required Skills & Technologies
+                  </h2>
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    {job.skills.map((skill) => (
+                      <span
+                        key={skill}
+                        className="rounded-lg border border-border/70 px-3 py-1.5 text-sm font-medium text-foreground/90 transition-colors hover:border-brand-500/40"
+                      >
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
+                </section>
+              )}
+            </div>
           </div>
 
-          {/* Sticky Sidebar (Right Column) */}
-          <div className="lg:col-span-4 space-y-6">
-
-            {/* Quick Hirance Apply Box */}
-            <div className="rounded-2xl border border-brand-500/25 bg-brand-50/50 dark:bg-brand-950/20 p-6 shadow-xs">
-              <h3 className="text-base font-bold text-foreground">
-                Apply in Seconds on Hirance App
-              </h3>
-              <p className="mt-1.5 text-xs text-muted-foreground leading-relaxed">
-                Connect directly with {job.company}&apos;s recruitment team. Download the mobile app and swipe to apply.
-              </p>
-
-              <a
-                href={siteConfig.links.playStore}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl bg-brand-600 px-4 py-3 text-sm font-bold text-white shadow-xs transition-all hover:bg-brand-500 active:scale-98 cursor-pointer"
-              >
-                <Smartphone className="h-4 w-4" />
-                <span>Download App & Apply</span>
-                <ArrowUpRight className="h-4 w-4" />
-              </a>
-            </div>
+          {/* Sticky Sidebar (Right Column - Stops above FAQ section) */}
+          <div className="lg:col-span-4 lg:sticky lg:top-24 space-y-6">
 
             {/* Similar Openings (if available) */}
             {relatedJobs && relatedJobs.length > 0 && (
               <div className="rounded-2xl border border-border/80 bg-card p-5 shadow-xs space-y-3">
                 <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                  Similar Openings in {job.cityName || "India"}
+                  Similar Openings
                 </h3>
 
                 <div className="space-y-2.5 pt-1">
@@ -479,8 +481,109 @@ export function JobDetailContent({ job, relatedJobs = [] }: JobDetailContentProp
                 </div>
               </div>
             )}
+
+            {/* Quick Hirance Apply Box */}
+            <div className="rounded-2xl border border-brand-500/25 bg-brand-50/50 dark:bg-brand-950/20 p-6 shadow-xs">
+              <h3 className="text-base font-bold text-foreground">
+                Apply in Seconds on Hirance App
+              </h3>
+              <p className="mt-1.5 text-xs text-muted-foreground leading-relaxed">
+                Connect directly with {job.company}&apos;s recruitment team. Download the mobile app and swipe to apply.
+              </p>
+
+              <a
+                href={siteConfig.links.playStore}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl bg-brand-600 px-4 py-3 text-sm font-bold text-white shadow-xs transition-all hover:bg-brand-500 active:scale-98 cursor-pointer"
+              >
+                <Smartphone className="h-4 w-4" />
+                <span>Download App & Apply</span>
+                <ArrowUpRight className="h-4 w-4" />
+              </a>
+            </div>
           </div>
         </div>
+
+        {/* Frequently Asked Questions — Full Width */}
+        <section id="job-faq" className="mt-10 space-y-4">
+          <div className="text-center space-y-1 max-w-2xl mx-auto">
+            <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground text-center">
+              Frequently Asked{" "}
+              <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-sky-500 bg-clip-text text-transparent">
+                Questions
+              </span>
+            </h2>
+            <p className="text-xs sm:text-sm text-muted-foreground text-center">
+              Common questions about this {job.title} opening at {job.company}.
+            </p>
+          </div>
+
+          <div className="rounded-2xl border border-border/80 bg-card p-6 sm:p-8 shadow-2xs divide-y divide-border/60">
+            {[
+              {
+                q: `What is the eligibility criteria to apply for this ${job.title} job?`,
+                a: `Candidates must have ${job.educationLevel || "Graduation / Diploma or equivalent"} qualification and ${job.experience || "relevant"} of experience in the related field.`,
+              },
+              {
+                q: `How much salary can I expect for this ${job.title} job?`,
+                a: `You can expect a salary of ${job.salaryRange.replace(/^₹\s*/, "₹")} per month. The exact offer depends on your skills, experience, and interview performance.`,
+              },
+              {
+                q: `Is this ${job.title} role a work from home job?`,
+                a: job.workMode && job.workMode.toLowerCase().includes("home")
+                  ? `Yes, this is a remote / work from home ${job.title} role at ${job.company}.`
+                  : `No, this is an on-site ${job.title} role based in ${job.location}. It cannot be done remotely.`,
+              },
+              {
+                q: `How do I apply for this ${job.title} job at ${job.company}?`,
+                a: `Click "Swipe to Apply", download the Hirance app, and apply directly to ${job.company}'s hiring team with a single swipe — no forms, no waiting.`,
+              },
+            ].map((faq, idx) => {
+              const isOpen = openFaq === idx;
+              return (
+                <div key={idx} className="py-3 sm:py-3.5 first:pt-0 last:pb-0">
+                  <button
+                    type="button"
+                    onClick={() => setOpenFaq(isOpen ? null : idx)}
+                    aria-expanded={isOpen}
+                    aria-controls={`job-faq-answer-${idx}`}
+                    className="flex w-full items-start justify-between gap-4 text-left group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-lg py-1"
+                  >
+                    <span className="text-sm font-medium text-foreground group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors leading-snug">
+                      {faq.q}
+                    </span>
+                    <span
+                      className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full transition-all duration-200 ${isOpen
+                        ? "bg-blue-600 text-white rotate-180"
+                        : "bg-blue-500/10 text-blue-600 dark:text-blue-400"
+                        }`}
+                    >
+                      <ChevronDown className="h-4 w-4" />
+                    </span>
+                  </button>
+
+                  <AnimatePresence initial={false}>
+                    {isOpen && (
+                      <motion.div
+                        id={`job-faq-answer-${idx}`}
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: "auto" }}
+                        exit={{ opacity: 0, height: 0 }}
+                        transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                        className="overflow-hidden"
+                      >
+                        <p className="pt-2 pb-1 text-sm leading-relaxed text-muted-foreground">
+                          {faq.a}
+                        </p>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              );
+            })}
+          </div>
+        </section>
       </div>
 
       {/* Mobile Sticky Bottom Floating Apply Bar */}

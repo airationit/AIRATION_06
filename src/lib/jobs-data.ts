@@ -410,29 +410,48 @@ export async function getJobById(slugOrId: string): Promise<Job | null> {
  */
 export async function getRelatedJobs(currentJob: Job, limit: number = 3): Promise<Job[]> {
   try {
-    const res = await getJobs({
-      roleId: currentJob.jobRoleId,
-      cityId: currentJob.cityId,
-      limit: limit + 2,
-    });
+    let matches: Job[] = [];
 
-    const filtered = res.jobs.filter((j) => j.id !== currentJob.id);
-    if (filtered.length >= limit) {
-      return filtered.slice(0, limit);
+    // 1. Try matching role + city
+    if (currentJob.jobRoleId || currentJob.cityId) {
+      const res = await getJobs({
+        roleId: currentJob.jobRoleId,
+        cityId: currentJob.cityId,
+        limit: limit + 2,
+      });
+      matches = res.jobs.filter((j) => j.id !== currentJob.id);
     }
 
-    // Fallback by city
-    const fallbackRes = await getJobs({
-      citySlug: currentJob.citySlug,
-      limit: limit + 2,
+    if (matches.length >= limit) {
+      return matches.slice(0, limit);
+    }
+
+    // 2. Fallback by role only (if roleId is available)
+    if (currentJob.jobRoleId) {
+      const fallbackRes = await getJobs({
+        roleId: currentJob.jobRoleId,
+        limit: limit + 2,
+      });
+      const roleMatches = fallbackRes.jobs.filter(
+        (j) => j.id !== currentJob.id && !matches.some((m) => m.id === j.id)
+      );
+      matches = [...matches, ...roleMatches];
+    }
+
+    if (matches.length >= limit) {
+      return matches.slice(0, limit);
+    }
+
+    // 3. Fallback to general/usual active jobs if no role-specific jobs found
+    const generalRes = await getJobs({
+      limit: limit + 4,
     });
+    const generalMatches = generalRes.jobs.filter(
+      (j) => j.id !== currentJob.id && !matches.some((m) => m.id === j.id)
+    );
+    matches = [...matches, ...generalMatches];
 
-    const combined = [
-      ...filtered,
-      ...fallbackRes.jobs.filter((j) => j.id !== currentJob.id && !filtered.some((f) => f.id === j.id)),
-    ];
-
-    return combined.slice(0, limit);
+    return matches.slice(0, limit);
   } catch (error) {
     console.error("getRelatedJobs error:", error);
     return [];
