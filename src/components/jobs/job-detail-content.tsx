@@ -20,6 +20,8 @@ import {
   MessageSquare,
   ShieldCheck,
   IndianRupee,
+  Users,
+  Layers,
 } from "lucide-react";
 import { Job } from "@/lib/jobs-data";
 import { siteConfig } from "@/config/site";
@@ -166,8 +168,8 @@ export function JobDetailContent({ job, relatedJobs = [] }: JobDetailContentProp
               </div>
             </div>
 
-            {/* Top Action / Apply */}
-            <div className="flex items-center lg:items-end justify-end shrink-0 pt-2 lg:pt-0 border-t lg:border-t-0 border-border/60">
+            {/* Top Action / Apply & Share */}
+            <div className="flex flex-col items-start lg:items-end justify-end gap-2.5 shrink-0 pt-2 lg:pt-0 border-t lg:border-t-0 border-border/60">
               <a
                 href={siteConfig.links.playStore}
                 target="_blank"
@@ -178,11 +180,54 @@ export function JobDetailContent({ job, relatedJobs = [] }: JobDetailContentProp
                 <span>Swipe to Apply</span>
                 <ArrowUpRight className="h-4 w-4" />
               </a>
+
+              {/* Share Ribbon */}
+              <div className="flex items-center gap-2 pt-0.5">
+                <button
+                  type="button"
+                  onClick={handleCopyLink}
+                  className="inline-flex items-center gap-1.5 rounded-full border border-border/70 bg-card px-3 py-1.5 text-xs font-semibold text-foreground hover:bg-muted transition-colors shadow-2xs cursor-pointer"
+                >
+                  {copied ? (
+                    <>
+                      <Check className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
+                      <span className="text-emerald-600 dark:text-emerald-400 font-bold">Link Copied</span>
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="h-3.5 w-3.5 text-muted-foreground" />
+                      <span>Copy Link</span>
+                    </>
+                  )}
+                </button>
+
+                <a
+                  href={`https://api.whatsapp.com/send?text=${encodeURIComponent(`${shareText} ${shareUrl}`)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Share on WhatsApp"
+                  title="Share on WhatsApp"
+                  className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-border/70 bg-card text-[#25D366] hover:bg-[#25D366]/10 hover:border-[#25D366]/40 transition-colors shadow-2xs cursor-pointer"
+                >
+                  <WhatsAppIcon className="h-4 w-4" />
+                </a>
+
+                <a
+                  href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Share on LinkedIn"
+                  title="Share on LinkedIn"
+                  className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-border/70 bg-card text-[#0A66C2] hover:bg-[#0A66C2]/10 hover:border-[#0A66C2]/40 transition-colors shadow-2xs cursor-pointer"
+                >
+                  <LinkedInIcon className="h-4 w-4" />
+                </a>
+              </div>
             </div>
           </div>
 
           {/* Quick Meta Ribbon */}
-          <div className="mt-6 sm:mt-8 grid grid-cols-2 gap-4 border-t border-border/60 pt-6 sm:grid-cols-4">
+          <div className="mt-6 sm:mt-8 grid grid-cols-2 gap-y-5 gap-x-4 border-t border-border/60 pt-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-7">
             <div>
               <span className="text-xs text-muted-foreground font-medium">Offered Salary</span>
               <p className="mt-1 font-mono text-sm sm:text-base font-bold text-foreground flex items-center gap-0.5">
@@ -212,6 +257,34 @@ export function JobDetailContent({ job, relatedJobs = [] }: JobDetailContentProp
               <p className="mt-1 text-sm sm:text-[15px] font-medium text-foreground flex items-center gap-1">
                 <Briefcase className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
                 <span>{job.experience}</span>
+              </p>
+            </div>
+
+            <div>
+              <span className="text-xs text-muted-foreground font-medium">Openings</span>
+              <p className="mt-1 text-sm sm:text-[15px] font-medium text-foreground flex items-center gap-1">
+                <Users className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+                <span>{job.openings || 1} position(s)</span>
+              </p>
+            </div>
+
+            {job.department && (
+              <div>
+                <span className="text-xs text-muted-foreground font-medium">Department</span>
+                <p className="mt-1 text-sm sm:text-[15px] font-medium text-foreground flex items-center gap-1 truncate">
+                  <Layers className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+                  <span className="truncate">{job.department}</span>
+                </p>
+              </div>
+            )}
+
+            <div>
+              <span className="text-xs text-muted-foreground font-medium">Verification</span>
+              <p className="mt-1 text-sm sm:text-[15px] font-medium text-foreground flex items-center gap-1 truncate">
+                <ShieldCheck className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                <span className="truncate">
+                  {job.isVerified ? "Verified Employer" : "Standard Employer"}
+                </span>
               </p>
             </div>
           </div>
@@ -352,55 +425,6 @@ export function JobDetailContent({ job, relatedJobs = [] }: JobDetailContentProp
 
           {/* Sticky Sidebar (Right Column) */}
           <div className="lg:col-span-4 space-y-6">
-            {/* Quick Summary / Snapshot */}
-            <div className="rounded-2xl border border-border/80 bg-card p-6 shadow-xs space-y-4">
-              <h3 className="text-sm font-bold uppercase tracking-wider text-foreground">
-                Job Snapshot
-              </h3>
-
-              <div className="space-y-3 text-xs sm:text-sm">
-                <div className="flex items-center justify-between border-b border-border/50 pb-2.5">
-                  <span className="text-muted-foreground">Openings</span>
-                  <span className="font-semibold text-foreground">{job.openings || 1} position(s)</span>
-                </div>
-
-                <div className="flex items-center justify-between border-b border-border/50 pb-2.5">
-                  <span className="text-muted-foreground">Job Type</span>
-                  <span className="font-semibold text-foreground">{job.jobType}</span>
-                </div>
-
-                <div className="flex items-center justify-between border-b border-border/50 pb-2.5">
-                  <span className="text-muted-foreground">Work Mode</span>
-                  <span className="font-semibold text-foreground">{job.workMode || "On-site"}</span>
-                </div>
-
-                <div className="flex items-center justify-between border-b border-border/50 pb-2.5">
-                  <span className="text-muted-foreground">Experience</span>
-                  <span className="font-semibold text-foreground">{job.experience}</span>
-                </div>
-
-                {job.department && (
-                  <div className="flex items-center justify-between border-b border-border/50 pb-2.5">
-                    <span className="text-muted-foreground">Department</span>
-                    <span className="font-semibold text-foreground">{job.department}</span>
-                  </div>
-                )}
-
-                <div className="flex items-center justify-between pt-1">
-                  <span className="text-muted-foreground">Verification</span>
-                  {job.isVerified ? (
-                    <span className="font-semibold text-brand-600 dark:text-brand-400 flex items-center gap-1">
-                      <CheckCircle2 className="h-3.5 w-3.5" />
-                      Verified Employer
-                    </span>
-                  ) : (
-                    <span className="font-medium text-muted-foreground">
-                      Standard Employer
-                    </span>
-                  )}
-                </div>
-              </div>
-            </div>
 
             {/* Quick Hirance Apply Box */}
             <div className="rounded-2xl border border-brand-500/25 bg-brand-50/50 dark:bg-brand-950/20 p-6 shadow-xs">
@@ -421,56 +445,6 @@ export function JobDetailContent({ job, relatedJobs = [] }: JobDetailContentProp
                 <span>Download App & Apply</span>
                 <ArrowUpRight className="h-4 w-4" />
               </a>
-            </div>
-
-            {/* Share this Job Card */}
-            <div className="rounded-2xl border border-border/80 bg-card p-5 shadow-xs">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                  Share this Opening
-                </span>
-                <Share2 className="h-4 w-4 text-muted-foreground" />
-              </div>
-
-              <div className="mt-3.5 flex items-center gap-2">
-                <button
-                  type="button"
-                  onClick={handleCopyLink}
-                  className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-xl border border-border/80 bg-secondary/80 px-3 py-2 text-xs font-semibold text-foreground hover:bg-secondary transition-colors cursor-pointer"
-                >
-                  {copied ? (
-                    <>
-                      <Check className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
-                      <span className="text-emerald-600 dark:text-emerald-400">Link Copied!</span>
-                    </>
-                  ) : (
-                    <>
-                      <Copy className="h-3.5 w-3.5 text-muted-foreground" />
-                      <span>Copy Link</span>
-                    </>
-                  )}
-                </button>
-
-                <a
-                  href={`https://api.whatsapp.com/send?text=${encodeURIComponent(`${shareText} ${shareUrl}`)}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Share on WhatsApp"
-                  className="inline-flex items-center justify-center rounded-xl border border-border/80 bg-secondary/80 px-3 py-2 text-xs font-semibold text-foreground hover:bg-secondary transition-colors"
-                >
-                  WhatsApp
-                </a>
-
-                <a
-                  href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Share on LinkedIn"
-                  className="inline-flex items-center justify-center rounded-xl border border-border/80 bg-secondary/80 px-3 py-2 text-xs font-semibold text-foreground hover:bg-secondary transition-colors"
-                >
-                  LinkedIn
-                </a>
-              </div>
             </div>
 
             {/* Similar Openings (if available) */}
@@ -537,5 +511,21 @@ export function JobDetailContent({ job, relatedJobs = [] }: JobDetailContentProp
       {/* Footer */}
       <Footer />
     </main>
+  );
+}
+
+function WhatsAppIcon(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" {...props}>
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.99c-.002 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893 0-3.18-1.238-6.167-3.485-8.414" />
+    </svg>
+  );
+}
+
+function LinkedInIcon(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" {...props}>
+      <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 10.9v8.37H9.25V10.9H6.46M7.86 6.6a1.4 1.4 0 1 0 1.4 1.4 1.4 1.4 0 0 0-1.4-1.4" />
+    </svg>
   );
 }

@@ -18,8 +18,8 @@ const CONTACT_CHANNELS = [
     id: "phone",
     icon: Phone,
     label: "Phone",
-    value: "+91 9793780913",
-    href: "tel:+919793780913",
+    value: "+91 7309510718, +91 9151410718",
+    href: "tel:+917309510718",
   },
   {
     id: "office",

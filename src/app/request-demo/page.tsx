@@ -59,7 +59,7 @@ export default function RequestDemoPage() {
     },
     mainEntity: {
       "@type": "ContactPoint",
-      telephone: "+91-9793780913",
+      telephone: "+91-7309510718",
       email: "hello@hirance.com",
       contactType: "sales and recruitment demo",
       areaServed: "IN",

@@ -48,12 +48,15 @@ export const metadata: Metadata = {
   },
 };
 
+import { fetchJobs } from "@/lib/api/jobs";
+
 export default async function BlogIndexPage() {
   // Pre-fetch initial data server-side for instant SSR & SEO indexing
-  const [blogsResponse, categories, tags] = await Promise.all([
+  const [blogsResponse, categories, tags, jobsRes] = await Promise.all([
     fetchBlogs({ page: 1, page_size: 9, category: "all" }, { revalidate: 60 }),
     fetchBlogCategories({ revalidate: 3600 }),
     fetchBlogTags({ revalidate: 3600 }),
+    fetchJobs({ ordering: "-published_at", page_size: 3 }, { revalidate: 3600 }).catch(() => ({ data: [] })),
   ]);
 
   const jsonLd = {
@@ -96,6 +99,7 @@ export default async function BlogIndexPage() {
         initialTags={tags}
         currentPage={blogsResponse.pagination?.current_page || 1}
         totalPages={blogsResponse.pagination?.total_pages || 1}
+        featuredJobs={jobsRes?.data || []}
       />
     </>
   );

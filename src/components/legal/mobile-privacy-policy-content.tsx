@@ -335,7 +335,7 @@ export function MobilePrivacyPolicyContent() {
                   <p className="font-semibold text-slate-900">Hirance Private Limited</p>
                   <p>Address: 8/4, Sector-4, Jankipuram, Lucknow – 226021, Uttar Pradesh, India</p>
                   <p>Email: <a href="mailto:hello@hirance.com" className="text-blue-600 font-bold hover:underline">hello@hirance.com</a></p>
-                  <p>Phone: <a href="tel:+919793780913" className="text-blue-600 font-bold hover:underline">+91 9793780913</a></p>
+                  <p>Phone: <a href="tel:+917309510718" className="text-blue-600 font-bold hover:underline">+91 7309510718, +91 9151410718</a></p>
                 </div>
 
                 {/* EXPLICIT CONSENT STATEMENT */}
@@ -1208,7 +1208,7 @@ export function MobilePrivacyPolicyContent() {
                     </p>
                     <p className="flex items-center gap-2 m-0">
                       <PhoneCall className="w-4 h-4 text-blue-600 shrink-0" />
-                      <strong>Phone:</strong> <a href="tel:+919793780913" className="text-blue-600 font-bold hover:underline">+91 9793780913</a>
+                      <strong>Phone:</strong> <a href="tel:+917309510718" className="text-blue-600 font-bold hover:underline">+91 7309510718, +91 9151410718</a>
                     </p>
                     <p className="flex items-start gap-2 m-0">
                       <MapPin className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
