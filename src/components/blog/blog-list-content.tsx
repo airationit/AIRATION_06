@@ -190,7 +190,7 @@ export function BlogListContent({
                   initial={{ opacity: 0, y: 18 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                  className="mb-10 rounded-3xl border border-border bg-white dark:bg-card p-5 lg:p-6 shadow-sm hover:border-blue-500/30 transition-all duration-300"
+                  className="mb-10 rounded-3xl border border-border bg-white dark:bg-card p-4 lg:px-6 lg:py-5 shadow-sm hover:border-blue-500/30 transition-all duration-300"
                 >
                   <div className="grid md:grid-cols-[1.2fr_1fr] gap-6 items-center">
                     <div className="order-2 md:order-1 flex flex-col justify-between h-full">
@@ -199,7 +199,7 @@ export function BlogListContent({
                           Featured Story
                         </span>
                         
-                        <h2 className="text-[26px] font-bold tracking-tight text-foreground hover:text-blue-600 transition-colors leading-tight">
+                        <h2 className="text-[26px] font-bold tracking-tight text-foreground hover:text-blue-600 transition-colors leading-tight line-clamp-2">
                           <Link href={`/blog/${featuredBlog.slug}`}>
                             {featuredBlog.title}
                           </Link>
@@ -482,7 +482,7 @@ export function BlogListContent({
               
               {/* Latest Articles Sidebar Component */}
               <div className="rounded-3xl border border-border bg-white dark:bg-card p-6 shadow-sm">
-                <div className="flex items-center justify-between mb-6 pb-2">
+                <div className="flex items-center justify-between mb-4">
                   <h3 className="text-[17px] font-bold text-foreground">Latest articles</h3>
                 </div>
                 
@@ -503,7 +503,7 @@ export function BlogListContent({
                         <h4 className="mt-1 text-[13px] font-bold text-foreground line-clamp-2 group-hover:text-blue-600 transition-colors leading-tight">
                           <Link href={`/blog/${post.slug}`}>{post.title}</Link>
                         </h4>
-                        <p className="mt-1 text-[10px] text-muted-foreground line-clamp-2 leading-relaxed">
+                        <p className="mt-1 text-[12px] text-muted-foreground line-clamp-2 leading-relaxed">
                           {post.excerpt}
                         </p>
                         <p className="mt-1.5 text-[10px] font-medium text-muted-foreground flex items-center gap-1">
@@ -517,7 +517,7 @@ export function BlogListContent({
 
               {/* Hirance Featured Jobs Sidebar Component */}
               <div className="rounded-3xl border border-border bg-[#f6f9fc] dark:bg-card p-6 shadow-sm">
-                <div className="mb-5 pb-1">
+                <div className="mb-4">
                   <h3 className="text-[11px] font-bold tracking-widest uppercase text-blue-600 dark:text-blue-400">Hirance Featured Jobs</h3>
                 </div>
                 

@@ -82,7 +82,7 @@ function SectionBlockRenderer({ section, index }: { section: BlogSection; index:
           <h2
             key={index}
             id={id}
-            className="mt-14 mb-6 text-[26px] sm:text-[32px] font-extrabold tracking-tight text-foreground leading-[1.2] pb-3 border-b border-border/40"
+            className="mt-14 mb-6 text-[26px] sm:text-[32px] font-semibold tracking-tight text-foreground leading-[1.2] pb-3 border-b border-border/40"
           >
             {section.content}
           </h2>
@@ -231,11 +231,10 @@ function SectionBlockRenderer({ section, index }: { section: BlogSection; index:
   }
 }
 
-function FAQItem({ item }: { item: { question: string; answer: string } }) {
-  const [isOpen, setIsOpen] = useState(false);
+function FAQItem({ item, isOpen, onToggle }: { item: { question: string; answer: string }, isOpen: boolean, onToggle: () => void }) {
   return (
     <div className="border border-border/60 rounded-2xl mb-4 overflow-hidden bg-white/40 dark:bg-card/40 transition-all hover:border-blue-500/30 shadow-sm">
-      <button onClick={() => setIsOpen(!isOpen)} className="w-full flex items-center justify-between p-5 text-left">
+      <button onClick={onToggle} className="w-full flex items-center justify-between p-5 text-left">
         <span className="font-bold text-sm sm:text-base text-foreground">{item.question}</span>
         <ChevronDown className={`h-5 w-5 text-muted-foreground transition-transform ${isOpen ? "rotate-180" : ""}`} />
       </button>
@@ -259,6 +258,7 @@ function FAQItem({ item }: { item: { question: string; answer: string } }) {
 
 export function BlogDetailContent({ post, featuredJobs = [] }: BlogDetailContentProps) {
   const [copied, setCopied] = useState(false);
+  const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
 
   // Record view count once per session
   useEffect(() => {
@@ -323,7 +323,7 @@ export function BlogDetailContent({ post, featuredJobs = [] }: BlogDetailContent
           </nav>
 
           {/* Metadata Row */}
-          <div className="flex flex-wrap items-center gap-3 text-xs font-medium mb-5">
+          <div className="flex flex-wrap items-center gap-3 text-xs font-medium mb-3">
             <span className="font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400">
               {post.category?.name || "Hiring & Recruitment"}
             </span>
@@ -351,12 +351,12 @@ export function BlogDetailContent({ post, featuredJobs = [] }: BlogDetailContent
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-            className="text-3xl font-extrabold tracking-tight sm:text-4xl lg:text-5xl text-foreground leading-[1.15]"
+            className="text-3xl font-semibold tracking-tight sm:text-4xl lg:text-5xl text-foreground leading-[1.15]"
           >
             {post.title}
           </motion.h1>
 
-          <p className="mt-4 text-base leading-relaxed text-muted-foreground sm:text-lg mb-8">
+          <p className="mt-3 text-base leading-relaxed text-muted-foreground sm:text-lg mb-6">
             {post.excerpt}
           </p>
 
@@ -387,9 +387,12 @@ export function BlogDetailContent({ post, featuredJobs = [] }: BlogDetailContent
             </div>
 
             <div className="flex items-center gap-4 rounded-full border border-border bg-white dark:bg-card px-4 py-2.5 shadow-sm">
-              <span className="text-xs font-bold text-foreground flex items-center gap-2">
-                <Share2 className="h-4 w-4 text-blue-600" /> Share this article
-              </span>
+              <button 
+                onClick={handleShare}
+                className="text-xs font-bold text-foreground flex items-center gap-2 hover:text-blue-600 transition-colors"
+              >
+                <Share2 className="h-4 w-4 text-blue-600" /> {copied ? "Link Copied!" : "Share this article"}
+              </button>
               <div className="w-px h-4 bg-border"></div>
               <div className="flex items-center gap-2.5">
                 <a href={`https://api.whatsapp.com/send?text=${encodeURIComponent(post.title)}%20${encodeURIComponent(`https://hirance.com/blog/${post.slug}`)}`} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center h-6 w-6 rounded-full bg-[#25D366] text-white hover:scale-110 transition-transform shadow-sm" title="WhatsApp">
@@ -622,8 +625,8 @@ export function BlogDetailContent({ post, featuredJobs = [] }: BlogDetailContent
           {/* Dynamic Featured Jobs */}
           {featuredJobs && featuredJobs.length > 0 && (
             <div className="rounded-3xl border border-border bg-[#f6f9fc] dark:bg-card p-6 shadow-sm">
-              <div className="mb-5 pb-1">
-                <h3 className="text-[11px] font-bold uppercase tracking-widest text-blue-600 mb-5">
+              <div className="mb-4">
+                <h3 className="text-[11px] font-bold uppercase tracking-widest text-blue-600">
                   Hirance Featured Jobs
                 </h3>
               </div>
@@ -654,7 +657,6 @@ export function BlogDetailContent({ post, featuredJobs = [] }: BlogDetailContent
       </div>
 
       {/* Dynamic CTA Section Removed as requested */}
-
       {/* Dynamic Frequently Asked Questions from Backend */}
       {post.faq && post.faq.length > 0 && (
         <section className="relative border-t border-border/50 py-16">
@@ -667,7 +669,12 @@ export function BlogDetailContent({ post, featuredJobs = [] }: BlogDetailContent
             </div>
             <div className="mx-auto mt-8">
               {post.faq.map((item, idx) => (
-                <FAQItem key={idx} item={item} />
+                <FAQItem 
+                  key={idx} 
+                  item={item} 
+                  isOpen={openFaqIndex === idx} 
+                  onToggle={() => setOpenFaqIndex(openFaqIndex === idx ? null : idx)} 
+                />
               ))}
             </div>
           </div>
