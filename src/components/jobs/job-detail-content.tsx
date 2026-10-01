@@ -205,18 +205,18 @@ export function JobDetailContent({ job, relatedJobs = [] }: JobDetailContentProp
         </div>
 
         {/* Hero Header Card (Non-sticky, attached ref for observer) */}
-        <div ref={heroRef} className="mt-6 rounded-2xl sm:rounded-3xl border border-border/80 bg-card/90 p-6 sm:p-8 backdrop-blur-md shadow-xs">
-          <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-6">
-            <div className="flex items-start gap-4 sm:gap-5 flex-1 min-w-0">
+        <div ref={heroRef} className="mt-4 sm:mt-6 rounded-2xl sm:rounded-3xl border border-border/80 bg-card/90 p-4 sm:p-5 backdrop-blur-md shadow-xs">
+          <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-5 sm:gap-6">
+            <div className="flex items-start gap-3.5 sm:gap-5 flex-1 min-w-0">
               {/* Company Logo / Avatar */}
-              <div className="flex h-14 w-14 sm:h-16 sm:w-16 shrink-0 items-center justify-center rounded-2xl border border-border/80 bg-muted/50 font-mono text-base font-bold text-brand-600 dark:text-brand-400 shadow-2xs overflow-hidden">
+              <div className="flex h-12 w-12 sm:h-16 sm:w-16 shrink-0 items-center justify-center rounded-xl sm:rounded-2xl border border-border/80 bg-muted/50 font-mono text-sm sm:text-base font-bold text-brand-600 dark:text-brand-400 shadow-2xs overflow-hidden">
                 {job.companyLogo && !imgError ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
                     src={job.companyLogo}
                     alt={job.company}
                     onError={() => setImgError(true)}
-                    className="h-full w-full object-contain p-2"
+                    className="h-full w-full object-contain p-1.5 sm:p-2"
                   />
                 ) : (
                   <span>{initials}</span>
@@ -226,7 +226,7 @@ export function JobDetailContent({ job, relatedJobs = [] }: JobDetailContentProp
               {/* Title & Metadata */}
               <div className="min-w-0 flex-1">
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="text-sm font-semibold text-foreground/90">
+                  <span className="text-xs sm:text-sm font-semibold text-foreground/90">
                     {job.company}
                   </span>
                   {job.isVerified && (
@@ -241,7 +241,7 @@ export function JobDetailContent({ job, relatedJobs = [] }: JobDetailContentProp
 
                 </div>
 
-                <h1 className="mt-1 text-2xl font-semibold tracking-tight text-foreground sm:text-3xl lg:text-2xl leading-tight">
+                <h1 className="mt-1 text-xl font-semibold tracking-tight text-foreground sm:text-3xl lg:text-2xl leading-tight break-words [overflow-wrap:anywhere]">
                   {job.title}
                 </h1>
 
@@ -259,7 +259,7 @@ export function JobDetailContent({ job, relatedJobs = [] }: JobDetailContentProp
                 href={siteConfig.links.playStore}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-xl bg-brand-600 px-5 py-2.5 text-sm font-bold text-white shadow-xs transition-all hover:bg-brand-500 hover:shadow-sm active:scale-95 shrink-0 cursor-pointer"
+                className="inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-xl bg-brand-600 px-5 py-2.5 text-xs sm:text-sm font-bold text-white shadow-xs transition-all hover:bg-brand-500 hover:shadow-sm active:scale-95 shrink-0 cursor-pointer"
               >
                 <Smartphone className="h-4 w-4" />
                 <span>Swipe to Apply</span>
@@ -269,43 +269,41 @@ export function JobDetailContent({ job, relatedJobs = [] }: JobDetailContentProp
           </div>
 
           {/* Quick Meta Ribbon — Above the horizontal line */}
-          <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-foreground">
-            <span className="flex items-center gap-1.5 font-medium">
-              <Briefcase className="h-4 w-4 text-muted-foreground shrink-0" />
+          <div className="mt-4 flex flex-wrap items-center gap-x-3.5 sm:gap-x-4 gap-y-2 text-xs sm:text-sm text-muted-foreground">
+            <span className="flex items-center gap-1.5 font-normal text-muted-foreground/70">
+              <Briefcase className="h-4 w-4 text-muted-foreground/60 shrink-0" />
               {job.experience}
             </span>
             <span className="text-border/80 hidden sm:inline">|</span>
-            <span className="flex items-center gap-1 font-medium font-mono">
-              <IndianRupee className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+            <span className="flex items-center gap-1.5 font-normal text-muted-foreground/70">
+              <IndianRupee className="h-3.5 w-3.5 text-muted-foreground/60 shrink-0" />
               {job.salaryRange.replace(/^₹\s*/, "")}
             </span>
             <span className="text-border/80 hidden sm:inline">|</span>
-            <span className="flex items-center gap-1.5 font-medium">
-              <Building2 className="h-4 w-4 text-muted-foreground shrink-0" />
+            <span className="flex items-center gap-1.5 font-normal text-muted-foreground/70">
+              <Building2 className="h-4 w-4 text-muted-foreground/60 shrink-0" />
               {job.workMode || "Work from Office"}
             </span>
             <span className="text-border/80 hidden sm:inline">|</span>
-            <span className="flex items-center gap-1.5 font-medium">
-              <Clock className="h-4 w-4 text-muted-foreground shrink-0" />
+            <span className="flex items-center gap-1.5 font-normal text-muted-foreground/70">
+              <Clock className="h-4 w-4 text-muted-foreground/60 shrink-0" />
               {job.jobType}
             </span>
             <span className="text-border/80 hidden sm:inline">|</span>
-            <span className="flex items-center gap-1.5 font-medium">
-              <MapPin className="h-4 w-4 text-muted-foreground shrink-0" />
+            <span className="flex items-center gap-1.5 font-normal text-muted-foreground/70">
+              <MapPin className="h-4 w-4 text-muted-foreground/60 shrink-0" />
               {job.location}
             </span>
           </div>
 
           {/* Horizontal Line Divider & Bottom Row — Compact Spacing */}
-          <div className="mt-3 border-t border-border/60 pt-2.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="mt-2 border-t border-border/60 pt-2 flex flex-row items-center justify-between gap-2">
             {/* Left: Posted | Openings */}
-            <div className="flex flex-wrap items-center gap-x-3 text-sm text-muted-foreground">
-              <span>
-                Posted: <span className="font-semibold text-foreground">{formatRelativeTime(job.postedDate)}</span>
-              </span>
+            <div className="flex flex-wrap items-center gap-x-3 text-xs sm:text-sm text-muted-foreground">
+              <span className="font-normal text-muted-foreground/75">{formatRelativeTime(job.postedDate)}</span>
               <span className="text-border/80">|</span>
               <span>
-                Openings: <span className="font-semibold text-foreground">{job.openings || 1}</span>
+                Openings: <span className="font-medium text-foreground">{job.openings || 1}</span>
               </span>
             </div>
 
@@ -351,16 +349,16 @@ export function JobDetailContent({ job, relatedJobs = [] }: JobDetailContentProp
         </div>
 
         {/* Main 2-Column Content Grid */}
-        <div className="mt-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        <div className="mt-6 sm:mt-8 grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
           {/* Main Details (Left Column - Unified Single Card Container) */}
           <div className="lg:col-span-8">
-            <div className="rounded-2xl sm:rounded-3xl border border-border/80 bg-card p-6 sm:p-8 shadow-2xs space-y-8">
+            <div className="rounded-2xl sm:rounded-3xl border border-border/80 bg-card p-4 sm:p-8 shadow-2xs space-y-6 sm:space-y-8">
               {/* About the Role / Description */}
               <section>
-                <h2 className="text-base font-medium tracking-tight text-foreground">
-                  Job description
+                <h2 className="text-base sm:text-lg font-semibold tracking-tight text-foreground">
+                  Responsibilities & Requirements
                 </h2>
-                <div className="mt-4">
+                <div className="mt-3 sm:mt-4">
                   <RichDescription
                     content={job.description}
                     fallbackText={`We are hiring a ${job.title} to join ${job.company}. You will collaborate with the team on key objectives, deliver quality outcomes, and advance your career in a dynamic environment.`}
@@ -370,72 +368,27 @@ export function JobDetailContent({ job, relatedJobs = [] }: JobDetailContentProp
 
               {/* Key Responsibilities (if available) */}
               {job.responsibilities && (
-                <section className="pt-8 border-t border-border/60">
+                <section className="pt-6 sm:pt-8 border-t border-border/60">
                   <h2 className="text-base font-medium tracking-tight text-foreground">
                     Key Responsibilities
                   </h2>
-                  <div className="mt-4">
+                  <div className="mt-3 sm:mt-4">
                     <RichDescription content={job.responsibilities} />
                   </div>
                 </section>
               )}
 
-              {/* Candidate Eligibility & Requirements */}
-              <section className="pt-8 border-t border-border/60">
-                <h2 className="text-base font-medium tracking-tight text-foreground">
-                  Candidate Profile & Eligibility
-                </h2>
-                <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-                  <div className="rounded-xl border border-border/60 bg-muted/30 p-3.5">
-                    <span className="text-xs text-muted-foreground font-medium">Education</span>
-                    <p className="mt-1 font-semibold text-foreground flex items-center gap-1.5">
-                      <GraduationCap className="h-4 w-4 text-brand-600 dark:text-brand-400" />
-                      <span>
-                        {job.educationLevel || "Graduation / Diploma or equivalent"}
-                        {job.educationSpecialization ? ` (${job.educationSpecialization})` : ""}
-                      </span>
-                    </p>
-                  </div>
-
-                  <div className="rounded-xl border border-border/60 bg-muted/30 p-3.5">
-                    <span className="text-xs text-muted-foreground font-medium">Work Shift</span>
-                    <p className="mt-1 font-semibold text-foreground flex items-center gap-1.5">
-                      <Clock className="h-4 w-4 text-brand-600 dark:text-brand-400" />
-                      <span>{job.workShift || "Standard Day Shift"}</span>
-                    </p>
-                  </div>
-
-                  {job.englishProficiency && (
-                    <div className="rounded-xl border border-border/60 bg-muted/30 p-3.5">
-                      <span className="text-xs text-muted-foreground font-medium">Language Skills</span>
-                      <p className="mt-1 font-semibold text-foreground flex items-center gap-1.5">
-                        <MessageSquare className="h-4 w-4 text-brand-600 dark:text-brand-400" />
-                        <span>{job.englishProficiency}</span>
-                      </p>
-                    </div>
-                  )}
-
-                  <div className="rounded-xl border border-border/60 bg-muted/30 p-3.5">
-                    <span className="text-xs text-muted-foreground font-medium">Hiring Process</span>
-                    <p className="mt-1 font-semibold text-foreground flex items-center gap-1.5">
-                      <ShieldCheck className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
-                      <span>{job.isWalkIn ? "Walk-In Drive Available" : "Direct Online Screening & Chat"}</span>
-                    </p>
-                  </div>
-                </div>
-              </section>
-
               {/* Required Skills & Tech Stack */}
               {job.skills && job.skills.length > 0 && (
-                <section className="pt-8 border-t border-border/60">
+                <section className="pt-6 sm:pt-8 border-t border-border/60">
                   <h2 className="text-base font-medium tracking-tight text-foreground">
                     Required Skills & Technologies
                   </h2>
-                  <div className="mt-4 flex flex-wrap gap-2">
+                  <div className="mt-3 sm:mt-4 flex flex-wrap gap-2">
                     {job.skills.map((skill) => (
                       <span
                         key={skill}
-                        className="rounded-lg border border-border/70 px-3 py-1.5 text-sm font-medium text-foreground/90 transition-colors hover:border-brand-500/40"
+                        className="rounded-lg border border-border/70 px-2.5 py-1 sm:px-3 sm:py-1.5 text-xs sm:text-sm font-medium text-foreground/90 transition-colors hover:border-brand-500/40"
                       >
                         {skill}
                       </span>
@@ -443,61 +396,187 @@ export function JobDetailContent({ job, relatedJobs = [] }: JobDetailContentProp
                   </div>
                 </section>
               )}
+
+              {/* Candidate Eligibility & Requirements */}
+              <section className="pt-6 sm:pt-8 border-t border-border/60">
+                <h2 className="text-base font-semibold tracking-tight text-foreground">
+                  Candidate Profile & Eligibility
+                </h2>
+                <div className="mt-3 flex flex-col sm:flex-row gap-0">
+                  {/* Left column */}
+                  <div className="flex-1 divide-y divide-border/60">
+                    <div className="flex items-center justify-between py-2.5 sm:pr-5 text-xs sm:text-sm">
+                      <span className="flex items-center gap-2 text-muted-foreground">
+                        <GraduationCap className="h-4 w-4 shrink-0" />
+                        Education
+                      </span>
+                      <span className="font-medium text-foreground text-right">
+                        {job.educationLevel || "Graduation / Diploma"}
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between py-2.5 sm:pr-5 text-xs sm:text-sm">
+                      <span className="flex items-center gap-2 text-muted-foreground">
+                        <MessageSquare className="h-4 w-4 shrink-0" />
+                        Language
+                      </span>
+                      <span className="font-medium text-foreground">
+                        {job.englishProficiency || "—"}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Vertical divider */}
+                  <div className="hidden sm:block w-px bg-border/60 mx-1 self-stretch" />
+
+                  {/* Right column */}
+                  <div className="flex-1 divide-y divide-border/60">
+                    <div className="flex items-center justify-between py-2.5 sm:pl-5 text-xs sm:text-sm">
+                      <span className="flex items-center gap-2 text-muted-foreground">
+                        <Clock className="h-4 w-4 shrink-0" />
+                        Work Shift
+                      </span>
+                      <span className="font-medium text-foreground">{job.workShift || "Day Shift"}</span>
+                    </div>
+                    <div className="flex items-center justify-between py-2.5 sm:pl-5 text-xs sm:text-sm">
+                      <span className="flex items-center gap-2 text-muted-foreground">
+                        <ShieldCheck className="h-4 w-4 shrink-0" />
+                        Hiring
+                      </span>
+                      <span className="font-medium text-foreground">
+                        {job.isWalkIn ? "Walk-In" : "Online Screening"}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </section>
             </div>
           </div>
 
-          {/* Sticky Sidebar (Right Column - Stops above FAQ section) */}
-          <div className="lg:col-span-4 lg:sticky lg:top-24 space-y-6">
+          {/* Sticky Sidebar (Right Column) */}
+          <div className="lg:col-span-4 lg:sticky lg:top-24 space-y-5">
 
-            {/* Similar Openings (if available) */}
+            {/* Similar Openings */}
             {relatedJobs && relatedJobs.length > 0 && (
-              <div className="rounded-2xl border border-border/80 bg-card p-5 shadow-xs space-y-3">
-                <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                  Similar Openings
-                </h3>
+              <div className="space-y-3">
+                <div className="flex items-center justify-between px-1">
+                  <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                    Similar Openings
+                  </h3>
 
-                <div className="space-y-2.5 pt-1">
-                  {relatedJobs.map((relJob) => (
+                </div>
+
+                <div className="space-y-3">
+                  {relatedJobs.slice(0, 3).map((relJob) => (
                     <Link
                       key={relJob.id}
                       href={`/jobs/view/${relJob.slug}`}
-                      className="group block rounded-xl border border-border/60 bg-muted/20 p-3 hover:border-brand-500/40 hover:bg-muted/40 transition-all"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group block rounded-lg border border-border/80 bg-card p-4 shadow-2xs transition-all hover:shadow-sm space-y-3"
                     >
-                      <div className="flex items-start justify-between gap-2">
-                        <div>
-                          <h4 className="text-xs sm:text-sm font-bold text-foreground group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors line-clamp-1">
+                      {/* Top Header: Logo on Left, Title & Company on Right */}
+                      <div className="flex items-center gap-3">
+                        <div className="h-10 w-10 shrink-0 rounded-md border border-border/60 bg-muted/40 flex items-center justify-center overflow-hidden">
+                          {relJob.companyLogo ? (
+                            // eslint-disable-next-line @next/next/no-img-element
+                            <img
+                              src={relJob.companyLogo}
+                              alt={relJob.company}
+                              className="h-full w-full object-contain p-1.5"
+                            />
+                          ) : (
+                            <span className="text-xs font-bold text-foreground/80">
+                              {relJob.company.slice(0, 2).toUpperCase()}
+                            </span>
+                          )}
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <h4 className="text-sm font-semibold text-foreground group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors line-clamp-1">
                             {relJob.title}
                           </h4>
-                          <p className="mt-0.5 text-[11px] text-muted-foreground">
-                            {relJob.company} • {relJob.location}
+                          <p className="mt-0.5 text-xs text-muted-foreground line-clamp-1 font-medium">
+                            {relJob.company}
                           </p>
                         </div>
-                        <span className="text-[11px] font-bold text-foreground font-mono shrink-0">
-                          {relJob.salaryRange.replace(/^₹\s*/, "₹")}
-                        </span>
+                      </div>
+
+                      {/* Rows Container with top padding & tight line spacing */}
+                      <div className="pt-1 space-y-1.5">
+                        {/* Row 1: Experience & Work Type (Left) · Salary (Right) */}
+                        <div className="flex items-center justify-between gap-2 text-xs text-muted-foreground">
+                          <div className="flex items-center gap-2.5">
+                            <span className="flex items-center gap-1.5">
+                              <Briefcase className="h-3.5 w-3.5 shrink-0" />
+                              {relJob.experience}
+                            </span>
+                            <span className="flex items-center gap-1.5">
+                              <Clock className="h-3.5 w-3.5 shrink-0" />
+                              {relJob.jobType}
+                            </span>
+                          </div>
+                          <span className="flex items-center gap-0.5 shrink-0 font-medium text-foreground">
+                            <IndianRupee className="h-3.5 w-3.5 shrink-0" />
+                            {relJob.salaryRange.replace(/^₹\s*/, "")}
+                          </span>
+                        </div>
+
+                        {/* Row 2: Location (Left) · Posted Date (Right) */}
+                        <div className="flex items-center justify-between gap-2 text-xs text-muted-foreground">
+                          <span className="flex items-center gap-1.5 min-w-0">
+                            <MapPin className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+                            <span className="truncate">{relJob.location}</span>
+                          </span>
+                          <span className="shrink-0 text-[11px] text-muted-foreground font-medium">
+                            {formatRelativeTime(relJob.postedDate)}
+                          </span>
+                        </div>
                       </div>
                     </Link>
                   ))}
                 </div>
+
+                {relatedJobs.length > 3 && (
+                  <div className="pt-1 text-center">
+                    <Link
+                      href={job.roleName ? `/jobs?role=${encodeURIComponent(job.roleName)}` : "/jobs"}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center justify-center gap-1.5 text-xs font-semibold text-brand-600 dark:text-brand-400 hover:underline transition-all py-1"
+                    >
+                      <span>View All {relatedJobs.length} Similar Jobs</span>
+                      <ArrowUpRight className="h-3.5 w-3.5" />
+                    </Link>
+                  </div>
+                )}
               </div>
             )}
 
-            {/* Quick Hirance Apply Box */}
-            <div className="rounded-2xl border border-brand-500/25 bg-brand-50/50 dark:bg-brand-950/20 p-6 shadow-xs">
-              <h3 className="text-base font-bold text-foreground">
-                Apply in Seconds on Hirance App
-              </h3>
-              <p className="mt-1.5 text-xs text-muted-foreground leading-relaxed">
-                Connect directly with {job.company}&apos;s recruitment team. Download the mobile app and swipe to apply.
+            {/* Premium Hirance App Card */}
+            <div className="rounded-2xl border border-brand-500/20 bg-gradient-to-br from-brand-500/5 via-card to-brand-500/10 p-5 shadow-2xs space-y-3">
+              <div className="flex items-center gap-2.5">
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-600/10 text-brand-600 dark:text-brand-400">
+                  <Smartphone className="h-5 w-5" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-bold text-foreground">
+                    Apply in Seconds
+                  </h3>
+                  <p className="text-[11px] text-muted-foreground font-medium">
+                    Direct connect on Hirance App
+                  </p>
+                </div>
+              </div>
+
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                Connect directly with {job.company}&apos;s recruitment team. Download the mobile app and swipe to apply instantly.
               </p>
 
               <a
                 href={siteConfig.links.playStore}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl bg-brand-600 px-4 py-3 text-sm font-bold text-white shadow-xs transition-all hover:bg-brand-500 active:scale-98 cursor-pointer"
+                className="flex w-full items-center justify-center gap-2 rounded-xl bg-brand-600 px-4 py-2.5 text-xs font-bold text-white shadow-xs transition-all hover:bg-brand-500 active:scale-98 cursor-pointer"
               >
-                <Smartphone className="h-4 w-4" />
                 <span>Download App & Apply</span>
                 <ArrowUpRight className="h-4 w-4" />
               </a>
@@ -521,23 +600,39 @@ export function JobDetailContent({ job, relatedJobs = [] }: JobDetailContentProp
 
           <div className="rounded-2xl border border-border/80 bg-card p-6 sm:p-8 shadow-2xs divide-y divide-border/60">
             {[
+              // 4 English FAQs (1-4)
               {
-                q: `What is the eligibility criteria to apply for this ${job.title} job?`,
-                a: `Candidates must have ${job.educationLevel || "Graduation / Diploma or equivalent"} qualification and ${job.experience || "relevant"} of experience in the related field.`,
+                q: `What is the eligibility criteria to apply for this ${job.title} job in ${job.cityName || job.location || "Lucknow"}?`,
+                a: `Candidates must have ${job.educationLevel || "Graduation / Diploma or equivalent"} qualification and ${job.experience || "relevant"} experience for this ${job.title} job in ${job.cityName || job.location || "Lucknow"}.`,
               },
               {
-                q: `How much salary can I expect for this ${job.title} job?`,
-                a: `You can expect a salary of ${job.salaryRange.replace(/^₹\s*/, "₹")} per month. The exact offer depends on your skills, experience, and interview performance.`,
+                q: `How much salary can I expect for this ${job.title} job at ${job.company}?`,
+                a: `You can expect a monthly salary range of ${job.salaryRange.replace(/^₹\s*/, "₹")} for this ${job.title} vacancy at ${job.company} in ${job.cityName || job.location || "Lucknow"}.`,
               },
               {
-                q: `Is this ${job.title} role a work from home job?`,
+                q: `Is this ${job.title} vacancy in ${job.cityName || job.location || "Lucknow"} a work from home job?`,
                 a: job.workMode && job.workMode.toLowerCase().includes("home")
-                  ? `Yes, this is a remote / work from home ${job.title} role at ${job.company}.`
-                  : `No, this is an on-site ${job.title} role based in ${job.location}. It cannot be done remotely.`,
+                  ? `Yes, this is a remote / work from home ${job.title} job at ${job.company}.`
+                  : `No, this is an on-site ${job.workMode || "Work from Office"} job based in ${job.location || "Lucknow"}.`,
               },
               {
                 q: `How do I apply for this ${job.title} job at ${job.company}?`,
-                a: `Click "Swipe to Apply", download the Hirance app, and apply directly to ${job.company}'s hiring team with a single swipe — no forms, no waiting.`,
+                a: `Click "Swipe to Apply" on Hirance, download the mobile app, and apply directly to ${job.company}'s recruitment team for ${job.title} jobs in ${job.cityName || job.location || "Lucknow"}.`,
+              },
+              // 3 Hinglish FAQs (5-7 for SEO)
+              {
+                q: `Kya is ${job.title} job in ${job.cityName || job.location || "Lucknow"} ke liye freshers apply kar sakte hain?`,
+                a: job.experience && (job.experience.toLowerCase().includes("fresher") || job.experience.toLowerCase().includes("0-1"))
+                  ? `Haan, ${job.company} mein is ${job.title} job in ${job.cityName || job.location || "Lucknow"} ke liye freshers bhi apply kar sakte hain.`
+                  : `Is role ke liye minimum ${job.experience || "relevant experience"} required hai. Detailed eligibility ke liye candidate profile check karein.`,
+              },
+              {
+                q: `${job.company} mein is ${job.title} job in ${job.cityName || job.location || "Lucknow"} ki exact location kya hai?`,
+                a: `Is ${job.title} job in ${job.cityName || job.location || "Lucknow"} ki official hiring location ${job.location || "Lucknow"} hai. Direct HR connection ke liye Hirance app se apply karein.`,
+              },
+              {
+                q: `Hirance app par ${job.title} jobs in ${job.cityName || job.location || "Lucknow"} ke liye apply karne ka koi charge hai kya?`,
+                a: `Nahi, Hirance app par ${job.title} jobs in ${job.cityName || job.location || "Lucknow"} ke liye apply karna 100% free hai. Aap direct employer hiring team se bina kisi middleman ke connect kar sakte hain.`,
               },
             ].map((faq, idx) => {
               const isOpen = openFaq === idx;
