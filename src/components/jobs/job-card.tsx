@@ -71,7 +71,7 @@ export function JobCard({ job, index = 0 }: JobCardProps) {
 
             {/* Full Title (No truncate) & Company Name */}
             <div className="min-w-0 flex-1">
-              <Link href={`/jobs/view/${job.slug}`} className="group/title block">
+              <Link href={`/jobs/view/${job.slug}`} target="_blank" rel="noopener noreferrer" className="group/title block">
                 <h3 className="text-sm sm:text-[15px] font-bold text-foreground group-hover/title:text-brand-600 dark:group-hover/title:text-brand-400 transition-colors leading-snug break-words">
                   {job.title}
                 </h3>
@@ -152,6 +152,8 @@ export function JobCard({ job, index = 0 }: JobCardProps) {
         <div className="flex items-center gap-2 shrink-0">
           <Link
             href={`/jobs/view/${job.slug}`}
+            target="_blank"
+            rel="noopener noreferrer"
             className="text-xs font-semibold text-muted-foreground hover:text-brand-600 dark:hover:text-brand-400 transition-colors px-1"
           >
             Details
