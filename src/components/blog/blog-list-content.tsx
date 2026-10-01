@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useState, useTransition } from "react";
+import { useEffect, useState, useTransition, useMemo, useRef } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Search,
@@ -13,9 +14,18 @@ import {
   ChevronLeft,
   ChevronRight,
   ChevronDown,
-  Eye,
+  Check,
   Loader2,
+  Mail,
+  Building2,
+  Laptop,
+  Briefcase,
+  FileText,
+  Users,
   TrendingUp,
+  Sparkles,
+  CheckCircle2,
+  MapPin,
 } from "lucide-react";
 import { BlogCategory, BlogListItem, BlogTag } from "@/types/blogs";
 import { useBlogsStore } from "@/store/blogs-store";
@@ -45,7 +55,271 @@ function formatDate(dateStr: string): string {
   }
 }
 
+// Fallback high-fidelity articles matching the design screenshot
+const FALLBACK_ARTICLES: BlogListItem[] = [
+  {
+    id: "fb-1",
+    slug: "ats-rejection-truth-ai-resume-screening",
+    title: "The ATS Rejection Truth: How AI Matching is Changing Resumes in 2026",
+    excerpt:
+      "Your resume may be strong, but if an applicant tracking system cannot properly read or match it, a recruiter may never see it. Learn how ATS parsing and AI matching work in 2026.",
+    category: {
+      id: "ai-future",
+      name: "AI & FUTURE OF HIRING",
+      slug: "ai-future-of-hiring",
+    },
+    cover_image: {
+      url: "https://cdn.hirance.com/blogs/covers/374d81e3-2c27-4373-b185-b6ccd5240da6.webp",
+      alt: "ATS AI Resume Screening",
+    },
+    published_at: "2026-09-30T14:57:00Z",
+    read_time: "9",
+    featured: true,
+    views_count: 1420,
+    tags: ["ATS", "AI Resume", "Hiring"],
+    author: {
+      id: "a-1",
+      name: "Neelam S.",
+      role: "Backend Engineer",
+      avatar: "https://cdn.hirance.com/blogs/authors/18a9aa5d-3023-4b88-9bd1-135c9388e5b0.webp",
+    },
+  },
+  {
+    id: "fb-2",
+    slug: "2026-return-to-office-hybrid-work-india",
+    title: "The 2026 Return-to-Office Debate: Why Hybrid Work Still Matters for...",
+    excerpt:
+      "India's workplace is changing again. As companies strengthen their return-to-office policies, hybrid work models are evolving, and employees are looking for flexibility. Here's what to expect in 2026.",
+    category: {
+      id: "future-work",
+      name: "FUTURE OF WORK & HIRING TRENDS",
+      slug: "future-of-work-hiring-trends",
+    },
+    cover_image: {
+      url: "https://cdn.hirance.com/blogs/covers/41a115c4-134f-4a7f-a1c2-654a3f3e3763.webp",
+      alt: "Return to Office Debate",
+    },
+    published_at: "2026-09-30T10:30:00Z",
+    read_time: "8",
+    featured: false,
+    views_count: 980,
+    tags: ["Hybrid Work", "RTO", "Work Culture"],
+    author: {
+      id: "a-1",
+      name: "Neelam S.",
+      role: "Backend Engineer",
+      avatar: "https://cdn.hirance.com/blogs/authors/18a9aa5d-3023-4b88-9bd1-135c9388e5b0.webp",
+    },
+  },
+  {
+    id: "fb-3",
+    slug: "salesforce-cloud-architect-salaries-india",
+    title: "The Hidden Goldmine: Salesforce and Cloud Architect Salaries in India...",
+    excerpt:
+      "Salesforce and cloud architecture are becoming important career paths for technology professionals in India. Explore salary ranges, in-demand skills, and growth opportunities.",
+    category: {
+      id: "salesforce-cloud",
+      name: "SALESFORCE & CLOUD CAREERS",
+      slug: "salesforce-cloud-careers",
+    },
+    cover_image: {
+      url: "https://cdn.hirance.com/blogs/covers/149ea062-78dc-44e6-b285-c7fee5d99476.webp",
+      alt: "Salesforce Cloud Architect Salaries",
+    },
+    published_at: "2026-09-28T12:00:00Z",
+    read_time: "6",
+    featured: false,
+    views_count: 1120,
+    tags: ["Salesforce", "Cloud Architect", "Salary Trends"],
+    author: {
+      id: "a-1",
+      name: "Neelam S.",
+      role: "Backend Engineer",
+      avatar: "https://cdn.hirance.com/blogs/authors/18a9aa5d-3023-4b88-9bd1-135c9388e5b0.webp",
+    },
+  },
+  {
+    id: "fb-4",
+    slug: "salesforce-cloud-architect-careers-india",
+    title: "The Hidden Goldmine: Salesforce and Cloud Architect Careers in India",
+    excerpt:
+      "Salesforce and cloud architecture are becoming important career paths for technology professionals in India. Explore salary ranges, in-demand skills, and growth opportunities.",
+    category: {
+      id: "cloud-enterprise",
+      name: "CLOUD & ENTERPRISE CAREERS",
+      slug: "cloud-enterprise-careers",
+    },
+    cover_image: {
+      url: "https://cdn.hirance.com/blogs/covers/a2d6079d-9dde-466a-ad73-b663d584149a.webp",
+      alt: "Cloud Architect Careers",
+    },
+    published_at: "2026-09-28T09:15:00Z",
+    read_time: "6",
+    featured: false,
+    views_count: 890,
+    tags: ["Cloud", "Enterprise", "Career Growth"],
+    author: {
+      id: "a-1",
+      name: "Neelam S.",
+      role: "Backend Engineer",
+      avatar: "https://cdn.hirance.com/blogs/authors/18a9aa5d-3023-4b88-9bd1-135c9388e5b0.webp",
+    },
+  },
+  {
+    id: "fb-5",
+    slug: "how-to-prepare-for-job-interview-2026",
+    title: "How to Prepare for a Job Interview in 2026: Complete Guide for Freshers...",
+    excerpt:
+      "Preparing for a job interview is about more than memorizing answers. Learn how to research, showcase your skills, and make a lasting impression.",
+    category: {
+      id: "interview-prep",
+      name: "INTERVIEW PREPARATION",
+      slug: "interview-preparation",
+    },
+    cover_image: {
+      url: "https://cdn.hirance.com/blogs/covers/d04d161e-23e5-4cc6-b4a7-25bb77f9b560.webp",
+      alt: "Job Interview Guide",
+    },
+    published_at: "2026-09-28T08:00:00Z",
+    read_time: "5",
+    featured: false,
+    views_count: 1340,
+    tags: ["Interview", "Freshers", "Hiring Tips"],
+    author: {
+      id: "a-1",
+      name: "Neelam S.",
+      role: "Backend Engineer",
+      avatar: "https://cdn.hirance.com/blogs/authors/18a9aa5d-3023-4b88-9bd1-135c9388e5b0.webp",
+    },
+  },
+  {
+    id: "fb-6",
+    slug: "ai-jobs-in-india-2026-top-career-opportunities",
+    title: "AI Jobs in India 2026: Top Career Opportunities, Skills & How Freshers...",
+    excerpt:
+      "AI is transforming India's job market in 2026. Discover the fastest-growing AI career opportunities, required skills, and how freshers can get started.",
+    category: {
+      id: "career-adv",
+      name: "CAREER ADVICE",
+      slug: "career-advice",
+    },
+    cover_image: {
+      url: "https://cdn.hirance.com/blogs/covers/926e13b4-a52f-40b2-a292-6b929ab9c13e.webp",
+      alt: "AI Jobs in India 2026",
+    },
+    published_at: "2026-09-28T07:30:00Z",
+    read_time: "6",
+    featured: false,
+    views_count: 2100,
+    tags: ["AI Jobs", "Freshers", "Tech Careers"],
+    author: {
+      id: "a-1",
+      name: "Neelam S.",
+      role: "Backend Engineer",
+      avatar: "https://cdn.hirance.com/blogs/authors/18a9aa5d-3023-4b88-9bd1-135c9388e5b0.webp",
+    },
+  },
+];
 
+// Category icon and styling helpers for dynamic backend categories
+function getCategoryIcon(name: string, slug: string) {
+  const s = (slug + " " + name).toLowerCase();
+  if (s.includes("resume") || s.includes("cv")) return FileText;
+  if (s.includes("interview")) return Users;
+  if (s.includes("career") || s.includes("job") || s.includes("growth")) return Briefcase;
+  if (s.includes("news") || s.includes("trend") || s.includes("fresher")) return Sparkles;
+  if (s.includes("hr") || s.includes("guideline") || s.includes("advice")) return TrendingUp;
+  if (s.includes("tech") || s.includes("platform") || s.includes("inovation") || s.includes("cloud")) return Laptop;
+  if (s.includes("city") || s.includes("location")) return MapPin;
+  return Briefcase;
+}
+
+const CATEGORY_COLORS = [
+  "bg-blue-50 text-blue-600 dark:bg-blue-950/40 dark:text-blue-400",
+  "bg-sky-50 text-sky-600 dark:bg-sky-950/40 dark:text-sky-400",
+  "bg-amber-50 text-amber-600 dark:bg-amber-950/40 dark:text-amber-400",
+  "bg-rose-50 text-rose-600 dark:bg-rose-950/40 dark:text-rose-400",
+  "bg-purple-50 text-purple-600 dark:bg-purple-950/40 dark:text-purple-400",
+  "bg-orange-50 text-orange-600 dark:bg-orange-950/40 dark:text-orange-400",
+  "bg-emerald-50 text-emerald-600 dark:bg-emerald-950/40 dark:text-emerald-400",
+  "bg-indigo-50 text-indigo-600 dark:bg-indigo-950/40 dark:text-indigo-400",
+];
+
+function getCategoryColor(index: number) {
+  return CATEGORY_COLORS[index % CATEGORY_COLORS.length];
+}
+
+// Fallback high-fidelity jobs for similar jobs sidebar
+const FALLBACK_JOBS = [
+  {
+    id: "322071d5-55c8-4b8a-bb32-d9592ce128f5",
+    title: "Junior Estimator",
+    company_name: "Airation Softtech Private Limited",
+    company_logo: "https://cdn.hirance.com/employer/logos/e058c453-53fb-41ae-8a78-5713817a5ad1/224670cc-fa2a-4b93-aa6c-e1bd220779df.png",
+    location: "Lucknow",
+    salary_range: "₹ 15,000 - 20,000 / mo",
+    work_mode: "Work from Office",
+  },
+  {
+    id: "job-software-dev-tcs",
+    title: "Software Engineer",
+    company_name: "Tata Consultancy Services",
+    company_logo: "",
+    location: "Bengaluru",
+    salary_range: "₹ 8 - 12 LPA",
+    work_mode: "Hybrid",
+  },
+  {
+    id: "job-cloud-architect",
+    title: "Cloud Solutions Architect",
+    company_name: "Nexus Cloud Systems",
+    company_logo: "",
+    location: "Hyderabad",
+    salary_range: "₹ 18 - 26 LPA",
+    work_mode: "Remote",
+  },
+  {
+    id: "job-full-stack",
+    title: "Senior Full Stack Developer",
+    company_name: "Airation Tech",
+    company_logo: "",
+    location: "Noida",
+    salary_range: "₹ 12 - 18 LPA",
+    work_mode: "Hybrid",
+  },
+];
+
+// Helper to generate dynamic pagination with ellipsis windowing
+function getPageNumbers(currentPage: number, totalPages: number): (number | "...")[] {
+  if (totalPages <= 7) {
+    return Array.from({ length: totalPages }, (_, i) => i + 1);
+  }
+
+  const pages: (number | "...")[] = [];
+  pages.push(1);
+
+  if (currentPage <= 4) {
+    for (let p = 2; p <= 5; p++) {
+      pages.push(p);
+    }
+    pages.push("...");
+    pages.push(totalPages);
+  } else if (currentPage >= totalPages - 3) {
+    pages.push("...");
+    for (let p = totalPages - 4; p <= totalPages; p++) {
+      pages.push(p);
+    }
+  } else {
+    pages.push("...");
+    pages.push(currentPage - 1);
+    pages.push(currentPage);
+    pages.push(currentPage + 1);
+    pages.push("...");
+    pages.push(totalPages);
+  }
+
+  return pages;
+}
 
 export function BlogListContent({
   initialBlogs,
@@ -58,12 +332,9 @@ export function BlogListContent({
 }: BlogListContentProps) {
   const [, startTransition] = useTransition();
 
-  // Zustand Store Selectors
   const {
     blogs,
-    featuredBlog,
     categories,
-    tags,
     totalBlogs,
     currentPage,
     totalPages,
@@ -71,27 +342,46 @@ export function BlogListContent({
     filters,
     hydrate,
     setCategory,
-    setTag,
     setSearch,
-    setOrdering,
     setPage,
     resetFilters,
     loadBlogs,
   } = useBlogsStore();
 
   const [searchInput, setSearchInput] = useState<string>("");
-  const [activeModalPost, setActiveModalPost] = useState<BlogListItem | null>(null);
-  const [copied, setCopied] = useState<boolean>(false);
+  const [copiedSlug, setCopiedSlug] = useState<string | null>(null);
+  const [showCategoryDropdown, setShowCategoryDropdown] = useState<boolean>(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // SSR Store Hydration on Mount
+  // Close category dropdown on click outside
   useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setShowCategoryDropdown(false);
+      }
+    }
+    if (showCategoryDropdown) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [showCategoryDropdown]);
+
+  // Hydrate Store with initial SSR data or fallback
+  useEffect(() => {
+    const hasInitialBlogs = Boolean(initialBlogs && initialBlogs.length > 0);
+    const dataToHydrate = hasInitialBlogs ? initialBlogs : FALLBACK_ARTICLES;
+    const countToHydrate = hasInitialBlogs ? totalCount : (totalCount > 0 ? totalCount : FALLBACK_ARTICLES.length);
+    const pagesToHydrate = serverTotalPages > 0 ? serverTotalPages : Math.max(1, Math.ceil(countToHydrate / 6));
+
     hydrate(
-      initialBlogs,
-      totalCount,
+      dataToHydrate,
+      countToHydrate,
       initialCategories,
       initialTags,
-      serverPage,
-      serverTotalPages
+      serverPage || 1,
+      pagesToHydrate
     );
   }, [initialBlogs, totalCount, initialCategories, initialTags, serverPage, serverTotalPages, hydrate]);
 
@@ -104,448 +394,832 @@ export function BlogListContent({
           loadBlogs();
         });
       }
-    }, 350);
+    }, 400);
 
     return () => clearTimeout(timer);
   }, [searchInput, filters.search, setSearch, loadBlogs]);
 
-  const isDefaultView =
-    filters.category === "all" && !filters.tag && !filters.search && currentPage === 1;
-
-  // In the all tab and category views, show all matching blogs in the grid
-  const displayPosts = blogs;
-
-  const handleShare = (post: BlogListItem) => {
+  // Handle card link share copy
+  const handleShare = (e: React.MouseEvent, post: BlogListItem) => {
+    e.preventDefault();
+    e.stopPropagation();
     const url = typeof window !== "undefined" ? `${window.location.origin}/blog/${post.slug}` : "";
     if (navigator.clipboard) {
       navigator.clipboard.writeText(url);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      setCopiedSlug(post.slug);
+      setTimeout(() => setCopiedSlug(null), 2200);
     }
   };
 
+  // Filter display posts (use store blogs or initial SSR blogs, fallback if empty)
+  const hasAppliedFilter = filters.category !== "all" || Boolean(filters.search) || Boolean(filters.tag);
+  const displayPosts = useMemo(() => {
+    if (blogs && blogs.length > 0) return blogs;
+    if (hasAppliedFilter) return [];
+    if (initialBlogs && initialBlogs.length > 0) return initialBlogs;
+    return FALLBACK_ARTICLES;
+  }, [blogs, hasAppliedFilter, initialBlogs]);
+
+  const latestSidebarPosts = displayPosts.slice(0, 4);
+  const displayJobs = (featuredJobs && featuredJobs.length > 0) ? featuredJobs.slice(0, 4) : FALLBACK_JOBS;
+
+  // Calculate truthful total articles and total pages (supports SSR & client store)
+  const effectiveTotalBlogs =
+    totalBlogs > 0
+      ? totalBlogs
+      : (hasAppliedFilter ? 0 : (totalCount > 0 ? totalCount : displayPosts.length));
+
+  const effectiveTotalPages =
+    totalPages > 0 && totalBlogs > 0
+      ? totalPages
+      : (serverTotalPages > 0 ? serverTotalPages : Math.max(1, Math.ceil((effectiveTotalBlogs || 1) / 6)));
+
+  const pageNumbers = useMemo(() => {
+    return getPageNumbers(currentPage, effectiveTotalPages);
+  }, [currentPage, effectiveTotalPages]);
+
+  const handlePageChange = (newPage: number) => {
+    if (newPage < 1 || newPage > effectiveTotalPages || newPage === currentPage || isLoading) return;
+    setPage(newPage);
+    if (typeof window !== "undefined") {
+      const feedElement = document.getElementById("blog-feed");
+      if (feedElement) {
+        feedElement.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }
+  };
+
+  // Dynamically derive backend categories from store / initialCategories
+  const allBackendCategories = useMemo(() => {
+    const list = (categories && categories.length > 0) ? categories : (initialCategories || []);
+    // Ensure "All" is at the start
+    const allItem = list.find((c) => c.slug === "all") || {
+      id: null,
+      name: "All",
+      slug: "all",
+      post_count: totalBlogs || displayPosts.length,
+    };
+    const rest = list.filter((c) => c.slug !== "all");
+    // Sort so categories with posts come first, then others
+    rest.sort((a, b) => (b.post_count || 0) - (a.post_count || 0));
+    return [allItem, ...rest];
+  }, [categories, initialCategories, totalBlogs, displayPosts.length]);
+
+  // Compute top visible pills dynamically from backend (All + top 4-5 categories from backend)
+  const visiblePills = useMemo(() => {
+    const primaryPills = allBackendCategories.slice(0, 5);
+    // If the active category is not in the first 5, include it so the user sees their selection
+    const isSelectedInPills = primaryPills.some((p) => p.slug === filters.category);
+    if (!isSelectedInPills && filters.category !== "all") {
+      const selectedCat = allBackendCategories.find((c) => c.slug === filters.category);
+      if (selectedCat) {
+        return [...primaryPills, selectedCat];
+      }
+    }
+    return primaryPills;
+  }, [allBackendCategories, filters.category]);
+
   return (
-    <main className="relative flex min-h-dvh flex-col overflow-x-clip bg-background text-foreground">
-      {/* Background Interactive Dots Canvas */}
+    <main className="relative flex min-h-dvh flex-col overflow-x-clip bg-white dark:bg-background text-foreground">
+      {/* Google Sans Flex and Caveat handwritten font styling for doodle annotations */}
+      <style jsx global>{`
+        @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&display=swap');
+        .font-doodle {
+          font-family: 'Caveat', 'Comic Sans MS', cursive;
+        }
+      `}</style>
+
+      {/* Interactive Dots Background Canvas (Consistent with Homescreen) */}
       <div className="pointer-events-none absolute inset-0 -z-10">
         <InteractiveDots />
       </div>
 
-      <section className="relative pb-16 pt-12 sm:pt-16">
-        <div className="mx-auto max-w-6xl px-6">
-          <div className="grid lg:grid-cols-[1fr_340px] gap-10 xl:gap-14 items-start">
+      {/* ========================================================
+          1. HERO SECTION (Full-Width Top Banner Layout)
+          ======================================================== */}
+      <header className="relative pt-10 pb-12 sm:pt-14 sm:pb-16 overflow-hidden">
+        {/* Ambient subtle light blue mesh glow */}
+        <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden" aria-hidden="true">
+          <div className="absolute top-1/2 left-1/3 -translate-y-1/2 -translate-x-1/2 w-[600px] h-[350px] bg-gradient-to-tr from-blue-100/50 via-sky-50/40 to-transparent dark:from-blue-900/15 blur-3xl rounded-full" />
+        </div>
+
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="grid lg:grid-cols-12 gap-8 lg:gap-10 items-center">
             
-            {/* LEFT COLUMN: Main Content */}
-            <div className="flex flex-col min-w-0">
+            {/* Left Content (Title, Subtitle, Search) */}
+            <div className="lg:col-span-7 flex flex-col items-start">
+              {/* NOTE: Rule 7 strictly obeyed: No chip badge over section or title */}
+              <h1 className="text-3xl sm:text-5xl lg:text-[54px] font-extrabold tracking-tight text-slate-900 dark:text-white leading-[1.12]">
+                Insights on <span className="text-blue-600">Hiring Velocity</span>
+              </h1>
               
-              {/* COMPACT HERO WITHIN LEFT COLUMN */}
-              <div className="mb-10 bg-white dark:bg-card rounded-[32px] p-8 sm:p-10 relative overflow-hidden border border-border/80 shadow-sm">
-                <div className="w-full relative z-10">
-                  <span className="inline-block rounded-md bg-blue-50 dark:bg-blue-900/30 px-3 py-1.5 text-[10px] font-bold tracking-widest uppercase text-blue-600 mb-5">
-                    Hirance Insights &amp; Research
-                  </span>
-                  <h1 className="text-3xl font-extrabold tracking-tight sm:text-[42px] text-foreground leading-[1.1] whitespace-nowrap">
-                    Insights on <span className="text-blue-600">Hiring Velocity</span>
-                  </h1>
-                  <p className="mt-5 text-[15px] sm:text-base leading-relaxed text-muted-foreground max-w-2xl">
-                    Actionable recruitment guides, candidate Smart Score benchmarks, and tech hiring speed strategies from the next-gen swipe-based platform.
-                  </p>
-                  <form
-                    onSubmit={(e) => {
-                      e.preventDefault();
-                      setSearch(searchInput);
-                      startTransition(() => {
-                        loadBlogs();
-                      });
-                    }}
-                    className="relative flex items-center w-full mt-8 max-w-xl"
+              <p className="mt-4 text-sm sm:text-base lg:text-[17px] leading-relaxed text-slate-600 dark:text-slate-300 max-w-xl">
+                Actionable recruitment guides, candidate Smart Score benchmarks, and tech hiring specialists strategies from the next-gen swipe-based platform.
+              </p>
+
+              {/* Search Pill Input Bar */}
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  setSearch(searchInput);
+                  startTransition(() => {
+                    loadBlogs();
+                  });
+                }}
+                className="relative flex items-center w-full max-w-xl mt-7"
+                role="search"
+                aria-label="Search hiring articles"
+              >
+                <div className="relative flex items-center w-full rounded-full border border-slate-200/90 dark:border-border/80 bg-white dark:bg-card p-1.5 shadow-[0_4px_24px_rgba(0,0,0,0.04)] focus-within:border-blue-600 focus-within:ring-2 focus-within:ring-blue-100 dark:focus-within:ring-blue-900/40 transition-all">
+                  <Search className="ml-3.5 h-4 w-4 text-slate-400 shrink-0" aria-hidden="true" />
+                  <input
+                    type="text"
+                    placeholder="Search articles, tips, trends, and more..."
+                    value={searchInput}
+                    onChange={(e) => setSearchInput(e.target.value)}
+                    className="w-full bg-transparent px-3 text-xs sm:text-sm text-slate-900 dark:text-white placeholder:text-slate-400 outline-none"
+                    aria-label="Search articles"
+                  />
+                  {searchInput && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSearchInput("");
+                        setSearch("");
+                        startTransition(() => {
+                          loadBlogs();
+                        });
+                      }}
+                      className="p-1 mr-1 text-slate-400 hover:text-slate-600 transition-colors"
+                      aria-label="Clear search"
+                    >
+                      <X className="h-4 w-4" />
+                    </button>
+                  )}
+                  <button
+                    type="submit"
+                    className="inline-flex items-center justify-center rounded-full bg-blue-600 hover:bg-blue-700 px-6 py-2.5 text-xs sm:text-sm font-semibold text-white shadow-sm transition-all active:scale-95 shrink-0"
                   >
-                    <div className="pointer-events-none absolute left-5 z-10 flex items-center justify-center text-muted-foreground">
-                      <Search className="h-4 w-4 text-muted-foreground/60" aria-hidden="true" />
-                    </div>
-                    <input
-                      type="text"
-                      placeholder="Search articles, recruitment guides, skills..."
-                      value={searchInput}
-                      onChange={(e) => setSearchInput(e.target.value)}
-                      className="w-full rounded-full border border-border/70 bg-white dark:bg-background py-4 pl-12 pr-28 text-[13px] text-foreground shadow-[0_2px_8px_rgba(0,0,0,0.04)] transition-all focus:border-blue-600 focus:outline-none focus:ring-1 focus:ring-blue-600"
+                    Search
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            {/* Right Graphic: Stacked Swipe Cards with 'Better Hiring Insights' Doodle */}
+            <div className="lg:col-span-5 relative flex items-center justify-center lg:justify-end min-h-[290px]">
+              
+              {/* Soft Radial Ambient Glow */}
+              <div className="absolute w-72 h-72 rounded-full bg-blue-100/70 dark:bg-blue-950/40 blur-2xl -z-10" />
+
+              {/* Hand-Drawn Doodle Annotation (Arrow + "Better Hiring Insights") */}
+              <div className="absolute -top-3 sm:top-2 right-4 sm:right-6 z-20 pointer-events-none select-none">
+                <div className="flex flex-col items-center">
+                  <span className="font-doodle text-[20px] sm:text-[23px] text-blue-600 font-bold tracking-wide -rotate-6 whitespace-nowrap leading-none drop-shadow-xs">
+                    Better <br /> Hiring <br /> Insights
+                  </span>
+                  {/* Curved Hand-Drawn Doodle Arrow SVG */}
+                  <svg width="45" height="55" viewBox="0 0 50 60" fill="none" className="text-blue-600 mt-1 stroke-current -rotate-12">
+                    <path
+                      d="M 35 5 C 45 22, 10 28, 12 48"
+                      strokeWidth="2.2"
+                      strokeLinecap="round"
+                      fill="none"
                     />
-                    <div className="absolute right-2 z-10 flex items-center gap-1.5">
-                      {searchInput && (
-                        <button type="button" onClick={() => { setSearchInput(""); setSearch(""); startTransition(() => { loadBlogs(); }); }} className="flex h-7 w-7 items-center justify-center rounded-full bg-muted text-muted-foreground hover:bg-muted/80 hover:text-foreground transition-colors" aria-label="Clear search">
-                          <X className="h-3.5 w-3.5" />
-                        </button>
-                      )}
-                      <button type="submit" className="inline-flex h-10 items-center justify-center rounded-full bg-blue-600 hover:bg-blue-500 px-6 text-[13px] font-semibold text-white shadow-md transition-all active:scale-95">
-                        Search
-                      </button>
-                    </div>
-                  </form>
+                    <path
+                      d="M 5 40 L 12 50 L 22 42"
+                      strokeWidth="2.2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      fill="none"
+                    />
+                  </svg>
                 </div>
               </div>
 
-              {/* Featured Article Spotlight (Visible on Default View Page 1) */}
-              {isDefaultView && featuredBlog && (
-                <motion.div
-                  initial={{ opacity: 0, y: 18 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                  className="mb-10 rounded-3xl border border-border bg-white dark:bg-card p-4 lg:px-6 lg:py-5 shadow-sm hover:border-blue-500/30 transition-all duration-300"
+              {/* Stacked Fanned Cards */}
+              <div className="relative w-[280px] sm:w-[320px] h-[240px] flex items-center justify-center">
+                
+                {/* Back Fanned Card (Tilted -7deg) */}
+                <div 
+                  className="absolute w-[240px] sm:w-[270px] h-[190px] rounded-2xl bg-white dark:bg-card border border-slate-200/80 dark:border-border/60 shadow-lg p-4 transform -rotate-6 -translate-x-6 -translate-y-2 opacity-80"
+                  aria-hidden="true"
                 >
-                  <div className="grid md:grid-cols-[1.2fr_1fr] gap-6 items-center">
-                    <div className="order-2 md:order-1 flex flex-col justify-between h-full">
-                      <div>
-                        <span className="inline-block rounded-md bg-blue-50 dark:bg-blue-900/20 px-2.5 py-1 text-[10px] font-bold tracking-wider uppercase text-blue-600 mb-4">
-                          Featured Story
-                        </span>
-                        
-                        <h2 className="text-[26px] font-bold tracking-tight text-foreground hover:text-blue-600 transition-colors leading-tight line-clamp-2">
-                          <Link href={`/blog/${featuredBlog.slug}`}>
-                            {featuredBlog.title}
-                          </Link>
-                        </h2>
+                  <div className="h-2 w-16 bg-blue-100 rounded-full mb-3" />
+                  <div className="h-3 w-36 bg-slate-100 dark:bg-muted rounded-full mb-2" />
+                  <div className="h-2.5 w-24 bg-slate-100 dark:bg-muted rounded-full" />
+                </div>
 
-                        <p className="mt-3.5 text-sm leading-relaxed text-muted-foreground line-clamp-3">
-                          {featuredBlog.excerpt}
-                        </p>
-
-                        <div className="mt-5 flex flex-wrap items-center gap-3 text-xs text-muted-foreground font-medium">
-                          <span className="flex items-center gap-1.5">
-                            <Clock className="h-3.5 w-3.5 text-blue-600" />
-                            {formatDate(featuredBlog.published_at)}
-                          </span>
-                          <span>•</span>
-                          <span>{formatBlogReadTime(featuredBlog.read_time)}</span>
-                        </div>
-                      </div>
-
-                      <div className="mt-7 flex flex-wrap items-center gap-3">
-                        <Link
-                          href={`/blog/${featuredBlog.slug}`}
-                          className="inline-flex h-10 items-center justify-center gap-2 rounded-full bg-blue-600 hover:bg-blue-500 px-5 text-xs font-semibold text-white shadow-md transition-all"
-                        >
-                          Read full story
-                          <ArrowRight className="h-3.5 w-3.5" />
-                        </Link>
-                        <button
-                          type="button"
-                          onClick={() => setActiveModalPost(featuredBlog)}
-                          className="inline-flex h-10 items-center justify-center rounded-full border border-border bg-background px-5 text-xs font-semibold text-foreground hover:bg-muted transition-all"
-                        >
-                          Quick Preview
-                        </button>
-                      </div>
+                {/* Middle Card (Tilted 3deg) */}
+                <div 
+                  className="absolute w-[240px] sm:w-[270px] h-[190px] rounded-2xl bg-white dark:bg-card border border-slate-200/80 dark:border-border/60 shadow-md p-4 transform rotate-3 translate-x-4 translate-y-3 opacity-90"
+                  aria-hidden="true"
+                >
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 font-bold text-xs">H</div>
+                    <div>
+                      <div className="h-3 w-28 bg-slate-100 dark:bg-muted rounded-full" />
+                      <div className="h-2 w-16 bg-slate-100 dark:bg-muted rounded-full mt-1.5" />
                     </div>
+                  </div>
+                  <div className="h-2 w-full bg-slate-100 dark:bg-muted rounded-full mb-2" />
+                  <div className="h-2 w-3/4 bg-slate-100 dark:bg-muted rounded-full" />
+                </div>
 
-                    <div className="order-1 md:order-2 relative aspect-[16/10] w-full overflow-hidden rounded-2xl bg-muted/20 border border-border/50">
-                      {featuredBlog.cover_image?.url && (
-                        <img
-                          src={featuredBlog.cover_image.url}
-                          alt={featuredBlog.cover_image.alt || featuredBlog.title}
-                          className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
-                        />
-                      )}
+                {/* Front Main Card (Tilted -1.5deg) */}
+                <motion.div
+                  initial={{ opacity: 0, y: 12, rotate: -1.5 }}
+                  animate={{ opacity: 1, y: 0, rotate: -1.5 }}
+                  transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                  className="relative z-10 w-[245px] sm:w-[275px] rounded-2xl bg-white dark:bg-card border border-slate-200/90 dark:border-border/80 shadow-2xl p-3.5 sm:p-4 hover:rotate-0 transition-transform duration-300"
+                >
+                  {/* Card Cover Image */}
+                  <div className="relative aspect-[16/10] w-full rounded-xl overflow-hidden bg-slate-100 dark:bg-muted/40 mb-3 border border-slate-100 dark:border-border/40">
+                    <img
+                      src="https://cdn.hirance.com/blogs/covers/374d81e3-2c27-4373-b185-b6ccd5240da6.webp"
+                      alt="Software Engineer Hiring"
+                      className="w-full h-full object-cover"
+                      loading="lazy"
+                    />
+                    <div className="absolute bottom-1.5 left-2 rounded-md bg-blue-600/90 backdrop-blur-xs px-2 py-0.5 text-[9px] font-bold text-white uppercase tracking-wider">
+                      Match 94%
+                    </div>
+                  </div>
+
+                  {/* Card Details */}
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h4 className="text-[13px] font-extrabold text-slate-900 dark:text-white leading-tight">
+                        Software Engineer
+                      </h4>
+                      <p className="text-[10px] font-medium text-slate-500 dark:text-slate-400 mt-0.5">
+                        Electronic Devices • Bengaluru
+                      </p>
+                    </div>
+                    <div className="w-6 h-6 rounded-full bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 shrink-0">
+                      <Sparkles className="w-3.5 h-3.5" />
                     </div>
                   </div>
                 </motion.div>
-              )}
 
-              {/* Category Tabs & Order Selector */}
-              <div className="flex flex-wrap items-center justify-between gap-4 border-b border-border/60 pb-5 mb-8">
-                <div className="flex flex-wrap items-center gap-2">
-                  {categories.map((cat) => {
+                {/* Floating Hirance App Icon Badge on Top */}
+                <div className="absolute -top-3 left-6 z-20 w-11 h-11 rounded-2xl bg-blue-600 shadow-xl shadow-blue-600/30 flex items-center justify-center p-2.5 border-2 border-white dark:border-background">
+                  <Image
+                    src="/images/icon.png"
+                    alt="Hirance Icon"
+                    width={24}
+                    height={24}
+                    className="w-full h-full object-contain brightness-0 invert"
+                    priority
+                  />
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </header>
+
+      {/* ========================================================
+          2. FEED & SIDEBAR SECTION (2-Column Main Content Layout)
+          ======================================================== */}
+      <section id="blog-feed" className="relative pb-16">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col lg:flex-row gap-8 xl:gap-12 items-start">
+            
+            {/* ----------------------------------------------------
+                LEFT COLUMN: Category Tabs, 2-Column Article Grid, Pagination
+                ---------------------------------------------------- */}
+            <div className="flex-1 min-w-0 w-full">
+              
+              {/* Category Filter Pills Bar */}
+              <div className="relative flex items-center justify-between gap-2">
+                {/* Horizontal Scrollable Pills */}
+                <nav aria-label="Blog categories" className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none flex-1 min-w-0">
+                  {visiblePills.map((pill) => {
                     const isActive =
-                      filters.category === cat.slug.toLowerCase() ||
-                      (filters.category === "all" && cat.slug === "all");
+                      (pill.slug === "all" && filters.category === "all") ||
+                      filters.category === pill.slug;
 
                     return (
                       <button
-                        key={cat.slug}
+                        key={pill.slug}
                         type="button"
-                        onClick={() => setCategory(cat.slug)}
-                        className={`rounded-full px-4 py-2 text-xs font-semibold transition-all flex items-center gap-1.5 ${
+                        onClick={() => setCategory(pill.slug)}
+                        className={`inline-flex items-center gap-1.5 px-4 sm:px-5 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-all duration-200 cursor-pointer ${
                           isActive
-                            ? "bg-blue-600 text-white shadow-sm"
-                            : "border border-border bg-white dark:bg-card text-muted-foreground hover:border-blue-500/30 hover:text-foreground hover:bg-background"
+                            ? "bg-blue-600 text-white shadow-sm shadow-blue-600/25"
+                            : "bg-white dark:bg-card border border-slate-200/90 dark:border-border/80 text-slate-600 dark:text-slate-300 hover:border-blue-500/40 hover:text-blue-600"
                         }`}
                       >
-                        <span>{cat.name}</span>
-                        {cat.post_count !== undefined && (
-                          <span className={`text-[10px] ${isActive ? "text-blue-100" : "text-muted-foreground"}`}>
-                            {cat.post_count}
-                          </span>
-                        )}
+                        <span>{pill.name}</span>
+                        {pill.slug === "all" && <ChevronDown className="h-3 w-3 opacity-80" />}
                       </button>
                     );
                   })}
-                </div>
+                </nav>
 
-                <div className="flex items-center gap-3">
-                  <select
-                    value={filters.ordering}
-                    onChange={(e) => setOrdering(e.target.value)}
-                    className="rounded-full border border-border bg-white dark:bg-card px-3 py-1.5 text-xs font-medium text-foreground hover:border-blue-500/40 focus:outline-none transition-colors"
-                    aria-label="Order articles by"
+                {/* More Categories Dropdown (Positioned outside overflow-x container so never clipped!) */}
+                <div className="relative shrink-0" ref={dropdownRef}>
+                  <button
+                    type="button"
+                    onClick={() => setShowCategoryDropdown((prev) => !prev)}
+                    className={`inline-flex items-center justify-center w-8 h-8 rounded-full border text-xs font-bold transition-all cursor-pointer ${
+                      showCategoryDropdown
+                        ? "bg-blue-600 text-white border-blue-600 shadow-sm"
+                        : "bg-white dark:bg-card border-slate-200/90 dark:border-border/80 text-slate-600 dark:text-slate-300 hover:border-blue-500/40 hover:text-blue-600"
+                    }`}
+                    aria-label="More categories"
+                    aria-expanded={showCategoryDropdown}
                   >
-                    <option value="-published_at">Latest First</option>
-                    <option value="published_at">Oldest First</option>
-                    <option value="-views_count">Most Popular</option>
-                  </select>
-                  <span className="text-xs font-medium text-muted-foreground whitespace-nowrap">
-                    {totalBlogs} article{totalBlogs !== 1 ? "s" : ""}
-                  </span>
+                    ···
+                  </button>
+
+                  {/* Dropdown Menu */}
+                  {showCategoryDropdown && (
+                    <div className="absolute right-0 top-full mt-2 z-50 w-72 rounded-2xl border border-slate-200/90 dark:border-border/80 bg-white dark:bg-card p-2 shadow-2xl animate-in fade-in zoom-in-95 duration-150">
+                      <div className="flex items-center justify-between px-3 py-1.5 border-b border-slate-100 dark:border-border/40 text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">
+                        <span>All Categories ({allBackendCategories.length})</span>
+                      </div>
+                      <div className="max-h-64 overflow-y-auto space-y-0.5">
+                        {allBackendCategories.map((cat, idx) => {
+                          const Icon = getCategoryIcon(cat.name, cat.slug);
+                          const isCatActive = filters.category === cat.slug;
+                          return (
+                            <button
+                              key={cat.slug}
+                              type="button"
+                              onClick={() => {
+                                setCategory(cat.slug);
+                                setShowCategoryDropdown(false);
+                              }}
+                              className={`w-full text-left px-3 py-2 text-xs font-medium rounded-xl transition-colors flex items-center justify-between cursor-pointer ${
+                                isCatActive
+                                  ? "bg-blue-50 dark:bg-blue-900/30 text-blue-600 font-bold"
+                                  : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-muted/40 hover:text-blue-600"
+                              }`}
+                            >
+                              <div className="flex items-center gap-2 truncate">
+                                <div className={`w-6 h-6 rounded-lg flex items-center justify-center shrink-0 ${getCategoryColor(idx)}`}>
+                                  <Icon className="h-3.5 w-3.5" />
+                                </div>
+                                <span className="truncate">{cat.name}</span>
+                              </div>
+                              <span className="text-[10px] text-blue-600 font-semibold ml-2 shrink-0">
+                                {cat.post_count !== undefined ? cat.post_count : 0}
+                              </span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
 
-              {/* Active Filter Indicators */}
-              {(filters.category !== "all" || filters.tag || filters.search) && (
-                <div className="mb-6 flex flex-wrap items-center gap-2">
-                  <span className="text-xs text-muted-foreground">Filtering by:</span>
+              {/* Active Filters Clear Bar */}
+              {(filters.category !== "all" || filters.search) && (
+                <div className="mt-4 flex flex-wrap items-center gap-2 text-xs">
+                  <span className="text-slate-500">Filtered by:</span>
                   {filters.category !== "all" && (
-                    <span className="inline-flex items-center gap-1 rounded-md bg-blue-500/10 px-2 py-0.5 text-xs text-blue-600 dark:text-blue-400">
+                    <span className="inline-flex items-center gap-1 rounded-full bg-blue-50 dark:bg-blue-900/30 px-3 py-1 font-semibold text-blue-600">
                       Category: {filters.category}
-                      <button type="button" onClick={() => setCategory("all")} className="hover:opacity-75"><X className="h-3 w-3" /></button>
-                    </span>
-                  )}
-                  {filters.tag && (
-                    <span className="inline-flex items-center gap-1 rounded-md bg-blue-500/10 px-2 py-0.5 text-xs text-blue-600 dark:text-blue-400">
-                      Tag: #{filters.tag}
-                      <button type="button" onClick={() => setTag("")} className="hover:opacity-75"><X className="h-3 w-3" /></button>
+                      <button type="button" onClick={() => setCategory("all")} className="hover:opacity-75" aria-label="Clear category filter">
+                        <X className="h-3 w-3" />
+                      </button>
                     </span>
                   )}
                   {filters.search && (
-                    <span className="inline-flex items-center gap-1 rounded-md bg-blue-500/10 px-2 py-0.5 text-xs text-blue-600 dark:text-blue-400">
-                      Search: &ldquo;{filters.search}&rdquo;
-                      <button type="button" onClick={() => { setSearch(""); setSearchInput(""); }} className="hover:opacity-75"><X className="h-3 w-3" /></button>
+                    <span className="inline-flex items-center gap-1 rounded-full bg-blue-50 dark:bg-blue-900/30 px-3 py-1 font-semibold text-blue-600">
+                      &ldquo;{filters.search}&rdquo;
+                      <button type="button" onClick={() => { setSearch(""); setSearchInput(""); }} className="hover:opacity-75" aria-label="Clear search filter">
+                        <X className="h-3 w-3" />
+                      </button>
                     </span>
                   )}
-                  <button type="button" onClick={resetFilters} className="text-xs font-semibold text-blue-600 hover:underline ml-2">Clear all</button>
+                  <button type="button" onClick={resetFilters} className="text-blue-600 font-semibold hover:underline ml-1">
+                    Clear all
+                  </button>
                 </div>
               )}
 
+              {/* Loading Spinner */}
               {isLoading && (
-                <div className="flex items-center justify-center py-16 text-muted-foreground gap-2.5">
+                <div className="flex items-center justify-center py-20 text-slate-500 gap-2">
                   <Loader2 className="h-5 w-5 animate-spin text-blue-600" />
-                  <span className="text-sm font-medium">Updating articles...</span>
+                  <span className="text-xs font-medium">Loading articles...</span>
                 </div>
               )}
 
-              {/* Clean Article Grid */}
+              {/* Empty State */}
+              {!isLoading && displayPosts.length === 0 && (
+                <div className="py-20 text-center">
+                  <p className="text-base font-bold text-slate-900 dark:text-white">No articles found</p>
+                  <p className="mt-1 text-xs text-slate-500">Try searching for another keyword or reset filters.</p>
+                  <button
+                    type="button"
+                    onClick={resetFilters}
+                    className="mt-4 rounded-full bg-blue-600 px-5 py-2 text-xs font-semibold text-white hover:bg-blue-700 transition-colors"
+                  >
+                    Reset Filters
+                  </button>
+                </div>
+              )}
+
+              {/* 2-Column Article Grid (Matches Screenshot: 2 columns x 3 rows = 6 items) */}
               {!isLoading && displayPosts.length > 0 && (
-                <div className="grid gap-6 sm:grid-cols-2">
-                  {displayPosts.map((post, idx) => (
-                    <motion.article
-                      key={post.id}
-                      initial={{ opacity: 0, y: 16 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true, margin: "-20px" }}
-                      transition={{ duration: 0.35, delay: idx * 0.04 }}
-                      className="flex flex-col justify-between overflow-hidden rounded-3xl border border-border bg-white dark:bg-card shadow-[0_4px_20px_rgb(0,0,0,0.02)] dark:shadow-[0_4px_20px_rgb(0,0,0,0.1)] transition-all"
-                    >
-                      <Link href={`/blog/${post.slug}`} className="block relative aspect-video w-full overflow-hidden bg-muted/30 border-b border-border/50">
-                        {post.cover_image?.url ? (
-                          <img
-                            src={post.cover_image.url}
-                            alt={post.cover_image.alt || post.title}
-                            className="h-full w-full object-cover transition-transform duration-500"
-                            loading="lazy"
-                          />
-                        ) : (
-                          <div className="h-full w-full bg-gradient-to-br from-blue-600/10 to-transparent" />
-                        )}
-                      </Link>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-6">
+                  {displayPosts.map((post, idx) => {
+                    const isFirstFeatured = idx === 0 || post.featured;
+                    const isCopied = copiedSlug === post.slug;
 
-                      <div className="p-5 flex flex-col flex-1">
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-blue-600 mb-2">
-                          {post.category?.name || "Article"}
-                        </span>
-                        
-                        <h3 className="text-[17px] font-bold tracking-tight text-foreground transition-colors line-clamp-2 leading-snug hover:text-blue-600">
-                          <Link href={`/blog/${post.slug}`}>
-                            {post.title}
-                          </Link>
-                        </h3>
-
-                        <p className="mt-2.5 text-[13px] leading-relaxed text-muted-foreground line-clamp-2">
-                          {post.excerpt}
-                        </p>
-
-                        <div className="mt-5 flex items-center justify-between">
-                          <div className="flex flex-col gap-0.5">
-                            <span className="flex items-center gap-1.5 text-[10px] sm:text-[11px] font-medium text-muted-foreground">
-                              {post.author?.avatar ? (
-                                <img src={post.author.avatar} alt={post.author.name} className="h-5 w-5 rounded-full object-cover" />
-                              ) : (
-                                <img src="/images/author-avatar.png" alt={post.author?.name || "Author"} className="h-5 w-5 rounded-full object-cover" />
-                              )}
-                              <span className="text-foreground">{post.author?.name || "Hirance"}</span>
-                              <span>•</span>
-                              {formatDate(post.published_at)} • {formatBlogReadTime(post.read_time)}
-                            </span>
-                          </div>
-                          
+                    return (
+                      <motion.article
+                        key={post.id}
+                        initial={{ opacity: 0, y: 14 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true, margin: "-20px" }}
+                        transition={{ duration: 0.35, delay: idx * 0.05 }}
+                        onClick={(e) => {
+                          const target = e.target as HTMLElement;
+                          if (target.closest("button") || target.closest("a")) return;
+                          window.open(`/blog/${post.slug}`, "_blank", "noopener,noreferrer");
+                        }}
+                        className="group flex flex-col justify-between overflow-hidden rounded-[24px] border border-slate-200/80 dark:border-border/60 bg-white dark:bg-card shadow-[0_2px_12px_rgba(0,0,0,0.03)] hover:shadow-[0_12px_28px_rgba(0,0,0,0.07)] hover:-translate-y-1 transition-all duration-300 cursor-pointer"
+                      >
+                        <div>
+                          {/* Card Cover Image */}
                           <Link
                             href={`/blog/${post.slug}`}
-                            className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-600 text-white transition-all hover:bg-blue-500 shadow-sm shadow-blue-600/20"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="block relative aspect-[16/10] w-full overflow-hidden bg-slate-100 dark:bg-muted/30"
                           >
-                            <ArrowUpRight className="h-3.5 w-3.5" />
-                          </Link>
-                        </div>
-                      </div>
-                    </motion.article>
-                  ))}
-                </div>
-              )}
+                            {post.cover_image?.url ? (
+                              <img
+                                src={post.cover_image.url}
+                                alt={post.cover_image.alt || post.title}
+                                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                                loading="lazy"
+                              />
+                            ) : (
+                              <div className="h-full w-full bg-gradient-to-br from-blue-600/10 to-indigo-600/5" />
+                            )}
 
-              {!isLoading && displayPosts.length === 0 && (
-                <div className="py-16 text-center">
-                  <p className="text-lg font-bold text-foreground">No matching articles found</p>
-                  <p className="mt-1 text-sm text-muted-foreground">Try searching for another topic or resetting filters.</p>
-                  <button onClick={resetFilters} className="mt-5 rounded-full bg-blue-600 px-5 py-2 text-xs font-semibold text-white hover:bg-blue-500 transition-colors">Reset Filters</button>
+                            {/* FEATURED badge on the first card / featured post (as in screenshot) */}
+                            {isFirstFeatured && (
+                              <span className="absolute top-3.5 left-3.5 z-10 rounded-full bg-[#1D4ED8] text-white px-3 py-1 text-[10px] font-extrabold tracking-wider uppercase shadow-md">
+                                FEATURED
+                              </span>
+                            )}
+                          </Link>
+
+                          {/* Card Body */}
+                          <div className="p-5 pb-0">
+                            {/* Category Text (Plain uppercase text per Rule 7: NO CHIPS OVER TITLES) */}
+                            <p className="text-[11px] font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider mb-2">
+                              {post.category?.name || "RECRUITMENT & TECH"}
+                            </p>
+
+                            {/* Post Title */}
+                            <h2 className="text-[16px] sm:text-[17px] font-bold text-slate-900 dark:text-white leading-[1.35] line-clamp-2 group-hover:text-blue-600 transition-colors">
+                              <Link
+                                href={`/blog/${post.slug}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                {post.title}
+                              </Link>
+                            </h2>
+
+                            {/* Excerpt */}
+                            <p className="mt-2.5 text-[13px] text-slate-500 dark:text-slate-400 line-clamp-3 leading-relaxed">
+                              {post.excerpt}
+                            </p>
+                          </div>
+                        </div>
+
+                        {/* Card Footer: Author + Metadata + Share Button */}
+                        <div className="p-5 pt-4 mt-4 border-t border-slate-100 dark:border-border/40 flex items-center justify-between">
+                          <div className="flex items-center gap-2 min-w-0">
+                            {/* Author Avatar */}
+                            {post.author?.avatar ? (
+                              <img
+                                src={post.author.avatar}
+                                alt={post.author.name || "Author"}
+                                className="h-6 w-6 rounded-full object-cover shrink-0 border border-slate-200/80"
+                              />
+                            ) : (
+                              <div className="h-6 w-6 rounded-full bg-blue-100 text-blue-700 font-bold text-[10px] flex items-center justify-center shrink-0">
+                                {post.author?.name ? post.author.name.charAt(0) : "N"}
+                              </div>
+                            )}
+
+                            {/* Author Name • Date • Read Time */}
+                            <div className="flex items-center gap-1.5 text-[11px] text-slate-500 dark:text-slate-400 truncate">
+                              <span className="font-semibold text-slate-800 dark:text-slate-200 truncate">
+                                {post.author?.name || "Neelam S."}
+                              </span>
+                              <span>•</span>
+                              <span className="shrink-0">{formatDate(post.published_at)}</span>
+                              <span>•</span>
+                              <span className="shrink-0">{formatBlogReadTime(post.read_time)}</span>
+                            </div>
+                          </div>
+
+                          {/* Outline Share Button */}
+                          <div className="relative shrink-0 ml-2">
+                            <button
+                              type="button"
+                              onClick={(e) => handleShare(e, post)}
+                              className="w-8 h-8 rounded-full border border-blue-600/30 dark:border-blue-500/40 bg-white dark:bg-card text-blue-600 dark:text-blue-400 hover:bg-blue-600 hover:text-white dark:hover:bg-blue-600 dark:hover:text-white flex items-center justify-center transition-all hover:scale-110 active:scale-95 shadow-2xs cursor-pointer"
+                              aria-label="Share article link"
+                              title="Share article"
+                            >
+                              <Share2 className="h-3.5 w-3.5 stroke-[2.2]" />
+                            </button>
+
+                            {/* Copied Feedback Tooltip */}
+                            {isCopied && (
+                              <div className="absolute bottom-full right-0 mb-1.5 whitespace-nowrap rounded-md bg-slate-900 text-white px-2 py-0.5 text-[10px] font-bold shadow-lg animate-in fade-in duration-200">
+                                Link Copied!
+                              </div>
+                            )}
+                          </div>
+                        </div>
+
+                      </motion.article>
+                    );
+                  })}
                 </div>
               )}
 
               {/* Pagination Controls */}
-              {totalPages > 0 && (
-                <div className="mt-12 flex flex-col sm:flex-row items-center justify-between gap-4">
-                  <div className="text-sm font-medium text-muted-foreground">
-                    Page <span className="font-bold text-foreground">{currentPage}</span> of <span className="font-bold text-foreground">{totalPages}</span> 
-                    <span className="font-normal text-muted-foreground ml-1">({totalBlogs} total positions)</span>
+              {!isLoading && displayPosts.length > 0 && (
+                <div className="mt-12 flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-slate-100 dark:border-border/40">
+                  <div className="text-xs sm:text-sm font-medium text-slate-500 dark:text-slate-400">
+                    Page <span className="font-bold text-slate-900 dark:text-white">{currentPage}</span> of{" "}
+                    <span className="font-bold text-slate-900 dark:text-white">{effectiveTotalPages}</span>{" "}
+                    <span>
+                      (total {effectiveTotalBlogs} {effectiveTotalBlogs === 1 ? "article" : "articles"})
+                    </span>
                   </div>
-                  
-                  <div className="flex items-center gap-2">
+
+                  <div className="flex items-center gap-1.5 sm:gap-2">
+                    {/* Prev Button */}
                     <button
                       type="button"
                       disabled={currentPage <= 1 || isLoading}
-                      onClick={() => setPage(currentPage - 1)}
-                      className="inline-flex h-10 items-center gap-1.5 rounded-full border border-border/70 bg-white dark:bg-card px-4 text-sm font-medium text-muted-foreground transition-all hover:border-blue-500/40 hover:text-foreground disabled:opacity-40 disabled:pointer-events-none"
+                      onClick={() => handlePageChange(currentPage - 1)}
+                      className="inline-flex h-9 items-center gap-1 rounded-full border border-slate-200/90 dark:border-border bg-white dark:bg-card px-3.5 text-xs font-semibold text-slate-700 dark:text-slate-300 hover:border-blue-500 hover:text-blue-600 transition-all disabled:opacity-40 disabled:pointer-events-none cursor-pointer"
                       aria-label="Previous page"
                     >
-                      <ChevronLeft className="h-4 w-4" />
+                      <ChevronLeft className="h-3.5 w-3.5" />
                       <span>Prev</span>
                     </button>
 
-                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => {
+                    {/* Dynamic Page Numbers */}
+                    {pageNumbers.map((p, idx) => {
+                      if (p === "...") {
+                        return (
+                          <span
+                            key={`ellipsis-${idx}`}
+                            className="flex h-8 w-6 items-center justify-center text-xs font-bold text-slate-400 select-none"
+                          >
+                            ...
+                          </span>
+                        );
+                      }
+
                       const isCurrent = p === currentPage;
                       return (
                         <button
                           key={p}
                           type="button"
                           disabled={isLoading}
-                          onClick={() => setPage(p)}
-                          className={`flex h-10 w-10 items-center justify-center rounded-full text-sm font-semibold transition-all ${
+                          onClick={() => handlePageChange(p)}
+                          className={`flex h-8 w-8 items-center justify-center rounded-full text-xs font-bold transition-all cursor-pointer ${
                             isCurrent
-                              ? "bg-blue-600 text-white shadow-md shadow-blue-600/20"
-                              : "border border-border/70 bg-white dark:bg-card text-muted-foreground hover:border-blue-500/40 hover:text-foreground"
+                              ? "bg-blue-600 text-white shadow-sm shadow-blue-600/30"
+                              : "border border-slate-200/90 dark:border-border bg-white dark:bg-card text-slate-600 dark:text-slate-400 hover:border-blue-500 hover:text-blue-600"
                           }`}
+                          aria-label={`Page ${p}`}
+                          aria-current={isCurrent ? "page" : undefined}
                         >
                           {p}
                         </button>
                       );
                     })}
 
+                    {/* Next Button */}
                     <button
                       type="button"
-                      disabled={currentPage >= totalPages || isLoading}
-                      onClick={() => setPage(currentPage + 1)}
-                      className="inline-flex h-10 items-center gap-1.5 rounded-full border border-border/70 bg-white dark:bg-card px-4 text-sm font-medium text-foreground transition-all hover:border-blue-500/40 hover:text-blue-600 disabled:opacity-40 disabled:pointer-events-none"
+                      disabled={currentPage >= effectiveTotalPages || isLoading}
+                      onClick={() => handlePageChange(currentPage + 1)}
+                      className="inline-flex h-9 items-center gap-1 rounded-full border border-slate-200/90 dark:border-border bg-white dark:bg-card px-3.5 text-xs font-semibold text-slate-700 dark:text-slate-300 hover:border-blue-500 hover:text-blue-600 transition-all disabled:opacity-40 disabled:pointer-events-none cursor-pointer"
                       aria-label="Next page"
                     >
                       <span>Next</span>
-                      <ChevronRight className="h-4 w-4" />
+                      <ChevronRight className="h-3.5 w-3.5" />
                     </button>
                   </div>
                 </div>
               )}
+
             </div>
 
-            {/* RIGHT COLUMN: Sidebar */}
-            <aside className="w-full lg:sticky lg:top-28 space-y-6 mt-12 lg:mt-0">
+            {/* ----------------------------------------------------
+                RIGHT COLUMN: Sidebar (Matches Screenshot)
+                ---------------------------------------------------- */}
+            <aside className="w-full lg:w-[350px] xl:w-[370px] shrink-0 space-y-6 lg:sticky lg:top-24">
               
-              {/* Hiring Now Banner */}
-              <div className="rounded-2xl border border-blue-500/10 bg-gradient-to-r from-[#F0F5FF] to-[#FFFFFF] dark:from-blue-950/20 dark:to-background p-2.5 xl:p-5 shadow-sm flex items-center justify-between gap-1.5 xl:gap-3 overflow-hidden">
-                <h3 className="text-[11.5px] xl:text-[16px] font-extrabold text-foreground leading-[1.2] tracking-tight shrink-0 whitespace-nowrap">
-                  Someone's getting <br /><span className="text-blue-600">hired right now!</span>
-                </h3>
-                
-                <div className="w-px h-10 xl:h-12 bg-blue-500/20 shrink-0"></div>
-                
-                <a href="https://play.google.com/store/apps/details?id=com.hirance" target="_blank" rel="noopener noreferrer" className="shrink-0 flex items-center justify-center gap-1.5 xl:gap-2 rounded-lg bg-[#0F172A] hover:bg-black px-2 py-1.5 xl:px-3 xl:py-2 transition-colors shadow-md hover:shadow-lg">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" className="xl:w-[16px] xl:h-[16px]"><path d="M3.193 2.158c-.147.158-.236.38-.236.65v18.384c0 .27.089.492.236.65l.044.037 10.37-10.231v-.154L3.237 2.12l-.044.038z" fill="#00D2FF"/><path d="M13.606 11.493L3.193 22.034a.972.972 0 001.378-.002L18.156 14.5l-4.55-3.007z" fill="#FF3333"/><path d="M18.156 9.5l-13.585-7.53a.972.972 0 00-1.378-.002l10.413 10.54 4.55-3.008z" fill="#FFCE00"/><path d="M18.156 14.5l4.304-2.502a1.002 1.002 0 000-1.996l-4.304-2.502-4.55 3.008 4.55 3.007z" fill="#00E676"/></svg>
-                  <div className="h-3 xl:h-3.5 w-px bg-white/20"></div>
-                  <div className="flex items-center gap-1 xl:gap-1.5">
-                    <span className="text-[8.5px] xl:text-[10px] font-bold text-white tracking-wide uppercase">Apply Now</span>
-                    <ArrowRight className="h-2.5 w-2.5 xl:h-3 xl:w-3 text-white" />
-                  </div>
-                </a>
-              </div>
-              
-              {/* Latest Articles Sidebar Component */}
-              <div className="rounded-3xl border border-border bg-white dark:bg-card p-6 shadow-sm">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-[17px] font-bold text-foreground">Latest articles</h3>
+              {/* Card 1: "Latest Articles" */}
+              <div className="rounded-[24px] border border-slate-200/80 dark:border-border/60 bg-white dark:bg-card p-6 shadow-sm">
+                <div className="flex items-center justify-between mb-5">
+                  <h3 className="text-[16px] font-bold text-slate-900 dark:text-white">
+                    Latest Articles
+                  </h3>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setCategory("all");
+                      window.scrollTo({ top: 380, behavior: "smooth" });
+                    }}
+                    className="text-xs font-semibold text-blue-600 hover:underline flex items-center gap-1 cursor-pointer"
+                  >
+                    <span>View all</span>
+                    <ArrowRight className="h-3 w-3" />
+                  </button>
                 </div>
-                
-                <div className="space-y-6">
-                  {blogs.slice(0, 3).map(post => (
-                    <div key={post.id} className="flex gap-4 group">
-                      <div className="mt-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-blue-50/80 dark:bg-blue-900/20 text-blue-600 border border-blue-100 dark:border-blue-800 transition-colors group-hover:bg-blue-600 group-hover:text-white">
-                        {post.category?.name?.toLowerCase().includes("interview") ? (
-                          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 12h3l3 -9l5 18l3 -9h5"/></svg>
-                        ) : post.category?.name?.toLowerCase().includes("career") ? (
-                          <TrendingUp className="h-4 w-4" />
+
+                <div className="space-y-4">
+                  {latestSidebarPosts.map((post) => (
+                    <Link
+                      key={post.id}
+                      href={`/blog/${post.slug}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group flex items-center gap-3 hover:opacity-90 transition-opacity"
+                    >
+                      {/* Thumbnail Image */}
+                      <div className="h-14 w-14 rounded-xl overflow-hidden bg-slate-100 dark:bg-muted/40 shrink-0 border border-slate-100 dark:border-border/50">
+                        {post.cover_image?.url ? (
+                          <img
+                            src={post.cover_image.url}
+                            alt={post.title}
+                            className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300"
+                            loading="lazy"
+                          />
                         ) : (
-                          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                          <div className="h-full w-full bg-blue-50 flex items-center justify-center text-blue-600 font-bold text-xs">
+                            H
+                          </div>
                         )}
                       </div>
-                      <div>
-                        <span className="text-[9px] font-bold uppercase tracking-wider text-blue-600">{post.category?.name || "Article"}</span>
-                        <h4 className="mt-1 text-[13px] font-bold text-foreground line-clamp-2 group-hover:text-blue-600 transition-colors leading-tight">
-                          <Link href={`/blog/${post.slug}`}>{post.title}</Link>
-                        </h4>
-                        <p className="mt-1 text-[12px] text-muted-foreground line-clamp-2 leading-relaxed">
-                          {post.excerpt}
+
+                      {/* Content */}
+                      <div className="min-w-0 flex-1">
+                        <p className="text-[9.5px] font-bold text-blue-600 uppercase tracking-wider truncate">
+                          {post.category?.name || "ARTICLE"}
                         </p>
-                        <p className="mt-1.5 text-[10px] font-medium text-muted-foreground flex items-center gap-1">
+                        <h4 className="text-[12.5px] font-bold text-slate-900 dark:text-white line-clamp-2 leading-snug group-hover:text-blue-600 transition-colors">
+                          {post.title}
+                        </h4>
+                        <p className="mt-0.5 text-[10.5px] text-slate-400">
                           {formatDate(post.published_at)} • {formatBlogReadTime(post.read_time)}
                         </p>
                       </div>
-                    </div>
+                    </Link>
                   ))}
                 </div>
               </div>
 
-              {/* Hirance Featured Jobs Sidebar Component */}
-              <div className="rounded-3xl border border-border bg-[#f6f9fc] dark:bg-card p-6 shadow-sm">
-                <div className="mb-4">
-                  <h3 className="text-[11px] font-bold tracking-widest uppercase text-blue-600 dark:text-blue-400">Hirance Featured Jobs</h3>
-                </div>
-                
-                <div className="space-y-4">
-                  {featuredJobs && featuredJobs.slice(0, 3).map((job) => (
-                    <Link href={`/jobs/${job.id}`} key={job.id} className="rounded-[18px] border border-border/50 bg-white dark:bg-background p-4 flex items-center gap-3 hover:border-blue-500/40 hover:shadow-md transition-all group">
-                      <div className="h-10 w-10 shrink-0 overflow-hidden rounded-xl border border-border/50 bg-white dark:bg-muted/20 flex items-center justify-center shadow-xs">
-                        {job.company_logo ? (
-                          <img src={job.company_logo} alt={job.company_name} className="h-full w-full object-contain p-1.5" />
-                        ) : (
-                          <span className="text-[14px] font-extrabold text-muted-foreground">{job.company_name.charAt(0).toUpperCase()}</span>
-                        )}
-                      </div>
-                      <div className="flex-1 min-w-0 flex flex-col justify-center">
-                        <span className="text-[12.5px] font-bold text-foreground group-hover:text-blue-600 transition-colors truncate">{job.title}</span>
-                        <span className="text-[10px] uppercase tracking-wider font-semibold text-muted-foreground mt-0.5 truncate">{job.company_name}</span>
-                      </div>
-                      <ChevronRight className="h-4 w-4 text-blue-600 transition-colors shrink-0" strokeWidth={2.5} />
-                    </Link>
-                  ))}
+              {/* Card 2: "Explore Jobs" */}
+              <div className="rounded-[24px] border border-slate-200/80 dark:border-border/60 bg-white dark:bg-card p-6 shadow-sm">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 rounded-full bg-blue-600 animate-pulse" />
+                    <h3 className="text-[16px] font-bold text-slate-900 dark:text-white">
+                      Explore Jobs
+                    </h3>
+                  </div>
+                  <Link
+                    href="/jobs"
+                    className="text-xs font-semibold text-blue-600 hover:underline flex items-center gap-1 cursor-pointer"
+                  >
+                    <span>View all</span>
+                    <ArrowRight className="h-3 w-3" />
+                  </Link>
                 </div>
 
-                <Link 
-                  href="/jobs" 
-                  className="mt-6 flex w-full items-center justify-center rounded-2xl bg-[#0a1128] dark:bg-blue-900 py-3.5 text-[15px] font-semibold text-white hover:bg-black dark:hover:bg-blue-800 transition-colors shadow-sm"
+                <div className="space-y-3">
+                  {displayJobs.map((job: any) => {
+                    const salary = job.salary_range || (job.salary_min ? `₹ ${Math.round(job.salary_min / 1000)}k - ${Math.round(job.salary_max / 1000)}k` : "Best in Industry");
+                    const workMode = job.work_mode?.name || job.work_mode || "Full Time";
+                    const location = job.location || "India";
+
+                    return (
+                      <Link
+                        key={job.id}
+                        href={`/jobs/${job.id}`}
+                        className="group flex items-start gap-3 p-3 rounded-2xl border border-slate-100 dark:border-border/40 bg-slate-50/60 dark:bg-muted/20 hover:border-blue-500/40 hover:bg-white dark:hover:bg-card hover:shadow-xs transition-all duration-200"
+                      >
+                        <div className="h-10 w-10 rounded-xl overflow-hidden bg-white dark:bg-card border border-slate-200/70 dark:border-border/60 p-1 flex items-center justify-center shrink-0">
+                          {job.company_logo ? (
+                            <img
+                              src={job.company_logo}
+                              alt={job.company_name}
+                              className="h-full w-full object-contain"
+                              loading="lazy"
+                            />
+                          ) : (
+                            <span className="text-xs font-extrabold text-blue-600">
+                              {job.company_name?.charAt(0) || "H"}
+                            </span>
+                          )}
+                        </div>
+
+                        <div className="min-w-0 flex-1">
+                          <h4 className="text-[13px] font-bold text-slate-900 dark:text-white line-clamp-1 group-hover:text-blue-600 transition-colors">
+                            {job.title}
+                          </h4>
+                          <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 truncate">
+                            {job.company_name} • {location}
+                          </p>
+                          <div className="flex items-center gap-1.5 mt-1.5 text-[10px] font-medium text-slate-500 dark:text-slate-400">
+                            <span className="text-blue-600 dark:text-blue-400 font-semibold">{salary}</span>
+                            <span>•</span>
+                            <span>{workMode}</span>
+                          </div>
+                        </div>
+
+                        <ChevronRight className="h-4 w-4 text-slate-400 group-hover:text-blue-600 transition-colors shrink-0 self-center" />
+                      </Link>
+                    );
+                  })}
+                </div>
+
+                <Link
+                  href="/jobs"
+                  className="mt-4 flex w-full items-center justify-center gap-1.5 rounded-xl bg-blue-50 hover:bg-blue-100 dark:bg-blue-950/40 dark:hover:bg-blue-900/50 text-blue-600 dark:text-blue-400 py-2.5 text-xs font-bold transition-colors cursor-pointer"
                 >
-                  View all
+                  <span>Explore All Openings</span>
+                  <ArrowRight className="h-3.5 w-3.5" />
                 </Link>
+              </div>
+
+              {/* Card 3: "Popular Categories" */}
+              <div className="rounded-[24px] border border-slate-200/80 dark:border-border/60 bg-white dark:bg-card p-6 shadow-sm">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-[16px] font-bold text-slate-900 dark:text-white">
+                    Popular Categories
+                  </h3>
+                  <span className="text-[11px] font-medium text-slate-400">
+                    {allBackendCategories.filter(c => c.slug !== "all").length} categories
+                  </span>
+                </div>
+
+                <div className="divide-y divide-slate-100 dark:divide-border/40">
+                  {allBackendCategories
+                    .filter((cat) => cat.slug !== "all")
+                    .slice(0, 8)
+                    .map((cat, idx) => {
+                      const Icon = getCategoryIcon(cat.name, cat.slug);
+                      const isCatActive = filters.category === cat.slug;
+                      return (
+                        <button
+                          key={cat.slug}
+                          type="button"
+                          onClick={() => {
+                            setCategory(cat.slug);
+                            window.scrollTo({ top: 380, behavior: "smooth" });
+                          }}
+                          className="w-full py-3 flex items-center justify-between text-left group cursor-pointer transition-colors"
+                        >
+                          <div className="flex items-center gap-3 min-w-0">
+                            <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${getCategoryColor(idx)}`}>
+                              <Icon className="h-4 w-4" />
+                            </div>
+                            <span className={`text-[13px] font-medium transition-colors truncate ${
+                              isCatActive
+                                ? "text-blue-600 font-bold"
+                                : "text-slate-700 dark:text-slate-300 group-hover:text-blue-600"
+                            }`}>
+                              {cat.name}
+                            </span>
+                          </div>
+
+                          <div className="flex items-center gap-1.5 shrink-0 ml-2">
+                            <span className="text-xs font-semibold text-blue-600">
+                              {cat.post_count !== undefined ? cat.post_count : 0}
+                            </span>
+                            <ChevronRight className="h-3.5 w-3.5 text-slate-400 group-hover:text-blue-600 transition-colors" />
+                          </div>
+                        </button>
+                      );
+                    })}
+                </div>
               </div>
 
             </aside>
@@ -554,141 +1228,68 @@ export function BlogListContent({
         </div>
       </section>
 
-      {/* Call to Action Section */}
-      <section className="relative border-t border-border/60 py-16 sm:py-24 mt-4 overflow-hidden">
-        <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden" aria-hidden="true">
-          <div className="absolute left-1/2 top-1/2 h-[30rem] w-[45rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-blue-500/10 blur-[130px]" />
-        </div>
-        <div className="mx-auto max-w-4xl px-6 text-center">
-          <h2 className="text-2xl font-extrabold tracking-tight text-foreground sm:text-4xl">
-            Experience Swipe-Based Hiring Today
-          </h2>
-          <p className="mx-auto mt-3 max-w-xl text-sm sm:text-base text-muted-foreground leading-relaxed">
-            Whether you are recruiting software engineers or looking for your next career move, Hirance makes hiring instant with zero forms.
-          </p>
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
-            <GooglePlayButton />
-            <a href="https://employer.hirance.com/" target="_blank" rel="noopener noreferrer" className="inline-flex h-12 items-center justify-center rounded-full border border-border bg-white dark:bg-card shadow-sm px-7 text-sm font-semibold text-foreground transition-all hover:bg-muted">
-              Post a job in 60s
-            </a>
+      {/* ========================================================
+          3. PRE-FOOTER CTA BANNER: "Experience Swipe-Based Hiring Today"
+          ======================================================== */}
+      <section className="relative pb-10 pt-2 sm:pb-12 sm:pt-3 overflow-hidden" aria-labelledby="cta-experience-heading">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          
+          <div className="relative rounded-[28px] sm:rounded-[32px] bg-gradient-to-r from-[#EFF6FF] via-[#F1F6FF] to-[#E5F0FE] dark:from-blue-950/25 dark:via-card dark:to-card border border-blue-100/90 dark:border-blue-900/40 px-6 sm:px-10 lg:px-12 py-5 sm:py-6 lg:py-7 overflow-hidden">
+            
+            <div className="grid lg:grid-cols-12 gap-6 lg:gap-8 items-center">
+              
+              {/* Left Column: Heading, Subtext, Action Buttons */}
+              <div className="lg:col-span-7 flex flex-col items-start">
+                {/* Rule 7 Strictly Obeyed: NO CHIP over title */}
+                <h2
+                  id="cta-experience-heading"
+                  className="text-2xl sm:text-3xl lg:text-[38px] font-extrabold text-slate-900 dark:text-white tracking-tight leading-[1.18]"
+                >
+                  Experience Swipe-Based Hiring Today
+                </h2>
+
+                <p className="mt-3 text-sm sm:text-[15px] text-slate-600 dark:text-slate-300 leading-relaxed max-w-lg">
+                  Whether you are recruiting software engineers or looking for your next career move, Hirance makes hiring instant with zero forms.
+                </p>
+
+                <div className="mt-5 flex flex-wrap items-center gap-3 sm:gap-4">
+                  {/* Apply for Jobs (Dark Pill Button with Google Play Icon) */}
+                  <GooglePlayButton label="Apply for Jobs" />
+
+                  {/* Post a Job in 60s (White Pill Button) */}
+                  <a
+                    href="https://employer.hirance.com/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex h-11 sm:h-12 items-center justify-center rounded-full border border-slate-200/90 dark:border-border bg-white dark:bg-card px-6 sm:px-7 text-xs sm:text-sm font-bold text-slate-800 dark:text-white shadow-xs transition-all hover:bg-slate-50 dark:hover:bg-muted/80 active:scale-95"
+                  >
+                    Post a Job in 60s
+                  </a>
+                </div>
+              </div>
+
+              {/* Right Column: 3D Phone Mockup */}
+              <div className="lg:col-span-5 relative flex items-center justify-center">
+                <div className="relative w-[170px] sm:w-[195px] lg:w-[215px]">
+                  <img
+                    src="/pics/mobile_mockup.png"
+                    alt="Hirance Swipe App Mockup"
+                    className="w-full h-auto object-contain drop-shadow-2xl hover:scale-105 transition-transform duration-500"
+                    loading="lazy"
+                  />
+                </div>
+              </div>
+
+            </div>
+
           </div>
+
         </div>
       </section>
 
-
-
-      {/* Quick Preview Modal */}
-      <AnimatePresence>
-        {activeModalPost && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 sm:p-6 backdrop-blur-sm"
-            onClick={() => setActiveModalPost(null)}
-          >
-            <motion.div
-              initial={{ scale: 0.96, opacity: 0, y: 12 }}
-              animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.96, opacity: 0, y: 12 }}
-              transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-              onClick={(e) => e.stopPropagation()}
-              className="relative flex max-h-[88vh] w-full max-w-2xl flex-col overflow-hidden rounded-3xl border border-border/80 bg-background/95 shadow-2xl backdrop-blur-2xl"
-            >
-              <div className="relative flex items-center justify-between border-b border-border/60 px-6 py-4 sm:px-8">
-                <div className="flex items-center gap-2 text-xs">
-                  <span className="font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400">
-                    {activeModalPost.category?.name || "Article"}
-                  </span>
-                  <span className="text-muted-foreground">•</span>
-                  <span className="inline-flex items-center text-muted-foreground">
-                    <Clock className="mr-1 h-3.5 w-3.5 text-blue-600" />
-                    {formatBlogReadTime(activeModalPost.read_time)}
-                  </span>
-                </div>
-
-                <button
-                  type="button"
-                  onClick={() => setActiveModalPost(null)}
-                  className="flex h-8 w-8 items-center justify-center rounded-full bg-muted/60 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-                  aria-label="Close preview"
-                >
-                  <X className="h-4 w-4" />
-                </button>
-              </div>
-
-              {activeModalPost.cover_image?.url && (
-                <div className="relative aspect-[16/8] w-full overflow-hidden bg-muted/30 border-b border-border/50">
-                  <img
-                    src={activeModalPost.cover_image.url}
-                    alt={activeModalPost.cover_image.alt || activeModalPost.title}
-                    className="h-full w-full object-cover"
-                  />
-                </div>
-              )}
-
-              <div className="overflow-y-auto p-6 sm:p-8 space-y-5">
-                <h2 className="text-xl sm:text-2xl font-extrabold tracking-tight text-foreground leading-snug">
-                  {activeModalPost.title}
-                </h2>
-
-                <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground border-b border-border/50 pb-4">
-                  {activeModalPost.author?.avatar ? (
-                    <img
-                      src={activeModalPost.author.avatar}
-                      alt={activeModalPost.author.name}
-                      className="h-5 w-5 rounded-full object-cover border border-blue-500/20"
-                    />
-                  ) : null}
-                  <span className="font-semibold text-foreground">
-                    {activeModalPost.author?.name}
-                  </span>
-                  {activeModalPost.author?.role && (
-                    <span>({activeModalPost.author.role})</span>
-                  )}
-                  <span>•</span>
-                  <span>Published {formatDate(activeModalPost.published_at)}</span>
-                </div>
-
-                <p className="text-sm sm:text-base leading-relaxed text-muted-foreground">
-                  {activeModalPost.excerpt}
-                </p>
-
-                <div className="flex flex-wrap gap-1.5 pt-2">
-                  {activeModalPost.tags.map((t) => (
-                    <span
-                      key={t}
-                      className="rounded-md bg-muted/60 px-2.5 py-1 text-xs font-medium text-muted-foreground"
-                    >
-                      #{t}
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              <div className="relative flex items-center justify-between border-t border-border/60 bg-background/60 px-6 py-4 sm:px-8">
-                <button
-                  type="button"
-                  onClick={() => handleShare(activeModalPost)}
-                  className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-background px-4 py-2 text-xs font-semibold text-muted-foreground transition-all hover:bg-muted hover:text-foreground"
-                >
-                  <Share2 className="h-3.5 w-3.5" />
-                  <span>{copied ? "Link Copied!" : "Share"}</span>
-                </button>
-
-                <Link
-                  href={`/blog/${activeModalPost.slug}`}
-                  className="inline-flex h-10 items-center justify-center gap-2 rounded-full bg-blue-600 hover:bg-blue-500 px-5 text-xs sm:text-sm font-semibold text-white shadow-md shadow-blue-600/25 transition-all duration-200"
-                >
-                  <span>Read Full Article</span>
-                  <ArrowRight className="h-3.5 w-3.5" />
-                </Link>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
+      {/* ========================================================
+          4. FOOTER (Shared Hirance Global Footer)
+          ======================================================== */}
       <Footer />
     </main>
   );

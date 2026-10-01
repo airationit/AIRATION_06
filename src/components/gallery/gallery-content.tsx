@@ -32,6 +32,16 @@ interface GalleryItem {
 
 const GALLERY_ITEMS: GalleryItem[] = [
   {
+    id: 999,
+    category: "team",
+    src: "https://cdn.hirance.com/library/125ad1bc-67bd-43c9-ac97-858631187aff.webp",
+    alt: "Hirance Team",
+    title: "Our Team",
+    caption: "The core team behind the successful launch.",
+    date: "Lucknow Event",
+    aspectRatio: "aspect-[16/9]",
+  },
+  {
     id: 14,
     category: "keynote",
     src: "https://cdn.hirance.com/library/02a65975-4e14-4e72-8bb4-c365ea1a5264.webp",
@@ -241,16 +251,7 @@ const GALLERY_ITEMS: GalleryItem[] = [
     date: "Lucknow Event",
     aspectRatio: "aspect-[4/3]",
   },
-  {
-    id: 12,
-    category: "highlights",
-    src: "https://cdn.hirance.com/library/6ed62ee8-41cd-48f8-9f08-b57c2195f42c.webp",
-    alt: "Attendee Engagement at Hirance Lucknow Event",
-    title: "Guest Interactions",
-    caption: "Discussing direct chat features with candidates and recruiters.",
-    date: "Lucknow Event",
-    aspectRatio: "aspect-[4/3]",
-  },
+
 ];
 
 export function GalleryContent() {
@@ -280,7 +281,48 @@ export function GalleryContent() {
     return () => window.removeEventListener("keydown", handler);
   }, [lightboxIndex, closeLightbox, goPrev, goNext]);
 
+  const heroItem = GALLERY_ITEMS.find((i) => i.id === 999);
+  const footerItems = GALLERY_ITEMS.filter((i) => i.id === 10 || i.id === 6);
+  const gridItems = GALLERY_ITEMS.filter((i) => i.id !== 999 && i.id !== 10 && i.id !== 6);
   const current = lightboxIndex !== null ? GALLERY_ITEMS[lightboxIndex] : null;
+
+  const renderItem = (item: GalleryItem, index: number, isHero = false) => {
+    const originalIndex = GALLERY_ITEMS.findIndex((i) => i.id === item.id);
+    return (
+      <motion.div
+        key={item.id}
+        layout
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.95 }}
+        transition={{ duration: 0.4, delay: index * 0.04 }}
+        className="group relative overflow-hidden rounded-lg border border-slate-200/80 dark:border-slate-800/80 bg-white dark:bg-slate-900 shadow-sm transition-shadow duration-300 flex flex-col h-full"
+      >
+        <div
+          onClick={() => openLightbox(originalIndex)}
+          className={`relative w-full ${isHero ? 'aspect-[16/9]' : item.aspectRatio} overflow-hidden cursor-zoom-in bg-slate-100 dark:bg-slate-800`}
+        >
+          <Image
+            src={item.src}
+            alt={item.alt}
+            fill
+            quality={85}
+            className={`object-cover ${item.objectPosition || "object-top"} transition-opacity duration-300 hover:opacity-95`}
+            sizes={isHero ? "100vw" : "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"}
+          />
+        </div>
+        <div className="px-5 py-4 flex flex-col justify-start h-[104px] shrink-0 bg-white dark:bg-slate-900">
+          <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100 group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors line-clamp-1">
+            {item.title}
+          </h3>
+          <div className="w-5 h-[2px] bg-brand-600 dark:bg-brand-500 rounded-full my-1.5 shrink-0" />
+          <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed line-clamp-2">
+            {item.caption}
+          </p>
+        </div>
+      </motion.div>
+    );
+  };
 
   return (
     <main className="min-h-dvh bg-gradient-to-b from-white via-blue-50/70 to-slate-50/40 dark:from-[#060c18] dark:via-[#091124] dark:to-[#060c18] overflow-x-hidden text-slate-900 dark:text-slate-100">
@@ -290,9 +332,10 @@ export function GalleryContent() {
 
       <div className="mx-auto max-w-6xl px-4 sm:px-8 py-4 sm:py-6 space-y-16">
 
-        {/* ── CINEMATIC VIDEO RECAP (FULL VIEWPORT ON LOAD) ───── */}
-        <section aria-label="Event Video Highlight" className="min-h-[calc(100vh-6rem)] flex flex-col justify-center py-2">
-          <div className="mb-8 text-center flex flex-col items-center">
+        {/* ── PHOTO GALLERY SHOWCASE ─────────────────────────────── */}
+        <section aria-label="Event photo showcase">
+
+          <div className="mb-8 text-center flex flex-col items-center pt-8">
             <div className="relative inline-block px-4 sm:px-6 py-2 mb-1">
               {/* Transparent Brush Stroke Background PNG Spanning Full Text */}
               <div className="absolute inset-0 w-[120%] h-[160%] -left-[10%] -top-[30%] pointer-events-none opacity-90">
@@ -312,15 +355,54 @@ export function GalleryContent() {
               </svg>
 
               <h1 className="relative z-10 text-xl sm:text-2xl lg:text-3xl font-semibold text-[#0f172a] dark:text-white tracking-tight">
-                Official Launch Gallery
+                Highlights from our Lucknow launch event.
               </h1>
             </div>
             {
-              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 max-w-xl mx-auto">
-                Capturing the moments from our grand launch event in Lucknow
-              </p>}
+              // <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 max-w-xl mx-auto">
+              //   Highlights from our Lucknow launch event.
+              // </p>
+            }
           </div>
 
+          <div className="space-y-8">
+            {/* Top Row: 1 Image */}
+            <AnimatePresence mode="popLayout">
+              {heroItem && (
+                <div className="grid grid-cols-1 gap-6 sm:gap-7">
+                  {renderItem(heroItem, 0, true)}
+                </div>
+              )}
+            </AnimatePresence>
+
+            {/* Middle Rows: 4 Images per row */}
+            <AnimatePresence mode="popLayout">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-7">
+                {gridItems.map((item, index) => renderItem(item, index + 1))}
+              </div>
+            </AnimatePresence>
+
+            {/* Bottom Row: 2 Images per row */}
+            <AnimatePresence mode="popLayout">
+              {footerItems.length > 0 && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-7">
+                  {footerItems.map((item, index) => renderItem(item, index + gridItems.length + 1))}
+                </div>
+              )}
+            </AnimatePresence>
+          </div>
+        </section>
+
+        {/* ── CINEMATIC VIDEO RECAP (LAST) ───── */}
+        <section aria-label="Event Video Highlight" className="flex flex-col justify-center py-2 mt-16">
+          <div className="mb-8 text-center flex flex-col items-center">
+            <h2 className="text-2xl lg:text-3xl font-semibold text-[#0f172a] dark:text-white tracking-tight mb-2">
+              Watch The Highlights
+            </h2>
+            <p className="text-sm text-slate-600 dark:text-slate-400 max-w-xl mx-auto">
+              Relive the best moments of our launch event in this recap video.
+            </p>
+          </div>
           <div className="relative overflow-hidden rounded-lg border border-slate-200 dark:border-slate-800 bg-[#060c18] shadow-2xl w-full aspect-[16/9] sm:aspect-[18/8] min-h-[400px] sm:min-h-[500px]">
             {!videoOpen ? (
               <button
@@ -366,51 +448,6 @@ export function GalleryContent() {
                 />
               </div>
             )}
-          </div>
-        </section>
-
-        {/* ── PHOTO GALLERY SHOWCASE ─────────────────────────────── */}
-        <section aria-label="Event photo showcase">
-          {/* Clean 3-Column Layout */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7">
-            <AnimatePresence mode="popLayout">
-              {GALLERY_ITEMS.map((item, index) => (
-                <motion.div
-                  key={item.id}
-                  layout
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, scale: 0.95 }}
-                  transition={{ duration: 0.4, delay: index * 0.04 }}
-                  className="group relative overflow-hidden rounded-lg border border-slate-200/80 dark:border-slate-800/80 bg-white dark:bg-slate-900 shadow-sm transition-shadow duration-300 flex flex-col h-full"
-                >
-                  <div
-                    onClick={() => openLightbox(index)}
-                    className={`relative w-full ${item.aspectRatio} overflow-hidden cursor-zoom-in bg-slate-100 dark:bg-slate-800`}
-                  >
-                    <Image
-                      src={item.src}
-                      alt={item.alt}
-                      fill
-                      quality={85}
-                      className={`object-cover ${item.objectPosition || "object-top"} transition-opacity duration-300 hover:opacity-95`}
-                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                    />
-                  </div>
-
-                  {/* Card Description Footer with Equal Height */}
-                  <div className="px-5 py-4 flex flex-col justify-start h-[104px] shrink-0 bg-white dark:bg-slate-900">
-                    <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100 group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors line-clamp-1">
-                      {item.title}
-                    </h3>
-                    <div className="w-5 h-[2px] bg-brand-600 dark:bg-brand-500 rounded-full my-1.5 shrink-0" />
-                    <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed line-clamp-2">
-                      {item.caption}
-                    </p>
-                  </div>
-                </motion.div>
-              ))}
-            </AnimatePresence>
           </div>
         </section>
 
