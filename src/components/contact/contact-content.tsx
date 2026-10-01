@@ -27,7 +27,7 @@ const contactFaqs = [
   {
     question: "How fast does the Hirance support team respond?",
     answer:
-      "Our support team typically responds within 24 hours. For urgent employer queries, you can call or WhatsApp us directly at +91 9793780913 during business hours.",
+      "Our support team typically responds within 24 hours. For urgent employer queries, you can call or WhatsApp us directly at +91 7309510718, +91 9151410718 during business hours.",
   },
   {
     question: "How can employers get dedicated onboarding assistance?",
@@ -64,8 +64,8 @@ const CONTACT_CHANNELS = [
     id: "phone",
     icon: Phone,
     label: "Call or WhatsApp",
-    value: "+91 9793780913",
-    href: "tel:+919793780913",
+    value: "+91 7309510718, +91 9151410718",
+    href: "tel:+917309510718",
     subtext: "Mon - Sat from 9am to 7pm IST",
   },
   {

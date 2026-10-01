@@ -836,28 +836,17 @@ export function JobsContent({
             <button
               type="button"
               onClick={() => {
-                setFilters((f) => ({
-                  ...f,
-                  citySlug: f.citySlug === "lucknow" ? "all" : "lucknow",
-                }));
-                setCurrentPage(1);
-              }}
-              className={cn(
-                "rounded-lg border px-2.5 py-1 font-medium transition-colors cursor-pointer",
-                filters.citySlug === "lucknow"
-                  ? "border-brand-500 bg-brand-50 text-brand-700 dark:bg-brand-950/40 dark:text-brand-300 font-semibold"
-                  : "border-border/70 bg-background/60 text-muted-foreground hover:border-brand-500/40 hover:text-foreground"
-              )}
-            >
-              Lucknow
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                setFilters((f) => ({
-                  ...f,
-                  citySlug: f.citySlug === "noida" ? "all" : "noida",
-                }));
+                setFilters((f) => {
+                  const next = f.citySlug === "noida" ? "all" : "noida";
+                  const match = cities.find(
+                    (c) => c.name.toLowerCase().replace(/[^a-z0-9]+/g, "-") === next
+                  );
+                  return {
+                    ...f,
+                    citySlug: next,
+                    cityId: match?.id || "",
+                  };
+                });
                 setCurrentPage(1);
               }}
               className={cn(
@@ -872,10 +861,17 @@ export function JobsContent({
             <button
               type="button"
               onClick={() => {
-                setFilters((f) => ({
-                  ...f,
-                  citySlug: f.citySlug === "gurgaon" ? "all" : "gurgaon",
-                }));
+                setFilters((f) => {
+                  const next = f.citySlug === "gurgaon" ? "all" : "gurgaon";
+                  const match = cities.find(
+                    (c) => c.name.toLowerCase().replace(/[^a-z0-9]+/g, "-") === next
+                  );
+                  return {
+                    ...f,
+                    citySlug: next,
+                    cityId: match?.id || "",
+                  };
+                });
                 setCurrentPage(1);
               }}
               className={cn(
@@ -925,7 +921,7 @@ export function JobsContent({
         {/* Main 2-Column Layout: Left Filters + Middle Jobs List */}
         <div className="grid grid-cols-12 gap-8 items-start">
           {/* LEFT SIDEBAR: FILTERS */}
-          <div className="col-span-12 lg:col-span-4 xl:col-span-3">
+          <div className="col-span-12 lg:col-span-4 xl:col-span-3 lg:sticky lg:top-20 self-start">
             <JobFiltersSidebar
               filters={filters}
               onChange={(newFilters) => {

@@ -189,7 +189,7 @@ export function GrievancesContent() {
                 <p>Name: <span className="font-semibold text-slate-800 dark:text-slate-200">Grievance Officer, Hirance</span></p>
                 <p>Email: <a href="mailto:grievance@hirance.com" className="text-blue-600 dark:text-blue-400 font-medium hover:underline">grievance@hirance.com</a></p>
                 <p>Alternate: <a href="mailto:hello@hirance.com" className="text-blue-600 dark:text-blue-400 font-medium hover:underline">hello@hirance.com</a></p>
-                <p>Phone: <a href="tel:+919793780913" className="text-blue-600 dark:text-blue-400 font-medium hover:underline">+91 9793780913</a></p>
+                <p>Phone: <a href="tel:+917309510718" className="text-blue-600 dark:text-blue-400 font-medium hover:underline">+91 7309510718, +91 9151410718</a></p>
                 <p>Address: 8/4, Sector-4, Jankipuram, Lucknow – 226021, Uttar Pradesh, India</p>
                 <p>Working hours: Monday – Friday, 10:00 AM – 6:00 PM IST</p>
               </div>

@@ -208,7 +208,7 @@ export function FraudAlertContent() {
                 { label: "Website", value: "hirance.com", icon: <Eye className="w-4 h-4 text-emerald-600" /> },
                 { label: "Official Email Domain", value: "@hirance.com only", icon: <Mail className="w-4 h-4 text-emerald-600" /> },
                 { label: "Support Email", value: "hello@hirance.com", icon: <Mail className="w-4 h-4 text-emerald-600" /> },
-                { label: "Contact Number", value: "+91 9793780913", icon: <PhoneCall className="w-4 h-4 text-emerald-600" /> },
+                { label: "Contact Number", value: "+91 7309510718, +91 9151410718", icon: <PhoneCall className="w-4 h-4 text-emerald-600" /> },
               ].map((item) => (
                 <div key={item.label} className="flex items-center gap-4 rounded-xl border border-emerald-200 dark:border-emerald-800/60 bg-emerald-50/50 dark:bg-emerald-950/20 px-5 py-4">
                   {item.icon}
@@ -250,7 +250,7 @@ export function FraudAlertContent() {
               <div className="space-y-2 text-[14px] text-slate-600 dark:text-slate-300 border-t border-slate-100 dark:border-slate-800 pt-4">
                 <p>Email: <a href="mailto:fraud@hirance.com" className="text-blue-600 dark:text-blue-400 font-medium hover:underline">fraud@hirance.com</a></p>
                 <p>General: <a href="mailto:hello@hirance.com" className="text-blue-600 dark:text-blue-400 font-medium hover:underline">hello@hirance.com</a></p>
-                <p>Phone: <a href="tel:+919793780913" className="text-blue-600 dark:text-blue-400 font-medium hover:underline">+91 9793780913</a></p>
+                <p>Phone: <a href="tel:+917309510718" className="text-blue-600 dark:text-blue-400 font-medium hover:underline">+91 7309510718, +91 9151410718</a></p>
                 <p>Contact form: <Link href="/contact" className="text-blue-600 dark:text-blue-400 font-medium hover:underline">hirance.com/contact</Link></p>
               </div>
               <p className="mt-4 text-[13px] text-slate-500 dark:text-slate-400">

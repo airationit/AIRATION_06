@@ -301,7 +301,7 @@ export function JobFiltersSidebar({
               />
             </div>
 
-            <div className="space-y-1 max-h-48 overflow-y-auto pr-1">
+            <div className="space-y-1 pr-1">
               {filteredRoles.map((role) => {
                 const isSelected =
                   filters.roleId === role.id ||
@@ -736,7 +736,7 @@ export function JobFiltersSidebar({
               />
             </div>
 
-            <div className="space-y-1.5 max-h-48 overflow-y-auto pr-1">
+            <div className="space-y-1.5 pr-1">
               {filteredCities.map((city) => {
                 const isChecked = filters.citySlug === city.slug || filters.cityId === city.id;
                 return (
@@ -799,7 +799,7 @@ export function JobFiltersSidebar({
   return (
     <>
       {/* Desktop Sticky Sidebar */}
-      <aside className="sticky top-28 hidden lg:block rounded-2xl border border-border/80 bg-card p-5 shadow-xs">
+      <aside className="sticky top-20 hidden lg:block rounded-2xl border border-border/80 bg-card p-5 shadow-[0_4px_24px_rgba(0,0,0,0.03)] dark:shadow-[0_4px_24px_rgba(0,0,0,0.2)] max-h-[calc(100vh-5.5rem)] overflow-y-auto overscroll-contain [scrollbar-width:thin] [scrollbar-color:rgba(156,163,175,0.3)_transparent]">
         {content}
       </aside>
 

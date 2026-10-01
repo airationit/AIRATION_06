@@ -41,7 +41,7 @@ export function RichDescription({
 
   if (!renderedContent) {
     return (
-      <p className={`text-[15px] leading-relaxed text-muted-foreground ${className}`}>
+      <p className={`text-sm leading-relaxed text-muted-foreground ${className}`}>
         {fallbackText}
       </p>
     );
@@ -49,7 +49,7 @@ export function RichDescription({
 
   if (renderedContent.type === "plain") {
     return (
-      <div className={`space-y-3 text-[15px] sm:text-base leading-relaxed text-foreground/90 ${className}`}>
+      <div className={`space-y-3 text-sm leading-relaxed text-foreground/90 ${className}`}>
         {renderedContent.paragraphs.map((para, idx) => {
           // If paragraph looks like bullet list
           if (para.includes("\n- ") || para.includes("\n• ") || para.startsWith("- ") || para.startsWith("• ")) {
@@ -81,7 +81,7 @@ export function RichDescription({
 
   return (
     <div
-      className={`prose-job text-[15px] sm:text-base leading-relaxed text-foreground/90 ${className}`}
+      className={`prose-job text-sm leading-relaxed text-foreground/90 [&_p]:text-sm [&_li]:text-sm [&_h1]:text-base [&_h1]:font-medium [&_h2]:text-base [&_h2]:font-medium [&_h3]:text-base [&_h3]:font-medium [&_h4]:text-base [&_h4]:font-medium [&_h5]:text-base [&_h5]:font-medium [&_h6]:text-base [&_h6]:font-medium ${className}`}
       dangerouslySetInnerHTML={{ __html: renderedContent.html }}
     />
   );

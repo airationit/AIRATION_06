@@ -51,7 +51,7 @@ export default function GrievancesPage() {
       name: "Hirance Private Limited",
       url: "https://hirance.com",
       email: "grievance@hirance.com",
-      telephone: "+91-9793780913",
+      telephone: "+91-7309510718",
       address: {
         "@type": "PostalAddress",
         streetAddress: "8/4, Sector-4, Jankipuram",

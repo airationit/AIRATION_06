@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { fetchBlogBySlug, fetchBlogSitemap } from "@/lib/api/blogs";
+import { fetchBlogBySlug, fetchBlogSitemap, fetchBlogs } from "@/lib/api/blogs";
 import { BlogDetailContent } from "@/components/blog/blog-detail-content";
+import { fetchJobs } from "@/lib/api/jobs";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -82,6 +83,37 @@ export default async function BlogPostPage({ params }: PageProps) {
     notFound();
   }
 
+  // Fetch dynamic featured jobs for the sidebar
+  let featuredJobs: any[] = [];
+  try {
+    const jobsRes = await fetchJobs({ ordering: "-published_at", page_size: 2 }, { revalidate: 3600 });
+    if (jobsRes?.data) {
+      featuredJobs = jobsRes.data;
+    }
+  } catch (e) {
+    console.warn("Failed to fetch featured jobs for blog sidebar", e);
+  }
+
+  // Fallback pagination: fetch latest blogs to populate next/prev if not returned by API
+  if (!post.previous_post && !post.next_post) {
+    try {
+      const recentBlogs = await fetchBlogs({ page_size: 10 }, { revalidate: 3600 });
+      if (recentBlogs?.data) {
+        const idx = recentBlogs.data.findIndex((b) => b.slug === post.slug);
+        if (idx !== -1) {
+          if (idx < recentBlogs.data.length - 1) post.previous_post = recentBlogs.data[idx + 1] as any;
+          if (idx > 0) post.next_post = recentBlogs.data[idx - 1] as any;
+        } else {
+          // If not in the first 10, just use the latest two as generic suggestions
+          post.next_post = recentBlogs.data[0] as any;
+          if (recentBlogs.data.length > 1) post.previous_post = recentBlogs.data[1] as any;
+        }
+      }
+    } catch (e) {
+      console.warn("Failed to fetch recent blogs for pagination fallback", e);
+    }
+  }
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
@@ -114,7 +146,7 @@ export default async function BlogPostPage({ params }: PageProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <BlogDetailContent post={post} />
+      <BlogDetailContent post={post} featuredJobs={featuredJobs} />
     </>
   );
 }

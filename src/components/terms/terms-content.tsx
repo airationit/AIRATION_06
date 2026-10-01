@@ -970,10 +970,10 @@ export function TermsContent() {
                 <p>
                   Phone:{" "}
                   <a
-                    href="tel:+919793780913"
+                    href="tel:+917309510718"
                     className="text-blue-600 dark:text-blue-400 hover:underline font-medium"
                   >
-                    +91 9793780913
+                    +91 7309510718, +91 9151410718
                   </a>
                 </p>
               </div>
