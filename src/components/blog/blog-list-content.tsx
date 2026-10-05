@@ -480,7 +480,7 @@ export function BlogListContent({
   }, [allBackendCategories, filters.category]);
 
   return (
-    <main className="relative flex min-h-dvh flex-col overflow-x-clip bg-white dark:bg-background text-foreground">
+    <main className="relative flex min-h-dvh flex-col overflow-x-clip bg-background text-foreground">
       {/* Google Sans Flex and Caveat handwritten font styling for doodle annotations */}
       <style jsx global>{`
         @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&display=swap');
@@ -497,7 +497,7 @@ export function BlogListContent({
       {/* ========================================================
           1. HERO SECTION (Full-Width Top Banner Layout)
           ======================================================== */}
-      <header className="relative pt-8 pb-6 sm:pt-10 sm:pb-8 lg:pb-10 overflow-hidden">
+      <header className="relative pt-6 pb-3 sm:pt-8 sm:pb-4 lg:pb-5 overflow-hidden">
         {/* Ambient subtle light blue mesh glow */}
         <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden" aria-hidden="true">
           <div className="absolute top-1/2 left-1/3 -translate-y-1/2 -translate-x-1/2 w-[600px] h-[350px] bg-gradient-to-tr from-blue-100/50 via-sky-50/40 to-transparent dark:from-blue-900/15 blur-3xl rounded-full" />
@@ -684,7 +684,7 @@ export function BlogListContent({
       {/* ========================================================
           2. FEED & SIDEBAR SECTION (2-Column Main Content Layout)
           ======================================================== */}
-      <section id="blog-feed" className="relative pb-16">
+      <section id="blog-feed" className="relative pb-2">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col lg:flex-row gap-8 xl:gap-12 items-start">
             
@@ -693,6 +693,82 @@ export function BlogListContent({
                 ---------------------------------------------------- */}
             <div className="flex-1 min-w-0 w-full">
               
+              {/* Quick Filter Category Pills */}
+              <div className="flex flex-wrap items-center gap-2 mb-1">
+                {visiblePills.map((cat) => {
+                  const isActive = filters.category === cat.slug;
+                  return (
+                    <button
+                      key={cat.slug}
+                      type="button"
+                      onClick={() => {
+                        setCategory(cat.slug);
+                        startTransition(() => {
+                          loadBlogs();
+                        });
+                      }}
+                      className={`inline-flex items-center rounded-full px-4 py-2 text-xs font-semibold transition-all cursor-pointer ${
+                        isActive
+                          ? "bg-blue-600 text-white shadow-sm shadow-blue-600/25"
+                          : "bg-white dark:bg-muted/40 text-slate-600 dark:text-slate-300 hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-950/30 border border-slate-200/60 dark:border-border/40"
+                      }`}
+                    >
+                      {cat.name}
+                    </button>
+                  );
+                })}
+
+                {/* More Categories Dropdown */}
+                {allBackendCategories.length > 5 && (
+                  <div className="relative" ref={dropdownRef}>
+                    <button
+                      type="button"
+                      onClick={() => setShowCategoryDropdown(!showCategoryDropdown)}
+                      className="inline-flex items-center gap-1 rounded-full px-4 py-2 text-xs font-semibold bg-white dark:bg-muted/40 text-slate-600 dark:text-slate-300 hover:bg-blue-50 hover:text-blue-600 border border-slate-200/60 dark:border-border/40 transition-all cursor-pointer"
+                    >
+                      More
+                      <ChevronDown className={`h-3 w-3 transition-transform ${showCategoryDropdown ? "rotate-180" : ""}`} />
+                    </button>
+
+                    <AnimatePresence>
+                      {showCategoryDropdown && (
+                        <motion.div
+                          initial={{ opacity: 0, y: 6, scale: 0.97 }}
+                          animate={{ opacity: 1, y: 0, scale: 1 }}
+                          exit={{ opacity: 0, y: 6, scale: 0.97 }}
+                          transition={{ duration: 0.15 }}
+                          className="absolute left-0 top-full mt-2 z-40 w-56 rounded-2xl border border-slate-200/90 dark:border-border bg-white dark:bg-card shadow-xl p-2 max-h-64 overflow-y-auto"
+                        >
+                          {allBackendCategories.slice(5).map((cat) => {
+                            const isActive = filters.category === cat.slug;
+                            return (
+                              <button
+                                key={cat.slug}
+                                type="button"
+                                onClick={() => {
+                                  setCategory(cat.slug);
+                                  setShowCategoryDropdown(false);
+                                  startTransition(() => {
+                                    loadBlogs();
+                                  });
+                                }}
+                                className={`w-full flex items-center justify-between rounded-xl px-3 py-2 text-xs font-medium transition-colors cursor-pointer ${
+                                  isActive
+                                    ? "bg-blue-50 text-blue-600 dark:bg-blue-950/40 dark:text-blue-400"
+                                    : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-muted/40"
+                                }`}
+                              >
+                                <span className="truncate">{cat.name}</span>
+                                {isActive && <Check className="h-3.5 w-3.5 shrink-0" />}
+                              </button>
+                            );
+                          })}
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                )}
+              </div>
 
 
               {/* Loading Spinner */}
@@ -744,7 +820,7 @@ export function BlogListContent({
                             href={`/blog/${post.slug}`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="block relative aspect-[16/10] w-full overflow-hidden bg-slate-100 dark:bg-muted/30"
+                            className="block relative aspect-video w-full overflow-hidden bg-slate-100 dark:bg-muted/30"
                           >
                             {post.cover_image?.url ? (
                               <img
@@ -773,7 +849,7 @@ export function BlogListContent({
                             </p>
 
                             {/* Post Title */}
-                            <h2 className="text-[16px] sm:text-[17px] font-bold text-slate-900 dark:text-white leading-[1.35] line-clamp-2 group-hover:text-blue-600 transition-colors">
+                            <h2 className="text-[16px] sm:text-[17px] font-semibold text-slate-900 dark:text-white leading-[1.35] line-clamp-2 group-hover:text-blue-600 transition-colors">
                               <Link
                                 href={`/blog/${post.slug}`}
                                 target="_blank"
@@ -829,7 +905,7 @@ export function BlogListContent({
 
               {/* Pagination Controls */}
               {!isLoading && displayPosts.length > 0 && (
-                <div className="mt-12 flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-slate-100 dark:border-border/40">
+                <div className="mt-2 flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-slate-100 dark:border-border/40">
                   <div className="text-xs sm:text-sm font-medium text-slate-500 dark:text-slate-400">
                     Page <span className="font-bold text-slate-900 dark:text-white">{currentPage}</span> of{" "}
                     <span className="font-bold text-slate-900 dark:text-white">{effectiveTotalPages}</span>{" "}
@@ -905,6 +981,62 @@ export function BlogListContent({
                 RIGHT COLUMN: Sidebar (Matches Screenshot)
                 ---------------------------------------------------- */}
             <aside className="w-full lg:w-[350px] xl:w-[370px] shrink-0 space-y-6 lg:sticky lg:top-24">
+
+              {/* Card 1: "Latest Articles" */}
+              <div className="rounded-[24px] border border-slate-200/80 dark:border-border/60 bg-white dark:bg-card p-6 shadow-sm">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-[16px] font-semibold text-slate-900 dark:text-white">
+                    Latest Articles
+                  </h3>
+                  <Link
+                    href="/blog"
+                    className="text-xs font-semibold text-blue-600 hover:underline flex items-center gap-1 cursor-pointer"
+                  >
+                    <span>View all</span>
+                    <ArrowRight className="h-3 w-3" />
+                  </Link>
+                </div>
+
+                <div className="space-y-3.5">
+                  {latestSidebarPosts.map((post) => (
+                    <Link
+                      key={post.id}
+                      href={`/blog/${post.slug}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group flex items-start gap-3 transition-colors"
+                    >
+                      {/* Thumbnail */}
+                      <div className="h-14 w-14 rounded-xl overflow-hidden bg-slate-100 dark:bg-muted/30 shrink-0 border border-slate-100 dark:border-border/40">
+                        {post.cover_image?.url ? (
+                          <img
+                            src={post.cover_image.url}
+                            alt={post.title}
+                            className="h-full w-full object-cover"
+                            loading="lazy"
+                          />
+                        ) : (
+                          <div className="h-full w-full bg-gradient-to-br from-blue-600/10 to-indigo-600/5" />
+                        )}
+                      </div>
+
+                      {/* Article Info */}
+                      <div className="min-w-0 flex-1">
+                        <p className="text-[10px] font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider mb-0.5">
+                          {post.category?.name || "HIRING"}
+                        </p>
+                        <h4 className="text-[13px] font-semibold text-slate-900 dark:text-white leading-[1.35] line-clamp-2 group-hover:text-blue-600 transition-colors">
+                          {post.title}
+                        </h4>
+                        <p className="text-[10px] text-slate-400 dark:text-slate-500 mt-1">
+                          {formatDate(post.published_at)} • {formatBlogReadTime(post.read_time)}
+                        </p>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+
               
               {/* Card 2: "Explore Jobs" */}
               <div className="rounded-[24px] border border-slate-200/80 dark:border-border/60 bg-white dark:bg-card p-6 shadow-sm">
@@ -982,7 +1114,7 @@ export function BlogListContent({
 
               {/* Card 3: "Popular Categories" */}
               <div className="rounded-[24px] border border-slate-200/80 dark:border-border/60 bg-white dark:bg-card p-6 shadow-sm">
-                <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center justify-between mb-2">
                   <h3 className="text-[16px] font-bold text-slate-900 dark:text-white">
                     Popular Categories
                   </h3>
@@ -991,7 +1123,7 @@ export function BlogListContent({
                   </span>
                 </div>
 
-                <div className="divide-y divide-slate-100 dark:divide-border/40">
+                <div className="flex flex-col">
                   {allBackendCategories
                     .filter((cat) => cat.slug !== "all")
                     .slice(0, 8)
@@ -1006,26 +1138,26 @@ export function BlogListContent({
                             setCategory(cat.slug);
                             window.scrollTo({ top: 380, behavior: "smooth" });
                           }}
-                          className="w-full py-3 flex items-center justify-between text-left group cursor-pointer transition-colors"
+                          className="w-full py-1.5 flex items-center justify-between text-left group cursor-pointer transition-colors"
                         >
-                          <div className="flex items-center gap-3 min-w-0">
-                            <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${getCategoryColor(idx)}`}>
-                              <Icon className="h-4 w-4" />
+                          <div className="flex items-center gap-2.5 min-w-0">
+                            <div className="w-5 h-5 rounded-md flex items-center justify-center shrink-0 bg-slate-100 dark:bg-muted/40">
+                              <Icon className="h-[10px] w-[10px] text-slate-400 dark:text-slate-500" />
                             </div>
-                            <span className={`text-[13px] font-medium transition-colors truncate ${
+                            <span className={`text-[12px] font-normal transition-colors truncate ${
                               isCatActive
-                                ? "text-blue-600 font-bold"
-                                : "text-slate-700 dark:text-slate-300 group-hover:text-blue-600"
+                                ? "text-blue-600 font-medium"
+                                : "text-slate-400 dark:text-slate-500 group-hover:text-blue-600"
                             }`}>
                               {cat.name}
                             </span>
                           </div>
 
-                          <div className="flex items-center gap-1.5 shrink-0 ml-2">
-                            <span className="text-xs font-semibold text-blue-600">
+                          <div className="flex items-center gap-1 shrink-0 ml-2">
+                            <span className="text-[12px] font-medium text-slate-400 dark:text-slate-500">
                               {cat.post_count !== undefined ? cat.post_count : 0}
                             </span>
-                            <ChevronRight className="h-3.5 w-3.5 text-slate-400 group-hover:text-blue-600 transition-colors" />
+                            <ChevronRight className="h-3 w-3 text-slate-300 group-hover:text-blue-600 transition-colors" />
                           </div>
                         </button>
                       );
@@ -1042,35 +1174,50 @@ export function BlogListContent({
       {/* ========================================================
           3. PRE-FOOTER CTA BANNER: "Experience Swipe-Based Hiring Today"
           ======================================================== */}
-      <section className="relative pb-4 pt-1 sm:pb-6 sm:pt-1 overflow-hidden" aria-labelledby="cta-experience-heading">
+      <section className="relative pb-8 pt-10 sm:pt-14 lg:pt-16 overflow-hidden" aria-labelledby="cta-experience-heading">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           
-          <div 
-            className="relative rounded-[28px] sm:rounded-[32px] bg-[#EFF6FF] border border-blue-100/90 dark:border-blue-900/40 px-6 sm:px-10 lg:px-12 py-3 lg:py-3 bg-cover bg-center bg-no-repeat"
-            style={{ backgroundImage: "url('/pics/cta_bg.png')" }}
-          >
+          {/* Main Card with minimum corner radius (rounded-2xl) */}
+          <div className="relative rounded-2xl border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 overflow-hidden shadow-xs">
             
-            <div className="relative flex flex-col lg:flex-row items-center justify-between gap-6 lg:gap-8">
+            {/* 2-Column Grid Layout: col-8 (left) & col-4 (right) */}
+            <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 items-center gap-8 lg:gap-10 p-6 sm:p-10 lg:p-12">
               
-              {/* Left Column: Heading, Subtext, Action Buttons */}
-              <div className="lg:w-3/5 flex flex-col items-start relative z-10">
-                {/* Rule 7 Strictly Obeyed: NO CHIP over title */}
+              {/* Left Column: col-8 */}
+              <div className="lg:col-span-8 flex flex-col justify-center">
                 <h2
                   id="cta-experience-heading"
-                  className="text-3xl sm:text-4xl lg:text-[44px] font-semibold text-slate-900 dark:text-white tracking-tight leading-[1.15]"
+                  className="text-2xl sm:text-3xl lg:text-[38px] font-semibold text-slate-900 dark:text-white tracking-tight leading-[1.15]"
                 >
-                  Experience <span className="text-blue-600">Swipe-Based</span><br className="hidden lg:block" /> Hiring Today
+                  Experience <span className="text-blue-600">Swipe-Based Hiring</span><br /> 
+                  <span className="text-slate-900 dark:text-white">Today</span>
                 </h2>
 
-                <p className="mt-4 text-[15px] sm:text-[16px] text-slate-600 dark:text-slate-300 leading-relaxed max-w-lg">
-                  Whether you are recruiting software engineers or looking for your next career move, Hirance makes hiring instant with zero forms.
+                <p className="mt-3.5 text-[14px] sm:text-[14px] text-slate-600 dark:text-slate-300 leading-relaxed max-w-2xl line-clamp-2">
+                  Whether you're recruiting top software talent or searching for your next career move, Hirance makes hiring instant with zero forms. Match directly with verified profiles, swipe tailored job cards, and connect in seconds.
                 </p>
 
-                <div className="mt-5 flex flex-wrap items-center gap-3 sm:gap-4">
-                  {/* Apply for Jobs (Dark Pill Button with Google Play Icon) */}
-                  <GooglePlayButton label="Apply for Jobs" />
+                {/* Inline Stats Row */}
+                <div className="mt-6 flex flex-wrap items-center gap-6 sm:gap-8">
+                  <div>
+                    <p className="text-[18px] sm:text-[20px] font-semibold text-slate-900 dark:text-white leading-none">50K+</p>
+                    <p className="text-[12px] font-semibold text-slate-500 dark:text-slate-400 mt-1">Active Jobs</p>
+                  </div>
+                  <div className="w-px h-8 bg-slate-200 dark:bg-border/60" />
+                  <div>
+                    <p className="text-[18px] sm:text-[20px] font-semibold text-slate-900 dark:text-white leading-none">2M+</p>
+                    <p className="text-[12px] font-semibold text-slate-500 dark:text-slate-400 mt-1">Candidates</p>
+                  </div>
+                  <div className="w-px h-8 bg-slate-200 dark:bg-border/60" />
+                  <div>
+                    <p className="text-[18px] sm:text-[20px] font-semibold text-slate-900 dark:text-white leading-none">60s</p>
+                    <p className="text-[12px] font-semibold text-slate-500 dark:text-slate-400 mt-1">To Post a Job</p>
+                  </div>
+                </div>
 
-                  {/* Post a Job in 60s (White Pill Button) */}
+                {/* CTA Action Buttons */}
+                <div className="mt-7 flex flex-wrap items-center gap-3 sm:gap-4">
+                  <GooglePlayButton label="Apply for Jobs" />
                   <a
                     href="https://employer.hirance.com/"
                     target="_blank"
@@ -1082,16 +1229,23 @@ export function BlogListContent({
                 </div>
               </div>
 
-              {/* Right Column: 3D Phone Mockup */}
-              <div className="relative flex items-center justify-center pointer-events-none mt-6 lg:mt-0 w-full lg:w-auto z-20">
-                <div className="relative w-[180px] sm:w-[210px] lg:w-[220px] pointer-events-auto lg:mr-8">
-                  <img
-                    src="/pics/mobile_mockup.png"
-                    alt="Hirance Swipe App Mockup"
-                    className="w-full h-auto object-contain drop-shadow-2xl hover:scale-105 transition-transform duration-500"
-                    loading="lazy"
-                  />
-                </div>
+              {/* Right Column: col-4 */}
+              <div className="lg:col-span-4 relative flex items-center justify-center min-h-[240px] sm:min-h-[280px] lg:min-h-[320px]">
+                {/* Background Shape Image behind Phone Mockup */}
+                <img
+                  src="/pics/bg-shape.png"
+                  alt=""
+                  aria-hidden="true"
+                  className="absolute pointer-events-none z-0 w-[400px] sm:w-[480px] lg:w-[540px] max-w-none h-auto object-contain top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+                />
+
+                {/* Tilted Mobile Phone Image (Static) */}
+                <img
+                  src="/pics/mobile_mockup.png"
+                  alt="Hirance Swipe App Mockup"
+                  className="relative z-10 max-h-[260px] sm:max-h-[300px] lg:max-h-[340px] w-auto object-contain drop-shadow-[0_15px_30px_rgba(37,99,235,0.22)] transform rotate-6"
+                  loading="lazy"
+                />
               </div>
 
             </div>
