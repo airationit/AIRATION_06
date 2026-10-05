@@ -497,19 +497,19 @@ export function BlogListContent({
       {/* ========================================================
           1. HERO SECTION (Full-Width Top Banner Layout)
           ======================================================== */}
-      <header className="relative pt-10 pb-12 sm:pt-14 sm:pb-16 overflow-hidden">
+      <header className="relative pt-8 pb-6 sm:pt-10 sm:pb-8 lg:pb-10 overflow-hidden">
         {/* Ambient subtle light blue mesh glow */}
         <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden" aria-hidden="true">
           <div className="absolute top-1/2 left-1/3 -translate-y-1/2 -translate-x-1/2 w-[600px] h-[350px] bg-gradient-to-tr from-blue-100/50 via-sky-50/40 to-transparent dark:from-blue-900/15 blur-3xl rounded-full" />
         </div>
 
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-12 gap-8 lg:gap-10 items-center">
+          <div className="grid lg:grid-cols-12 gap-8 lg:gap-10 items-start">
             
             {/* Left Content (Title, Subtitle, Search) */}
             <div className="lg:col-span-7 flex flex-col items-start">
               {/* NOTE: Rule 7 strictly obeyed: No chip badge over section or title */}
-              <h1 className="text-3xl sm:text-5xl lg:text-[54px] font-extrabold tracking-tight text-slate-900 dark:text-white leading-[1.12]">
+              <h1 className="text-3xl sm:text-5xl lg:text-[54px] font-semibold tracking-tight text-slate-900 dark:text-white leading-[1.12]">
                 Insights on <span className="text-blue-600">Hiring Velocity</span>
               </h1>
               
@@ -526,7 +526,7 @@ export function BlogListContent({
                     loadBlogs();
                   });
                 }}
-                className="relative flex items-center w-full max-w-xl mt-7"
+                className="relative flex items-center w-full max-w-xl mt-5"
                 role="search"
                 aria-label="Search hiring articles"
               >
@@ -567,7 +567,7 @@ export function BlogListContent({
             </div>
 
             {/* Right Graphic: Stacked Swipe Cards with 'Better Hiring Insights' Doodle */}
-            <div className="lg:col-span-5 relative flex items-center justify-center lg:justify-end min-h-[290px]">
+            <div className="lg:col-span-5 relative flex items-center justify-center lg:justify-end">
               
               {/* Soft Radial Ambient Glow */}
               <div className="absolute w-72 h-72 rounded-full bg-blue-100/70 dark:bg-blue-950/40 blur-2xl -z-10" />
@@ -693,116 +693,7 @@ export function BlogListContent({
                 ---------------------------------------------------- */}
             <div className="flex-1 min-w-0 w-full">
               
-              {/* Category Filter Pills Bar */}
-              <div className="relative flex items-center justify-between gap-2">
-                {/* Horizontal Scrollable Pills */}
-                <nav aria-label="Blog categories" className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none flex-1 min-w-0">
-                  {visiblePills.map((pill) => {
-                    const isActive =
-                      (pill.slug === "all" && filters.category === "all") ||
-                      filters.category === pill.slug;
 
-                    return (
-                      <button
-                        key={pill.slug}
-                        type="button"
-                        onClick={() => setCategory(pill.slug)}
-                        className={`inline-flex items-center gap-1.5 px-4 sm:px-5 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-all duration-200 cursor-pointer ${
-                          isActive
-                            ? "bg-blue-600 text-white shadow-sm shadow-blue-600/25"
-                            : "bg-white dark:bg-card border border-slate-200/90 dark:border-border/80 text-slate-600 dark:text-slate-300 hover:border-blue-500/40 hover:text-blue-600"
-                        }`}
-                      >
-                        <span>{pill.name}</span>
-                        {pill.slug === "all" && <ChevronDown className="h-3 w-3 opacity-80" />}
-                      </button>
-                    );
-                  })}
-                </nav>
-
-                {/* More Categories Dropdown (Positioned outside overflow-x container so never clipped!) */}
-                <div className="relative shrink-0" ref={dropdownRef}>
-                  <button
-                    type="button"
-                    onClick={() => setShowCategoryDropdown((prev) => !prev)}
-                    className={`inline-flex items-center justify-center w-8 h-8 rounded-full border text-xs font-bold transition-all cursor-pointer ${
-                      showCategoryDropdown
-                        ? "bg-blue-600 text-white border-blue-600 shadow-sm"
-                        : "bg-white dark:bg-card border-slate-200/90 dark:border-border/80 text-slate-600 dark:text-slate-300 hover:border-blue-500/40 hover:text-blue-600"
-                    }`}
-                    aria-label="More categories"
-                    aria-expanded={showCategoryDropdown}
-                  >
-                    ···
-                  </button>
-
-                  {/* Dropdown Menu */}
-                  {showCategoryDropdown && (
-                    <div className="absolute right-0 top-full mt-2 z-50 w-72 rounded-2xl border border-slate-200/90 dark:border-border/80 bg-white dark:bg-card p-2 shadow-2xl animate-in fade-in zoom-in-95 duration-150">
-                      <div className="flex items-center justify-between px-3 py-1.5 border-b border-slate-100 dark:border-border/40 text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">
-                        <span>All Categories ({allBackendCategories.length})</span>
-                      </div>
-                      <div className="max-h-64 overflow-y-auto space-y-0.5">
-                        {allBackendCategories.map((cat, idx) => {
-                          const Icon = getCategoryIcon(cat.name, cat.slug);
-                          const isCatActive = filters.category === cat.slug;
-                          return (
-                            <button
-                              key={cat.slug}
-                              type="button"
-                              onClick={() => {
-                                setCategory(cat.slug);
-                                setShowCategoryDropdown(false);
-                              }}
-                              className={`w-full text-left px-3 py-2 text-xs font-medium rounded-xl transition-colors flex items-center justify-between cursor-pointer ${
-                                isCatActive
-                                  ? "bg-blue-50 dark:bg-blue-900/30 text-blue-600 font-bold"
-                                  : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-muted/40 hover:text-blue-600"
-                              }`}
-                            >
-                              <div className="flex items-center gap-2 truncate">
-                                <div className={`w-6 h-6 rounded-lg flex items-center justify-center shrink-0 ${getCategoryColor(idx)}`}>
-                                  <Icon className="h-3.5 w-3.5" />
-                                </div>
-                                <span className="truncate">{cat.name}</span>
-                              </div>
-                              <span className="text-[10px] text-blue-600 font-semibold ml-2 shrink-0">
-                                {cat.post_count !== undefined ? cat.post_count : 0}
-                              </span>
-                            </button>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {/* Active Filters Clear Bar */}
-              {(filters.category !== "all" || filters.search) && (
-                <div className="mt-4 flex flex-wrap items-center gap-2 text-xs">
-                  <span className="text-slate-500">Filtered by:</span>
-                  {filters.category !== "all" && (
-                    <span className="inline-flex items-center gap-1 rounded-full bg-blue-50 dark:bg-blue-900/30 px-3 py-1 font-semibold text-blue-600">
-                      Category: {filters.category}
-                      <button type="button" onClick={() => setCategory("all")} className="hover:opacity-75" aria-label="Clear category filter">
-                        <X className="h-3 w-3" />
-                      </button>
-                    </span>
-                  )}
-                  {filters.search && (
-                    <span className="inline-flex items-center gap-1 rounded-full bg-blue-50 dark:bg-blue-900/30 px-3 py-1 font-semibold text-blue-600">
-                      &ldquo;{filters.search}&rdquo;
-                      <button type="button" onClick={() => { setSearch(""); setSearchInput(""); }} className="hover:opacity-75" aria-label="Clear search filter">
-                        <X className="h-3 w-3" />
-                      </button>
-                    </span>
-                  )}
-                  <button type="button" onClick={resetFilters} className="text-blue-600 font-semibold hover:underline ml-1">
-                    Clear all
-                  </button>
-                </div>
-              )}
 
               {/* Loading Spinner */}
               {isLoading && (
@@ -832,7 +723,6 @@ export function BlogListContent({
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-6">
                   {displayPosts.map((post, idx) => {
                     const isFirstFeatured = idx === 0 || post.featured;
-                    const isCopied = copiedSlug === post.slug;
 
                     return (
                       <motion.article
@@ -928,25 +818,7 @@ export function BlogListContent({
                             </div>
                           </div>
 
-                          {/* Outline Share Button */}
-                          <div className="relative shrink-0 ml-2">
-                            <button
-                              type="button"
-                              onClick={(e) => handleShare(e, post)}
-                              className="w-8 h-8 rounded-full border border-blue-600/30 dark:border-blue-500/40 bg-white dark:bg-card text-blue-600 dark:text-blue-400 hover:bg-blue-600 hover:text-white dark:hover:bg-blue-600 dark:hover:text-white flex items-center justify-center transition-all hover:scale-110 active:scale-95 shadow-2xs cursor-pointer"
-                              aria-label="Share article link"
-                              title="Share article"
-                            >
-                              <Share2 className="h-3.5 w-3.5 stroke-[2.2]" />
-                            </button>
 
-                            {/* Copied Feedback Tooltip */}
-                            {isCopied && (
-                              <div className="absolute bottom-full right-0 mb-1.5 whitespace-nowrap rounded-md bg-slate-900 text-white px-2 py-0.5 text-[10px] font-bold shadow-lg animate-in fade-in duration-200">
-                                Link Copied!
-                              </div>
-                            )}
-                          </div>
                         </div>
 
                       </motion.article>
@@ -1034,67 +906,6 @@ export function BlogListContent({
                 ---------------------------------------------------- */}
             <aside className="w-full lg:w-[350px] xl:w-[370px] shrink-0 space-y-6 lg:sticky lg:top-24">
               
-              {/* Card 1: "Latest Articles" */}
-              <div className="rounded-[24px] border border-slate-200/80 dark:border-border/60 bg-white dark:bg-card p-6 shadow-sm">
-                <div className="flex items-center justify-between mb-5">
-                  <h3 className="text-[16px] font-bold text-slate-900 dark:text-white">
-                    Latest Articles
-                  </h3>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setCategory("all");
-                      window.scrollTo({ top: 380, behavior: "smooth" });
-                    }}
-                    className="text-xs font-semibold text-blue-600 hover:underline flex items-center gap-1 cursor-pointer"
-                  >
-                    <span>View all</span>
-                    <ArrowRight className="h-3 w-3" />
-                  </button>
-                </div>
-
-                <div className="space-y-4">
-                  {latestSidebarPosts.map((post) => (
-                    <Link
-                      key={post.id}
-                      href={`/blog/${post.slug}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="group flex items-center gap-3 hover:opacity-90 transition-opacity"
-                    >
-                      {/* Thumbnail Image */}
-                      <div className="h-14 w-14 rounded-xl overflow-hidden bg-slate-100 dark:bg-muted/40 shrink-0 border border-slate-100 dark:border-border/50">
-                        {post.cover_image?.url ? (
-                          <img
-                            src={post.cover_image.url}
-                            alt={post.title}
-                            className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300"
-                            loading="lazy"
-                          />
-                        ) : (
-                          <div className="h-full w-full bg-blue-50 flex items-center justify-center text-blue-600 font-bold text-xs">
-                            H
-                          </div>
-                        )}
-                      </div>
-
-                      {/* Content */}
-                      <div className="min-w-0 flex-1">
-                        <p className="text-[9.5px] font-bold text-blue-600 uppercase tracking-wider truncate">
-                          {post.category?.name || "ARTICLE"}
-                        </p>
-                        <h4 className="text-[12.5px] font-bold text-slate-900 dark:text-white line-clamp-2 leading-snug group-hover:text-blue-600 transition-colors">
-                          {post.title}
-                        </h4>
-                        <p className="mt-0.5 text-[10.5px] text-slate-400">
-                          {formatDate(post.published_at)} • {formatBlogReadTime(post.read_time)}
-                        </p>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-              </div>
-
               {/* Card 2: "Explore Jobs" */}
               <div className="rounded-[24px] border border-slate-200/80 dark:border-border/60 bg-white dark:bg-card p-6 shadow-sm">
                 <div className="flex items-center justify-between mb-4">
@@ -1114,7 +925,7 @@ export function BlogListContent({
                 </div>
 
                 <div className="space-y-3">
-                  {displayJobs.map((job: any) => {
+                  {displayJobs.slice(0, 2).map((job: any) => {
                     const salary = job.salary_range || (job.salary_min ? `₹ ${Math.round(job.salary_min / 1000)}k - ${Math.round(job.salary_max / 1000)}k` : "Best in Industry");
                     const workMode = job.work_mode?.name || job.work_mode || "Full Time";
                     const location = job.location || "India";
@@ -1231,24 +1042,27 @@ export function BlogListContent({
       {/* ========================================================
           3. PRE-FOOTER CTA BANNER: "Experience Swipe-Based Hiring Today"
           ======================================================== */}
-      <section className="relative pb-10 pt-2 sm:pb-12 sm:pt-3 overflow-hidden" aria-labelledby="cta-experience-heading">
+      <section className="relative pb-4 pt-1 sm:pb-6 sm:pt-1 overflow-hidden" aria-labelledby="cta-experience-heading">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           
-          <div className="relative rounded-[28px] sm:rounded-[32px] bg-gradient-to-r from-[#EFF6FF] via-[#F1F6FF] to-[#E5F0FE] dark:from-blue-950/25 dark:via-card dark:to-card border border-blue-100/90 dark:border-blue-900/40 px-6 sm:px-10 lg:px-12 py-5 sm:py-6 lg:py-7 overflow-hidden">
+          <div 
+            className="relative rounded-[28px] sm:rounded-[32px] bg-[#EFF6FF] border border-blue-100/90 dark:border-blue-900/40 px-6 sm:px-10 lg:px-12 py-3 lg:py-3 bg-cover bg-center bg-no-repeat"
+            style={{ backgroundImage: "url('/pics/cta_bg.png')" }}
+          >
             
-            <div className="grid lg:grid-cols-12 gap-6 lg:gap-8 items-center">
+            <div className="relative flex flex-col lg:flex-row items-center justify-between gap-6 lg:gap-8">
               
               {/* Left Column: Heading, Subtext, Action Buttons */}
-              <div className="lg:col-span-7 flex flex-col items-start">
+              <div className="lg:w-3/5 flex flex-col items-start relative z-10">
                 {/* Rule 7 Strictly Obeyed: NO CHIP over title */}
                 <h2
                   id="cta-experience-heading"
-                  className="text-2xl sm:text-3xl lg:text-[38px] font-extrabold text-slate-900 dark:text-white tracking-tight leading-[1.18]"
+                  className="text-3xl sm:text-4xl lg:text-[44px] font-semibold text-slate-900 dark:text-white tracking-tight leading-[1.15]"
                 >
-                  Experience Swipe-Based Hiring Today
+                  Experience <span className="text-blue-600">Swipe-Based</span><br className="hidden lg:block" /> Hiring Today
                 </h2>
 
-                <p className="mt-3 text-sm sm:text-[15px] text-slate-600 dark:text-slate-300 leading-relaxed max-w-lg">
+                <p className="mt-4 text-[15px] sm:text-[16px] text-slate-600 dark:text-slate-300 leading-relaxed max-w-lg">
                   Whether you are recruiting software engineers or looking for your next career move, Hirance makes hiring instant with zero forms.
                 </p>
 
@@ -1269,8 +1083,8 @@ export function BlogListContent({
               </div>
 
               {/* Right Column: 3D Phone Mockup */}
-              <div className="lg:col-span-5 relative flex items-center justify-center">
-                <div className="relative w-[170px] sm:w-[195px] lg:w-[215px]">
+              <div className="relative flex items-center justify-center pointer-events-none mt-6 lg:mt-0 w-full lg:w-auto z-20">
+                <div className="relative w-[180px] sm:w-[210px] lg:w-[220px] pointer-events-auto lg:mr-8">
                   <img
                     src="/pics/mobile_mockup.png"
                     alt="Hirance Swipe App Mockup"
