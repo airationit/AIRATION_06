@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation"
 import Image from "next/image"
 import Link from "next/link"
 import { AnimatePresence, motion } from "framer-motion"
-import { ArrowUpRight, Menu, X, ChevronRight, ChevronDown } from "lucide-react"
+import { ArrowUpRight, Menu, X, ChevronRight, ChevronDown, ArrowRight } from "lucide-react"
 import { siteConfig } from "@/config/site"
 import { cn } from "@/lib/utils"
 import { GooglePlayButton } from "./google-play-button"
@@ -232,7 +232,7 @@ export function Navbar({ className }: NavbarProps) {
 
                                   {subItem.flyoutItems && (
                                     <div className="absolute top-0 left-full pl-2 hidden group-hover/rightItem:block z-50">
-                                      <div className="w-[220px] bg-white rounded-xl shadow-xl border border-border/50 p-3 flex flex-col gap-1.5">
+                                      <div className="w-[230px] bg-white rounded-xl shadow-xl border border-border/50 p-3 flex flex-col gap-1.5">
                                         <h5 className="text-xs font-bold text-slate-900 tracking-tight mb-0.5">
                                           Popular {subItem.label.replace(/^Jobs By /, "")}
                                         </h5>
@@ -245,6 +245,18 @@ export function Navbar({ className }: NavbarProps) {
                                             {flyItem.label}
                                           </Link>
                                         ))}
+
+                                        {subItem.viewAllText && (
+                                          <div className="pt-2 mt-1 border-t border-slate-100 flex justify-center">
+                                            <Link
+                                              href={subItem.viewAllHref || subItem.href}
+                                              className="inline-flex items-center justify-between w-full rounded-2xl border border-blue-200/80 dark:border-blue-800/50 bg-blue-50/80 hover:bg-blue-100/80 dark:bg-blue-950/40 dark:hover:bg-blue-900/60 text-blue-600 dark:text-blue-300 font-semibold text-xs py-2 px-3.5 transition-all hover:scale-[1.01] active:scale-[0.99]"
+                                            >
+                                              <span>{subItem.viewAllText}</span>
+                                              <ArrowRight className="h-3.5 w-3.5 shrink-0 text-blue-600 dark:text-blue-400 ml-1.5" />
+                                            </Link>
+                                          </div>
+                                        )}
                                       </div>
                                     </div>
                                   )}
