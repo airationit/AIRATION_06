@@ -138,7 +138,7 @@ import { normalizeCitySlug } from "./city-normalizer";
 /**
  * Helper to extract a clean City Name & City Slug from location data
  */
-function resolveCityFromLocation(cityNameRaw?: string, locationRaw?: string): { cityName: string; citySlug: string } {
+export function resolveCityFromLocation(cityNameRaw?: string, locationRaw?: string): { cityName: string; citySlug: string } {
   let cityName = cityNameRaw?.trim() || "";
   const locationStr = locationRaw?.trim() || "";
 
@@ -315,12 +315,34 @@ export async function getJobs(params: {
   const limit = params.limit || 12;
 
   try {
+    let effectiveCityId = params.cityId;
+    let citySearchText = "";
+
+    // 1. Precise City Resolution: If citySlug is specified but cityId is missing, inspect live public jobs to resolve city ID
+    if (params.citySlug && params.citySlug !== "all" && !effectiveCityId) {
+      const allJobsRes = await apiFetchJobs({ page_size: 100 }, { revalidate: 60 });
+      if (allJobsRes && Array.isArray(allJobsRes.data)) {
+        for (const rawJob of allJobsRes.data) {
+          const titleLower = (rawJob.title || "").toLowerCase().trim();
+          if (titleLower === "new" || titleLower === "test" || titleLower === "demo" || titleLower.length < 2) {
+            continue;
+          }
+          const { citySlug: itemSlug } = resolveCityFromLocation(rawJob.city?.name, rawJob.location);
+          if (itemSlug === params.citySlug && rawJob.city?.id) {
+            effectiveCityId = rawJob.city.id;
+            break;
+          }
+        }
+      }
+      if (!effectiveCityId) {
+        citySearchText = params.citySlug.replace(/-/g, " ");
+      }
+    }
+
     const searchTerms = [
       params.search,
       params.roleSlug ? params.roleSlug.replace(/-/g, " ") : undefined,
-      params.citySlug && params.citySlug !== "all" && !params.cityId
-        ? params.citySlug.replace(/-/g, " ")
-        : undefined,
+      citySearchText || undefined,
     ]
       .filter(Boolean)
       .join(" ");
@@ -329,7 +351,7 @@ export async function getJobs(params: {
       page,
       page_size: limit,
       job_role: params.roleId || undefined,
-      city: params.cityId || undefined,
+      city: effectiveCityId || undefined,
       state: params.stateId || undefined,
       job_type: params.jobTypeId || params.jobType || undefined,
       work_mode: params.workModeId || params.workMode || undefined,
@@ -349,24 +371,63 @@ export async function getJobs(params: {
 
     const response = await apiFetchJobs(apiParams, { revalidate: 60 });
 
-    if (response && response.success && Array.isArray(response.data)) {
-      const normalizedJobs = response.data.map(normalizeJobItem);
-      const totalCount = response.pagination?.count ?? normalizedJobs.length;
-      const totalPages =
-        response.pagination?.total_pages ?? Math.max(1, Math.ceil(totalCount / limit));
+    if (response && response.success && Array.isArray(response.data) && response.data.length > 0) {
+      const validRawJobs = response.data.filter((rawJob) => {
+        const titleLower = (rawJob.title || "").toLowerCase().trim();
+        return titleLower !== "new" && titleLower !== "test" && titleLower !== "demo" && titleLower.length >= 2;
+      });
 
-      return {
-        jobs: normalizedJobs,
-        totalJobs: totalCount,
-        page: response.pagination?.current_page ?? page,
-        totalPages,
-        activeFilters: {
-          role: params.roleSlug,
-          city: params.citySlug,
-          jobType: params.jobType,
-          experience: params.experienceSlug,
-        },
-      };
+      if (validRawJobs.length > 0) {
+        const normalizedJobs = validRawJobs.map(normalizeJobItem);
+        const totalCount = normalizedJobs.length;
+        const totalPages = Math.max(1, Math.ceil(totalCount / limit));
+
+        return {
+          jobs: normalizedJobs,
+          totalJobs: totalCount,
+          page: response.pagination?.current_page ?? page,
+          totalPages,
+          activeFilters: {
+            role: params.roleSlug,
+            city: params.citySlug,
+            jobType: params.jobType,
+            experience: params.experienceSlug,
+          },
+        };
+      }
+    }
+
+    // 2. Comprehensive Fallback for City Slugs (handles both city relation & location text matches)
+    if (params.citySlug && params.citySlug !== "all") {
+      const allJobsRes = await apiFetchJobs({ page_size: 100 }, { revalidate: 60 });
+      if (allJobsRes && Array.isArray(allJobsRes.data)) {
+        const matchingRawJobs = allJobsRes.data.filter((rawJob) => {
+          const titleLower = (rawJob.title || "").toLowerCase().trim();
+          if (titleLower === "new" || titleLower === "test" || titleLower === "demo" || titleLower.length < 2) {
+            return false;
+          }
+          const { citySlug: itemSlug } = resolveCityFromLocation(rawJob.city?.name, rawJob.location);
+          return itemSlug === params.citySlug;
+        });
+
+        if (matchingRawJobs.length > 0) {
+          const normalized = matchingRawJobs.map(normalizeJobItem);
+          const startIdx = (page - 1) * limit;
+          const paginated = normalized.slice(startIdx, startIdx + limit);
+          return {
+            jobs: paginated,
+            totalJobs: normalized.length,
+            page,
+            totalPages: Math.max(1, Math.ceil(normalized.length / limit)),
+            activeFilters: {
+              role: params.roleSlug,
+              city: params.citySlug,
+              jobType: params.jobType,
+              experience: params.experienceSlug,
+            },
+          };
+        }
+      }
     }
   } catch (error) {
     console.error("Live jobs API error:", error);

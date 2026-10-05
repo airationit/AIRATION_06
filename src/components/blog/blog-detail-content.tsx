@@ -83,10 +83,7 @@ function SectionBlockRenderer({ section, index, headingIndex }: { section: BlogS
       const id = section.content.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
       if (section.level === 2) {
         return (
-          <div key={index} className="flex items-center gap-4 mt-12 mb-6 not-prose">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-100 text-blue-700 font-extrabold text-lg dark:bg-blue-900/50">
-              {headingIndex}
-            </div>
+          <div key={index} className="mt-12 mb-6 not-prose">
             <h2
               id={id}
               className="m-0 p-0 text-[24px] sm:text-[26px] font-semibold tracking-tight text-foreground leading-[1.3]"
