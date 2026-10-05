@@ -1,111 +1,112 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useMemo } from "react";
 import Link from "next/link";
-import { Search, Loader2 } from "lucide-react";
+import { Search } from "lucide-react";
 import { Footer, InteractiveDots } from "@/components/shared";
-import { fetchJobs } from "@/lib/api/jobs";
-import { resolveCityFromLocation } from "@/lib/jobs-data";
-import { JobListItem } from "@/types/jobs";
+
+interface CityItem {
+  name: string;
+  canonicalSlug: string;
+}
+
+// Full directory of major Indian cities matching reference design
+const DEFAULT_INDIAN_CITIES: CityItem[] = [
+  { name: "New Delhi", canonicalSlug: "delhi-ncr" },
+  { name: "Bengaluru", canonicalSlug: "bangalore" },
+  { name: "Mumbai", canonicalSlug: "mumbai" },
+  { name: "Hyderabad", canonicalSlug: "hyderabad" },
+  { name: "Pune", canonicalSlug: "pune" },
+  { name: "Chennai", canonicalSlug: "chennai" },
+  { name: "Lucknow", canonicalSlug: "lucknow" },
+  { name: "Kolkata", canonicalSlug: "kolkata" },
+  { name: "Ahmedabad", canonicalSlug: "ahmedabad" },
+  { name: "Surat", canonicalSlug: "surat" },
+  { name: "Jaipur", canonicalSlug: "jaipur" },
+  { name: "Chandigarh", canonicalSlug: "chandigarh" },
+  { name: "Gurgaon", canonicalSlug: "gurgaon" },
+  { name: "Noida", canonicalSlug: "noida" },
+  { name: "Greater Noida", canonicalSlug: "greater-noida" },
+  { name: "Indore", canonicalSlug: "indore" },
+  { name: "Kochi", canonicalSlug: "kochi" },
+  { name: "Coimbatore", canonicalSlug: "coimbatore" },
+  { name: "Bhubaneswar", canonicalSlug: "bhubaneswar" },
+  { name: "Vadodara", canonicalSlug: "vadodara" },
+  { name: "Nagpur", canonicalSlug: "nagpur" },
+  { name: "Visakhapatnam", canonicalSlug: "visakhapatnam" },
+  { name: "Bhopal", canonicalSlug: "bhopal" },
+  { name: "Patna", canonicalSlug: "patna" },
+  { name: "Kanpur", canonicalSlug: "kanpur" },
+  { name: "Ludhiana", canonicalSlug: "ludhiana" },
+  { name: "Nashik", canonicalSlug: "nashik" },
+  { name: "Rajkot", canonicalSlug: "rajkot" },
+  { name: "Varanasi", canonicalSlug: "varanasi" },
+  { name: "Agra", canonicalSlug: "agra" },
+  { name: "Madurai", canonicalSlug: "madurai" },
+  { name: "Guwahati", canonicalSlug: "guwahati" },
+  { name: "Meerut", canonicalSlug: "meerut" },
+  { name: "Jodhpur", canonicalSlug: "jodhpur" },
+  { name: "Vijayawada", canonicalSlug: "vijayawada" },
+  { name: "Gwalior", canonicalSlug: "gwalior" },
+  { name: "Ranchi", canonicalSlug: "ranchi" },
+  { name: "Jabalpur", canonicalSlug: "jabalpur" },
+  { name: "Raipur", canonicalSlug: "raipur" },
+  { name: "Prayagraj (Allahabad)", canonicalSlug: "allahabad" },
+  { name: "Amritsar", canonicalSlug: "amritsar" },
+  { name: "Thiruvananthapuram", canonicalSlug: "thiruvananthapuram" },
+  { name: "Dehradun", canonicalSlug: "dehradun" },
+  { name: "Mysore", canonicalSlug: "mysore" },
+  { name: "Bhilai", canonicalSlug: "bhilai" },
+  { name: "Gorakhpur", canonicalSlug: "gorakhpur" },
+  { name: "Anantapur", canonicalSlug: "anantapur" },
+  { name: "Kadapa", canonicalSlug: "kadapa" },
+  { name: "Tirupati", canonicalSlug: "tirupati" },
+  { name: "Tiruppur", canonicalSlug: "tiruppur" },
+  { name: "Hubli", canonicalSlug: "hubli" },
+  { name: "Madanapalli", canonicalSlug: "madanapalli" },
+  { name: "Durgapur", canonicalSlug: "durgapur" },
+  { name: "Aligarh", canonicalSlug: "aligarh" },
+  { name: "Kannur", canonicalSlug: "kannur" },
+  { name: "Guntur", canonicalSlug: "guntur" },
+  { name: "Vijayapura", canonicalSlug: "vijayapura" },
+  { name: "Salem", canonicalSlug: "salem" },
+  { name: "Chapra", canonicalSlug: "chapra" },
+  { name: "Anand", canonicalSlug: "anand" },
+  { name: "Darbhanga", canonicalSlug: "darbhanga" },
+  { name: "Durg", canonicalSlug: "durg" },
+  { name: "Hisar", canonicalSlug: "hisar" },
+  { name: "Firozabad", canonicalSlug: "firozabad" },
+  { name: "Patiala", canonicalSlug: "patiala" },
+  { name: "Nanded-Waghala", canonicalSlug: "nanded-waghala" },
+  { name: "Muzaffarpur", canonicalSlug: "muzaffarpur" },
+  { name: "Vellore", canonicalSlug: "vellore" },
+  { name: "Sangli", canonicalSlug: "sangli" },
+  { name: "Ajmer", canonicalSlug: "ajmer" },
+  { name: "Ujjain", canonicalSlug: "ujjain" },
+  { name: "Solapur", canonicalSlug: "solapur" },
+  { name: "Pathankot", canonicalSlug: "pathankot" },
+  { name: "Bhadrak", canonicalSlug: "bhadrak" },
+  { name: "Batala", canonicalSlug: "batala" },
+  { name: "Panvel", canonicalSlug: "panvel" },
+  { name: "Hajipur", canonicalSlug: "hajipur" },
+  { name: "Bhagalpur", canonicalSlug: "bhagalpur" },
+  { name: "Akola", canonicalSlug: "akola" },
+  { name: "Moradabad", canonicalSlug: "moradabad" },
+];
 
 export function JobsByCityContent() {
   const [searchQuery, setSearchQuery] = useState("");
-  const [activeJobs, setActiveJobs] = useState<JobListItem[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [cities] = useState<CityItem[]>(DEFAULT_INDIAN_CITIES);
 
-  // Dynamically fetch public active jobs directly from backend API
-  useEffect(() => {
-    let mounted = true;
-    async function loadActiveJobs() {
-      try {
-        const response = await fetchJobs({ page_size: 100 });
-        if (mounted && response.data) {
-          setActiveJobs(response.data);
-        }
-      } catch (err) {
-        console.error("Failed to load active jobs for city directory:", err);
-      } finally {
-        if (mounted) setLoading(false);
-      }
-    }
-    loadActiveJobs();
-    return () => {
-      mounted = false;
-    };
-  }, []);
-
-  // Compute active cities strictly from real active job listings using normalized city resolution
-  const citiesList = useMemo(() => {
-    const cityDataMap = new Map<string, { displayName: string; canonicalSlug: string; count: number }>();
-
-    activeJobs.forEach((job) => {
-      // Filter out test/dummy jobs (e.g. title: "new", "test", "demo")
-      const titleLower = (job.title || "").toLowerCase().trim();
-      if (titleLower === "new" || titleLower === "test" || titleLower === "demo" || titleLower.length < 2) {
-        return;
-      }
-
-      // Safely check status whether string, number, or object
-      let statusStr = "";
-      if (typeof job.status === "string") {
-        statusStr = job.status.toLowerCase();
-      } else if (typeof job.status === "number") {
-        statusStr = job.status === 1 ? "active" : "inactive";
-      } else if (job.status && typeof job.status === "object" && "name" in (job.status as any)) {
-        statusStr = String((job.status as any).name || "").toLowerCase();
-      }
-
-      if (statusStr && statusStr !== "published" && statusStr !== "active" && statusStr !== "open") {
-        return;
-      }
-
-      // Skip expired jobs if deadline passed
-      if (job.application_deadline) {
-        const deadline = new Date(job.application_deadline);
-        if (!isNaN(deadline.getTime()) && deadline < new Date()) {
-          return;
-        }
-      }
-
-      const { cityName, citySlug } = resolveCityFromLocation(job.city?.name, job.location);
-
-      if (cityName && citySlug && citySlug !== "all" && cityName !== "India" && cityName !== "Remote") {
-        const existing = cityDataMap.get(citySlug);
-        if (existing) {
-          existing.count += 1;
-        } else {
-          cityDataMap.set(citySlug, {
-            displayName: cityName,
-            canonicalSlug: citySlug,
-            count: 1,
-          });
-        }
-      }
-    });
-
-    const dynamicCities: Array<{ name: string; canonicalSlug: string; count: number }> = [];
-
-    cityDataMap.forEach(({ displayName, canonicalSlug, count }) => {
-      if (count > 0) {
-        dynamicCities.push({
-          name: displayName,
-          canonicalSlug,
-          count,
-        });
-      }
-    });
-
-    return dynamicCities.sort((a, b) => b.count - a.count || a.name.localeCompare(b.name));
-  }, [activeJobs]);
-
-  // Filter cities by search query
+  // Filter cities by live search query
   const filteredCities = useMemo(() => {
-    if (!searchQuery.trim()) return citiesList;
+    if (!searchQuery.trim()) return cities;
     const q = searchQuery.toLowerCase().trim();
-    return citiesList.filter((city) =>
-      city.name.toLowerCase().includes(q) || city.canonicalSlug.includes(q)
+    return cities.filter(
+      (city) =>
+        city.name.toLowerCase().includes(q) || city.canonicalSlug.includes(q)
     );
-  }, [citiesList, searchQuery]);
+  }, [cities, searchQuery]);
 
   return (
     <main className="relative flex min-h-dvh flex-col overflow-x-clip bg-background text-foreground">
@@ -146,33 +147,18 @@ export function JobsByCityContent() {
             <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white">
               Jobs By City
             </h1>
-            <p className="mt-1.5 text-xs sm:text-sm text-slate-500 dark:text-slate-400">
-             
-            </p>
           </div>
-          {loading && (
-            <div className="flex items-center gap-2 text-xs font-medium text-slate-400">
-              <Loader2 className="h-3.5 w-3.5 animate-spin text-blue-600" />
-              <span>Fetching active job cities...</span>
-            </div>
-          )}
         </div>
 
-        {/* Cities Grid: Strictly active backend job cities without count suffix */}
-        {loading ? (
-          <div className="py-20 flex flex-col items-center justify-center text-center">
-            <Loader2 className="h-8 w-8 animate-spin text-blue-600 mb-3" />
-            <p className="text-sm font-medium text-slate-500 dark:text-slate-400">
-              Loading active hiring cities...
-            </p>
-          </div>
-        ) : filteredCities.length > 0 ? (
+        {/* Cities Grid: Comprehensive 4-column directory layout matching reference screenshot */}
+        {filteredCities.length > 0 ? (
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-y-3.5 gap-x-6">
             {filteredCities.map((city) => (
               <Link
                 key={city.canonicalSlug}
                 href={`/jobs/jobs-in-${city.canonicalSlug}`}
-                className="group inline-flex items-center text-xs sm:text-sm font-medium text-slate-600 hover:text-blue-600 dark:text-slate-300 dark:hover:text-blue-400 transition-colors py-1.5"
+                className="group flex items-center text-xs sm:text-sm font-medium text-slate-600 hover:text-blue-600 dark:text-slate-300 dark:hover:text-blue-400 transition-colors py-1.5"
+                title={`Jobs in ${city.name}`}
               >
                 <span className="truncate group-hover:translate-x-0.5 transition-transform">
                   {city.name}
@@ -183,7 +169,9 @@ export function JobsByCityContent() {
         ) : (
           <div className="py-16 text-center">
             <p className="text-base font-semibold text-slate-700 dark:text-slate-300">
-              {searchQuery ? `No cities found matching "${searchQuery}"` : "No active job listings in any cities currently."}
+              {searchQuery
+                ? `No cities found matching "${searchQuery}"`
+                : "No cities available."}
             </p>
             {searchQuery && (
               <button
