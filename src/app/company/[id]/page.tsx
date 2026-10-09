@@ -1,156 +1,86 @@
+import React, { cache } from "react";
 import type { Metadata } from "next";
-import { redirect } from "next/navigation";
-import { cache } from "react";
-import CompanyContent from "./CompanyContent";
-import { fetchCompanyById, extractCompanyId, generateCompanySlug } from "@/lib/api/companies";
+import {
+  fetchCompanyById,
+  fetchCompanyCategories,
+  fetchCompanyJobsList,
+} from "@/lib/api/companies";
+import { normalizeJobItem } from "@/lib/jobs-data";
 import { siteConfig } from "@/config/site";
+import CompanyContent from "./CompanyContent";
 
 interface PageProps {
   params: Promise<{ id: string }>;
 }
 
 /**
- * Deduplicate server API call between generateMetadata and the page component
+ * Deduplicate server fetch between generateMetadata and CompanyPage.
+ * React cache() ensures this runs only once per request.
  */
-const getCachedCompany = cache(async (idOrSlug: string) => {
-  const cleanId = extractCompanyId(idOrSlug);
-  if (!cleanId) return null;
-  const res = await fetchCompanyById(cleanId);
-  return res.success ? res.data : null;
+const getCachedCompany = cache(async (id: string) => {
+  return await fetchCompanyById(id);
 });
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { id } = await params;
-  const company = await getCachedCompany(id);
-
-  if (!company) {
-    return {
-      title: "Company Not Found | Hirance",
-      description: "The requested company profile could not be found on Hirance.",
-      robots: { index: false, follow: true },
-    };
+  try {
+    const res = await getCachedCompany(id);
+    if (res?.data?.company_name) {
+      const company = res.data;
+      const title = `${company.company_name} - Careers, Jobs & Company Profile | Hirance`;
+      const description = `Explore open jobs, culture, and career opportunities at ${company.company_name} on Hirance.`;
+      return {
+        title,
+        description,
+        alternates: {
+          canonical: `${siteConfig.url}/company/${id}`,
+        },
+        openGraph: {
+          title,
+          description,
+          url: `${siteConfig.url}/company/${id}`,
+          siteName: siteConfig.name,
+          images: company.company_logo ? [{ url: company.company_logo }] : undefined,
+        },
+      };
+    }
+  } catch {
+    // fallback
   }
 
-  const canonicalSlug = generateCompanySlug(company.company_name, company.id);
-  const canonicalUrl = `${siteConfig.url}/company/${canonicalSlug}`;
-  const title = `${company.company_name} - Jobs & Hiring Profile | Hirance`;
-  const description = `Explore verified job openings and career opportunities at ${company.company_name} on Hirance. Fast application, verified recruiters.`;
-
   return {
-    title,
-    description,
-    alternates: {
-      canonical: canonicalUrl,
-    },
-    openGraph: {
-      type: "website",
-      locale: "en_IN",
-      url: canonicalUrl,
-      title,
-      description,
-      siteName: siteConfig.name,
-      images: company.company_logo
-        ? [
-            {
-              url: company.company_logo,
-              width: 400,
-              height: 400,
-              alt: `${company.company_name} Logo`,
-            },
-          ]
-        : undefined,
-    },
-    twitter: {
-      card: "summary",
-      title,
-      description,
-      images: company.company_logo ? [company.company_logo] : undefined,
-    },
+    title: "Company Profile | Hirance",
+    description: "View verified company details, culture, and active job openings on Hirance.",
   };
 }
 
 export default async function CompanyPage({ params }: PageProps) {
   const { id } = await params;
-  const company = await getCachedCompany(id);
 
-  if (company) {
-    const canonicalSlug = generateCompanySlug(company.company_name, company.id);
-    // If accessed with raw ID or outdated slug, permanently redirect to canonical slug with company name
-    if (id !== canonicalSlug) {
-      redirect(`/company/${canonicalSlug}`);
-    }
-  }
+  // 1. Fetch company details first to know exact backend host (api.hirance.com vs prod.hirance.com)
+  const compRes = await getCachedCompany(id);
+  const source = compRes?.source;
 
-  const cleanId = extractCompanyId(id);
+  // 2. Fetch categories and jobs targeted strictly to that backend
+  const [catRes, jobsRes] = await Promise.all([
+    fetchCompanyCategories(id, source),
+    fetchCompanyJobsList(id, undefined, source),
+  ]);
 
-  // Structured Data Schema for Organization & Breadcrumb
-  const canonicalSlug = company
-    ? generateCompanySlug(company.company_name, company.id)
-    : id;
-  const canonicalUrl = `${siteConfig.url}/company/${canonicalSlug}`;
-
-  const jsonLd = company
-    ? {
-        "@context": "https://schema.org",
-        "@type": "Organization",
-        name: company.company_name,
-        url: canonicalUrl,
-        logo: company.company_logo || undefined,
-        sameAs: [company.website_link, company.linkedin_link].filter(Boolean),
-        address: company.address
-          ? {
-              "@type": "PostalAddress",
-              streetAddress: company.address,
-              addressLocality: company.city?.name || undefined,
-              addressRegion: company.state?.name || undefined,
-              addressCountry: "IN",
-            }
-          : undefined,
-      }
-    : null;
-
-  const breadcrumbJsonLd = company
-    ? {
-        "@context": "https://schema.org",
-        "@type": "BreadcrumbList",
-        itemListElement: [
-          {
-            "@type": "ListItem",
-            position: 1,
-            name: "Home",
-            item: siteConfig.url,
-          },
-          {
-            "@type": "ListItem",
-            position: 2,
-            name: "Companies",
-            item: `${siteConfig.url}/#partners`,
-          },
-          {
-            "@type": "ListItem",
-            position: 3,
-            name: company.company_name,
-            item: canonicalUrl,
-          },
-        ],
-      }
-    : null;
+  const initialCompany = compRes?.success && compRes.data ? compRes.data : null;
+  const initialCategories = catRes?.success && Array.isArray(catRes.data) ? catRes.data : [];
+  const initialJobs =
+    jobsRes?.success && Array.isArray(jobsRes.data)
+      ? jobsRes.data.map((raw) => normalizeJobItem(raw))
+      : [];
 
   return (
-    <>
-      {jsonLd && (
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        />
-      )}
-      {breadcrumbJsonLd && (
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
-        />
-      )}
-      <CompanyContent companyId={cleanId} initialCompany={company} />
-    </>
+    <CompanyContent
+      companyId={id}
+      initialCompany={initialCompany}
+      initialCategories={initialCategories}
+      initialJobs={initialJobs}
+      initialSource={source}
+    />
   );
 }

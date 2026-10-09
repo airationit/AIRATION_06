@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import { 
   MapPin, Globe, Share2,
@@ -14,10 +14,10 @@ import { normalizeJobItem } from "@/lib/jobs-data";
 import { JobCard } from "@/components/jobs/job-card";
 import { Job } from "@/lib/jobs-data";
 import {
-  extractCompanyId,
   fetchCompanyById,
   fetchCompanyCategories,
   fetchCompanyJobsList,
+  CompanyBackendSource,
 } from "@/lib/api/companies";
 
 /**
@@ -77,36 +77,72 @@ interface Company {
 interface CompanyContentProps {
   companyId: string;
   initialCompany?: Company | null;
+  initialCategories?: { id: string; name: string; open_jobs_count: number }[];
+  initialJobs?: Job[];
+  initialSource?: CompanyBackendSource;
 }
 
-export default function CompanyContent({ companyId, initialCompany = null }: CompanyContentProps) {
-  const cleanId = extractCompanyId(companyId);
+export default function CompanyContent({
+  companyId,
+  initialCompany = null,
+  initialCategories = [],
+  initialJobs = [],
+  initialSource,
+}: CompanyContentProps) {
   const [company, setCompany] = useState<Company | null>(initialCompany);
+  const [source, setSource] = useState<CompanyBackendSource | undefined>(initialSource);
   const [loading, setLoading] = useState(!initialCompany);
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
   const [logoError, setLogoError] = useState(false);
 
-  // Jobs State
-  const [jobs, setJobs] = useState<Job[]>([]);
-  const [loadingJobs, setLoadingJobs] = useState(true);
+  // Jobs State - initialized directly with server jobs so they appear immediately
+  const [jobs, setJobs] = useState<Job[]>(initialJobs);
+  const [loadingJobs, setLoadingJobs] = useState(false);
   
   // Categories State
-  const [categories, setCategories] = useState<{ id: string; name: string; open_jobs_count: number }[]>([]);
+  const [categories, setCategories] = useState<{ id: string; name: string; open_jobs_count: number }[]>(
+    initialCategories
+  );
   const [selectedCategory, setSelectedCategory] = useState<string>("");
 
+  // Only run client fetch if data was not provided via SSR
   useEffect(() => {
+    if (initialCompany) return;
+
     let isMounted = true;
 
-    const loadCompany = async () => {
+    const fetchAll = async () => {
+      setLoading(true);
+      setError(null);
       try {
-        const res = await fetchCompanyById(cleanId);
-        if (isMounted) {
-          if (res.success && res.data) {
-            setCompany(res.data);
-          } else {
-            setError(res.message || "Company not found.");
-          }
+        const compRes = await fetchCompanyById(companyId);
+        if (!isMounted) return;
+
+        const effectiveSource = compRes.source || initialSource;
+        if (effectiveSource) {
+          setSource(effectiveSource);
+        }
+
+        if (compRes.success && compRes.data) {
+          setCompany(compRes.data);
+        } else {
+          setError(compRes.message || "Company not found.");
+        }
+
+        const [catRes, jobsRes] = await Promise.all([
+          fetchCompanyCategories(companyId, effectiveSource),
+          fetchCompanyJobsList(companyId, undefined, effectiveSource),
+        ]);
+
+        if (!isMounted) return;
+
+        if (catRes.success && Array.isArray(catRes.data)) {
+          setCategories(catRes.data);
+        }
+
+        if (jobsRes.success && Array.isArray(jobsRes.data)) {
+          setJobs(jobsRes.data.map((raw: any) => normalizeJobItem(raw)));
         }
       } catch (err: any) {
         if (isMounted) {
@@ -119,38 +155,33 @@ export default function CompanyContent({ companyId, initialCompany = null }: Com
       }
     };
 
-    const loadCategories = async () => {
-      try {
-        const res = await fetchCompanyCategories(cleanId);
-        if (isMounted && res.success && res.data) {
-          setCategories(res.data);
-        }
-      } catch (err) {
-        console.error("Failed to fetch categories", err);
-      }
-    };
-
-    if (cleanId) {
-      if (!initialCompany) {
-        loadCompany();
-      }
-      loadCategories();
-    }
+    fetchAll();
 
     return () => {
       isMounted = false;
     };
-  }, [cleanId, initialCompany]);
+  }, [companyId, initialCompany, initialSource]);
 
+  // Only re-fetch jobs when user actually changes category filter tab
+  const isFirstMount = useRef(true);
   useEffect(() => {
+    if (isFirstMount.current) {
+      isFirstMount.current = false;
+      return;
+    }
+
     let isMounted = true;
 
-    const loadCompanyJobs = async () => {
+    const fetchFilteredJobs = async () => {
       setLoadingJobs(true);
       try {
-        const res = await fetchCompanyJobsList(cleanId, selectedCategory);
-        if (isMounted && res.success && res.data) {
+        const res = await fetchCompanyJobsList(companyId, selectedCategory || undefined, source);
+        if (!isMounted) return;
+
+        if (res.success && Array.isArray(res.data)) {
           setJobs(res.data.map((raw: any) => normalizeJobItem(raw)));
+        } else {
+          setJobs([]);
         }
       } catch (err) {
         console.error("Failed to fetch company jobs", err);
@@ -161,14 +192,12 @@ export default function CompanyContent({ companyId, initialCompany = null }: Com
       }
     };
 
-    if (cleanId) {
-      loadCompanyJobs();
-    }
+    fetchFilteredJobs();
 
     return () => {
       isMounted = false;
     };
-  }, [cleanId, selectedCategory]);
+  }, [companyId, selectedCategory, source]);
 
   const handleShare = async () => {
     if (typeof window !== "undefined") {
@@ -259,7 +288,7 @@ export default function CompanyContent({ companyId, initialCompany = null }: Com
         <div className="text-xs text-slate-500 mb-6 flex items-center gap-2">
           <Link href="/" className="hover:text-blue-600 transition-colors">Home</Link>
           <span>›</span>
-          <Link href="/#partners" className="hover:text-blue-600 transition-colors">Companies</Link>
+          <Link href="/companies" className="hover:text-blue-600 transition-colors">Top Companies</Link>
           <span>›</span>
           <span className="font-semibold text-slate-700">{company.company_name} Overview</span>
         </div>
@@ -270,16 +299,16 @@ export default function CompanyContent({ companyId, initialCompany = null }: Com
             {/* Left: App-Icon Squircle + Title & Single Meta Line */}
             <div className="flex items-center gap-4 min-w-0">
               {/* Squircle Logo */}
-              <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl bg-slate-950 text-white shrink-0 flex items-center justify-center overflow-hidden font-bold text-lg sm:text-xl shadow-xs border border-slate-200/60 dark:border-slate-800">
+              <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl bg-white dark:bg-card text-slate-800 dark:text-slate-100 shrink-0 flex items-center justify-center overflow-hidden font-bold text-lg sm:text-xl shadow-xs border border-slate-200/80 dark:border-slate-800">
                 {company.company_logo && !logoError ? (
                   <img
                     src={company.company_logo}
                     alt={company.company_name}
                     onError={() => setLogoError(true)}
-                    className="w-full h-full object-contain p-2 bg-white"
+                    className="w-full h-full object-contain p-2"
                   />
                 ) : (
-                  <span className="text-white font-extrabold tracking-tight">{initials}</span>
+                  <span className="font-extrabold tracking-tight">{initials}</span>
                 )}
               </div>
 
