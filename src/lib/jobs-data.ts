@@ -6,6 +6,7 @@ export interface Job {
   slug: string;
   title: string;
   company: string;
+  companyId?: string;
   companyLogo?: string | null;
   location: string;
   cityId?: string;
@@ -231,8 +232,9 @@ export function normalizeJobItem(raw: JobListItem | JobDetail): Job {
     id: raw.id,
     slug: seoSlug,
     title: raw.title,
-    company: raw.company_name,
-    companyLogo: raw.company_logo,
+    company: raw.company_name || (raw as any).company?.company_name || "",
+    companyId: (raw as any).company_id || (raw as any).company?.id,
+    companyLogo: raw.company_logo || (raw as any).company?.company_logo,
     location: locationStr,
     cityId: raw.city?.id,
     cityName: cityName || "India",
@@ -379,8 +381,8 @@ export async function getJobs(params: {
 
       if (validRawJobs.length > 0) {
         const normalizedJobs = validRawJobs.map(normalizeJobItem);
-        const totalCount = normalizedJobs.length;
-        const totalPages = Math.max(1, Math.ceil(totalCount / limit));
+        const totalCount = response.pagination?.count || normalizedJobs.length;
+        const totalPages = response.pagination?.total_pages || Math.max(1, Math.ceil(totalCount / limit));
 
         return {
           jobs: normalizedJobs,

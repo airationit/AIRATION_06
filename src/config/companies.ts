@@ -43,32 +43,37 @@ export const companies: Company[] = companiesData.map((c) => ({
 }));
 
 /** Deterministic color theme for a company card based on name & index */
-export function getCompanyColorTheme(name: string, index: number): CardColorTheme {
+export function getCompanyColorTheme(name: string = "", index: number = 0): CardColorTheme {
+  const safeName = (name || "").trim();
   let hash = 0;
-  for (let i = 0; i < name.length; i++) {
-    hash = name.charCodeAt(i) + ((hash << 5) - hash);
+  for (let i = 0; i < safeName.length; i++) {
+    hash = safeName.charCodeAt(i) + ((hash << 5) - hash);
   }
   const paletteIndex = (Math.abs(hash) + index) % CARD_COLOR_PALETTE.length;
   return CARD_COLOR_PALETTE[paletteIndex];
 }
 
 /** Deterministic hue (0–360) derived from a company name, for fallback */
-export function hueFromName(name: string) {
+export function hueFromName(name: string = "") {
+  const safeName = (name || "").trim();
   let hash = 0;
-  for (let i = 0; i < name.length; i++) {
-    hash = name.charCodeAt(i) + ((hash << 5) - hash);
+  for (let i = 0; i < safeName.length; i++) {
+    hash = safeName.charCodeAt(i) + ((hash << 5) - hash);
   }
   return Math.abs(hash) % 360;
 }
 
 /** Up to two initials for the monogram fallback */
-export function initials(name: string) {
-  return name
-  .replace(/[^a-zA-Z0-9 ]/g, "")
-  .trim()
-  .split(/\s+/)
-  .slice(0, 2)
-  .map((w) => w[0])
-  .join("")
-  .toUpperCase();
+export function initials(name: string = "") {
+  const safeName = (name || "").replace(/[^a-zA-Z0-9 ]/g, "").trim();
+  if (!safeName) return "CO";
+  const parts = safeName.split(/\s+/).filter(Boolean);
+  if (parts.length === 1) {
+    return parts[0].slice(0, 2).toUpperCase();
+  }
+  return parts
+    .slice(0, 2)
+    .map((w) => w[0])
+    .join("")
+    .toUpperCase();
 }

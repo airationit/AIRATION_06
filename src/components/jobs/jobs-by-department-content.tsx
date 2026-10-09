@@ -1,132 +1,84 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useMemo } from "react";
 import Link from "next/link";
-import { Search, Loader2 } from "lucide-react";
+import { Search } from "lucide-react";
 import { Footer, InteractiveDots } from "@/components/shared";
-import { fetchJobs } from "@/lib/api/jobs";
-import { JobListItem } from "@/types/jobs";
 
 interface DepartmentItem {
   name: string;
   slug: string;
-  count: number;
 }
+
+// Full directory of major Indian hiring departments matching reference design
+const DEFAULT_INDIAN_DEPARTMENTS: DepartmentItem[] = [
+  { name: "Admin / Back Office / Computer Operator", slug: "admin-back-office-computer-operator" },
+  { name: "Advertising / Communication", slug: "advertising-communication" },
+  { name: "Aviation & Aerospace", slug: "aviation-aerospace" },
+  { name: "Banking / Insurance / Financial Services", slug: "banking-insurance-financial-services" },
+  { name: "Beauty, Fitness & Personal Care", slug: "beauty-fitness-personal-care" },
+  { name: "Civil Engineering", slug: "civil-engineering" },
+  { name: "Cloud / Infrastructure", slug: "cloud-infrastructure" },
+  { name: "Construction & Engineering", slug: "construction-engineering" },
+  { name: "Construction & Site Engineering", slug: "construction-site-engineering" },
+  { name: "Consulting", slug: "consulting" },
+  { name: "Content, Editorial & Journalism", slug: "content-editorial-journalism" },
+  { name: "CSR & Social Service", slug: "csr-social-service" },
+  { name: "Customer Support", slug: "customer-support" },
+  { name: "Data / AI", slug: "data-ai" },
+  { name: "Data Science & Analytics", slug: "data-science-analytics" },
+  { name: "Delivery / Driver / Logistics", slug: "delivery-driver-logistics" },
+  { name: "Design & Creative", slug: "design-creative" },
+  { name: "Domestic Worker", slug: "domestic-worker" },
+  { name: "Education", slug: "education" },
+  { name: "Electrical", slug: "electrical" },
+  { name: "Energy & Mining", slug: "energy-mining" },
+  { name: "Engineering - Hardware & Networks", slug: "engineering-hardware-networks" },
+  { name: "Environment Health & Safety", slug: "environment-health-safety" },
+  { name: "Facility Management", slug: "facility-management" },
+  { name: "Finance & Accounting", slug: "finance-accounting" },
+  { name: "Healthcare / Doctor / Hospital", slug: "healthcare-doctor-hospital" },
+  { name: "Hospitality", slug: "hospitality" },
+  { name: "Human Resources", slug: "human-resources" },
+  { name: "IT & Software", slug: "it-software" },
+  { name: "IT & Information Security", slug: "it-information-security" },
+  { name: "Legal & Regulatory", slug: "legal-regulatory" },
+  { name: "Logistics / Supply Chain", slug: "logistics-supply-chain" },
+  { name: "Maintenance Services", slug: "maintenance-services" },
+  { name: "Manufacturing", slug: "manufacturing" },
+  { name: "Marketing / Brand / Digital Marketing", slug: "marketing-brand-digital-marketing" },
+  { name: "Mechanical / HVAC", slug: "mechanical-hvac" },
+  { name: "Media Production & Entertainment", slug: "media-production-entertainment" },
+  { name: "Operations", slug: "operations" },
+  { name: "Product Management", slug: "product-management" },
+  { name: "Production / Manufacturing / Maintenance", slug: "production-manufacturing-maintenance" },
+  { name: "Project & Program Management", slug: "project-program-management" },
+  { name: "Purchase & Supply Chain", slug: "purchase-supply-chain" },
+  { name: "Quality Assurance", slug: "quality-assurance" },
+  { name: "Research & Development", slug: "research-development" },
+  { name: "Restaurant / Hospitality / Tourism", slug: "restaurant-hospitality-tourism" },
+  { name: "Retail & eCommerce", slug: "retail-ecommerce" },
+  { name: "Risk Management & Compliance", slug: "risk-management-compliance" },
+  { name: "Sales & BD", slug: "sales-bd" },
+  { name: "Security Services", slug: "security-services" },
+  { name: "Shipping & Maritime", slug: "shipping-maritime" },
+  { name: "Software Engineering", slug: "software-engineering" },
+  { name: "Strategic & Top Management", slug: "strategic-top-management" },
+];
 
 export function JobsByDepartmentContent() {
   const [searchQuery, setSearchQuery] = useState("");
-  const [activeJobs, setActiveJobs] = useState<JobListItem[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  // Dynamically fetch public active jobs directly from backend API
-  useEffect(() => {
-    let mounted = true;
-    async function loadActiveJobs() {
-      try {
-        const response = await fetchJobs({ page_size: 100 });
-        if (mounted && response.data) {
-          setActiveJobs(response.data);
-        }
-      } catch (err) {
-        console.error("Failed to load active jobs for department directory:", err);
-      } finally {
-        if (mounted) setLoading(false);
-      }
-    }
-    loadActiveJobs();
-    return () => {
-      mounted = false;
-    };
-  }, []);
-
-  // Compute active departments strictly from backend active job listings
-  const departmentsList = useMemo(() => {
-    const deptDataMap = new Map<string, { displayName: string; canonicalSlug: string; count: number }>();
-
-    activeJobs.forEach((job) => {
-      // Filter out test/dummy jobs
-      const titleLower = (job.title || "").toLowerCase().trim();
-      if (titleLower === "new" || titleLower === "test" || titleLower === "demo" || titleLower.length < 2) {
-        return;
-      }
-
-      // Safely check status whether string, number, or object
-      let statusStr = "";
-      if (typeof job.status === "string") {
-        statusStr = job.status.toLowerCase();
-      } else if (typeof job.status === "number") {
-        statusStr = job.status === 1 ? "active" : "inactive";
-      } else if (job.status && typeof job.status === "object" && "name" in (job.status as any)) {
-        statusStr = String((job.status as any).name || "").toLowerCase();
-      }
-
-      if (statusStr && statusStr !== "published" && statusStr !== "active" && statusStr !== "open") {
-        return;
-      }
-
-      // Skip expired jobs if deadline passed
-      if (job.application_deadline) {
-        const deadline = new Date(job.application_deadline);
-        if (!isNaN(deadline.getTime()) && deadline < new Date()) {
-          return;
-        }
-      }
-
-      let rawDept = job.role_category?.name || job.job_role?.name || (job as any).department || "";
-      if (!rawDept) return;
-
-      // Clean up department label
-      let cleanDept = rawDept
-        .replace(/\s*Roles$/i, "")
-        .replace(/^IT\s*\/\s*Software$/i, "IT & Software")
-        .replace(/^Sales$/i, "Sales & BD")
-        .replace(/^Design$/i, "Design & Creative")
-        .replace(/^HR$/i, "Human Resources")
-        .replace(/^Admin$/i, "Admin & Office Support")
-        .trim();
-
-      if (cleanDept.toLowerCase() === "custom") return;
-
-      const slug = cleanDept.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
-
-      if (cleanDept && slug) {
-        const existing = deptDataMap.get(slug);
-        if (existing) {
-          existing.count += 1;
-        } else {
-          deptDataMap.set(slug, {
-            displayName: cleanDept,
-            canonicalSlug: slug,
-            count: 1,
-          });
-        }
-      }
-    });
-
-    const dynamicDepts: DepartmentItem[] = [];
-
-    deptDataMap.forEach(({ displayName, canonicalSlug, count }) => {
-      if (count > 0) {
-        dynamicDepts.push({
-          name: displayName,
-          slug: canonicalSlug,
-          count,
-        });
-      }
-    });
-
-    return dynamicDepts.sort((a, b) => b.count - a.count || a.name.localeCompare(b.name));
-  }, [activeJobs]);
+  const [departments] = useState<DepartmentItem[]>(DEFAULT_INDIAN_DEPARTMENTS);
 
   // Filter departments by live search query
   const filteredDepartments = useMemo(() => {
-    if (!searchQuery.trim()) return departmentsList;
+    if (!searchQuery.trim()) return departments;
     const q = searchQuery.toLowerCase().trim();
-    return departmentsList.filter(
+    return departments.filter(
       (dept) =>
         dept.name.toLowerCase().includes(q) || dept.slug.includes(q)
     );
-  }, [departmentsList, searchQuery]);
+  }, [departments, searchQuery]);
 
   return (
     <main className="relative flex min-h-dvh flex-col overflow-x-clip bg-background text-foreground">
@@ -168,23 +120,10 @@ export function JobsByDepartmentContent() {
               Jobs By Department
             </h1>
           </div>
-          {loading && (
-            <div className="flex items-center gap-2 text-xs font-medium text-slate-400">
-              <Loader2 className="h-3.5 w-3.5 animate-spin text-blue-600" />
-              <span>Fetching active hiring departments...</span>
-            </div>
-          )}
         </div>
 
-        {/* Departments Grid: Dynamic active backend hiring departments */}
-        {loading ? (
-          <div className="py-20 flex flex-col items-center justify-center text-center">
-            <Loader2 className="h-8 w-8 animate-spin text-blue-600 mb-3" />
-            <p className="text-sm font-medium text-slate-500 dark:text-slate-400">
-              Loading active hiring departments...
-            </p>
-          </div>
-        ) : filteredDepartments.length > 0 ? (
+        {/* Departments Grid: Comprehensive 4-column directory layout matching reference screenshot */}
+        {filteredDepartments.length > 0 ? (
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-y-3.5 gap-x-6">
             {filteredDepartments.map((dept) => (
               <Link
@@ -204,7 +143,7 @@ export function JobsByDepartmentContent() {
             <p className="text-base font-semibold text-slate-700 dark:text-slate-300">
               {searchQuery
                 ? `No departments found matching "${searchQuery}"`
-                : "No active job listings in any departments currently."}
+                : "No departments available."}
             </p>
             {searchQuery && (
               <button
