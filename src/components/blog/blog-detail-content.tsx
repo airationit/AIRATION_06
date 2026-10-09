@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -53,25 +53,38 @@ function SectionBlockRenderer({ section, index, headingIndex }: { section: BlogS
   switch (section.type) {
     case "paragraph":
       return (
-        <div key={index} className="my-6 space-y-6">
+        <div key={index} className="my-5 space-y-4">
           {section.content.split("\n\n").map((para, pIdx) => {
             // Check if this paragraph is a "pseudo-list" (multiple short lines)
             const lines = para.split("\n");
             if (lines.length > 2 && lines.every((l) => l.trim().length > 0 && l.length < 100)) {
               return (
-                <ul key={pIdx} className="my-6 space-y-3 pl-5 border-l-4 border-blue-500/20">
-                  {lines.map((line, lIdx) => (
-                    <li key={lIdx} className="text-[17px] sm:text-[19px] leading-relaxed text-foreground/80 flex items-start">
-                      <span className="mr-3 mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-blue-500"></span>
-                      <span>{line}</span>
-                    </li>
-                  ))}
+                <ul key={pIdx} className="my-4 space-y-2.5 pl-1">
+                  {lines.map((line, lIdx) => {
+                    const numberMatch = line.trim().match(/^(\d+)[\.\)]\s*(.*)$/);
+                    if (numberMatch) {
+                      return (
+                        <li key={lIdx} className="text-[14px] sm:text-[15px] leading-relaxed text-foreground/85 flex items-start">
+                          <span className="mr-2.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900 text-[11px] font-bold mt-0.5 shadow-2xs">
+                            {numberMatch[1]}
+                          </span>
+                          <span>{numberMatch[2]}</span>
+                        </li>
+                      );
+                    }
+                    return (
+                      <li key={lIdx} className="text-[14px] sm:text-[15px] leading-relaxed text-foreground/85 flex items-start">
+                        <span className="mr-2.5 mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-slate-900 dark:bg-slate-200"></span>
+                        <span>{line}</span>
+                      </li>
+                    );
+                  })}
                 </ul>
               );
             }
 
             return (
-              <p key={pIdx} className="text-[17px] sm:text-[19px] leading-8 sm:leading-9 text-slate-700 dark:text-slate-300 whitespace-pre-line tracking-tight">
+              <p key={pIdx} className="text-[14px] sm:text-[15px] leading-relaxed sm:leading-7 text-slate-700 dark:text-slate-300 whitespace-pre-line tracking-normal">
                 {para}
               </p>
             );
@@ -83,12 +96,17 @@ function SectionBlockRenderer({ section, index, headingIndex }: { section: BlogS
       const id = section.content.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
       if (section.level === 2) {
         return (
-          <div key={index} className="mt-12 mb-6 not-prose">
+          <div key={index} className="mt-8 mb-4 not-prose">
             <h2
               id={id}
-              className="m-0 p-0 text-[24px] sm:text-[26px] font-semibold tracking-tight text-foreground leading-[1.3]"
+              className="scroll-mt-24 m-0 p-0 text-[18px] sm:text-[20px] font-semibold tracking-tight text-foreground leading-[1.35] flex items-center gap-3"
             >
-              {section.content}
+              {headingIndex !== undefined && (
+                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900 text-xs font-bold shadow-2xs">
+                  {headingIndex}
+                </span>
+              )}
+              <span>{section.content}</span>
             </h2>
           </div>
         );
@@ -97,7 +115,7 @@ function SectionBlockRenderer({ section, index, headingIndex }: { section: BlogS
         <h3
           key={index}
           id={id}
-          className="mt-10 mb-4 text-xl sm:text-2xl font-bold tracking-tight text-blue-600 dark:text-blue-400 leading-snug"
+          className="scroll-mt-24 mt-6 mb-3 text-[15px] sm:text-[17px] font-semibold tracking-tight text-blue-600 dark:text-blue-400 leading-snug"
         >
           {section.content}
         </h3>
@@ -127,13 +145,13 @@ function SectionBlockRenderer({ section, index, headingIndex }: { section: BlogS
       return (
         <div
           key={index}
-          className="my-7 relative overflow-hidden rounded-2xl border border-blue-500/25 bg-blue-500/[0.05] p-5 sm:p-6 shadow-sm backdrop-blur-sm"
+          className="my-6 relative overflow-hidden rounded-2xl border border-blue-500/25 bg-blue-500/[0.05] p-4 sm:p-5 shadow-sm backdrop-blur-sm"
         >
-          <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400">
+          <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-blue-600 dark:text-blue-400">
             <Info className="h-4 w-4 shrink-0" />
             <span>{section.title}</span>
           </div>
-          <p className="mt-2 text-sm sm:text-base leading-relaxed text-foreground/90 font-medium">
+          <p className="mt-2 text-[13px] sm:text-[14px] leading-relaxed text-foreground/90 font-medium">
             {section.content}
           </p>
         </div>
@@ -141,12 +159,12 @@ function SectionBlockRenderer({ section, index, headingIndex }: { section: BlogS
 
     case "list":
       return (
-        <ul key={index} className="my-5 space-y-3 pl-2">
+        <ul key={index} className="my-4 space-y-2.5 pl-2">
           {section.items.map((item, i) => {
             const parts = item.split("**");
             return (
-              <li key={i} className="flex items-start text-[17px] sm:text-[19px] leading-relaxed text-slate-700 dark:text-slate-300">
-                <span className="mr-3 mt-1 text-blue-600 dark:text-blue-400 text-2xl leading-none">•</span>
+              <li key={i} className="flex items-start text-[14px] sm:text-[15px] leading-relaxed text-slate-700 dark:text-slate-300">
+                <span className="mr-2.5 mt-0.5 text-slate-900 dark:text-slate-100 text-lg leading-none font-bold">•</span>
                 <span>
                   {parts.length > 1 ? (
                     <>
@@ -171,7 +189,7 @@ function SectionBlockRenderer({ section, index, headingIndex }: { section: BlogS
               <thead className="bg-muted/50 border-b border-border/60">
                 <tr>
                   {section.headers.map((header, i) => (
-                    <th key={i} className="py-4 px-5 font-bold text-foreground">
+                    <th key={i} className="py-4 px-5 font-semibold text-foreground">
                       {header}
                     </th>
                   ))}
@@ -264,6 +282,107 @@ function FAQItem({ item, isOpen, onToggle }: { item: { question: string; answer:
 export function BlogDetailContent({ post, featuredJobs = [] }: BlogDetailContentProps) {
   const [copied, setCopied] = useState(false);
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
+  const [activeHeadingId, setActiveHeadingId] = useState<string>("");
+  const tocListRef = useRef<HTMLUListElement>(null);
+  const isManualClickRef = useRef(false);
+  const manualClickTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Track active heading on scroll & init with first heading
+  useEffect(() => {
+    const headings = post.sections?.filter((s) => s.type === "heading") || [];
+    if (headings.length === 0) return;
+
+    const getHeadingElements = () => {
+      return headings
+        .map((s) => {
+          const id = s.content.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)+/g, "");
+          return document.getElementById(id);
+        })
+        .filter(Boolean) as HTMLElement[];
+    };
+
+    const initialHeadingElements = getHeadingElements();
+    if (initialHeadingElements.length > 0 && !activeHeadingId) {
+      setActiveHeadingId(initialHeadingElements[0].id);
+    }
+
+    const handleScroll = () => {
+      if (isManualClickRef.current) return;
+
+      const headingElements = getHeadingElements();
+      if (headingElements.length === 0) return;
+
+      // If at bottom of page, highlight last heading
+      if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 100) {
+        setActiveHeadingId(headingElements[headingElements.length - 1].id);
+        return;
+      }
+
+      // Check which heading is currently active (closest above 150px reading offset)
+      let currentId = headingElements[0].id;
+      for (let i = 0; i < headingElements.length; i++) {
+        const rect = headingElements[i].getBoundingClientRect();
+        if (rect.top <= 150) {
+          currentId = headingElements[i].id;
+        } else {
+          break;
+        }
+      }
+      setActiveHeadingId(currentId);
+    };
+
+    const handleUserScrollInteraction = () => {
+      if (isManualClickRef.current) {
+        isManualClickRef.current = false;
+        if (manualClickTimerRef.current) {
+          clearTimeout(manualClickTimerRef.current);
+          manualClickTimerRef.current = null;
+        }
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("wheel", handleUserScrollInteraction, { passive: true });
+    window.addEventListener("touchmove", handleUserScrollInteraction, { passive: true });
+    handleScroll();
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("wheel", handleUserScrollInteraction);
+      window.removeEventListener("touchmove", handleUserScrollInteraction);
+      if (manualClickTimerRef.current) {
+        clearTimeout(manualClickTimerRef.current);
+      }
+    };
+  }, [post.sections]);
+
+  // Keep active TOC item in view inside the TOC container when scrolling
+  useEffect(() => {
+    if (!activeHeadingId || !tocListRef.current) return;
+    const list = tocListRef.current;
+    const activeItem = list.querySelector<HTMLElement>(`[data-toc-id="${activeHeadingId}"]`);
+    if (!activeItem) return;
+
+    const listRect = list.getBoundingClientRect();
+    const itemRect = activeItem.getBoundingClientRect();
+
+    // If active item is below the visible bottom of the list container
+    if (itemRect.bottom > listRect.bottom - 16) {
+      const scrollDownAmount = itemRect.bottom - listRect.bottom + 48;
+      list.scrollTo({
+        top: list.scrollTop + scrollDownAmount,
+        behavior: "smooth",
+      });
+    }
+    // If active item is above the visible top of the list container
+    else if (itemRect.top < listRect.top + 16) {
+      const scrollUpAmount = listRect.top - itemRect.top + 48;
+      list.scrollTo({
+        top: Math.max(0, list.scrollTop - scrollUpAmount),
+        behavior: "smooth",
+      });
+    }
+  }, [activeHeadingId]);
 
   // Record view count once per session
   useEffect(() => {
@@ -276,11 +395,38 @@ export function BlogDetailContent({ post, featuredJobs = [] }: BlogDetailContent
     }
   }, [post.slug]);
 
-  const handleShare = () => {
-    if (typeof window !== "undefined" && navigator.clipboard) {
-      navigator.clipboard.writeText(window.location.href);
+  const fallbackCopy = (text: string) => {
+    try {
+      const textArea = document.createElement("textarea");
+      textArea.value = text;
+      textArea.style.position = "fixed";
+      textArea.style.left = "-9999px";
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      document.execCommand("copy");
+      document.body.removeChild(textArea);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
+    } catch (e) {
+      console.warn("Clipboard copy failed", e);
+    }
+  };
+
+  const handleShare = () => {
+    if (typeof window !== "undefined") {
+      const url = window.location.href;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard
+          .writeText(url)
+          .then(() => {
+            setCopied(true);
+            setTimeout(() => setCopied(false), 2000);
+          })
+          .catch(() => fallbackCopy(url));
+      } else {
+        fallbackCopy(url);
+      }
     }
   };
 
@@ -349,12 +495,12 @@ export function BlogDetailContent({ post, featuredJobs = [] }: BlogDetailContent
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-            className="text-[32px] font-bold tracking-tight sm:text-4xl lg:text-[40px] text-slate-900 dark:text-white leading-[1.2] mb-5"
+            className="text-2xl font-semibold tracking-tight sm:text-3xl lg:text-[32px] text-slate-900 dark:text-white leading-[1.25] mb-4"
           >
             {post.title}
           </motion.h1>
 
-          <p className="mt-4 text-[17px] leading-relaxed text-slate-600 dark:text-slate-300 sm:text-[19px] mb-8">
+          <p className="mt-3 text-[14px] sm:text-[15px] leading-relaxed text-slate-600 dark:text-slate-300 mb-6">
             {post.excerpt}
           </p>
 
@@ -388,10 +534,24 @@ export function BlogDetailContent({ post, featuredJobs = [] }: BlogDetailContent
 
             {/* Share this article pill */}
             <div className="flex items-center gap-3 rounded-full border border-slate-200/80 dark:border-border/60 bg-white dark:bg-card p-1.5 shadow-sm">
-              <span className="flex items-center gap-2 pl-3 pr-2 text-[13px] font-semibold text-slate-700 dark:text-slate-200">
-                <Share2 className="h-4 w-4 text-blue-600" />
-                Share this article
-              </span>
+              <button
+                type="button"
+                onClick={handleShare}
+                className="group flex items-center gap-2 pl-3 pr-2 py-1 text-[13px] font-semibold text-slate-700 dark:text-slate-200 hover:text-blue-600 transition-colors cursor-pointer select-none rounded-full"
+                title="Click to copy article link"
+              >
+                {copied ? (
+                  <>
+                    <CheckCircle2 className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
+                    <span className="text-emerald-600 dark:text-emerald-400 font-bold">Link copied!</span>
+                  </>
+                ) : (
+                  <>
+                    <Share2 className="h-4 w-4 text-blue-600 group-hover:scale-110 transition-transform" />
+                    <span>Share this article</span>
+                  </>
+                )}
+              </button>
               <div className="flex items-center gap-1.5">
                 {/* WhatsApp */}
                 <a href={`https://api.whatsapp.com/send?text=${encodeURIComponent(post.title)}%20https://hirance.com/blog/${post.slug}`} target="_blank" rel="noopener noreferrer" className="flex h-8 w-8 items-center justify-center rounded-full bg-[#25D366] text-white hover:opacity-90 transition-opacity" title="WhatsApp">
@@ -459,18 +619,20 @@ export function BlogDetailContent({ post, featuredJobs = [] }: BlogDetailContent
 
           {/* Executive Summary / Key Takeaways Box */}
           {post.key_takeaways && post.key_takeaways.length > 0 && (
-            <div className="mb-10 rounded-[20px] bg-[#f8faff] dark:bg-card p-6 sm:p-8 border border-blue-100/50 dark:border-border shadow-sm">
-              <div className="flex items-center gap-3 mb-5">
-                <div className="flex h-10 w-10 items-center justify-center rounded-[12px] bg-blue-100 text-blue-600 dark:bg-blue-900/30">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+            <div className="mb-8 rounded-2xl bg-[#f8faff] dark:bg-card p-5 sm:p-6 border border-blue-100/60 dark:border-border shadow-xs">
+              <div className="flex items-center gap-2.5 mb-4">
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-100 text-blue-600 dark:bg-blue-900/30 shrink-0">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
                 </div>
-                <h3 className="text-[20px] font-bold text-foreground">Key Takeaways</h3>
+                <h3 className="text-[16px] sm:text-[17px] font-semibold text-foreground">Key Takeaways</h3>
               </div>
               <ul className="space-y-3">
                 {post.key_takeaways.map((takeaway, i) => (
-                  <li key={i} className="flex items-start text-[15px] sm:text-[16px] text-slate-700 dark:text-slate-300 leading-relaxed font-medium">
-                    <span className="mr-3 mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-blue-600"></span>
-                    <span>{takeaway}</span>
+                  <li key={i} className="flex items-start text-[13.5px] sm:text-[14px] text-slate-700 dark:text-slate-300 leading-relaxed font-normal">
+                    <span className="mr-3 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900 text-[11px] font-bold mt-0.5 shadow-2xs">
+                      {i + 1}
+                    </span>
+                    <span className="flex-1">{takeaway}</span>
                   </li>
                 ))}
               </ul>
@@ -511,7 +673,7 @@ export function BlogDetailContent({ post, featuredJobs = [] }: BlogDetailContent
                 <Briefcase className="h-7 w-7" />
               </div>
               <div>
-                <h3 className="text-[22px] font-bold text-slate-900 leading-tight">Find Jobs</h3>
+                <h3 className="text-[22px] font-semibold text-slate-900 leading-tight">Find Jobs</h3>
                 <p className="text-[14px] text-slate-500 mt-1 max-w-[440px] leading-relaxed">
                   Explore thousands of IT & corporate jobs that match your skills and career goals. Get hired faster with Hirance.
                 </p>
@@ -553,7 +715,7 @@ export function BlogDetailContent({ post, featuredJobs = [] }: BlogDetailContent
                     </div>
                     <div className="flex-1 min-w-0 px-2 text-right">
                       <p className="text-[13px] font-medium text-slate-500 mb-0.5">Previous Article</p>
-                      <h4 className="text-[14.5px] font-bold text-slate-900 truncate leading-snug">{prev.title}</h4>
+                      <h4 className="text-[14.5px] font-semibold text-slate-900 truncate leading-snug">{prev.title}</h4>
                     </div>
                     {prev.cover_image?.url ? (
                       <div className="h-[68px] w-[88px] shrink-0 overflow-hidden rounded-[14px]">
@@ -581,7 +743,7 @@ export function BlogDetailContent({ post, featuredJobs = [] }: BlogDetailContent
                     )}
                     <div className="flex-1 min-w-0 pr-2">
                       <p className="text-[13px] font-medium text-slate-500 mb-0.5">Next Article</p>
-                      <h4 className="text-[14.5px] font-bold text-slate-900 truncate leading-snug">{next.title}</h4>
+                      <h4 className="text-[14.5px] font-semibold text-slate-900 truncate leading-snug">{next.title}</h4>
                     </div>
                     <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-slate-200 text-blue-600 group-hover:bg-blue-50 transition-colors mr-1">
                       <ArrowRight className="h-4 w-4" />
@@ -610,26 +772,59 @@ export function BlogDetailContent({ post, featuredJobs = [] }: BlogDetailContent
           
           {/* On This Page (TOC) */}
           {post.sections && post.sections.some(s => s.type === "heading") && (
-            <div className="rounded-2xl border border-border/70 bg-white/50 dark:bg-card/40 p-6 shadow-sm backdrop-blur-md">
-              <h3 className="text-xs font-bold uppercase tracking-wider text-foreground mb-4">
-                On This Page
-              </h3>
-              <ul className="space-y-4">
+            <div className="rounded-2xl bg-white/60 dark:bg-card/50 p-5 sm:p-6 shadow-sm backdrop-blur-md flex flex-col max-h-[calc(100vh-8rem)]">
+              <div className="flex items-center justify-between mb-4 shrink-0">
+                <h3 className="text-xs font-semibold uppercase tracking-wider text-foreground">
+                  On This Page
+                </h3>
+                <span className="text-[11px] font-medium text-slate-400">
+                  {post.sections.filter(s => s.type === "heading").length} sections
+                </span>
+              </div>
+              <ul
+                ref={tocListRef}
+                className="space-y-1 overflow-y-auto p-1 -m-1 scroll-smooth overscroll-contain [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+              >
                 {post.sections.filter(s => s.type === "heading").map((section, idx) => {
                   const id = section.content.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
-                  const isSelected = idx === 0;
+                  const isSelected = activeHeadingId ? activeHeadingId === id : idx === 0;
                   return (
-                  <li key={idx} className={`text-[13px] ${section.level === 3 ? "pl-4" : ""}`}>
-                    <a href={`#${id}`} onClick={(e) => {
-                      e.preventDefault();
-                      document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
-                    }} className={`flex items-center gap-3 transition-colors ${
-                      isSelected ? "text-blue-700 font-semibold" : "text-slate-600 hover:text-blue-600 font-medium"
-                    }`}>
-                      <span className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[11px] font-bold ${
+                  <li 
+                    key={idx} 
+                    data-toc-id={id}
+                    className={`text-[13px] ${section.level === 3 ? "pl-3" : ""}`}
+                  >
+                    <a
+                      href={`#${id}`}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        isManualClickRef.current = true;
+                        setActiveHeadingId(id);
+                        if (manualClickTimerRef.current) {
+                          clearTimeout(manualClickTimerRef.current);
+                        }
+                        manualClickTimerRef.current = setTimeout(() => {
+                          isManualClickRef.current = false;
+                          manualClickTimerRef.current = null;
+                        }, 1600);
+
+                        const el = document.getElementById(id);
+                        if (el) {
+                          const yOffset = -90;
+                          const y = el.getBoundingClientRect().top + window.scrollY + yOffset;
+                          window.scrollTo({ top: Math.max(0, y), behavior: "smooth" });
+                        }
+                      }}
+                      className={`group flex items-center gap-2.5 px-3 py-2 rounded-xl transition-all cursor-pointer ${
                         isSelected 
-                          ? "bg-blue-600 text-white" 
-                          : "bg-transparent text-slate-900"
+                          ? "bg-blue-50/90 dark:bg-blue-950/40 text-blue-700 dark:text-blue-400 font-semibold" 
+                          : "text-slate-600 dark:text-slate-400 hover:text-blue-600 hover:bg-slate-50 dark:hover:bg-card/70 font-medium"
+                      }`}
+                    >
+                      <span className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[11px] font-bold transition-all ${
+                        isSelected 
+                          ? "bg-blue-600 text-white shadow-xs ring-2 ring-blue-600/20" 
+                          : "bg-slate-100 dark:bg-muted text-slate-700 dark:text-slate-300 group-hover:bg-blue-50 dark:group-hover:bg-blue-950/40 group-hover:text-blue-600"
                       }`}>{idx + 1}</span>
                       <span className="truncate leading-relaxed">{section.content}</span>
                     </a>
@@ -643,7 +838,7 @@ export function BlogDetailContent({ post, featuredJobs = [] }: BlogDetailContent
           {/* Related Articles Mini */}
           {relatedPosts.length > 0 && (
             <div className="rounded-2xl border border-border/70 bg-white/50 dark:bg-card/40 p-6 shadow-sm backdrop-blur-md">
-              <h3 className="text-xs font-bold uppercase tracking-wider text-foreground mb-5">
+              <h3 className="text-xs font-semibold uppercase tracking-wider text-foreground mb-5">
                 Related Articles
               </h3>
               <div className="space-y-5">
@@ -674,7 +869,7 @@ export function BlogDetailContent({ post, featuredJobs = [] }: BlogDetailContent
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
                   <div className="w-2 h-2 rounded-full bg-blue-600 animate-pulse" />
-                  <h3 className="text-[16px] font-bold text-slate-900 dark:text-white">
+                  <h3 className="text-[16px] font-semibold text-slate-900 dark:text-white">
                     Explore Jobs
                   </h3>
                 </div>
@@ -747,7 +942,7 @@ export function BlogDetailContent({ post, featuredJobs = [] }: BlogDetailContent
           {/* Card: "Popular Categories" */}
           <div className="mt-8 rounded-[24px] border border-slate-200/80 dark:border-border/60 bg-white dark:bg-card p-6 shadow-sm">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-[16px] font-bold text-slate-900 dark:text-white">
+              <h3 className="text-[16px] font-semibold text-slate-900 dark:text-white">
                 Popular Categories
               </h3>
               <span className="text-[11px] font-medium text-slate-400">
@@ -810,8 +1005,8 @@ export function BlogDetailContent({ post, featuredJobs = [] }: BlogDetailContent
         <section className="relative border-t border-border/50 py-16">
           <div className="mx-auto max-w-3xl px-6">
             <div className="text-center mb-10">
-              <span className="text-xs font-bold uppercase tracking-wider text-blue-600 mb-2 block">Quick Answers</span>
-              <h2 className="text-2xl font-extrabold tracking-tight text-foreground sm:text-3xl">
+              <span className="text-xs font-semibold uppercase tracking-wider text-blue-600 mb-2 block">Quick Answers</span>
+              <h2 className="text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
                 Frequently Asked <span className="text-blue-600">Questions</span>
               </h2>
             </div>
@@ -834,7 +1029,7 @@ export function BlogDetailContent({ post, featuredJobs = [] }: BlogDetailContent
         <section className="relative border-t border-border/50 py-16">
           <div className="mx-auto max-w-5xl px-6">
             <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-bold tracking-tight text-foreground">
+              <h2 className="text-2xl font-semibold tracking-tight text-foreground">
                 Related Insights
               </h2>
               <Link

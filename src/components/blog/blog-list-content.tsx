@@ -3,6 +3,7 @@
 import { useEffect, useState, useTransition, useMemo, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Search,
@@ -30,7 +31,7 @@ import {
 import { BlogCategory, BlogListItem, BlogTag } from "@/types/blogs";
 import { useBlogsStore } from "@/store/blogs-store";
 import { formatBlogReadTime } from "@/lib/api/blogs";
-import { Footer, InteractiveDots, GooglePlayButton } from "@/components/shared";
+import { Footer, InteractiveDots, GooglePlayButton, SwipeHiringCta } from "@/components/shared";
 
 interface BlogListContentProps {
   initialBlogs: BlogListItem[];
@@ -781,13 +782,20 @@ export function BlogListContent({
 
               {/* Empty State */}
               {!isLoading && displayPosts.length === 0 && (
-                <div className="py-20 text-center">
-                  <p className="text-base font-bold text-slate-900 dark:text-white">No articles found</p>
+                <div className="py-20 flex flex-col items-center justify-center text-center">
+                  <div className="w-64 h-64 max-w-full">
+                    <DotLottieReact
+                      src="https://lottie.host/4a29a009-77f7-4dc8-a8ab-8c92b23447de/Jq9P8t4o5y.lottie"
+                      loop
+                      autoplay
+                    />
+                  </div>
+                  <p className="text-base font-bold text-slate-900 dark:text-white mt-4">No articles found</p>
                   <p className="mt-1 text-xs text-slate-500">Try searching for another keyword or reset filters.</p>
                   <button
                     type="button"
                     onClick={resetFilters}
-                    className="mt-4 rounded-full bg-blue-600 px-5 py-2 text-xs font-semibold text-white hover:bg-blue-700 transition-colors"
+                    className="mt-6 rounded-full bg-blue-600 px-5 py-2 text-xs font-semibold text-white hover:bg-blue-700 transition-colors"
                   >
                     Reset Filters
                   </button>
@@ -1171,89 +1179,8 @@ export function BlogListContent({
         </div>
       </section>
 
-      {/* ========================================================
-          3. PRE-FOOTER CTA BANNER: "Experience Swipe-Based Hiring Today"
-          ======================================================== */}
-      <section className="relative pb-8 pt-10 sm:pt-14 lg:pt-16 overflow-hidden" aria-labelledby="cta-experience-heading">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          
-          {/* Main Card with minimum corner radius (rounded-2xl) */}
-          <div className="relative rounded-2xl border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 overflow-hidden shadow-xs">
-            
-            {/* 2-Column Grid Layout: col-8 (left) & col-4 (right) */}
-            <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 items-center gap-8 lg:gap-10 p-6 sm:p-10 lg:p-12">
-              
-              {/* Left Column: col-8 */}
-              <div className="lg:col-span-8 flex flex-col justify-center">
-                <h2
-                  id="cta-experience-heading"
-                  className="text-2xl sm:text-3xl lg:text-[38px] font-semibold text-slate-900 dark:text-white tracking-tight leading-[1.15]"
-                >
-                  Experience <span className="text-blue-600">Swipe-Based Hiring</span><br /> 
-                  <span className="text-slate-900 dark:text-white">Today</span>
-                </h2>
-
-                <p className="mt-3.5 text-[14px] sm:text-[14px] text-slate-600 dark:text-slate-300 leading-relaxed max-w-2xl line-clamp-2">
-                  Whether you're recruiting top software talent or searching for your next career move, Hirance makes hiring instant with zero forms. Match directly with verified profiles, swipe tailored job cards, and connect in seconds.
-                </p>
-
-                {/* Inline Stats Row */}
-                <div className="mt-6 flex flex-wrap items-center gap-6 sm:gap-8">
-                  <div>
-                    <p className="text-[18px] sm:text-[20px] font-semibold text-slate-900 dark:text-white leading-none">50K+</p>
-                    <p className="text-[12px] font-semibold text-slate-500 dark:text-slate-400 mt-1">Active Jobs</p>
-                  </div>
-                  <div className="w-px h-8 bg-slate-200 dark:bg-border/60" />
-                  <div>
-                    <p className="text-[18px] sm:text-[20px] font-semibold text-slate-900 dark:text-white leading-none">2M+</p>
-                    <p className="text-[12px] font-semibold text-slate-500 dark:text-slate-400 mt-1">Candidates</p>
-                  </div>
-                  <div className="w-px h-8 bg-slate-200 dark:bg-border/60" />
-                  <div>
-                    <p className="text-[18px] sm:text-[20px] font-semibold text-slate-900 dark:text-white leading-none">60s</p>
-                    <p className="text-[12px] font-semibold text-slate-500 dark:text-slate-400 mt-1">To Post a Job</p>
-                  </div>
-                </div>
-
-                {/* CTA Action Buttons */}
-                <div className="mt-7 flex flex-wrap items-center gap-3 sm:gap-4">
-                  <GooglePlayButton label="Apply for Jobs" />
-                  <a
-                    href="https://employer.hirance.com/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex h-11 sm:h-12 items-center justify-center rounded-full border border-slate-200/90 dark:border-border bg-white dark:bg-card px-6 sm:px-7 text-xs sm:text-sm font-bold text-slate-800 dark:text-white shadow-xs transition-all hover:bg-slate-50 dark:hover:bg-muted/80 active:scale-95"
-                  >
-                    Post a Job in 60s
-                  </a>
-                </div>
-              </div>
-
-              {/* Right Column: col-4 */}
-              <div className="lg:col-span-4 relative flex items-center justify-center min-h-[240px] sm:min-h-[280px] lg:min-h-[320px]">
-                {/* Background Shape Image behind Phone Mockup */}
-                <img
-                  src="/pics/bg-shape.png"
-                  alt=""
-                  aria-hidden="true"
-                  className="absolute pointer-events-none z-0 w-[400px] sm:w-[480px] lg:w-[540px] max-w-none h-auto object-contain top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
-                />
-
-                {/* Tilted Mobile Phone Image (Static) */}
-                <img
-                  src="/pics/mobile_mockup.png"
-                  alt="Hirance Swipe App Mockup"
-                  className="relative z-10 max-h-[260px] sm:max-h-[300px] lg:max-h-[340px] w-auto object-contain drop-shadow-[0_15px_30px_rgba(37,99,235,0.22)] transform rotate-6"
-                  loading="lazy"
-                />
-              </div>
-
-            </div>
-
-          </div>
-
-        </div>
-      </section>
+      {/* 3. PRE-FOOTER CTA BANNER: "Experience Swipe-Based Hiring Today" */}
+      <SwipeHiringCta className="pb-10 pt-6 sm:pb-14 sm:pt-8" />
 
       {/* ========================================================
           4. FOOTER (Shared Hirance Global Footer)

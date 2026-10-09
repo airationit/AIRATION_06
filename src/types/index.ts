@@ -4,6 +4,7 @@ export * from "./api";
 export * from "./masterdata";
 export * from "./jobs";
 export * from "./blogs";
+export * from "./companies";
 
 export interface NavItem {
   label: string;
