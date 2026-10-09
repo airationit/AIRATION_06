@@ -4,7 +4,7 @@ import { useState, useEffect, useMemo, memo } from "react";
 import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
 import { getCompanyColorTheme, initials } from "@/config/companies";
-import { fetchCompanies } from "@/lib/api";
+import { fetchCompanies, generateCompanySlug } from "@/lib/api";
 import type { CompanyItem } from "@/types";
 import { cn } from "@/lib/utils";
 
@@ -57,11 +57,16 @@ const AppIconCompanyCard = memo(function AppIconCompanyCard({
 
   const theme = useMemo(() => getCompanyColorTheme(name, index), [name, index]);
 
+  const companySlug = generateCompanySlug(name, company.id);
+  const companyHref = company.id
+    ? `/company/${companySlug}`
+    : `/jobs?search=${encodeURIComponent(name)}`;
+
   return (
     <Link
-      href={`/jobs?search=${encodeURIComponent(name)}`}
+      href={companyHref}
       title={name}
-      aria-label={`View jobs at ${name}`}
+      aria-label={`View ${name} profile and jobs`}
       suppressHydrationWarning
       className="relative flex shrink-0 items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 rounded-xl sm:rounded-[14px] md:rounded-2xl"
     >

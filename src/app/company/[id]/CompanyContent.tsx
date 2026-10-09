@@ -13,6 +13,12 @@ import { apiClient } from "@/lib/api/client";
 import { normalizeJobItem } from "@/lib/jobs-data";
 import { JobCard } from "@/components/jobs/job-card";
 import { Job } from "@/lib/jobs-data";
+import {
+  extractCompanyId,
+  fetchCompanyById,
+  fetchCompanyCategories,
+  fetchCompanyJobsList,
+} from "@/lib/api/companies";
 
 /**
  * Custom Building/Industry SVG matching the user's provided icon exactly
@@ -68,9 +74,15 @@ interface Company {
   contact_email?: string;
 }
 
-export default function CompanyContent({ companyId }: { companyId: string }) {
-  const [company, setCompany] = useState<Company | null>(null);
-  const [loading, setLoading] = useState(true);
+interface CompanyContentProps {
+  companyId: string;
+  initialCompany?: Company | null;
+}
+
+export default function CompanyContent({ companyId, initialCompany = null }: CompanyContentProps) {
+  const cleanId = extractCompanyId(companyId);
+  const [company, setCompany] = useState<Company | null>(initialCompany);
+  const [loading, setLoading] = useState(!initialCompany);
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
   const [logoError, setLogoError] = useState(false);
@@ -84,59 +96,79 @@ export default function CompanyContent({ companyId }: { companyId: string }) {
   const [selectedCategory, setSelectedCategory] = useState<string>("");
 
   useEffect(() => {
-    const fetchCompany = async () => {
+    let isMounted = true;
+
+    const loadCompany = async () => {
       try {
-        const json = await apiClient<any>(`/api/v1/company/${companyId}/`);
-        if (json.success && json.data) {
-          setCompany(json.data);
-        } else {
-          throw new Error(json.message || "Failed to load company details");
+        const res = await fetchCompanyById(cleanId);
+        if (isMounted) {
+          if (res.success && res.data) {
+            setCompany(res.data);
+          } else {
+            setError(res.message || "Company not found.");
+          }
         }
       } catch (err: any) {
-        setError(err.message);
+        if (isMounted) {
+          setError(err.message || "Failed to load company details");
+        }
       } finally {
-        setLoading(false);
+        if (isMounted) {
+          setLoading(false);
+        }
       }
     };
 
-    const fetchCategories = async () => {
+    const loadCategories = async () => {
       try {
-        const json = await apiClient<any>(`/api/v1/company/${companyId}/job-categories/`);
-        if (json && json.data) {
-          setCategories(json.data);
+        const res = await fetchCompanyCategories(cleanId);
+        if (isMounted && res.success && res.data) {
+          setCategories(res.data);
         }
       } catch (err) {
         console.error("Failed to fetch categories", err);
       }
     };
 
-    if (companyId) {
-      fetchCompany();
-      fetchCategories();
+    if (cleanId) {
+      if (!initialCompany) {
+        loadCompany();
+      }
+      loadCategories();
     }
-  }, [companyId]);
+
+    return () => {
+      isMounted = false;
+    };
+  }, [cleanId, initialCompany]);
 
   useEffect(() => {
-    const fetchCompanyJobs = async () => {
+    let isMounted = true;
+
+    const loadCompanyJobs = async () => {
       setLoadingJobs(true);
       try {
-        const json = await apiClient<any>(`/api/v1/company/${companyId}/jobs/`, {
-          params: selectedCategory ? { category_id: selectedCategory } : undefined,
-        });
-        if (json && json.data) {
-          setJobs(json.data.map((raw: any) => normalizeJobItem(raw)));
+        const res = await fetchCompanyJobsList(cleanId, selectedCategory);
+        if (isMounted && res.success && res.data) {
+          setJobs(res.data.map((raw: any) => normalizeJobItem(raw)));
         }
       } catch (err) {
         console.error("Failed to fetch company jobs", err);
       } finally {
-        setLoadingJobs(false);
+        if (isMounted) {
+          setLoadingJobs(false);
+        }
       }
     };
 
-    if (companyId) {
-      fetchCompanyJobs();
+    if (cleanId) {
+      loadCompanyJobs();
     }
-  }, [companyId, selectedCategory]);
+
+    return () => {
+      isMounted = false;
+    };
+  }, [cleanId, selectedCategory]);
 
   const handleShare = async () => {
     if (typeof window !== "undefined") {
@@ -227,7 +259,7 @@ export default function CompanyContent({ companyId }: { companyId: string }) {
         <div className="text-xs text-slate-500 mb-6 flex items-center gap-2">
           <Link href="/" className="hover:text-blue-600 transition-colors">Home</Link>
           <span>›</span>
-          <Link href="/companies" className="hover:text-blue-600 transition-colors">Top Companies</Link>
+          <Link href="/#partners" className="hover:text-blue-600 transition-colors">Companies</Link>
           <span>›</span>
           <span className="font-semibold text-slate-700">{company.company_name} Overview</span>
         </div>
