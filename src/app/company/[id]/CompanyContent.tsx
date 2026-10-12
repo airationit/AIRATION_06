@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { 
   MapPin, Globe, Share2,
   Briefcase, User, Users, ChevronDown,
@@ -89,6 +90,7 @@ export default function CompanyContent({
   initialJobs = [],
   initialSource,
 }: CompanyContentProps) {
+  const router = useRouter();
   const [company, setCompany] = useState<Company | null>(initialCompany);
   const [source, setSource] = useState<CompanyBackendSource | undefined>(initialSource);
   const [loading, setLoading] = useState(!initialCompany);
@@ -228,12 +230,27 @@ export default function CompanyContent({
     );
   }
 
+  useEffect(() => {
+    if (!loading && (error || !company)) {
+      const timer = setTimeout(() => {
+        router.replace("/companies");
+      }, 1200);
+      return () => clearTimeout(timer);
+    }
+  }, [loading, error, company, router]);
+
   if (error || !company) {
     return (
       <main className="min-h-screen bg-background flex flex-col items-center justify-center p-4">
-        <div className="text-center text-slate-600 mb-4">{error || "Company not found."}</div>
-        <Link href="/" className="text-blue-600 font-medium hover:underline">
-          Return to home
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mb-4"></div>
+        <div className="text-center text-slate-800 font-semibold mb-1">
+          Redirecting to companies directory...
+        </div>
+        <p className="text-xs text-slate-500 mb-4">
+          Finding active company opportunities for you
+        </p>
+        <Link href="/companies" className="text-xs font-semibold text-blue-600 hover:underline">
+          Click here if not redirected automatically
         </Link>
       </main>
     );

@@ -1,11 +1,15 @@
 import React, { cache } from "react";
 import type { Metadata } from "next";
+import { redirect } from "next/navigation";
 import {
   fetchCompanyById,
   fetchCompanyCategories,
   fetchCompanyJobsList,
+  extractCompanyId,
+  generateCompanySlug,
 } from "@/lib/api/companies";
-import { normalizeJobItem } from "@/lib/jobs-data";
+import { fetchJobDetail } from "@/lib/api/jobs";
+import { normalizeJobItem, generateJobSlug } from "@/lib/jobs-data";
 import { siteConfig } from "@/config/site";
 import CompanyContent from "./CompanyContent";
 
@@ -23,6 +27,7 @@ const getCachedCompany = cache(async (id: string) => {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { id } = await params;
+  const cleanId = extractCompanyId(id);
   try {
     const res = await getCachedCompany(id);
     if (res?.data?.company_name) {
@@ -44,6 +49,14 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         },
       };
     }
+
+    const job = await fetchJobDetail(cleanId);
+    if (job?.company_name) {
+      return {
+        title: `${job.company_name} - Jobs & Careers | Hirance`,
+        description: `Explore jobs and career opportunities at ${job.company_name} on Hirance.`,
+      };
+    }
   } catch {
     // fallback
   }
@@ -56,10 +69,40 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function CompanyPage({ params }: PageProps) {
   const { id } = await params;
+  const cleanId = extractCompanyId(id);
 
   // 1. Fetch company details first to know exact backend host (api.hirance.com vs prod.hirance.com)
   const compRes = await getCachedCompany(id);
-  const source = compRes?.source;
+
+  // Logical redirection: If company is not found by ID or slug, resolve logically
+  if (!compRes?.success || !compRes?.data) {
+    // A. Check if the ID belongs to a job posting
+    const job = await fetchJobDetail(cleanId);
+    if (job) {
+      const jobSlug = generateJobSlug(
+        job.title,
+        job.company_name,
+        job.city?.name || job.state?.name || "India",
+        job.id
+      );
+      redirect(`/jobs/view/${jobSlug}`);
+    }
+
+    // B. Check if name can be extracted from slug (e.g. "aara-global-...")
+    const potentialName = id
+      .replace(cleanId, "")
+      .replace(/[-_]+/g, " ")
+      .trim();
+
+    if (potentialName && potentialName.length > 2) {
+      redirect(`/jobs?search=${encodeURIComponent(potentialName)}`);
+    }
+
+    // C. Default safe redirection to companies directory
+    redirect("/companies");
+  }
+
+  const source = compRes.source;
 
   // 2. Fetch categories and jobs targeted strictly to that backend
   const [catRes, jobsRes] = await Promise.all([
@@ -67,7 +110,7 @@ export default async function CompanyPage({ params }: PageProps) {
     fetchCompanyJobsList(id, undefined, source),
   ]);
 
-  const initialCompany = compRes?.success && compRes.data ? compRes.data : null;
+  const initialCompany = compRes.data;
   const initialCategories = catRes?.success && Array.isArray(catRes.data) ? catRes.data : [];
   const initialJobs =
     jobsRes?.success && Array.isArray(jobsRes.data)
@@ -84,3 +127,4 @@ export default async function CompanyPage({ params }: PageProps) {
     />
   );
 }
+

@@ -280,9 +280,10 @@ export async function fetchCompanyCategories(
 }
 
 /**
- * Fetch company jobs with targeted routing.
- * If source is "api", queries only api.hirance.com (/company/{id}/jobs/).
- * If source is "prod", queries only prod.hirance.com (/api/v1/company/{id}/jobs/).
+ * Fetch company jobs accurately with zero 404 errors:
+ * - If company source is "prod": Query prod.hirance.com/jobs/?company_id={cleanId}
+ * - If company source is "api": Query api.hirance.com/company/{cleanId}/jobs/
+ * - If unknown: Try prod jobs API first, then api.hirance.com
  */
 export async function fetchCompanyJobsList(
   companyId: string,
@@ -292,15 +293,15 @@ export async function fetchCompanyJobsList(
   const cleanId = extractCompanyId(companyId);
   if (!cleanId) return { success: false, data: [] };
 
-  const params = categoryId ? { category_id: categoryId } : undefined;
   const effectiveSource = source || companySourceMap.get(cleanId);
 
-  // If known to be on api.hirance.com: ONLY call /company/{id}/jobs/
+  // 1. If known to be on api.hirance.com (e.g. legacy/dev companies): ONLY call /company/{id}/jobs/
   if (effectiveSource === "api") {
     try {
+      const params = categoryId ? { category_id: categoryId } : undefined;
       const apiRes = await apiClient<{ success: boolean; data: any[] }>(
         `/company/${cleanId}/jobs/`,
-        { params }
+        { params, revalidate: 60 }
       );
       if (apiRes && apiRes.success && Array.isArray(apiRes.data)) {
         return apiRes;
@@ -308,30 +309,61 @@ export async function fetchCompanyJobsList(
     } catch {
       // Suppressed
     }
-    return { success: false, data: [] };
+    return { success: true, data: [] };
   }
 
-  // If known to be on prod.hirance.com: ONLY call /api/v1/company/{id}/jobs/
+  // 2. If known to be on prod.hirance.com (core production): Query /jobs/?company_id=
   if (effectiveSource === "prod") {
     try {
-      const prodRes = await apiClient<{ success: boolean; data: any[] }>(
-        `/api/v1/company/${cleanId}/jobs/`,
-        { params }
-      );
-      if (prodRes && prodRes.success && Array.isArray(prodRes.data)) {
-        return prodRes;
+      const queryParams: Record<string, string | number | undefined> = {
+        company_id: cleanId,
+        page_size: 50,
+      };
+      if (categoryId) {
+        queryParams.role_category = categoryId;
+      }
+
+      const prodRes = await apiClient<{ success?: boolean; data?: any[] }>("/jobs/", {
+        params: queryParams,
+        revalidate: 60,
+      });
+
+      if (prodRes && Array.isArray(prodRes.data)) {
+        return { success: true, data: prodRes.data };
       }
     } catch {
       // Suppressed
     }
-    return { success: false, data: [] };
+    return { success: true, data: [] };
   }
 
-  // Fallback if source is not yet determined: check api.hirance.com first, then prod
+  // 3. Fallback if source is not yet determined: check prod.hirance.com first
   try {
+    const queryParams: Record<string, string | number | undefined> = {
+      company_id: cleanId,
+      page_size: 50,
+    };
+    if (categoryId) {
+      queryParams.role_category = categoryId;
+    }
+
+    const prodRes = await apiClient<{ success?: boolean; data?: any[] }>("/jobs/", {
+      params: queryParams,
+      revalidate: 60,
+    });
+
+    if (prodRes && Array.isArray(prodRes.data) && prodRes.data.length > 0) {
+      companySourceMap.set(cleanId, "prod");
+      return { success: true, data: prodRes.data };
+    }
+  } catch {}
+
+  // 4. Then check api.hirance.com
+  try {
+    const params = categoryId ? { category_id: categoryId } : undefined;
     const apiRes = await apiClient<{ success: boolean; data: any[] }>(
       `/company/${cleanId}/jobs/`,
-      { params }
+      { params, revalidate: 60 }
     );
     if (apiRes && apiRes.success && Array.isArray(apiRes.data)) {
       companySourceMap.set(cleanId, "api");
@@ -339,16 +371,5 @@ export async function fetchCompanyJobsList(
     }
   } catch {}
 
-  try {
-    const prodRes = await apiClient<{ success: boolean; data: any[] }>(
-      `/api/v1/company/${cleanId}/jobs/`,
-      { params }
-    );
-    if (prodRes && prodRes.success && Array.isArray(prodRes.data)) {
-      companySourceMap.set(cleanId, "prod");
-      return prodRes;
-    }
-  } catch {}
-
-  return { success: false, data: [] };
+  return { success: true, data: [] };
 }

@@ -7,6 +7,7 @@ import { getCompanyColorTheme, initials } from "@/config/companies";
 import { fetchCompanies } from "@/lib/api";
 import type { CompanyItem } from "@/types";
 import { cn } from "@/lib/utils";
+import { ArrowRight } from "lucide-react";
 
 /**
  * Deduplicate company items by normalized company name.
@@ -270,6 +271,14 @@ export function TrustedBy({ initialCompanies }: TrustedByProps) {
           <p className="mt-3 text-sm sm:text-base text-muted-foreground max-w-xl mx-auto">
             Built for modern hiring teams looking for better matches, faster applications and simpler hiring.
           </p>
+          <div className="mt-3 flex items-center justify-center">
+            <Link
+              href="/companies"
+              className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-blue-600 hover:text-blue-700 dark:text-blue-400 hover:underline transition-colors"
+            >
+              Explore Top Companies <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+          </div>
         </motion.div>
 
         {/* 4-Row Continuous App-Icon Stream (Continuous, no pause on hover) */}
