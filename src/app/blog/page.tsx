@@ -48,13 +48,39 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function BlogIndexPage() {
+import { fetchJobs } from "@/lib/api/jobs";
+
+interface BlogPageProps {
+  searchParams?: Promise<{
+    page?: string;
+    category?: string;
+    search?: string;
+  }>;
+}
+
+export default async function BlogIndexPage({ searchParams }: BlogPageProps) {
+  const resolvedParams = searchParams ? await searchParams : {};
+  const page = resolvedParams?.page ? Math.max(1, parseInt(resolvedParams.page, 10) || 1) : 1;
+  const category = resolvedParams?.category && resolvedParams.category !== "all" ? resolvedParams.category : undefined;
+  const search = resolvedParams?.search || undefined;
+
   // Pre-fetch initial data server-side for instant SSR & SEO indexing
-  const [blogsResponse, categories, tags] = await Promise.all([
-    fetchBlogs({ page: 1, page_size: 9, category: "all" }, { revalidate: 60 }),
-    fetchBlogCategories({ revalidate: 3600 }),
+  const [blogsResponse, categories, tags, jobsRes] = await Promise.all([
+    fetchBlogs(
+      { page, page_size: 6, category, search },
+      { revalidate: 60 }
+    ),
+    fetchBlogCategories({ revalidate: 60 }),
     fetchBlogTags({ revalidate: 3600 }),
+    fetchJobs({ ordering: "-published_at", page_size: 4 }, { revalidate: 3600 }).catch(() => ({ data: [] })),
   ]);
+
+  const blogsList = blogsResponse.data || [];
+  const totalCount = blogsResponse.pagination?.count ?? blogsList.length;
+  const totalPages =
+    blogsResponse.pagination?.total_pages && blogsResponse.pagination.total_pages > 0
+      ? blogsResponse.pagination.total_pages
+      : Math.max(1, Math.ceil(totalCount / 6));
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -70,7 +96,7 @@ export default async function BlogIndexPage() {
       logo: "https://hirance.com/og.png",
       slogan: "Swipe. Match. Get Hired.",
     },
-    blogPost: (blogsResponse.data || []).map((post) => ({
+    blogPost: blogsList.map((post) => ({
       "@type": "BlogPosting",
       headline: post.title,
       description: post.excerpt,
@@ -90,12 +116,13 @@ export default async function BlogIndexPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <BlogListContent
-        initialBlogs={blogsResponse.data || []}
-        totalCount={blogsResponse.pagination?.count || 0}
+        initialBlogs={blogsList}
+        totalCount={totalCount}
         initialCategories={categories}
         initialTags={tags}
-        currentPage={blogsResponse.pagination?.current_page || 1}
-        totalPages={blogsResponse.pagination?.total_pages || 1}
+        currentPage={page}
+        totalPages={totalPages}
+        featuredJobs={jobsRes?.data || []}
       />
     </>
   );

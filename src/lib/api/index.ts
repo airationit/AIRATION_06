@@ -3,3 +3,4 @@ export * from "./masterdata";
 export * from "./jobs";
 export * from "./blogs";
 export * from "./contact";
+export * from "./companies";

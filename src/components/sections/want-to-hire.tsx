@@ -288,7 +288,7 @@ function RecruiterDashboardMockup({
         <span className="w-3 h-3 rounded-full bg-amber-400/90" />
         <span className="w-3 h-3 rounded-full bg-emerald-400/90" />
         <span className="ml-2.5 font-mono text-[11px] text-muted-foreground">
-          hirance.com/recruiter
+          employer.hirance.com
         </span>
         <span className="ml-auto font-mono text-[11px] font-bold text-blue-600 dark:text-blue-400">
           {completed}/4 done
@@ -534,6 +534,11 @@ export function WantToHire() {
             }}
             className="flex flex-col justify-start items-center text-center lg:items-start lg:text-left lg:col-span-6 order-1 lg:order-2 w-full"
           >
+            {/* Section Eyebrow (clean typography, no chip/badge) */}
+            <p className="mb-2.5 text-xs sm:text-sm font-bold tracking-widest uppercase text-brand-600 dark:text-brand-400">
+              For Employers &amp; Hiring Teams
+            </p>
+
             {/* Main Headline */}
             <h2
               id="want-to-hire-heading"
@@ -547,7 +552,7 @@ export function WantToHire() {
 
             {/* Subtext */}
             <p className="mt-3.5 max-w-xl text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
-              Post any role in 60 seconds. Our match engine filters applicants in real time so you only talk to the best fits.
+              Built for employers: post any role in 60 seconds. Our match engine filters applicants in real time so you only talk to the best fits.
             </p>
 
             {/* 4 Interactive Step Highlight Cards (2x2 Grid) */}

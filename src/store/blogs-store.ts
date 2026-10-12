@@ -73,7 +73,7 @@ export const useBlogsStore = create<BlogsStoreState>((set, get) => ({
   totalBlogs: 0,
   currentPage: 1,
   totalPages: 1,
-  pageSize: 9,
+  pageSize: 6,
   isLoading: false,
   error: null,
   filters: initialFilters,
@@ -144,7 +144,9 @@ export const useBlogsStore = create<BlogsStoreState>((set, get) => ({
   },
 
   setPage: (page: number) => {
-    set({ currentPage: page });
+    const { totalPages } = get();
+    const safePage = Math.max(1, Math.min(page, Math.max(1, totalPages)));
+    set({ currentPage: safePage });
     get().loadBlogs();
   },
 
@@ -180,10 +182,16 @@ export const useBlogsStore = create<BlogsStoreState>((set, get) => ({
           ? response.data.find((b) => b.featured) || response.data[0] || null
           : get().featuredBlog;
 
+        const count = response.pagination?.count ?? (response.data?.length || 0);
+        const computedTotalPages =
+          response.pagination?.total_pages && response.pagination.total_pages > 0
+            ? response.pagination.total_pages
+            : Math.max(1, Math.ceil(count / pageSize));
+
         set({
           blogs: response.data || [],
-          totalBlogs: response.pagination?.count ?? (response.data?.length || 0),
-          totalPages: response.pagination?.total_pages ?? 1,
+          totalBlogs: count,
+          totalPages: computedTotalPages,
           currentPage: response.pagination?.current_page ?? currentPage,
           featuredBlog: newFeatured,
           isLoading: false,

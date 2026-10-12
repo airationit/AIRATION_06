@@ -1,6 +1,4 @@
-// export const BASE_URL = "https://api.hirance.com";
-export const BASE_URL = "https://prod.hirance.com";
-
+export const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://prod.hirance.com";
 
 interface FetchOptions extends Omit<RequestInit, "headers"> {
   headers?: Record<string, string>;
@@ -19,7 +17,7 @@ export function buildQueryString(
   const searchParams = new URLSearchParams();
 
   Object.entries(params).forEach(([key, value]) => {
-    if (value !== undefined && value !== null && value !== "") {
+    if (value !== undefined && value !== null) {
       searchParams.set(key, String(value));
     }
   });
@@ -40,7 +38,11 @@ export async function apiClient<T>(
 
   // Normalize endpoint URL
   const cleanEndpoint = endpoint.startsWith("/") ? endpoint : `/${endpoint}`;
-  const fullUrl = `${BASE_URL}${cleanEndpoint}${queryString}`;
+  // Dedicated routing: /company/ endpoints live on api.hirance.com while all core endpoints live on prod.hirance.com
+  const effectiveBaseUrl = cleanEndpoint.startsWith("/company")
+    ? "https://api.hirance.com"
+    : BASE_URL;
+  const fullUrl = `${effectiveBaseUrl}${cleanEndpoint}${queryString}`;
 
   const isServer = typeof window === "undefined";
 

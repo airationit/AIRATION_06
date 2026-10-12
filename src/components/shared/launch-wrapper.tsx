@@ -307,7 +307,7 @@ export function LaunchWrapper({ children }: LaunchWrapperProps) {
             </Link>
           </div>
 
-          {/* Actions: Support & Employer Login */}
+          {/* Actions: Support & Employer Dashboard */}
           <div className="flex shrink-0 items-center gap-1.5 sm:gap-2.5 md:gap-3">
             <a
               href="mailto:support@hirance.com"
@@ -327,7 +327,7 @@ export function LaunchWrapper({ children }: LaunchWrapperProps) {
               rel="noopener noreferrer"
               className="group inline-flex h-9 sm:h-10 md:h-11 items-center justify-center gap-1 sm:gap-1.5 md:gap-2 rounded-full bg-gradient-to-r from-brand-600 to-blue-600 hover:from-brand-500 hover:to-blue-500 px-3 sm:px-4.5 md:px-6 text-xs sm:text-sm font-semibold text-white shadow-md shadow-brand-500/25 hover:shadow-lg hover:shadow-brand-500/35 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/50 shrink-0 whitespace-nowrap"
             >
-              <span>Employer Login</span>
+              <span>Employer Dashboard</span>
               <ArrowUpRight className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
             </a>
           </div>
