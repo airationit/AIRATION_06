@@ -2,7 +2,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   // Transpile packages that need it
-  transpilePackages: ["three", "lenis"],
+  transpilePackages: ["three", "lenis", "gsap"],
 
   // Image optimization
   images: {

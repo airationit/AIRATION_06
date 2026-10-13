@@ -418,11 +418,11 @@ export function BlogListContent({
     if (blogs && blogs.length > 0) return blogs;
     if (hasAppliedFilter) return [];
     if (initialBlogs && initialBlogs.length > 0) return initialBlogs;
-    return FALLBACK_ARTICLES;
+    return [];
   }, [blogs, hasAppliedFilter, initialBlogs]);
 
   const latestSidebarPosts = displayPosts.slice(0, 4);
-  const displayJobs = (featuredJobs && featuredJobs.length > 0) ? featuredJobs.slice(0, 4) : FALLBACK_JOBS;
+  const displayJobs = (featuredJobs && featuredJobs.length > 0) ? featuredJobs.slice(0, 4) : [];
 
   // Calculate truthful total articles and total pages (supports SSR & client store)
   const effectiveTotalBlogs =

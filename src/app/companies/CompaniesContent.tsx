@@ -26,17 +26,21 @@ import {
   Landmark,
   Package,
 } from "lucide-react";
-import { JobListItem } from "@/types/jobs";
 import { PaginationMeta } from "@/types/api";
-import { fetchJobs } from "@/lib/api/jobs";
-import { generateJobSlug } from "@/lib/jobs-data";
-import { generateCompanySlug } from "@/lib/api/companies";
+import { CompanyItem, CompanyDetail } from "@/types/companies";
+import { JobListItem } from "@/types/jobs";
+import { fetchCompanies, deduplicateCompanies, fetchCompanyById } from "@/lib/api/companies";
 import { siteConfig } from "@/config/site";
-import { Footer } from "@/components/shared";
+import { Footer, InteractiveDots } from "@/components/shared";
 import { initials, getCompanyColorTheme } from "@/config/companies";
+import { motion, AnimatePresence } from "framer-motion";
+import { JobSeoLinks } from "@/components/jobs/job-seo-links";
+import { faqs } from "@/components/jobs/jobs-faq-data";
 
 interface CompaniesContentProps {
-  initialJobs: JobListItem[];
+  initialCompanies: CompanyItem[];
+  initialJobs?: JobListItem[];
+  initialCompanyDetails?: Record<string, CompanyDetail>;
   initialPagination: PaginationMeta;
 }
 
@@ -64,11 +68,10 @@ const INDUSTRIES_LIST = [
 ];
 
 const COMPANY_SIZES = [
-  "1-5 Openings",
-  "6-10 Openings",
-  "10+ Openings",
-  "20+ Openings",
-  "50+ Openings",
+  "0-50 Employees",
+  "51-100 Employees",
+  "101-500 Employees",
+  "500+ Employees",
 ];
 
 const LOCATIONS_LIST = [
@@ -84,13 +87,15 @@ const LOCATIONS_LIST = [
 ];
 
 const SORT_OPTIONS = [
-  { value: "newest", label: "Newest First" },
+  { value: "newest", label: "Default" },
   { value: "name_asc", label: "Name (A-Z)" },
   { value: "name_desc", label: "Name (Z-A)" },
 ];
 
 export default function CompaniesContent({
-  initialJobs,
+  initialCompanies,
+  initialJobs = [],
+  initialCompanyDetails = {},
   initialPagination,
 }: CompaniesContentProps) {
   const router = useRouter();
@@ -135,35 +140,66 @@ export default function CompaniesContent({
   const [sizeOpen, setSizeOpen] = useState(true);
   const [locationOpen, setLocationOpen] = useState(true);
 
+  // FAQ Accordion & Category Filter State
+  const [openFaq, setOpenFaq] = useState<number | null>(0);
+  const [activeFaqCategory, setActiveFaqCategory] = useState<string>("All Questions");
+
+  const filteredFaqs = useMemo(() => {
+    if (activeFaqCategory === "All Questions") return faqs;
+    return faqs.filter((f) => f.category === activeFaqCategory);
+  }, [activeFaqCategory]);
+
   // Pagination State
   const [currentPage, setCurrentPage] = useState(initialPagination?.current_page || 1);
   const [pagination, setPagination] = useState<PaginationMeta>(initialPagination);
 
-  // Real Jobs & Companies State (from https://prod.hirance.com/jobs/?ordering=-published_at)
-  const [jobs, setJobs] = useState<JobListItem[]>(initialJobs);
+  // All registered companies from /company/
+  const [companies, setCompanies] = useState<CompanyItem[]>(initialCompanies);
+  const [jobs] = useState<JobListItem[]>(initialJobs || []);
+  const [companyDetails, setCompanyDetails] = useState<Record<string, CompanyDetail>>(
+    initialCompanyDetails || {}
+  );
   const [isLoading, setIsLoading] = useState(false);
 
-  // Execute API fetch on page or search change using the exact API endpoint requested by user
-  const executeFetch = async (queryText: string, pageNum: number, locationOverride?: string) => {
+
+  // Lookup map for vacancy openings, location, and technology
+  const jobMap = useMemo(() => {
+    const map = new Map<string, { openings: number; city: string; industry: string }>();
+    for (const j of jobs) {
+      const key = (j.company_id || j.company_name).toLowerCase().trim();
+      const curr = map.get(key) || {
+        openings: 0,
+        city: j.city?.name || j.location || j.state?.name || "",
+        industry: j.role_category?.name || j.job_role?.name || "",
+      };
+      curr.openings += j.number_of_openings || 1;
+      map.set(key, curr);
+      if (j.company_name) {
+        map.set(j.company_name.toLowerCase().trim(), curr);
+      }
+    }
+    return map;
+  }, [jobs]);
+
+  // Execute standard API fetch (using page_size=100 to retrieve all registered companies)
+  const executeFetch = async (queryText: string, pageNum: number = 1) => {
     setIsLoading(true);
     try {
-      const cityParam = locationOverride !== undefined ? locationOverride : selectedLocation;
-      const res = await fetchJobs({
-        ordering: "-published_at",
+      const res = await fetchCompanies({
         search: queryText.trim() || undefined,
-        city: cityParam && cityParam !== "all" ? cityParam : undefined,
         page: pageNum,
-        page_size: 12,
+        page_size: 100,
       });
 
       if (res && res.success) {
-        setJobs(res.data || []);
+        const unique = deduplicateCompanies(res.data || [], companyDetails, jobMap);
+        setCompanies(unique);
         if (res.pagination) {
-          setPagination(res.pagination);
+          setPagination({ ...res.pagination, count: unique.length });
         }
       }
     } catch (err) {
-      console.error("fetchJobs error in CompaniesContent:", err);
+      console.error("fetchCompanies error in CompaniesContent:", err);
     } finally {
       setIsLoading(false);
     }
@@ -197,11 +233,10 @@ export default function CompaniesContent({
     }
   };
 
-  // Handle Page Change
+  // Handle Page Change (instant client switch across all registered companies)
   const handlePageChange = (page: number) => {
-    if (page < 1 || (pagination && page > pagination.total_pages)) return;
+    if (page < 1 || page > totalPages) return;
     setCurrentPage(page);
-    executeFetch(searchInput, page);
     window.scrollTo({ top: 120, behavior: "smooth" });
   };
 
@@ -214,44 +249,61 @@ export default function CompaniesContent({
     setSelectedIndustries([]);
     setSelectedLocations([]);
     setCurrentPage(1);
-    executeFetch("", 1, "");
+    executeFetch("", 1);
   };
 
-  // Filter & Sort Companies client-side on top of API response
-  const displayedJobs = useMemo(() => {
-    let list = [...jobs];
+  // Filter & Sort Companies
+  const displayedCompanies = useMemo(() => {
+    let list = [...companies];
 
     // Filter by Selected Locations
     if (selectedLocations.length > 0) {
-      list = list.filter((j) => {
-        const city = (j.city?.name || "").toLowerCase();
-        const state = (j.state?.name || "").toLowerCase();
-        return selectedLocations.some((loc) => {
-          const l = loc.toLowerCase();
-          return city.includes(l) || state.includes(l);
-        });
+      list = list.filter((c) => {
+        const detail = companyDetails[c.id];
+        const job =
+          jobMap.get(c.id.toLowerCase()) ||
+          jobMap.get(c.company_name.toLowerCase().trim());
+        const loc = (
+          detail?.city?.name ||
+          job?.city ||
+          (detail?.address ? extractCityFromAddress(detail.address) : "") ||
+          detail?.state?.name ||
+          ""
+        ).toLowerCase();
+        if (!loc) return false;
+        return selectedLocations.some((selectedLoc) =>
+          loc.includes(selectedLoc.toLowerCase())
+        );
       });
     }
 
-    // Filter by Selected Industries / Categories
+    // Filter by Selected Industries / Technology
     if (selectedIndustries.length > 0) {
-      list = list.filter((j) => {
-        const category = (j.role_category?.name || j.job_role?.name || "").toLowerCase();
-        return selectedIndustries.some((ind) => category.includes(ind.toLowerCase()));
+      list = list.filter((c) => {
+        const detail = companyDetails[c.id];
+        const job =
+          jobMap.get(c.id.toLowerCase()) ||
+          jobMap.get(c.company_name.toLowerCase().trim());
+        const ind = (detail?.industry || job?.industry || "").toLowerCase();
+        if (!ind) return false;
+        return selectedIndustries.some((selectedInd) =>
+          ind.includes(selectedInd.toLowerCase())
+        );
       });
     }
 
-    // Filter by Selected Openings/Sizes
+    // Filter by Selected Company Sizes (Employee Count from API)
     if (selectedSizes.length > 0) {
-      list = list.filter((j) => {
-        const openings = j.number_of_openings || 1;
+      list = list.filter((c) => {
+        const detail = companyDetails[c.id];
+        const emp = detail?.number_of_employees?.trim() || "";
+        if (!emp) return false;
         return selectedSizes.some((s) => {
-          if (s.startsWith("1-5")) return openings >= 1 && openings <= 5;
-          if (s.startsWith("6-10")) return openings >= 6 && openings <= 10;
-          if (s.startsWith("10+")) return openings >= 10;
-          if (s.startsWith("20+")) return openings >= 20;
-          if (s.startsWith("50+")) return openings >= 50;
-          return true;
+          if (s.startsWith("0-50")) return emp.includes("0-50");
+          if (s.startsWith("51-100")) return emp.includes("51-100");
+          if (s.startsWith("101-500")) return emp.includes("101-500");
+          if (s.startsWith("500+")) return emp.includes("500") || emp.includes("501");
+          return false;
         });
       });
     }
@@ -261,13 +313,100 @@ export default function CompaniesContent({
       list.sort((a, b) => a.company_name.localeCompare(b.company_name));
     } else if (sortBy === "name_desc") {
       list.sort((a, b) => b.company_name.localeCompare(a.company_name));
+    } else {
+      // Default: prioritize verified and complete profiles (active openings, logo, city, employees, industry)
+      list.sort((a, b) => {
+        const aDetail = companyDetails[a.id];
+        const bDetail = companyDetails[b.id];
+        const aJob =
+          jobMap.get(a.id.toLowerCase()) ||
+          jobMap.get(a.company_name.toLowerCase().trim());
+        const bJob =
+          jobMap.get(b.id.toLowerCase()) ||
+          jobMap.get(b.company_name.toLowerCase().trim());
+
+        const aLoc = Boolean(
+          aDetail?.city?.name ||
+          aJob?.city ||
+          (aDetail?.address ? aDetail.address.trim() : "") ||
+          aDetail?.state?.name
+        );
+        const bLoc = Boolean(
+          bDetail?.city?.name ||
+          bJob?.city ||
+          (bDetail?.address ? bDetail.address.trim() : "") ||
+          bDetail?.state?.name
+        );
+
+        const aScore =
+          (aLoc ? 15 : 0) +
+          (aDetail?.number_of_employees ? 10 : 0) +
+          (aDetail?.industry || aJob?.industry ? 10 : 0) +
+          (aDetail?.is_verified ? 5 : 0) +
+          (a.company_logo ? 5 : 0) +
+          (aJob?.openings ? 3 : 0);
+
+        const bScore =
+          (bLoc ? 15 : 0) +
+          (bDetail?.number_of_employees ? 10 : 0) +
+          (bDetail?.industry || bJob?.industry ? 10 : 0) +
+          (bDetail?.is_verified ? 5 : 0) +
+          (b.company_logo ? 5 : 0) +
+          (bJob?.openings ? 3 : 0);
+
+        return bScore - aScore;
+      });
     }
 
     return list;
-  }, [jobs, selectedLocations, selectedIndustries, selectedSizes, sortBy]);
+  }, [companies, jobMap, companyDetails, selectedLocations, selectedIndustries, selectedSizes, sortBy]);
 
-  const totalCount = pagination?.count || jobs.length;
-  const totalPages = pagination?.total_pages || Math.max(1, Math.ceil(totalCount / 12));
+  const PAGE_SIZE = 12;
+  const totalCount = displayedCompanies.length;
+  const totalPages = Math.max(1, Math.ceil(totalCount / PAGE_SIZE));
+  const paginatedCompanies = useMemo(() => {
+    const start = (currentPage - 1) * PAGE_SIZE;
+    return displayedCompanies.slice(start, start + PAGE_SIZE);
+  }, [displayedCompanies, currentPage]);
+
+  // Track fetched company IDs to strictly prevent duplicate or infinite network requests
+  const fetchedIdsRef = useRef<Set<string>>(new Set(Object.keys(companyDetails)));
+
+  useEffect(() => {
+    const missing = paginatedCompanies.filter(
+      (c) => !companyDetails[c.id] && !fetchedIdsRef.current.has(c.id)
+    );
+    if (missing.length === 0) return;
+
+    missing.forEach((c) => fetchedIdsRef.current.add(c.id));
+
+    let isMounted = true;
+    Promise.all(
+      missing.map((c) =>
+        fetchCompanyById(c.id, { revalidate: 300 })
+          .then((res) => (res.success && res.data ? res.data : null))
+          .catch(() => null)
+      )
+    ).then((results) => {
+      if (!isMounted) return;
+      setCompanyDetails((prev) => {
+        let changed = false;
+        const next = { ...prev };
+        for (const item of results) {
+          if (item && item.id && !next[item.id]) {
+            next[item.id] = item;
+            changed = true;
+          }
+        }
+        return changed ? next : prev;
+      });
+    });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [paginatedCompanies, companyDetails]);
+
   const hasActiveFilters =
     searchInput ||
     selectedLocations.length > 0 ||
@@ -287,6 +426,11 @@ export default function CompaniesContent({
 
   return (
     <main className="relative flex min-h-dvh flex-col overflow-x-clip bg-[#F9F9F9] dark:bg-background pt-6 sm:pt-8 transition-colors">
+      {/* Interactive dots canvas matching home page theme */}
+      <div className="pointer-events-none absolute inset-0 -z-10">
+        <InteractiveDots />
+      </div>
+
       <div className="container mx-auto px-4 sm:px-6 max-w-7xl pb-16">
         {/* Breadcrumb Navigation matching site standard */}
         <nav
@@ -360,7 +504,7 @@ export default function CompaniesContent({
                 onChange={(e) => {
                   const val = e.target.value;
                   setSelectedLocation(val);
-                  executeFetch(searchInput, 1, val);
+                  executeFetch(searchInput, 1);
                 }}
                 className="w-full bg-transparent text-xs sm:text-sm font-medium text-slate-700 focus:outline-none cursor-pointer appearance-none pr-5"
               >
@@ -565,16 +709,16 @@ export default function CompaniesContent({
                 )}
               </div>
 
-              {/* Filter 2: Company Size / Openings with Package Icon */}
+              {/* Filter 2: Company Size with Users Icon */}
               <div className="space-y-3 pt-3.5 border-t border-slate-100">
                 <div
                   className="flex items-center justify-between cursor-pointer select-none group"
                   onClick={() => setSizeOpen(!sizeOpen)}
                 >
                   <div className="flex items-center gap-2">
-                    <Package className="w-4 h-4 text-slate-700 group-hover:text-blue-600 transition-colors" />
+                    <Users className="w-4 h-4 text-slate-700 group-hover:text-blue-600 transition-colors" />
                     <span className="text-sm font-bold text-slate-900 group-hover:text-blue-600 transition-colors">
-                      Openings / Scale
+                      Company Size
                     </span>
                   </div>
                   {sizeOpen ? (
@@ -753,15 +897,23 @@ export default function CompaniesContent({
                   </div>
                 ))}
               </div>
-            ) : displayedJobs.length > 0 ? (
+            ) : paginatedCompanies.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {displayedJobs.map((job, index) => (
-                  <CompanyCard
-                    key={`${job.id}-${index}`}
-                    job={job}
-                    index={index}
-                  />
-                ))}
+                {paginatedCompanies.map((company, index) => {
+                  const jobInfo =
+                    jobMap.get(company.id.toLowerCase()) ||
+                    jobMap.get(company.company_name.toLowerCase().trim());
+                  const detail = companyDetails[company.id];
+                  return (
+                    <CompanyCard
+                      key={`${company.id}-${index}`}
+                      company={company}
+                      index={index}
+                      detail={detail}
+                      jobInfo={jobInfo}
+                    />
+                  );
+                })}
               </div>
             ) : (
               <div className="rounded-xl border border-dashed border-slate-300 bg-white p-12 text-center">
@@ -896,6 +1048,100 @@ export default function CompaniesContent({
         </div>
       </div>
 
+      {/* FAQ Section — Matching Hirance Platform Style */}
+      <section id="faq" className="relative pt-12 pb-10 sm:pt-16 sm:pb-14 overflow-hidden border-t border-slate-200/70 bg-[#F9F9F9]">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 relative z-10">
+          {/* Section Header */}
+          <div className="text-center space-y-2.5">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-900 leading-tight">
+              Frequently Asked{" "}
+              <span className="text-blue-600">
+                Questions
+              </span>
+            </h2>
+            <p className="text-sm sm:text-base text-slate-600 max-w-2xl mx-auto">
+              Everything you need to know about finding jobs on Hirance.
+            </p>
+          </div>
+
+          {/* Category Filter Pills */}
+          <div className="mt-7 flex items-center justify-center gap-2 sm:gap-2.5 flex-wrap">
+            {["All Questions", "Candidates", "Employers", "General"].map((cat) => (
+              <button
+                key={cat}
+                type="button"
+                onClick={() => {
+                  setActiveFaqCategory(cat);
+                  setOpenFaq(0);
+                }}
+                className={`rounded-full px-5 py-2 text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer ${
+                  activeFaqCategory === cat
+                    ? "bg-blue-600 text-white shadow-sm shadow-blue-600/30"
+                    : "bg-white border border-slate-200/80 text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                }`}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+
+          {/* Accordion FAQ Items */}
+          <div className="mt-8 divide-y divide-slate-100 border border-slate-200/80 bg-white rounded-xl px-5 py-3.5 sm:px-7 sm:py-4 shadow-2xs">
+            {filteredFaqs.map((faq, idx) => {
+              const isOpen = openFaq === idx;
+              return (
+                <div key={idx} className="py-3.5 sm:py-4 first:pt-0 last:pb-0 transition-colors">
+                  <button
+                    type="button"
+                    onClick={() => setOpenFaq(isOpen ? null : idx)}
+                    aria-expanded={isOpen}
+                    aria-controls={`faq-answer-${idx}`}
+                    className="flex w-full items-start justify-between gap-4 text-left group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-lg py-1 cursor-pointer"
+                  >
+                    <span className="text-sm sm:text-[15px] font-semibold text-slate-900 group-hover:text-blue-600 transition-colors">
+                      {faq.question}
+                    </span>
+                    <span
+                      className={`flex h-7 w-7 sm:h-8 sm:w-8 shrink-0 items-center justify-center rounded-full transition-all duration-200 ${
+                        isOpen
+                          ? "bg-blue-600 text-white"
+                          : "bg-blue-50 text-blue-600 group-hover:bg-blue-100"
+                      }`}
+                    >
+                      <ChevronDown
+                        className={`h-4 w-4 transition-transform duration-200 ${
+                          isOpen ? "rotate-180" : ""
+                        }`}
+                      />
+                    </span>
+                  </button>
+
+                  <AnimatePresence initial={false}>
+                    {isOpen && (
+                      <motion.div
+                        id={`faq-answer-${idx}`}
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: "auto" }}
+                        exit={{ opacity: 0, height: 0 }}
+                        transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                        className="overflow-hidden"
+                      >
+                        <p className="pt-2.5 pb-1 text-xs sm:text-sm leading-relaxed text-slate-600">
+                          {faq.answer}
+                        </p>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* Full-Width Programmatic SEO Career Hubs (Footer Links) */}
+      <JobSeoLinks />
+
       {/* Global Site Footer */}
       <Footer />
     </main>
@@ -903,12 +1149,39 @@ export default function CompaniesContent({
 }
 
 /**
+ * Extract recognized city from raw address string (e.g. Jankipuram, Lucknow, Delhi)
+ */
+function extractCityFromAddress(addr: string): string {
+  if (!addr || !addr.trim()) return "";
+  const match = addr.match(
+    /\b(Lucknow|Jankipuram|Delhi|Noida|Kanpur|Bareilly|Gorakhpur|Patna|Chandigarh|Bengaluru|Bangalore|Hyderabad|Mumbai|Pune|Gurugram|Gurgaon|Prayagraj|Allahabad|Changlang|Bomdila)\b/i
+  );
+  if (match) {
+    const val = match[1].toLowerCase();
+    if (val === "jankipuram") return "Lucknow";
+    return match[1].charAt(0).toUpperCase() + match[1].slice(1).toLowerCase();
+  }
+  const parts = addr
+    .split(/[,;\n]+/)
+    .map((p) => p.trim())
+    .filter((p) => p && !/^\d{5,6}$/.test(p) && !/^india$/i.test(p));
+  for (let i = parts.length - 1; i >= 0; i--) {
+    const part = parts[i];
+    if (/^(uttar pradesh|up|maharashtra|delhi|bihar|karnataka|india)$/i.test(part)) continue;
+    if (/^(sector|plot|lane|road|street|house|flat|h\.no)/i.test(part)) continue;
+    return part;
+  }
+  return parts[parts.length - 1] || "";
+}
+
+/**
  * Clean format for role category and industry
  */
-function formatIndustry(ind: string): string {
-  if (!ind) return "Technology";
+function formatIndustry(ind?: string | null): string {
+  if (!ind || !ind.trim()) return "";
   const clean = ind.trim();
-  if (/information technology|software/i.test(clean)) return "IT & Software";
+  if (/information technology|software|it \/ software/i.test(clean)) return "IT & Software";
+  if (/internet|e-commerce/i.test(clean)) return "E-Commerce";
   if (/healthcare|life sciences/i.test(clean)) return "Healthcare";
   if (/consumer goods/i.test(clean)) return "Consumer";
   if (/logistics|supply chain/i.test(clean)) return "Logistics";
@@ -923,31 +1196,40 @@ function formatIndustry(ind: string): string {
 }
 
 /**
- * Clean Company Card Component representing actively hiring employers from jobs API
+ * Clean Company Card Component representing registered companies directly from API
+ * Displays the 3 metadata chips: Location, Vacancy/Openings, and Technology/Industry
  */
 function CompanyCard({
-  job,
+  company,
   index,
+  detail,
+  jobInfo,
 }: {
-  job: JobListItem;
+  company: CompanyItem;
   index: number;
+  detail?: CompanyDetail;
+  jobInfo?: { openings: number; city: string; industry: string };
 }) {
   const [logoFailed, setLogoFailed] = useState(false);
-  const theme = getCompanyColorTheme(job.company_name, index);
-  const location = job.city?.name || job.state?.name || "India";
-  const openingsCount = job.number_of_openings || 1;
-  const size = `${openingsCount} ${openingsCount === 1 ? "Opening" : "Openings"}`;
-  const rawIndustry = job.role_category?.name || job.job_role?.name || "Technology";
-  const formattedIndustry = formatIndustry(rawIndustry);
-  const jobSlug = generateJobSlug(
-    job.title,
-    job.company_name,
-    job.city?.name || job.state?.name || "India",
-    job.id
-  );
-  const targetHref = job.company_id
-    ? `/company/${job.company_id}`
-    : `/jobs/view/${jobSlug}`;
+  const theme = getCompanyColorTheme(company.company_name, index);
+
+  // 1. City / Location from GET /api/v1/company/<uuid:pk>/ or jobs API
+  const location =
+    detail?.city?.name?.trim() ||
+    jobInfo?.city?.trim() ||
+    (detail?.address ? extractCityFromAddress(detail.address) : "") ||
+    (detail?.state?.name ? detail.state.name.split("(")[0].trim() : "");
+
+  // 2. Number of employees directly from GET /api/v1/company/<uuid:pk>/
+  const rawEmployees = detail?.number_of_employees?.trim() || "";
+  const formattedEmployees = rawEmployees
+    ? (/employee/i.test(rawEmployees) ? rawEmployees : `${rawEmployees} Employees`)
+    : "";
+
+  // 3. Technology / Industry from GET /api/v1/company/<uuid:pk>/ or jobs API
+  const rawIndustry = detail?.industry || jobInfo?.industry || "";
+  const formattedIndustry = rawIndustry ? formatIndustry(rawIndustry) : "";
+  const targetHref = `/company/${company.id}`;
 
   return (
     <Link
@@ -956,11 +1238,11 @@ function CompanyCard({
     >
       {/* Company Logo / Monogram */}
       <div className="w-12 h-12 sm:w-13 sm:h-13 rounded-lg border border-slate-100 bg-slate-50 flex items-center justify-center shrink-0 overflow-hidden shadow-2xs group-hover:scale-105 transition-transform">
-        {job.company_logo && !logoFailed ? (
+        {company.company_logo && !logoFailed ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
-            src={job.company_logo}
-            alt={job.company_name}
+            src={company.company_logo}
+            alt={company.company_name}
             className="w-full h-full object-contain p-2"
             onError={() => setLogoFailed(true)}
           />
@@ -972,7 +1254,7 @@ function CompanyCard({
               color: theme.isLight ? "#0F172A" : "#FFFFFF",
             }}
           >
-            {initials(job.company_name)}
+            {initials(company.company_name)}
           </div>
         )}
       </div>
@@ -980,25 +1262,34 @@ function CompanyCard({
       {/* Company Info */}
       <div className="flex-1 min-w-0 flex flex-col justify-center">
         <h3 className="text-sm sm:text-base font-bold text-slate-900 group-hover:text-blue-600 transition-colors truncate">
-          {job.company_name}
+          {company.company_name}
         </h3>
 
-        {/* 3 Metadata Chips */}
+        {/* Real metadata chips: City, Number of Employees, and Technology */}
         <div className="mt-2 flex items-center gap-1.5 sm:gap-2 text-[11px] sm:text-xs flex-nowrap overflow-hidden">
-          <div className="inline-flex items-center gap-1 px-2 py-0.5 sm:px-2.5 sm:py-0.5 rounded-lg bg-slate-50/90 border border-slate-100 text-slate-600 shrink min-w-0 max-w-[95px] sm:max-w-[110px]">
-            <MapPin className="w-3 h-3 text-slate-500 shrink-0" />
-            <span className="truncate">{location}</span>
-          </div>
+          {/* City / Location Chip */}
+          {location && (
+            <div className="inline-flex items-center gap-1 px-2 py-0.5 sm:px-2.5 sm:py-0.5 rounded-lg bg-slate-50/90 border border-slate-100 text-slate-600 shrink-0">
+              <MapPin className="w-3 h-3 text-slate-500 shrink-0" />
+              <span className="whitespace-nowrap">{location}</span>
+            </div>
+          )}
 
-          <div className="inline-flex items-center gap-1 px-2 py-0.5 sm:px-2.5 sm:py-0.5 rounded-lg bg-slate-50/90 border border-slate-100 text-slate-600 shrink-0">
-            <Users className="w-3 h-3 text-slate-500 shrink-0" />
-            <span className="whitespace-nowrap">{size}</span>
-          </div>
+          {/* Number of Employees Chip */}
+          {formattedEmployees && (
+            <div className="inline-flex items-center gap-1 px-2 py-0.5 sm:px-2.5 sm:py-0.5 rounded-lg bg-slate-50/90 border border-slate-100 text-slate-600 shrink-0">
+              <Users className="w-3 h-3 text-slate-500 shrink-0" />
+              <span className="whitespace-nowrap">{formattedEmployees}</span>
+            </div>
+          )}
 
-          <div className="inline-flex items-center gap-1 px-2 py-0.5 sm:px-2.5 sm:py-0.5 rounded-lg bg-slate-50/90 border border-slate-100 text-slate-600 shrink min-w-0 max-w-[105px] sm:max-w-[125px]">
-            <Briefcase className="w-3 h-3 text-slate-500 shrink-0" />
-            <span className="truncate">{formattedIndustry}</span>
-          </div>
+          {/* Technology / Industry Chip */}
+          {formattedIndustry && (
+            <div className="inline-flex items-center gap-1 px-2 py-0.5 sm:px-2.5 sm:py-0.5 rounded-lg bg-slate-50/90 border border-slate-100 text-slate-600 shrink-0">
+              <Briefcase className="w-3 h-3 text-slate-500 shrink-0" />
+              <span className="whitespace-nowrap">{formattedIndustry}</span>
+            </div>
+          )}
         </div>
       </div>
     </Link>

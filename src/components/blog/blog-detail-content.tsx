@@ -21,6 +21,7 @@ import {
   Sparkles,
   Users,
   FileText,
+  Building2,
 } from "lucide-react";
 import { BlogDetail, BlogSection } from "@/types/blogs";
 import { JobListItem } from "@/types/jobs";
@@ -666,23 +667,57 @@ export function BlogDetailContent({ post, featuredJobs = [] }: BlogDetailContent
             )}
           </article>
 
-          {/* Find Jobs Section */}
-          <div className="mt-16 mb-10 rounded-[24px] bg-gradient-to-r from-[#f5f8ff] to-[#f9fbff] p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-6 border border-blue-100/50 shadow-sm">
-            <div className="flex items-center gap-5">
-              <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-[20px] bg-white shadow-sm border border-blue-50 text-blue-600">
-                <Briefcase className="h-7 w-7" />
+          {/* Dynamic Real-Time CTA Card from API */}
+          {(() => {
+            const cta = post.cta;
+            const title = cta?.title || "Find Jobs";
+            const description =
+              cta?.description ||
+              "Explore thousands of IT & corporate jobs that match your skills and career goals. Get hired faster with Hirance.";
+            const buttonText = cta?.button_text || "Explore Jobs";
+            const buttonUrl = cta?.button_url || "/jobs";
+            const isExternal =
+              buttonUrl.startsWith("http://") || buttonUrl.startsWith("https://");
+
+            return (
+              <div className="mt-16 mb-10 rounded-[24px] bg-gradient-to-r from-[#f5f8ff] to-[#f9fbff] p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-6 border border-blue-100/50 shadow-sm">
+                <div className="flex items-center gap-5">
+                  <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-[20px] bg-white shadow-sm border border-blue-50 text-blue-600">
+                    {cta?.type === "employer" ? (
+                      <Building2 className="h-7 w-7" />
+                    ) : (
+                      <Briefcase className="h-7 w-7" />
+                    )}
+                  </div>
+                  <div>
+                    <h3 className="text-[22px] font-semibold text-slate-900 leading-tight">
+                      {title}
+                    </h3>
+                    <p className="text-[14px] text-slate-500 mt-1 max-w-[440px] leading-relaxed">
+                      {description}
+                    </p>
+                  </div>
+                </div>
+                {isExternal ? (
+                  <a
+                    href={buttonUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="shrink-0 inline-flex items-center justify-center rounded-full bg-blue-600 px-7 py-3 text-[15px] font-bold text-white hover:bg-blue-700 transition-colors shadow-[0_4px_14px_0_rgba(37,99,235,0.39)] hover:shadow-[0_6px_20px_rgba(37,99,235,0.23)]"
+                  >
+                    {buttonText} <ArrowRight className="ml-2 h-4 w-4 stroke-[2.5]" />
+                  </a>
+                ) : (
+                  <Link
+                    href={buttonUrl}
+                    className="shrink-0 inline-flex items-center justify-center rounded-full bg-blue-600 px-7 py-3 text-[15px] font-bold text-white hover:bg-blue-700 transition-colors shadow-[0_4px_14px_0_rgba(37,99,235,0.39)] hover:shadow-[0_6px_20px_rgba(37,99,235,0.23)]"
+                  >
+                    {buttonText} <ArrowRight className="ml-2 h-4 w-4 stroke-[2.5]" />
+                  </Link>
+                )}
               </div>
-              <div>
-                <h3 className="text-[22px] font-semibold text-slate-900 leading-tight">Find Jobs</h3>
-                <p className="text-[14px] text-slate-500 mt-1 max-w-[440px] leading-relaxed">
-                  Explore thousands of IT & corporate jobs that match your skills and career goals. Get hired faster with Hirance.
-                </p>
-              </div>
-            </div>
-            <Link href="/jobs" className="shrink-0 inline-flex items-center justify-center rounded-full bg-blue-600 px-7 py-3 text-[15px] font-bold text-white hover:bg-blue-700 transition-colors shadow-[0_4px_14px_0_rgba(37,99,235,0.39)] hover:shadow-[0_6px_20px_rgba(37,99,235,0.23)]">
-              Explore Jobs <ArrowRight className="ml-2 h-4 w-4 stroke-[2.5]" />
-            </Link>
-          </div>
+            );
+          })()}
 
           {/* Post Pagination Block */}
           {(() => {

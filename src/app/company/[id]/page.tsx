@@ -71,7 +71,7 @@ export default async function CompanyPage({ params }: PageProps) {
   const { id } = await params;
   const cleanId = extractCompanyId(id);
 
-  // 1. Fetch company details first to know exact backend host (api.hirance.com vs prod.hirance.com)
+  // 1. Fetch company details from api.hirance.com
   const compRes = await getCachedCompany(id);
 
   // Logical redirection: If company is not found by ID or slug, resolve logically
@@ -102,12 +102,10 @@ export default async function CompanyPage({ params }: PageProps) {
     redirect("/companies");
   }
 
-  const source = compRes.source;
-
-  // 2. Fetch categories and jobs targeted strictly to that backend
+  // 2. Fetch categories and jobs from api.hirance.com
   const [catRes, jobsRes] = await Promise.all([
-    fetchCompanyCategories(id, source),
-    fetchCompanyJobsList(id, undefined, source),
+    fetchCompanyCategories(id),
+    fetchCompanyJobsList(id),
   ]);
 
   const initialCompany = compRes.data;
@@ -123,7 +121,6 @@ export default async function CompanyPage({ params }: PageProps) {
       initialCompany={initialCompany}
       initialCategories={initialCategories}
       initialJobs={initialJobs}
-      initialSource={source}
     />
   );
 }

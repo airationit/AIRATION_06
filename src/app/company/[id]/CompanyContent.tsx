@@ -18,7 +18,6 @@ import {
   fetchCompanyById,
   fetchCompanyCategories,
   fetchCompanyJobsList,
-  CompanyBackendSource,
 } from "@/lib/api/companies";
 
 /**
@@ -80,7 +79,6 @@ interface CompanyContentProps {
   initialCompany?: Company | null;
   initialCategories?: { id: string; name: string; open_jobs_count: number }[];
   initialJobs?: Job[];
-  initialSource?: CompanyBackendSource;
 }
 
 export default function CompanyContent({
@@ -88,11 +86,9 @@ export default function CompanyContent({
   initialCompany = null,
   initialCategories = [],
   initialJobs = [],
-  initialSource,
 }: CompanyContentProps) {
   const router = useRouter();
   const [company, setCompany] = useState<Company | null>(initialCompany);
-  const [source, setSource] = useState<CompanyBackendSource | undefined>(initialSource);
   const [loading, setLoading] = useState(!initialCompany);
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
@@ -121,11 +117,6 @@ export default function CompanyContent({
         const compRes = await fetchCompanyById(companyId);
         if (!isMounted) return;
 
-        const effectiveSource = compRes.source || initialSource;
-        if (effectiveSource) {
-          setSource(effectiveSource);
-        }
-
         if (compRes.success && compRes.data) {
           setCompany(compRes.data);
         } else {
@@ -133,8 +124,8 @@ export default function CompanyContent({
         }
 
         const [catRes, jobsRes] = await Promise.all([
-          fetchCompanyCategories(companyId, effectiveSource),
-          fetchCompanyJobsList(companyId, undefined, effectiveSource),
+          fetchCompanyCategories(companyId),
+          fetchCompanyJobsList(companyId),
         ]);
 
         if (!isMounted) return;
@@ -162,7 +153,7 @@ export default function CompanyContent({
     return () => {
       isMounted = false;
     };
-  }, [companyId, initialCompany, initialSource]);
+  }, [companyId, initialCompany]);
 
   // Only re-fetch jobs when user actually changes category filter tab
   const isFirstMount = useRef(true);
@@ -177,7 +168,7 @@ export default function CompanyContent({
     const fetchFilteredJobs = async () => {
       setLoadingJobs(true);
       try {
-        const res = await fetchCompanyJobsList(companyId, selectedCategory || undefined, source);
+        const res = await fetchCompanyJobsList(companyId, selectedCategory || undefined);
         if (!isMounted) return;
 
         if (res.success && Array.isArray(res.data)) {
@@ -199,7 +190,7 @@ export default function CompanyContent({
     return () => {
       isMounted = false;
     };
-  }, [companyId, selectedCategory, source]);
+  }, [companyId, selectedCategory]);
 
   const handleShare = async () => {
     if (typeof window !== "undefined") {
@@ -389,39 +380,35 @@ export default function CompanyContent({
 
             {/* Right: Pill Action Buttons (Linkedin, Website, Share) */}
             <div className="flex items-center gap-2 sm:gap-2.5 self-start lg:self-center shrink-0">
-              {/* LinkedIn Button */}
-              <a
-                href={
-                  company.linkedin_link && company.linkedin_link.trim().length > 0
-                    ? getValidUrl(company.linkedin_link)
-                    : `https://www.linkedin.com/search/results/all/?keywords=${encodeURIComponent(company.company_name)}`
-                }
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-full border border-slate-200/90 dark:border-slate-700 bg-white dark:bg-card hover:bg-slate-50 dark:hover:bg-slate-800 text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-200 transition-colors shadow-2xs"
-                title="LinkedIn Profile"
-              >
-                <span className="flex items-center justify-center w-4 h-4 rounded bg-[#0A66C2] text-white text-[10px] font-bold leading-none">
-                  in
-                </span>
-                <span>Linkedin</span>
-              </a>
+              {/* LinkedIn Button (only if present in API) */}
+              {company.linkedin_link && company.linkedin_link.trim().length > 0 && (
+                <a
+                  href={getValidUrl(company.linkedin_link)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-full border border-slate-200/90 dark:border-slate-700 bg-white dark:bg-card hover:bg-slate-50 dark:hover:bg-slate-800 text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-200 transition-colors shadow-2xs"
+                  title="LinkedIn Profile"
+                >
+                  <span className="flex items-center justify-center w-4 h-4 rounded bg-[#0A66C2] text-white text-[10px] font-bold leading-none">
+                    in
+                  </span>
+                  <span>Linkedin</span>
+                </a>
+              )}
 
-              {/* Website Button */}
-              <a
-                href={
-                  company.website_link && company.website_link.trim().length > 0
-                    ? getValidUrl(company.website_link)
-                    : `https://www.google.com/search?q=${encodeURIComponent(company.company_name)}`
-                }
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-full border border-slate-200/90 dark:border-slate-700 bg-white dark:bg-card hover:bg-slate-50 dark:hover:bg-slate-800 text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-200 transition-colors shadow-2xs"
-                title="Official Website"
-              >
-                <Globe className="w-4 h-4 text-blue-600" />
-                <span>Website</span>
-              </a>
+              {/* Website Button (only if present in API) */}
+              {company.website_link && company.website_link.trim().length > 0 && (
+                <a
+                  href={getValidUrl(company.website_link)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-full border border-slate-200/90 dark:border-slate-700 bg-white dark:bg-card hover:bg-slate-50 dark:hover:bg-slate-800 text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-200 transition-colors shadow-2xs"
+                  title="Official Website"
+                >
+                  <Globe className="w-4 h-4 text-blue-600" />
+                  <span>Website</span>
+                </a>
+              )}
 
               {/* Share Button */}
               <button
@@ -513,11 +500,13 @@ export default function CompanyContent({
                   <div className="w-12 h-12 rounded-2xl bg-slate-100 flex items-center justify-center mx-auto mb-3 text-slate-400">
                     <Briefcase className="w-6 h-6" />
                   </div>
-                  <h3 className="text-sm font-semibold text-slate-900">No active positions in this category</h3>
+                  <h3 className="text-sm font-semibold text-slate-900">
+                    {selectedCategory ? "No active positions in this category" : "No active job openings right now"}
+                  </h3>
                   <p className="text-xs text-slate-500 mt-1 max-w-sm mx-auto">
                     {selectedCategory 
                       ? "Try switching to All Roles or check back later as new positions are posted regularly."
-                      : "This company currently has no active job postings."}
+                      : "This company currently has no active vacancies. Download the Hirance app to follow them and get notified when new positions open."}
                   </p>
                   {selectedCategory && (
                     <button

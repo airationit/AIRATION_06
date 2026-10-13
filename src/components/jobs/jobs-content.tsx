@@ -8,9 +8,6 @@ import {
   ChevronsLeft,
   ChevronsRight,
   Search,
-  Sparkles,
-  Smartphone,
-  ArrowUpRight,
   SlidersHorizontal,
   X,
   ArrowUpDown,
@@ -18,27 +15,19 @@ import {
   MapPin,
   Loader2,
   ChevronDown,
+  Sparkles,
 } from "lucide-react";
-import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Job, getJobs } from "@/lib/jobs-data";
 import { JobCard } from "./job-card";
 import { JobCardSkeleton } from "./job-card-skeleton";
 import { JobFiltersSidebar, JobFilterValues } from "./job-filters-sidebar";
 import { JobSeoLinks } from "./job-seo-links";
-import { siteConfig } from "@/config/site";
 import { useMasterdataStore } from "@/store/masterdata-store";
 import { POPULAR_CITIES } from "@/config/jobs-taxonomy";
 import { cn } from "@/lib/utils";
-import { isCityMatch, normalizeCitySlug } from "@/lib/city-normalizer";
-import { Footer } from "@/components/shared";
+import { Footer, InteractiveDots } from "@/components/shared";
 import { faqs } from "./jobs-faq-data";
-
-
-// Helper to match jobs with selected city/location supporting all Indian aliases & variations
-function isLocationMatch(job: Job, targetSlugOrId: string): boolean {
-  if (!targetSlugOrId || targetSlugOrId === "all") return true;
-  return isCityMatch(job.location, job.cityName, job.cityId, targetSlugOrId);
-}
 
 interface JobsContentProps {
   initialJobs: Job[];
@@ -69,25 +58,12 @@ export function JobsContent({
   workShiftSlug,
   initialSearch = "",
 }: JobsContentProps) {
-  const reducedMotion = useReducedMotion();
-
-  // FAQ state management (matching how-it-works format)
   const [openFaq, setOpenFaq] = useState<number | null>(0);
   const [activeCategory, setActiveCategory] = useState<string>("All Questions");
 
   const filteredFaqs = faqs.filter(
     (faq) => activeCategory === "All Questions" || faq.category === activeCategory
   );
-
-  const fadeIn = (delay = 0) =>
-    reducedMotion
-      ? {}
-      : {
-        initial: { opacity: 0, y: 20 },
-        whileInView: { opacity: 1, y: 0 },
-        viewport: { once: true, margin: "-50px" },
-        transition: { duration: 0.5, delay, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] },
-      };
 
   const {
     loadMasterdata,
@@ -96,7 +72,6 @@ export function JobsContent({
     workModes,
     jobTypes,
     workShifts,
-    roleCategories,
     experienceRanges,
     salaryRanges,
     skills,
@@ -483,7 +458,21 @@ export function JobsContent({
   ]);
 
   return (
-    <main className="relative flex min-h-dvh flex-col overflow-x-clip bg-white dark:bg-background pt-6 sm:pt-8 transition-colors">
+    <main className="relative flex min-h-dvh flex-col overflow-x-clip bg-[#F9F9F9] dark:bg-background pt-6 sm:pt-8 transition-colors">
+      {/* Unified interactive dot canvas matching homescreen page */}
+      <div className="pointer-events-none absolute inset-0 -z-10">
+        <InteractiveDots />
+      </div>
+
+      {/* Subtle ambient lighting consistent with site design */}
+      <div
+        className="pointer-events-none absolute inset-0 -z-10"
+        aria-hidden="true"
+      >
+        <div className="absolute left-1/2 top-[10%] h-[24rem] w-[38rem] -translate-x-1/2 rounded-full bg-brand-400/10 blur-[130px]" />
+        <div className="absolute right-[-8%] top-[30%] h-[20rem] w-[24rem] rounded-full bg-sky-300/10 blur-[120px]" />
+      </div>
+
       <div className="container mx-auto px-4 sm:px-6 max-w-7xl pb-0">
         {/* Breadcrumb Navigation */}
         <nav
@@ -1127,69 +1116,8 @@ export function JobsContent({
               </div>
             )}
 
-            {/* Mobile App Callout Banner (when location filter is expanded) */}
-            {isLocationExpanded && (
-              <div className="mt-12 overflow-hidden rounded-3xl border border-brand-500/20 bg-gradient-to-br from-brand-50 via-card to-indigo-50/70 dark:from-brand-950/30 dark:via-card dark:to-indigo-950/30 p-6 sm:p-8 backdrop-blur-md shadow-xs">
-                <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-                  <div className="space-y-2 text-center md:text-left">
-                    <div className="inline-flex items-center gap-1.5 rounded-full border border-brand-200 bg-brand-50 dark:border-brand-500/20 dark:bg-brand-500/10 px-3 py-1 text-xs font-semibold text-brand-700 dark:text-brand-400">
-                      <Sparkles className="h-3.5 w-3.5" />
-                      <span>Swipe-Based Hiring</span>
-                    </div>
-                    <h3 className="text-xl font-bold tracking-tight text-foreground sm:text-2xl">
-                      Get interviewed 3x faster with the Hirance App
-                    </h3>
-                    <p className="max-w-xl text-xs sm:text-sm text-muted-foreground">
-                      Skip long application forms. Swipe right on roles you like and chat directly with verified hiring teams.
-                    </p>
-                  </div>
-
-                  <a
-                    href={siteConfig.links.playStore}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 rounded-xl bg-brand-600 px-5 py-3 text-sm font-bold text-white shadow-md transition-all hover:bg-brand-500 hover:shadow-lg shrink-0"
-                  >
-                    <Smartphone className="h-4 w-4" />
-                    <span>Download Hirance App</span>
-                    <ArrowUpRight className="h-4 w-4" />
-                  </a>
-                </div>
-              </div>
-            )}
           </div>
         </div>
-
-        {/* Mobile App Callout Banner (Full width when location filter is not expanded) */}
-        {!isLocationExpanded && (
-          <div className="mt-10 overflow-hidden rounded-3xl border border-brand-500/20 bg-gradient-to-br from-brand-50 via-card to-indigo-50/70 dark:from-brand-950/30 dark:via-card dark:to-indigo-950/30 p-6 sm:p-8 backdrop-blur-md shadow-xs">
-            <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-              <div className="space-y-2 text-center md:text-left">
-                <div className="inline-flex items-center gap-1.5 rounded-full border border-brand-200 bg-brand-50 dark:border-brand-500/20 dark:bg-brand-500/10 px-3 py-1 text-xs font-semibold text-brand-700 dark:text-brand-400">
-                  <Sparkles className="h-3.5 w-3.5" />
-                  <span>Swipe-Based Hiring</span>
-                </div>
-                <h3 className="text-xl font-bold tracking-tight text-foreground sm:text-2xl">
-                  Get interviewed 3x faster with the Hirance App
-                </h3>
-                <p className="max-w-xl text-xs sm:text-sm text-muted-foreground">
-                  Skip long application forms. Swipe right on roles you like and chat directly with verified hiring teams.
-                </p>
-              </div>
-
-              <a
-                href={siteConfig.links.playStore}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-xl bg-brand-600 px-5 py-3 text-sm font-bold text-white shadow-md transition-all hover:bg-brand-500 hover:shadow-lg shrink-0"
-              >
-                <Smartphone className="h-4 w-4" />
-                <span>Download Hirance App</span>
-                <ArrowUpRight className="h-4 w-4" />
-              </a>
-            </div>
-          </div>
-        )}
 
         {/* FAQ Section - Matching How It Works Page Style */}
         <section id="faq" className="relative pt-14 pb-8 sm:pt-16 sm:pb-10 overflow-hidden border-t border-border/30">

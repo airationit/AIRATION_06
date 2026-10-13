@@ -199,8 +199,10 @@ export function TrustedBy({ initialCompanies }: TrustedByProps) {
     deduplicateCompanies(initialCompanies || [])
   );
 
-  // Fetch live company directory on the client so that every reload executes GET /company/?search=
+  // Only fetch on client if server-rendered initialCompanies was not provided
   useEffect(() => {
+    if (initialCompanies && initialCompanies.length > 0) return;
+
     let isMounted = true;
     fetchCompanies({ search: "", page_size: 100 })
       .then((res) => {
@@ -208,14 +210,14 @@ export function TrustedBy({ initialCompanies }: TrustedByProps) {
           setCompanyList(deduplicateCompanies(res.data));
         }
       })
-      .catch((err) => {
-        console.error("fetchCompanies client error in TrustedBy:", err);
+      .catch(() => {
+        // Silently ignore network hiccup to prevent red error overlay
       });
 
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [initialCompanies]);
 
   // Round-robin distribution into 4 balanced rows to mix brand logos and monograms evenly
   const { row1, row2, row3, row4 } = useMemo(() => {

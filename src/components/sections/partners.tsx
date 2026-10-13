@@ -1,9 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { motion, type Variants } from "framer-motion";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import {
   companies,
   hueFromName,
@@ -135,79 +133,7 @@ export function Partners() {
   const row1 = companies.slice(0, half);
   const row2 = companies.slice(half);
 
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    gsap.registerPlugin(ScrollTrigger);
 
-    const reduced = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    ).matches;
-    if (reduced) return;
-
-    const ctx = gsap.context(() => {
-      // 1. Reveal header elements on scroll
-      if (headerRef.current) {
-        gsap.fromTo(
-          headerRef.current,
-          { opacity: 0, y: 35 },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.9,
-            ease: "power2.out",
-            scrollTrigger: {
-              trigger: headerRef.current,
-              start: "top 88%",
-              toggleActions: "play none none reverse",
-            },
-          }
-        );
-      }
-
-      // 2. Slide the marquee rows in opposite directions on scroll scrub
-      const rows = rowsRef.current;
-      if (!rows) return;
-
-      const ltrRow = rows.querySelector(".row-ltr-wrap");
-      const rtlRow = rows.querySelector(".row-rtl-wrap");
-
-      if (ltrRow) {
-        gsap.fromTo(
-          ltrRow,
-          { x: -120, opacity: 0.5 },
-          {
-            x: 0,
-            opacity: 1,
-            scrollTrigger: {
-              trigger: rows,
-              start: "top 95%",
-              end: "top 55%",
-              scrub: 1.2,
-            },
-          }
-        );
-      }
-
-      if (rtlRow) {
-        gsap.fromTo(
-          rtlRow,
-          { x: 120, opacity: 0.5 },
-          {
-            x: 0,
-            opacity: 1,
-            scrollTrigger: {
-              trigger: rows,
-              start: "top 95%",
-              end: "top 55%",
-              scrub: 1.2,
-            },
-          }
-        );
-      }
-    }, sectionRef);
-
-    return () => ctx.revert();
-  }, []);
 
   return (
     <section
