@@ -54,6 +54,18 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+
+
+  async redirects() {
+    return [
+      {
+        source:
+          "/((?!api|_next|favicon|favicons|icons|images|models|pics|videos|about|blog|companies|company|contact|cookies|delete-account|download-app|feedback|fonts|fraud-alert|free-job-alerts|gallery|grievances|how-it-works|job-search|jobs|mobile-privacy-policy|privacy|qr-marketing|request-demo|terms|trust-and-safety|vulnerability-disclosure|apple-app-site-association|robots|sitemap|manifest|og|hiranceiconlogo|\\.well-known).+)",
+        destination: "/",
+        permanent: false,
+      },
+    ];
+  },
 };
 
 export default nextConfig;
