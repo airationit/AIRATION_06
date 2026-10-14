@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import { fetchCompanies, deduplicateCompanies, fetchCompanyById } from "@/lib/api/companies";
+import { fetchCompanies, deduplicateCompanies, fetchCompanyById, generateCompanySlug } from "@/lib/api/companies";
 import { fetchJobs } from "@/lib/api/jobs";
 import { CompanyDetail } from "@/types/companies";
 import { siteConfig } from "@/config/site";
@@ -110,7 +110,7 @@ export default async function CompaniesPage() {
         "@type": "Organization",
         name: company.company_name,
         image: company.company_logo || undefined,
-        url: `${siteConfig.url}/company/${company.id}`,
+        url: `${siteConfig.url}/company/${generateCompanySlug(company.company_name, company.id)}`,
       },
     })),
   };

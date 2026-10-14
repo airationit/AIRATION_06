@@ -8,6 +8,7 @@ import { fetchCompanies } from "@/lib/api";
 import type { CompanyItem } from "@/types";
 import { cn } from "@/lib/utils";
 import { ArrowRight } from "lucide-react";
+import { generateCompanySlug } from "@/lib/api/companies";
 
 /**
  * Deduplicate company items by normalized company name.
@@ -60,7 +61,7 @@ const AppIconCompanyCard = memo(function AppIconCompanyCard({
 
   return (
     <Link
-      href={company.id ? `/company/${company.id}` : `/jobs?search=${encodeURIComponent(name)}`}
+      href={company.id ? `/company/${generateCompanySlug(company.company_name, company.id) || company.id}` : `/jobs?search=${encodeURIComponent(name)}`}
       title={name}
       aria-label={`View ${name} company profile`}
       suppressHydrationWarning

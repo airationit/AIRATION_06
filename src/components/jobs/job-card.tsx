@@ -35,7 +35,7 @@ export function JobCard({ job, index = 0 }: JobCardProps) {
         .toUpperCase()
     : "HI";
 
-  const companySlug = job.companyId || generateCompanySlug(job.company, job.companyId);
+  const companySlug = generateCompanySlug(job.company, job.companyId) || job.companyId || "";
 
   // Compact experience string
   const formatExp = (exp: string) => {

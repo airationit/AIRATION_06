@@ -29,7 +29,7 @@ import {
 import { PaginationMeta } from "@/types/api";
 import { CompanyItem, CompanyDetail } from "@/types/companies";
 import { JobListItem } from "@/types/jobs";
-import { fetchCompanies, deduplicateCompanies, fetchCompanyById } from "@/lib/api/companies";
+import { fetchCompanies, deduplicateCompanies, fetchCompanyById, generateCompanySlug } from "@/lib/api/companies";
 import { siteConfig } from "@/config/site";
 import { Footer, InteractiveDots } from "@/components/shared";
 import { initials, getCompanyColorTheme } from "@/config/companies";
@@ -1228,8 +1228,7 @@ function CompanyCard({
 
   // 3. Technology / Industry from GET /api/v1/company/<uuid:pk>/ or jobs API
   const rawIndustry = detail?.industry || jobInfo?.industry || "";
-  const formattedIndustry = rawIndustry ? formatIndustry(rawIndustry) : "";
-  const targetHref = `/company/${company.id}`;
+  const targetHref = `/company/${generateCompanySlug(company.company_name, company.id) || company.id}`;
 
   return (
     <Link

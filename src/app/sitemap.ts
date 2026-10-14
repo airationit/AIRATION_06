@@ -2,6 +2,7 @@ import { MetadataRoute } from "next";
 import { siteConfig } from "@/config/site";
 import { fetchJobSitemapList } from "@/lib/api/jobs";
 import { fetchBlogSitemap } from "@/lib/api/blogs";
+import { fetchCompanies, generateCompanySlug } from "@/lib/api/companies";
 import { generateJobSlug } from "@/lib/jobs-data";
 import { POPULAR_JOB_ROLES, POPULAR_CITIES } from "@/config/jobs-taxonomy";
 
@@ -249,11 +250,31 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     console.error("Error generating dynamic blog sitemap:", error);
   }
 
+  // 5. Dynamic Live Company Profiles from Companies API
+  let liveCompanyRoutes: MetadataRoute.Sitemap = [];
+  try {
+    const companiesRes = await fetchCompanies({ search: "", page_size: 100 });
+    if (companiesRes && companiesRes.data && companiesRes.data.length > 0) {
+      liveCompanyRoutes = companiesRes.data.map((company) => {
+        const slug = generateCompanySlug(company.company_name, company.id) || company.id;
+        return {
+          url: `${baseUrl}/company/${slug}`,
+          lastModified: now,
+          changeFrequency: "weekly" as const,
+          priority: 0.8,
+        };
+      });
+    }
+  } catch (error) {
+    console.error("Error generating dynamic company sitemap:", error);
+  }
+
   return [
     ...staticRoutes,
     ...categoryPreferenceRoutes,
     ...programmaticRoutes,
     ...liveJobRoutes,
     ...liveBlogRoutes,
+    ...liveCompanyRoutes,
   ];
 }

@@ -284,6 +284,21 @@ export default function CompanyContent({
     return "Not specified";
   })();
 
+  // Derive industry with graceful fallbacks
+  const resolvedIndustry = (() => {
+    if (company.industry && company.industry.trim().length > 0) {
+      return company.industry.trim();
+    }
+    if (categories.length > 0 && categories[0].name) {
+      return categories[0].name;
+    }
+    const jobWithCat = jobs.find((j) => j.roleCategoryName);
+    if (jobWithCat?.roleCategoryName) {
+      return jobWithCat.roleCategoryName;
+    }
+    return "";
+  })();
+
   return (
     <main className="relative flex min-h-dvh flex-col overflow-x-clip bg-background text-foreground justify-between">
       {/* Background Dots Canvas consistent with homescreen and blog */}
@@ -316,7 +331,9 @@ export default function CompanyContent({
                     className="w-full h-full object-contain p-2"
                   />
                 ) : (
-                  <span className="font-extrabold tracking-tight">{initials}</span>
+                  <div className="w-full h-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-brand-600 dark:text-brand-400 font-extrabold tracking-tight">
+                    {initials}
+                  </div>
                 )}
               </div>
 
@@ -346,15 +363,15 @@ export default function CompanyContent({
                   </span>
 
                   {/* Divider */}
-                  {company.industry && company.industry.trim().length > 0 && (
+                  {resolvedIndustry && (
                     <span className="h-3.5 w-px bg-slate-200 dark:bg-slate-700 hidden sm:inline-block" aria-hidden="true" />
                   )}
 
                   {/* Industry */}
-                  {company.industry && company.industry.trim().length > 0 && (
+                  {resolvedIndustry && (
                     <span className="inline-flex items-center gap-1.5 truncate">
                       <Briefcase className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                      <span>{company.industry}</span>
+                      <span>{resolvedIndustry}</span>
                     </span>
                   )}
 
