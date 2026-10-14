@@ -1228,6 +1228,7 @@ function CompanyCard({
 
   // 3. Technology / Industry from GET /api/v1/company/<uuid:pk>/ or jobs API
   const rawIndustry = detail?.industry || jobInfo?.industry || "";
+  const formattedIndustry = rawIndustry ? formatIndustry(rawIndustry) : "";
   const targetHref = `/company/${generateCompanySlug(company.company_name, company.id) || company.id}`;
 
   return (
