@@ -26,7 +26,6 @@ import {
 } from "lucide-react";
 import { Job } from "@/lib/jobs-data";
 import { siteConfig } from "@/config/site";
-import { generateCompanySlug } from "@/lib/api/companies";
 import { formatRelativeTime } from "@/lib/html-utils";
 import { RichDescription } from "./rich-description";
 import { Footer, InteractiveDots } from "@/components/shared";
@@ -73,8 +72,6 @@ export function JobDetailContent({ job, relatedJobs = [] }: JobDetailContentProp
       .join("")
       .toUpperCase()
     : "HI";
-
-  const companySlug = generateCompanySlug(job.company, job.companyId) || job.company;
 
   // Share handler
   const handleCopyLink = () => {
@@ -212,7 +209,7 @@ export function JobDetailContent({ job, relatedJobs = [] }: JobDetailContentProp
           <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-5 sm:gap-6">
             <div className="flex items-start gap-3.5 sm:gap-5 flex-1 min-w-0">
               {/* Company Logo / Avatar */}
-              <Link href={`/company/${companySlug}`} className="flex h-12 w-12 sm:h-16 sm:w-16 shrink-0 items-center justify-center rounded-xl sm:rounded-2xl border border-border/80 bg-muted/50 font-mono text-sm sm:text-base font-bold text-brand-600 dark:text-brand-400 shadow-2xs overflow-hidden hover:opacity-80 transition-opacity">
+              <Link href={`/company/${job.companyId || job.company}`} className="flex h-12 w-12 sm:h-16 sm:w-16 shrink-0 items-center justify-center rounded-xl sm:rounded-2xl border border-border/80 bg-muted/50 font-mono text-sm sm:text-base font-bold text-brand-600 dark:text-brand-400 shadow-2xs overflow-hidden hover:opacity-80 transition-opacity">
                 {job.companyLogo && !imgError ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
@@ -229,7 +226,7 @@ export function JobDetailContent({ job, relatedJobs = [] }: JobDetailContentProp
               {/* Title & Metadata */}
               <div className="min-w-0 flex-1">
                 <div className="flex flex-wrap items-center gap-2">
-                  <Link href={`/company/${companySlug}`} className="text-xs sm:text-sm font-semibold text-foreground/90 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">
+                  <Link href={`/company/${job.companyId || job.company}`} className="text-xs sm:text-sm font-semibold text-foreground/90 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">
                     {job.company}
                   </Link>
                   {job.isVerified && (
