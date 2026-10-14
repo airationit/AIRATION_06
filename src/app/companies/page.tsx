@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { Metadata } from "next";
 import { fetchCompanies, deduplicateCompanies, fetchCompanyById, generateCompanySlug } from "@/lib/api/companies";
 import { fetchJobs } from "@/lib/api/jobs";
@@ -136,12 +137,20 @@ export default async function CompaniesPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
-      <CompaniesContent
-        initialCompanies={initialCompanies}
-        initialJobs={initialJobs}
-        initialCompanyDetails={initialCompanyDetails}
-        initialPagination={initialPagination}
-      />
+      <Suspense
+        fallback={
+          <main className="min-h-screen bg-background flex items-center justify-center">
+            <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+          </main>
+        }
+      >
+        <CompaniesContent
+          initialCompanies={initialCompanies}
+          initialJobs={initialJobs}
+          initialCompanyDetails={initialCompanyDetails}
+          initialPagination={initialPagination}
+        />
+      </Suspense>
     </>
   );
 }
