@@ -98,7 +98,7 @@ export function JobCard({ job, index = 0 }: JobCardProps) {
                   {job.title}
                 </h3>
               </Link>
-              <div className="mt-0.5 flex items-center gap-1.5 text-xs text-muted-foreground font-medium">
+              <div className="mt-0.5 flex items-center gap-1.5 text-xs text-muted-foreground font-semibold">
                 {companySlug ? (
                   <Link
                     href={`/company/${companySlug}`}

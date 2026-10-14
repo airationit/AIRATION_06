@@ -1124,14 +1124,14 @@ export function JobsContent({
           <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 relative z-10">
 
             {/* Section Header (Clean & Professional) */}
-            <div className="text-center space-y-3">
-              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-foreground leading-tight">
+            <div className="text-center space-y-2.5">
+              <h2 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-foreground leading-tight">
                 Frequently Asked{" "}
                 <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-brand-600 dark:from-brand-400 dark:via-indigo-300 dark:to-sky-300 bg-clip-text text-transparent">
                   Questions
                 </span>
               </h2>
-              <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto">
+              <p className="text-sm sm:text-base text-muted-foreground max-w-2xl mx-auto">
                 Everything you need to know about finding jobs on Hirance.
               </p>
             </div>

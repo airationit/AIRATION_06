@@ -573,7 +573,7 @@ export default function CompaniesContent({
                   onClick={() => handleTagClick(tag)}
                   className={`px-3 py-1.5 rounded-lg border text-xs font-medium transition-colors cursor-pointer select-none ${
                     isSelected
-                      ? "border-blue-500 bg-blue-50 text-blue-700 font-semibold"
+                      ? "border-blue-500 bg-white text-blue-600 font-semibold shadow-2xs"
                       : "border-slate-200/80 bg-white hover:border-blue-400 hover:text-blue-600 text-slate-700 shadow-2xs"
                   }`}
                 >
@@ -664,13 +664,13 @@ export default function CompaniesContent({
                     </div>
 
                     {/* Industry Checkboxes */}
-                    <div className="space-y-2 pt-1 max-h-60 overflow-y-auto pr-1">
+                    <div className="space-y-1 pt-1 max-h-72 overflow-y-auto pr-1">
                       {visibleIndustries.map((ind) => {
                         const checked = selectedIndustries.includes(ind);
                         return (
                           <label
                             key={ind}
-                            className="flex items-center gap-2.5 text-xs text-slate-600 hover:text-slate-900 cursor-pointer select-none group"
+                            className="flex items-center gap-2.5 py-0.5 text-xs text-slate-600 hover:text-slate-900 cursor-pointer select-none group"
                           >
                             <input
                               type="checkbox"
@@ -684,7 +684,7 @@ export default function CompaniesContent({
                                   setSelectedIndustries([...selectedIndustries, ind]);
                                 }
                               }}
-                              className="h-3.5 w-3.5 rounded border-slate-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
+                              className="h-3.5 w-3.5 rounded border-slate-300 text-blue-600 focus:ring-blue-500 cursor-pointer shrink-0"
                             />
                             <span className="group-hover:text-slate-900 transition-colors">
                               {ind}
@@ -729,13 +729,13 @@ export default function CompaniesContent({
                 </div>
 
                 {sizeOpen && (
-                  <div className="space-y-2 pt-1">
+                  <div className="space-y-1 pt-1">
                     {COMPANY_SIZES.map((size) => {
                       const checked = selectedSizes.includes(size);
                       return (
                         <label
                           key={size}
-                          className="flex items-center gap-2.5 text-xs text-slate-600 hover:text-slate-900 cursor-pointer select-none group"
+                          className="flex items-center gap-2.5 py-1 text-xs text-slate-600 hover:text-slate-900 cursor-pointer select-none group"
                         >
                           <input
                             type="checkbox"
@@ -747,7 +747,7 @@ export default function CompaniesContent({
                                 setSelectedSizes([...selectedSizes, size]);
                               }
                             }}
-                            className="h-3.5 w-3.5 rounded border-slate-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
+                            className="h-3.5 w-3.5 rounded border-slate-300 text-blue-600 focus:ring-blue-500 cursor-pointer shrink-0"
                           />
                           <span className="group-hover:text-slate-900 transition-colors">
                             {size}
@@ -779,13 +779,13 @@ export default function CompaniesContent({
                 </div>
 
                 {locationOpen && (
-                  <div className="space-y-2 pt-1 max-h-52 overflow-y-auto pr-1">
+                  <div className="space-y-1 pt-1 max-h-72 overflow-y-auto pr-1">
                     {LOCATIONS_LIST.map((loc) => {
                       const checked = selectedLocations.includes(loc);
                       return (
                         <label
                           key={loc}
-                          className="flex items-center gap-2.5 text-xs text-slate-600 hover:text-slate-900 cursor-pointer select-none group"
+                          className="flex items-center gap-2.5 py-0.5 text-xs text-slate-600 hover:text-slate-900 cursor-pointer select-none group"
                         >
                           <input
                             type="checkbox"
@@ -799,7 +799,7 @@ export default function CompaniesContent({
                                 setSelectedLocations([...selectedLocations, loc]);
                               }
                             }}
-                            className="h-3.5 w-3.5 rounded border-slate-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
+                            className="h-3.5 w-3.5 rounded border-slate-300 text-blue-600 focus:ring-blue-500 cursor-pointer shrink-0"
                           />
                           <span className="group-hover:text-slate-900 transition-colors">
                             {loc}
@@ -1053,7 +1053,7 @@ export default function CompaniesContent({
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 relative z-10">
           {/* Section Header */}
           <div className="text-center space-y-2.5">
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-900 leading-tight">
+            <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 leading-tight">
               Frequently Asked{" "}
               <span className="text-blue-600">
                 Questions
@@ -1261,7 +1261,7 @@ function CompanyCard({
 
       {/* Company Info */}
       <div className="flex-1 min-w-0 flex flex-col justify-center">
-        <h3 className="text-sm sm:text-base font-bold text-slate-900 group-hover:text-blue-600 transition-colors truncate">
+        <h3 className="text-sm sm:text-base font-semibold text-slate-900 group-hover:text-blue-600 transition-colors truncate">
           {company.company_name}
         </h3>
 

@@ -587,7 +587,7 @@ export function JobDetailContent({ job, relatedJobs = [] }: JobDetailContentProp
         {/* Frequently Asked Questions — Full Width */}
         <section id="job-faq" className="mt-10 space-y-4">
           <div className="text-center space-y-1 max-w-2xl mx-auto">
-            <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground text-center">
+            <h2 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-foreground text-center">
               Frequently Asked{" "}
               <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-sky-500 bg-clip-text text-transparent">
                 Questions
