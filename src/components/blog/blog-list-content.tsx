@@ -418,11 +418,11 @@ export function BlogListContent({
     if (blogs && blogs.length > 0) return blogs;
     if (hasAppliedFilter) return [];
     if (initialBlogs && initialBlogs.length > 0) return initialBlogs;
-    return FALLBACK_ARTICLES;
+    return [];
   }, [blogs, hasAppliedFilter, initialBlogs]);
 
   const latestSidebarPosts = displayPosts.slice(0, 4);
-  const displayJobs = (featuredJobs && featuredJobs.length > 0) ? featuredJobs.slice(0, 4) : FALLBACK_JOBS;
+  const displayJobs = (featuredJobs && featuredJobs.length > 0) ? featuredJobs.slice(0, 4) : [];
 
   // Calculate truthful total articles and total pages (supports SSR & client store)
   const effectiveTotalBlogs =
@@ -510,7 +510,7 @@ export function BlogListContent({
             {/* Left Content (Title, Subtitle, Search) */}
             <div className="lg:col-span-7 flex flex-col items-start">
               {/* NOTE: Rule 7 strictly obeyed: No chip badge over section or title */}
-              <h1 className="text-3xl sm:text-5xl lg:text-[54px] font-semibold tracking-tight text-slate-900 dark:text-white leading-[1.12]">
+              <h1 className="text-3xl sm:text-5xl lg:text-[40px] font-semibold tracking-tight text-slate-900 dark:text-white leading-[1.12]">
                 Insights on <span className="text-blue-600">Hiring Velocity</span>
               </h1>
               
@@ -573,13 +573,12 @@ export function BlogListContent({
               {/* Soft Radial Ambient Glow */}
               <div className="absolute w-72 h-72 rounded-full bg-blue-100/70 dark:bg-blue-950/40 blur-2xl -z-10" />
 
-              {/* Hand-Drawn Doodle Annotation (Arrow + "Better Hiring Insights") */}
+              {/* Hand-Drawn Doodle Annotation (Arrow + "Better Hiring Insights") - Commented out
               <div className="absolute -top-3 sm:top-2 right-4 sm:right-6 z-20 pointer-events-none select-none">
                 <div className="flex flex-col items-center">
                   <span className="font-doodle text-[20px] sm:text-[23px] text-blue-600 font-bold tracking-wide -rotate-6 whitespace-nowrap leading-none drop-shadow-xs">
                     Better <br /> Hiring <br /> Insights
                   </span>
-                  {/* Curved Hand-Drawn Doodle Arrow SVG */}
                   <svg width="45" height="55" viewBox="0 0 50 60" fill="none" className="text-blue-600 mt-1 stroke-current -rotate-12">
                     <path
                       d="M 35 5 C 45 22, 10 28, 12 48"
@@ -597,6 +596,7 @@ export function BlogListContent({
                   </svg>
                 </div>
               </div>
+              */}
 
               {/* Stacked Fanned Cards */}
               <div className="relative w-[280px] sm:w-[320px] h-[240px] flex items-center justify-center">

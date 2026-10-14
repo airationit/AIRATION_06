@@ -7,6 +7,7 @@ import { getCompanyColorTheme, initials } from "@/config/companies";
 import { fetchCompanies } from "@/lib/api";
 import type { CompanyItem } from "@/types";
 import { cn } from "@/lib/utils";
+import { ArrowRight } from "lucide-react";
 
 /**
  * Deduplicate company items by normalized company name.
@@ -198,8 +199,10 @@ export function TrustedBy({ initialCompanies }: TrustedByProps) {
     deduplicateCompanies(initialCompanies || [])
   );
 
-  // Fetch live company directory on the client so that every reload executes GET /company/?search=
+  // Only fetch on client if server-rendered initialCompanies was not provided
   useEffect(() => {
+    if (initialCompanies && initialCompanies.length > 0) return;
+
     let isMounted = true;
     fetchCompanies({ search: "", page_size: 100 })
       .then((res) => {
@@ -207,14 +210,14 @@ export function TrustedBy({ initialCompanies }: TrustedByProps) {
           setCompanyList(deduplicateCompanies(res.data));
         }
       })
-      .catch((err) => {
-        console.error("fetchCompanies client error in TrustedBy:", err);
+      .catch(() => {
+        // Silently ignore network hiccup to prevent red error overlay
       });
 
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [initialCompanies]);
 
   // Round-robin distribution into 4 balanced rows to mix brand logos and monograms evenly
   const { row1, row2, row3, row4 } = useMemo(() => {
@@ -270,6 +273,14 @@ export function TrustedBy({ initialCompanies }: TrustedByProps) {
           <p className="mt-3 text-sm sm:text-base text-muted-foreground max-w-xl mx-auto">
             Built for modern hiring teams looking for better matches, faster applications and simpler hiring.
           </p>
+          <div className="mt-3 flex items-center justify-center">
+            <Link
+              href="/companies"
+              className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-blue-600 hover:text-blue-700 dark:text-blue-400 hover:underline transition-colors"
+            >
+              Explore Top Companies <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+          </div>
         </motion.div>
 
         {/* 4-Row Continuous App-Icon Stream (Continuous, no pause on hover) */}

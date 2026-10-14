@@ -2,7 +2,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   // Transpile packages that need it
-  transpilePackages: ["three", "lenis"],
+  transpilePackages: ["three", "lenis", "gsap"],
 
   // Image optimization
   images: {
@@ -51,6 +51,18 @@ const nextConfig: NextConfig = {
           { key: "Content-Type", value: "application/json" },
           { key: "Access-Control-Allow-Origin", value: "*" },
         ],
+      },
+    ];
+  },
+
+
+  async redirects() {
+    return [
+      {
+        source:
+          "/((?!api|_next|favicon|favicons|icons|images|models|pics|videos|about|blog|companies|company|contact|cookies|delete-account|download-app|feedback|fonts|fraud-alert|free-job-alerts|gallery|grievances|how-it-works|job-search|jobs|mobile-privacy-policy|privacy|qr-marketing|request-demo|terms|trust-and-safety|vulnerability-disclosure|apple-app-site-association|robots|sitemap|manifest|og|hiranceiconlogo|\\.well-known).+)",
+        destination: "/",
+        permanent: false,
       },
     ];
   },

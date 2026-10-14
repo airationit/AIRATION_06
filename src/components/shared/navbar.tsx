@@ -129,8 +129,13 @@ export function Navbar({ className }: NavbarProps) {
               {siteConfig.nav.map((item, index) => {
                 const external = "external" in item && item.external
                 const hasSubNav = "subNav" in item && item.subNav
-                const linkClass =
-                  "relative rounded-full px-3.5 py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-brand-500/40"
+                const isActive = pathname === item.href || (item.href !== "/" && pathname?.startsWith(item.href))
+                const linkClass = cn(
+                  "relative rounded-full px-3.5 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-brand-500/40",
+                  isActive
+                    ? "text-blue-600 font-semibold dark:text-blue-400"
+                    : "text-muted-foreground hover:text-foreground"
+                )
 
                 const label = (
                   <>
@@ -149,6 +154,9 @@ export function Navbar({ className }: NavbarProps) {
                       />
                     )}
                     <span className="relative z-10">{item.label}</span>
+                    {isActive && (
+                      <span className="absolute bottom-0 left-3 right-3 h-[2.5px] rounded-full bg-blue-600" />
+                    )}
                   </>
                 )
 
