@@ -64,8 +64,10 @@ export const siteConfig = {
         right: [
           {
             label: "Jobs By City",
-            href: "/jobs?keyword=Jobs+By+City",
+            href: "/jobs-by-city",
             hasArrow: true,
+            viewAllText: "View All Cities",
+            viewAllHref: "/jobs-by-city",
             flyoutItems: [
               { label: "Jobs in Bangalore", href: "/jobs/jobs-in-bangalore" },
               { label: "Jobs in Lucknow", href: "/jobs/jobs-in-lucknow" },
@@ -78,8 +80,10 @@ export const siteConfig = {
           },
           {
             label: "Jobs By Department",
-            href: "/jobs?keyword=Jobs+By+Department",
+            href: "/jobs-by-department",
             hasArrow: true,
+            viewAllText: "View All Departments",
+            viewAllHref: "/jobs-by-department",
             flyoutItems: [
               { label: "Software & IT Jobs", href: "/jobs/software-developer-jobs" },
               { label: "Sales & Marketing Jobs", href: "/jobs/sales-executive" },

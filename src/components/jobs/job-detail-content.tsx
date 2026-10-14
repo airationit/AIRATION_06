@@ -27,6 +27,7 @@ import {
 import { Job } from "@/lib/jobs-data";
 import { siteConfig } from "@/config/site";
 import { formatRelativeTime } from "@/lib/html-utils";
+import { generateCompanySlug } from "@/lib/api/companies";
 import { RichDescription } from "./rich-description";
 import { Footer, InteractiveDots } from "@/components/shared";
 
@@ -72,6 +73,8 @@ export function JobDetailContent({ job, relatedJobs = [] }: JobDetailContentProp
       .join("")
       .toUpperCase()
     : "HI";
+
+  const companySlug = generateCompanySlug(job.company, job.companyId) || job.companyId || job.company;
 
   // Share handler
   const handleCopyLink = () => {
@@ -209,7 +212,7 @@ export function JobDetailContent({ job, relatedJobs = [] }: JobDetailContentProp
           <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-5 sm:gap-6">
             <div className="flex items-start gap-3.5 sm:gap-5 flex-1 min-w-0">
               {/* Company Logo / Avatar */}
-              <div className="flex h-12 w-12 sm:h-16 sm:w-16 shrink-0 items-center justify-center rounded-xl sm:rounded-2xl border border-border/80 bg-muted/50 font-mono text-sm sm:text-base font-bold text-brand-600 dark:text-brand-400 shadow-2xs overflow-hidden">
+              <Link href={`/company/${companySlug}`} className="flex h-12 w-12 sm:h-16 sm:w-16 shrink-0 items-center justify-center rounded-xl sm:rounded-2xl border border-border/80 bg-muted/50 font-mono text-sm sm:text-base font-bold text-brand-600 dark:text-brand-400 shadow-2xs overflow-hidden hover:opacity-80 transition-opacity">
                 {job.companyLogo && !imgError ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
@@ -221,14 +224,14 @@ export function JobDetailContent({ job, relatedJobs = [] }: JobDetailContentProp
                 ) : (
                   <span>{initials}</span>
                 )}
-              </div>
+              </Link>
 
               {/* Title & Metadata */}
               <div className="min-w-0 flex-1">
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="text-xs sm:text-sm font-semibold text-foreground/90">
+                  <Link href={`/company/${companySlug}`} className="text-xs sm:text-sm font-semibold text-foreground/90 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">
                     {job.company}
-                  </span>
+                  </Link>
                   {job.isVerified && (
                     <span
                       title="Verified Employer"
@@ -587,7 +590,7 @@ export function JobDetailContent({ job, relatedJobs = [] }: JobDetailContentProp
         {/* Frequently Asked Questions — Full Width */}
         <section id="job-faq" className="mt-10 space-y-4">
           <div className="text-center space-y-1 max-w-2xl mx-auto">
-            <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground text-center">
+            <h2 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-foreground text-center">
               Frequently Asked{" "}
               <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-sky-500 bg-clip-text text-transparent">
                 Questions

@@ -357,7 +357,7 @@ export function DeleteAccountContent() {
         {/* SECTION 4: FREQUENTLY ASKED QUESTIONS */}
         <section className="space-y-6">
           <div className="text-center space-y-2">
-            <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">Frequently Asked Questions</h2>
+            <h2 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white">Frequently Asked Questions</h2>
             <p className="text-slate-600 dark:text-slate-400 text-sm max-w-md mx-auto">
               Quick answers regarding your candidate account deletion request.
             </p>

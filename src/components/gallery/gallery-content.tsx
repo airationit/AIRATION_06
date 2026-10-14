@@ -8,7 +8,7 @@ import { X, Play, ChevronLeft, ChevronRight, Maximize2, Video, ArrowUpRight, Cam
 import { Footer } from "@/components/shared";
 
 // Replace with your official YouTube launch video ID (e.g. from youtube.com/watch?v=VIDEO_ID)
-const YOUTUBE_VIDEO_ID = "dQw4w9WgXcQ";
+const YOUTUBE_VIDEO_ID = "tBPsumzal-U";
 
 const CATEGORIES = [
   { id: "all", label: "All Photos" },
@@ -34,7 +34,7 @@ const GALLERY_ITEMS: GalleryItem[] = [
   {
     id: 999,
     category: "team",
-    src: "https://cdn.hirance.com/library/125ad1bc-67bd-43c9-ac97-858631187aff.webp",
+    src: "https://cdn.hirance.com/library/767fed1f-20e1-4df5-9d1f-56b10bc0a690.webp",
     alt: "Hirance Team",
     title: "Our Team",
     caption: "The core team behind the successful launch.",
@@ -94,7 +94,7 @@ const GALLERY_ITEMS: GalleryItem[] = [
   {
     id: 2,
     category: "team",
-    src: "https://cdn.hirance.com/library/6ad3b395-5819-46b3-8a86-f5aca91bb758.webp",
+    src: "https://cdn.hirance.com/library/41ec5cc0-046f-409d-98a9-aa884e8d5658.webp",
     alt: "Behind the Scenes Lucknow Launch Event Prep",
     title: "Behind the Scenes",
     caption: "Our core event team ensuring a seamless launch experience.",
@@ -184,7 +184,7 @@ const GALLERY_ITEMS: GalleryItem[] = [
   {
     id: 4,
     category: "highlights",
-    src: "https://cdn.hirance.com/library/b7379f4e-15bc-4599-b073-4d2b3f922b60.webp",
+    src: "https://cdn.hirance.com/library/129dd702-5a6d-4dd6-a845-191eefcb449d.webp",
     alt: "Keynote Highlights in Lucknow",
     title: "Future Vision Address",
     caption: "Outlining the technology roadmap for instant swipe hiring.",
@@ -234,7 +234,7 @@ const GALLERY_ITEMS: GalleryItem[] = [
   {
     id: 17,
     category: "team",
-    src: "https://cdn.hirance.com/library/f09b3231-f37b-4286-a444-efdda6250622.webp",
+    src: "https://cdn.hirance.com/library/cda472b9-adc0-4e5e-8af2-2b4b273ae587.webp",
     alt: "Hirance Support and Growth Team in Lucknow",
     title: "Growth Team Briefing",
     caption: "Empowering candidates and employers at scale across Uttar Pradesh.",
@@ -403,7 +403,7 @@ export function GalleryContent() {
               Relive the best moments of our launch event in this recap video.
             </p>
           </div>
-          <div className="relative overflow-hidden rounded-lg border border-slate-200 dark:border-slate-800 bg-[#060c18] shadow-2xl w-full aspect-[16/9] sm:aspect-[18/8] min-h-[400px] sm:min-h-[500px]">
+          <div className="relative overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-950 shadow-2xl w-full max-w-5xl mx-auto aspect-video">
             {!videoOpen ? (
               <button
                 id="gallery-play-btn"
@@ -441,9 +441,9 @@ export function GalleryContent() {
               <div className="w-full h-full">
                 <iframe
                   className="w-full h-full"
-                  src={`https://www.youtube.com/embed/${YOUTUBE_VIDEO_ID}?autoplay=1&rel=0&modestbranding=1`}
+                  src={`https://www.youtube.com/embed/${YOUTUBE_VIDEO_ID}?autoplay=1&rel=0&modestbranding=1&enablejsapi=1`}
                   title="Hirance Official Launch Video 2026"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                   allowFullScreen
                 />
               </div>

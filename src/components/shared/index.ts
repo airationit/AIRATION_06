@@ -19,5 +19,4 @@ export {
 export { FloatingAppBanner } from "./floating-app-banner";
 export { LaunchWrapper } from "./launch-wrapper";
 export { CelebrationOverlay } from "./celebration-overlay";
-
-
+export { SwipeHiringCta } from "./swipe-hiring-cta";

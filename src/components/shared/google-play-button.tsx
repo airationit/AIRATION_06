@@ -42,7 +42,7 @@ export function GooglePlayButton({
       aria-label={`${sublabel ? `${sublabel}: ` : ""}${label} - Hirance`}
       {...(motionProps as Record<string, unknown>)}
       className={cn(
-        "group inline-flex h-12 items-center justify-center gap-3 rounded-full border border-foreground/10 bg-foreground px-5 sm:px-6 text-left text-background shadow-sm transition-all duration-300 hover:shadow-[0_0_20px_rgba(0,0,0,0.15)] focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-foreground/30 hover:scale-[1.02] active:scale-[0.98]",
+        "group inline-flex h-12 items-center justify-center gap-3 rounded-full bg-blue-600 hover:bg-blue-700 px-5 sm:px-6 text-left text-white shadow-md shadow-blue-600/25 transition-all duration-300 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-blue-500/30 hover:scale-[1.02] active:scale-[0.98]",
         animate && "glow-hover",
         className
       )}
@@ -50,7 +50,7 @@ export function GooglePlayButton({
       <PlayIcon className="h-5 w-5 shrink-0" />
       {!compact && (
         <span className="flex flex-col leading-none text-left">
-          <span className="text-xs sm:text-sm font-bold text-background mt-0.5">
+          <span className="text-xs sm:text-sm font-bold text-white mt-0.5">
             {label}
           </span>
         </span>
