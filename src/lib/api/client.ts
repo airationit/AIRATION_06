@@ -36,12 +36,13 @@ export async function apiClient<T>(
   const { params, timeoutMs = 15000, revalidate = 60, headers = {}, signal, ...fetchOptions } = options;
   const queryString = buildQueryString(params);
 
+  const isServer = typeof window === "undefined";
+
   // Normalize endpoint URL
   const cleanEndpoint = endpoint.startsWith("/") ? endpoint : `/${endpoint}`;
-  const effectiveBaseUrl = BASE_URL;
+  // In the browser, use same-origin relative path so Next.js proxies to backend without CORS errors
+  const effectiveBaseUrl = isServer ? BASE_URL : "";
   const fullUrl = `${effectiveBaseUrl}${cleanEndpoint}${queryString}`;
-
-  const isServer = typeof window === "undefined";
 
   let controller: AbortController | null = null;
   let timeoutId: NodeJS.Timeout | null = null;

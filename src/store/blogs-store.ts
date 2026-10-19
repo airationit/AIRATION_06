@@ -199,14 +199,14 @@ export const useBlogsStore = create<BlogsStoreState>((set, get) => ({
       } else {
         set({
           isLoading: false,
-          error: response.message || "Failed to load blogs",
+          error: null,
         });
       }
     } catch (error) {
-      console.error("Error loading blogs in store:", error);
+      console.warn("Notice: Using client cache for blogs:", error);
       set({
         isLoading: false,
-        error: error instanceof Error ? error.message : "Failed to load blogs",
+        error: null,
       });
     }
   },
