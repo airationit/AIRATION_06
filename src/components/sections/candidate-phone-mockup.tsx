@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import {
   motion,
   AnimatePresence,
@@ -40,6 +40,7 @@ export interface JobCardData {
   department: string;
   title: string;
   company: string;
+  companyLogo?: string | null;
   verified: boolean;
   verifiedText: string;
   matchScore: number;
@@ -432,7 +433,16 @@ function SwipeCard({
           <div className="flex items-start justify-between gap-2">
             {/* Company Logo & Details */}
             <div className="flex items-center gap-2 min-w-0">
-              {job.logoType === "hirance" ? (
+              {job.companyLogo ? (
+                <img
+                  src={job.companyLogo}
+                  alt={job.company}
+                  className="h-7 w-7 xs:h-8 xs:w-8 shrink-0 rounded-xl object-contain bg-white dark:bg-slate-800 p-0.5 border border-slate-200/60 dark:border-slate-700 shadow-2xs"
+                  onError={(e) => {
+                    (e.target as HTMLElement).style.display = "none";
+                  }}
+                />
+              ) : job.logoType === "hirance" ? (
                 <HiranceSwirlLogo />
               ) : (
                 <div
@@ -441,7 +451,7 @@ function SwipeCard({
                     job.logoColor || "from-blue-600 to-indigo-600"
                   )}
                 >
-                  {job.logoLetter || "H"}
+                  {job.logoLetter || job.company?.charAt(0) || "H"}
                 </div>
               )}
 
@@ -511,9 +521,9 @@ function SwipeCard({
 
           {/* Skill Tags */}
           <div className="mt-2 flex flex-wrap gap-1.5">
-            {job.tags.map((tag) => (
+            {job.tags.map((tag, tagIdx) => (
               <span
-                key={tag}
+                key={`${tag}-${tagIdx}`}
                 className="rounded-lg bg-blue-50/80 border border-blue-100/50 px-2 xs:px-2.5 py-0.5 xs:py-1 text-[9px] xs:text-[9.5px] font-medium text-slate-800 dark:bg-blue-950/40 dark:border-blue-900/40 dark:text-blue-200"
               >
                 {tag}
@@ -633,40 +643,39 @@ export function CandidatePhoneMockup() {
     setCurrentIndex((prev) => prev + 1);
   }, []);
 
-  const handleReset = useCallback(() => {
-    setCurrentIndex(0);
-    setAutoSwipeTarget(null);
-  }, []);
-
   // Automatic Swiping Engine based on match score
   useEffect(() => {
-    if (reducedMotion || isPaused || autoSwipeTarget) return;
+    if (reducedMotion || isPaused || autoSwipeTarget || JOBS_DATA.length === 0) return;
 
-    if (currentIndex >= JOBS_DATA.length) {
-      // Reached the end: pause on completion screen for 2.2 seconds then seamlessly auto-loop
-      timerRef.current = setTimeout(() => {
-        handleReset();
-      }, 2200);
-      return () => {
-        if (timerRef.current) clearTimeout(timerRef.current);
-      };
-    }
+    const currentJob = JOBS_DATA[currentIndex % JOBS_DATA.length];
+    if (!currentJob) return;
 
-    const currentJob = JOBS_DATA[currentIndex];
     // High match (>= 80) swipes right, otherwise left
     const targetDirection = currentJob.matchScore >= 80 ? "right" : "left";
 
     timerRef.current = setTimeout(() => {
       setAutoSwipeTarget({ id: currentJob.id, direction: targetDirection });
-    }, 2200);
+    }, 2800);
 
     return () => {
       if (timerRef.current) clearTimeout(timerRef.current);
     };
-  }, [currentIndex, isPaused, autoSwipeTarget, reducedMotion, handleReset]);
+  }, [currentIndex, isPaused, autoSwipeTarget, reducedMotion]);
 
-  const visibleJobs = JOBS_DATA.slice(currentIndex, currentIndex + 3);
-  const isDeckFinished = currentIndex >= JOBS_DATA.length;
+  // Continuously show available job cards in an infinite deck cycle (No "All Caught Up!" screen)
+  const visibleCards = useMemo(() => {
+    const count = Math.min(3, JOBS_DATA.length);
+    const result: { job: JobCardData; key: string; indexOffset: number }[] = [];
+    for (let offset = 0; offset < count; offset++) {
+      const idx = (currentIndex + offset) % JOBS_DATA.length;
+      result.push({
+        job: JOBS_DATA[idx],
+        key: `${JOBS_DATA[idx].id}-${currentIndex + offset}`,
+        indexOffset: offset,
+      });
+    }
+    return result;
+  }, [currentIndex]);
 
   return (
     <div
@@ -753,84 +762,20 @@ export function CandidatePhoneMockup() {
             }}
           >
             <AnimatePresence>
-              {!isDeckFinished ? (
-                visibleJobs.map((job, idx) => (
-                  <SwipeCard
-                    key={job.id}
-                    job={job}
-                    isTop={idx === 0}
-                    indexOffset={idx}
-                    onSwipeComplete={handleSwipeComplete}
-                    triggerDirection={
-                      idx === 0 && autoSwipeTarget?.id === job.id
-                        ? autoSwipeTarget.direction
-                        : null
-                    }
-                  />
-                ))
-              ) : (
-                /* Deck Finished Screen with Google Play Redirect */
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.4 }}
-                  className="absolute inset-0 rounded-[22px] xs:rounded-[26px] border border-slate-200 bg-white p-3.5 xs:p-4 shadow-lg flex flex-col items-center justify-center text-center dark:border-slate-800 dark:bg-slate-900"
-                >
-                  <div className="flex h-9 w-9 xs:h-10 xs:w-10 items-center justify-center rounded-full bg-emerald-100 text-emerald-600 dark:bg-emerald-950 dark:text-emerald-400 mb-1.5 xs:mb-2 shadow-xs">
-                    <Sparkles className="h-4 w-4 xs:h-5 xs:w-5" />
-                  </div>
-                  <h4 className="text-xs xs:text-sm sm:text-base font-black text-slate-900 dark:text-white">
-                    All Caught Up! 🎉
-                  </h4>
-                  <p className="mt-0.5 xs:mt-1 text-[9px] xs:text-[10px] sm:text-[10.5px] leading-relaxed text-slate-500 dark:text-slate-400 max-w-[190px] xs:max-w-[200px]">
-                    Ready to get hired? Get the Hirance mobile app on Google Play.
-                  </p>
-
-                  {/* Primary CTA: Google Play App Redirect */}
-                  <a
-                    href="https://play.google.com/store/apps/details?id=com.hirance"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="Get Hirance App on Google Play"
-                    className="mt-2.5 xs:mt-3.5 flex items-center justify-center gap-1.5 xs:gap-2 rounded-full bg-slate-950 px-3.5 xs:px-4 py-1.5 xs:py-2 text-[10px] xs:text-[11px] font-extrabold text-white shadow-md shadow-slate-950/20 transition-all hover:scale-105 active:scale-95 dark:bg-white dark:text-slate-950 border border-slate-800 dark:border-slate-200 w-full max-w-[200px] xs:max-w-[215px]"
-                  >
-                    <svg
-                      className="h-3.5 w-3.5 xs:h-4 xs:w-4 shrink-0"
-                      viewBox="0 0 512 512"
-                      fill="none"
-                      aria-hidden="true"
-                    >
-                      <path
-                        d="M47 24.6c-5.2 5.6-8.3 14.2-8.3 25.4v412c0 11.2 3.1 19.8 8.3 25.4l1.4 1.3 230.9-230.9v-5.4L48.4 23.4 47 24.6z"
-                        fill="#00D3FF"
-                      />
-                      <path
-                        d="M356.4 343.9l-77-77v-5.4l77-77 1.7 1 91.2 51.8c26 14.8 26 39 0 53.8l-91.2 51.8-1.7 1z"
-                        fill="#00F076"
-                      />
-                      <path
-                        d="M358.1 342.9l-78.7-78.7L47 497.3c8.6 9.1 22.7 10.2 38.7 1.1l272.4-155.5z"
-                        fill="#FFD900"
-                      />
-                      <path
-                        d="M358.1 185.5L85.7 30C69.7 20.9 55.6 22 47 31.1l232.4 232.4 78.7-78z"
-                        fill="#FF385C"
-                      />
-                    </svg>
-                    <span>Get on Google Play</span>
-                  </a>
-
-                  {/* Secondary Action: Reset Demo Deck */}
-                  <button
-                    type="button"
-                    onClick={handleReset}
-                    className="mt-1.5 xs:mt-2 flex items-center justify-center gap-1.5 rounded-full border border-slate-200 bg-slate-50 px-3 xs:px-3.5 py-1 xs:py-1.5 text-[9.5px] xs:text-[10px] font-bold text-slate-700 transition-all hover:bg-slate-100 active:scale-95 dark:border-slate-800 dark:bg-slate-800/80 dark:text-slate-300 w-full max-w-[200px] xs:max-w-[215px]"
-                  >
-                    <RotateCcw className="h-2.5 w-2.5 xs:h-3 xs:w-3 text-slate-500" />
-                    <span>Reset Demo Deck</span>
-                  </button>
-                </motion.div>
-              )}
+              {visibleCards.map(({ job, key, indexOffset }) => (
+                <SwipeCard
+                  key={key}
+                  job={job}
+                  isTop={indexOffset === 0}
+                  indexOffset={indexOffset}
+                  onSwipeComplete={handleSwipeComplete}
+                  triggerDirection={
+                    indexOffset === 0 && autoSwipeTarget?.id === job.id
+                      ? autoSwipeTarget.direction
+                      : null
+                  }
+                />
+              ))}
             </AnimatePresence>
           </div>
 

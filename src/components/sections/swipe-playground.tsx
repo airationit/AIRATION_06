@@ -423,9 +423,9 @@ function DragCard({ job, onDecide, isTop }: DragCardProps) {
 
           {/* Skills Tags */}
           <div className="mt-1.5 flex flex-wrap gap-1">
-            {job.tags.map((tag) => (
+            {job.tags.map((tag, tagIdx) => (
               <span
-                key={tag}
+                key={`${tag}-${tagIdx}`}
                 className="rounded bg-blue-50/80 px-1.5 py-0.5 text-[9px] font-semibold text-blue-700 dark:bg-blue-950/50 dark:text-blue-300"
               >
                 {tag}
@@ -642,7 +642,7 @@ export function SwipePlayground() {
 
               <div className="rounded-2xl border border-border/80 bg-card p-3.5 sm:p-4 text-center shadow-xs">
                 <p className="text-2xl sm:text-3xl font-black text-foreground">
-                  {Math.min(index + (done ? 0 : 1), PLAYGROUND_JOBS.length)}/{PLAYGROUND_JOBS.length}
+                  {Math.min(index, PLAYGROUND_JOBS.length)}/{PLAYGROUND_JOBS.length}
                 </p>
                 <p className="mt-0.5 text-xs text-muted-foreground font-medium">
                   Reviewed
