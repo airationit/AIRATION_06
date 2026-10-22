@@ -1,4 +1,4 @@
-export const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://prod.hirance.com";
+export const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://api.hirance.com";
 
 interface FetchOptions extends Omit<RequestInit, "headers"> {
   headers?: Record<string, string>;
@@ -27,7 +27,7 @@ export function buildQueryString(
 }
 
 /**
- * Core resilient API client for Hirance public endpoints
+ * Core resilient API client for Hirance public endpoints (defaults to api.hirance.com)
  */
 export async function apiClient<T>(
   endpoint: string,
@@ -36,15 +36,13 @@ export async function apiClient<T>(
   const { params, timeoutMs = 15000, revalidate = 60, headers = {}, signal, ...fetchOptions } = options;
   const queryString = buildQueryString(params);
 
+  const isServer = typeof window === "undefined";
+
   // Normalize endpoint URL
   const cleanEndpoint = endpoint.startsWith("/") ? endpoint : `/${endpoint}`;
-  // Dedicated routing: /company/ endpoints live on api.hirance.com while all core endpoints live on prod.hirance.com
-  const effectiveBaseUrl = cleanEndpoint.startsWith("/company")
-    ? "https://api.hirance.com"
-    : BASE_URL;
+  // In the browser, use same-origin relative path so Next.js proxies to backend without CORS errors
+  const effectiveBaseUrl = isServer ? BASE_URL : "";
   const fullUrl = `${effectiveBaseUrl}${cleanEndpoint}${queryString}`;
-
-  const isServer = typeof window === "undefined";
 
   let controller: AbortController | null = null;
   let timeoutId: NodeJS.Timeout | null = null;

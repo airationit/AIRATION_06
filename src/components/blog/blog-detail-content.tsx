@@ -21,6 +21,7 @@ import {
   Sparkles,
   Users,
   FileText,
+  Building2,
 } from "lucide-react";
 import { BlogDetail, BlogSection } from "@/types/blogs";
 import { JobListItem } from "@/types/jobs";
@@ -94,19 +95,21 @@ function SectionBlockRenderer({ section, index, headingIndex }: { section: BlogS
 
     case "heading": {
       const id = section.content.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
+      const hasNumber = /^\d+[\.\)]\s*/.test(section.content);
+      const displayTitle = hasNumber
+        ? section.content
+        : headingIndex !== undefined
+        ? `${headingIndex}. ${section.content}`
+        : section.content;
+
       if (section.level === 2) {
         return (
-          <div key={index} className="mt-8 mb-4 not-prose">
+          <div key={index} className="mt-9 mb-4 not-prose border-t border-slate-100 dark:border-slate-800/80 pt-6 first:border-t-0 first:pt-0">
             <h2
               id={id}
-              className="scroll-mt-24 m-0 p-0 text-[18px] sm:text-[20px] font-semibold tracking-tight text-foreground leading-[1.35] flex items-center gap-3"
+              className="scroll-mt-24 m-0 p-0 text-[19px] sm:text-[22px] font-bold tracking-tight text-slate-900 dark:text-slate-100 leading-snug"
             >
-              {headingIndex !== undefined && (
-                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900 text-xs font-bold shadow-2xs">
-                  {headingIndex}
-                </span>
-              )}
-              <span>{section.content}</span>
+              {displayTitle}
             </h2>
           </div>
         );
@@ -619,19 +622,15 @@ export function BlogDetailContent({ post, featuredJobs = [] }: BlogDetailContent
 
           {/* Executive Summary / Key Takeaways Box */}
           {post.key_takeaways && post.key_takeaways.length > 0 && (
-            <div className="mb-8 rounded-2xl bg-[#f8faff] dark:bg-card p-5 sm:p-6 border border-blue-100/60 dark:border-border shadow-xs">
-              <div className="flex items-center gap-2.5 mb-4">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-100 text-blue-600 dark:bg-blue-900/30 shrink-0">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
-                </div>
-                <h3 className="text-[16px] sm:text-[17px] font-semibold text-foreground">Key Takeaways</h3>
+            <div className="mb-8 rounded-2xl bg-[#f4f8ff]/80 dark:bg-card p-5 sm:p-7 border border-blue-200/80 dark:border-border shadow-xs">
+              <div className="flex items-center gap-2 mb-4 text-[12px] font-bold tracking-wider text-blue-600 dark:text-blue-400 uppercase select-none">
+                <span className="text-blue-600 dark:text-blue-400 text-sm leading-none">•</span>
+                <span>EXECUTIVE SUMMARY & KEY TAKEAWAYS</span>
               </div>
-              <ul className="space-y-3">
+              <ul className="space-y-3 sm:space-y-3.5">
                 {post.key_takeaways.map((takeaway, i) => (
-                  <li key={i} className="flex items-start text-[13.5px] sm:text-[14px] text-slate-700 dark:text-slate-300 leading-relaxed font-normal">
-                    <span className="mr-3 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900 text-[11px] font-bold mt-0.5 shadow-2xs">
-                      {i + 1}
-                    </span>
+                  <li key={i} className="flex items-start gap-3 text-[13.5px] sm:text-[14px] text-slate-700 dark:text-slate-300 leading-relaxed font-normal">
+                    <CheckCircle2 className="h-4 w-4 shrink-0 text-blue-500 dark:text-blue-400 mt-1 stroke-[2.2]" />
                     <span className="flex-1">{takeaway}</span>
                   </li>
                 ))}
@@ -666,23 +665,57 @@ export function BlogDetailContent({ post, featuredJobs = [] }: BlogDetailContent
             )}
           </article>
 
-          {/* Find Jobs Section */}
-          <div className="mt-16 mb-10 rounded-[24px] bg-gradient-to-r from-[#f5f8ff] to-[#f9fbff] p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-6 border border-blue-100/50 shadow-sm">
-            <div className="flex items-center gap-5">
-              <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-[20px] bg-white shadow-sm border border-blue-50 text-blue-600">
-                <Briefcase className="h-7 w-7" />
+          {/* Dynamic Real-Time CTA Card from API */}
+          {(() => {
+            const cta = post.cta;
+            const title = cta?.title || "Find Jobs";
+            const description =
+              cta?.description ||
+              "Explore thousands of IT & corporate jobs that match your skills and career goals. Get hired faster with Hirance.";
+            const buttonText = cta?.button_text || "Explore Jobs";
+            const buttonUrl = cta?.button_url || "/jobs";
+            const isExternal =
+              buttonUrl.startsWith("http://") || buttonUrl.startsWith("https://");
+
+            return (
+              <div className="mt-16 mb-10 rounded-[24px] bg-gradient-to-r from-[#f5f8ff] to-[#f9fbff] p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-6 border border-blue-100/50 shadow-sm">
+                <div className="flex items-center gap-5">
+                  <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-[20px] bg-white shadow-sm border border-blue-50 text-blue-600">
+                    {cta?.type === "employer" ? (
+                      <Building2 className="h-7 w-7" />
+                    ) : (
+                      <Briefcase className="h-7 w-7" />
+                    )}
+                  </div>
+                  <div>
+                    <h3 className="text-[22px] font-semibold text-slate-900 leading-tight">
+                      {title}
+                    </h3>
+                    <p className="text-[14px] text-slate-500 mt-1 max-w-[440px] leading-relaxed">
+                      {description}
+                    </p>
+                  </div>
+                </div>
+                {isExternal ? (
+                  <a
+                    href={buttonUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="shrink-0 inline-flex items-center justify-center rounded-full bg-blue-600 px-7 py-3 text-[15px] font-bold text-white hover:bg-blue-700 transition-colors shadow-[0_4px_14px_0_rgba(37,99,235,0.39)] hover:shadow-[0_6px_20px_rgba(37,99,235,0.23)]"
+                  >
+                    {buttonText} <ArrowRight className="ml-2 h-4 w-4 stroke-[2.5]" />
+                  </a>
+                ) : (
+                  <Link
+                    href={buttonUrl}
+                    className="shrink-0 inline-flex items-center justify-center rounded-full bg-blue-600 px-7 py-3 text-[15px] font-bold text-white hover:bg-blue-700 transition-colors shadow-[0_4px_14px_0_rgba(37,99,235,0.39)] hover:shadow-[0_6px_20px_rgba(37,99,235,0.23)]"
+                  >
+                    {buttonText} <ArrowRight className="ml-2 h-4 w-4 stroke-[2.5]" />
+                  </Link>
+                )}
               </div>
-              <div>
-                <h3 className="text-[22px] font-semibold text-slate-900 leading-tight">Find Jobs</h3>
-                <p className="text-[14px] text-slate-500 mt-1 max-w-[440px] leading-relaxed">
-                  Explore thousands of IT & corporate jobs that match your skills and career goals. Get hired faster with Hirance.
-                </p>
-              </div>
-            </div>
-            <Link href="/jobs" className="shrink-0 inline-flex items-center justify-center rounded-full bg-blue-600 px-7 py-3 text-[15px] font-bold text-white hover:bg-blue-700 transition-colors shadow-[0_4px_14px_0_rgba(37,99,235,0.39)] hover:shadow-[0_6px_20px_rgba(37,99,235,0.23)]">
-              Explore Jobs <ArrowRight className="ml-2 h-4 w-4 stroke-[2.5]" />
-            </Link>
-          </div>
+            );
+          })()}
 
           {/* Post Pagination Block */}
           {(() => {
@@ -1006,7 +1039,7 @@ export function BlogDetailContent({ post, featuredJobs = [] }: BlogDetailContent
           <div className="mx-auto max-w-3xl px-6">
             <div className="text-center mb-10">
               <span className="text-xs font-semibold uppercase tracking-wider text-blue-600 mb-2 block">Quick Answers</span>
-              <h2 className="text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
+              <h2 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-foreground">
                 Frequently Asked <span className="text-blue-600">Questions</span>
               </h2>
             </div>

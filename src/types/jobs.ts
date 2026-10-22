@@ -25,6 +25,7 @@ export interface JobCompanyRef {
 export interface JobListItem {
   id: string;
   title: string;
+  company_id?: string;
   company_name: string;
   company_logo: string | null;
   job_role: EntityRef | null;
@@ -68,6 +69,7 @@ export interface JobListItem {
 export interface JobDetail {
   id: string;
   title: string;
+  company_id?: string;
   company?: JobCompanyRef;
   created_by?: {
     id: string;
@@ -139,6 +141,7 @@ export interface JobSitemapData {
  * Query search parameters for GET /jobs/
  */
 export interface JobSearchParams {
+  company_id?: string; // Company UUID filter
   job_role?: string; // UUID or comma-separated UUIDs
   job_type?: string; // UUID
   work_mode?: string; // UUID

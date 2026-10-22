@@ -123,6 +123,7 @@ export default async function BlogIndexPage({ searchParams }: BlogPageProps) {
         currentPage={page}
         totalPages={totalPages}
         featuredJobs={jobsRes?.data || []}
+        initialCategory={category}
       />
     </>
   );
