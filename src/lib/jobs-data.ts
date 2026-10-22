@@ -1,4 +1,5 @@
 import { fetchJobs as apiFetchJobs, fetchJobDetail as apiFetchJobDetail } from "@/lib/api/jobs";
+import { fetchExperienceRanges } from "@/lib/api/masterdata";
 import { JobListItem, JobDetail, JobSearchParams } from "@/types/jobs";
 
 export interface Job {
@@ -221,9 +222,16 @@ export function normalizeJobItem(raw: JobListItem | JobDetail): Job {
     expSlug = "senior-level";
   }
 
+  const thresholdVal =
+    typeof raw.match_threshold === "number"
+      ? raw.match_threshold
+      : typeof raw.match_threshold === "string" && !isNaN(Number(raw.match_threshold))
+      ? Number(raw.match_threshold)
+      : 2;
+
   const matchScore =
     raw.compatibility_score ??
-    (raw.match_threshold ? Math.min(98, Math.max(82, 85 + raw.match_threshold * 5)) : 94);
+    (raw.match_threshold ? Math.min(98, Math.max(82, 85 + thresholdVal * 5)) : 94);
 
   // Generate SEO-friendly slug
   const seoSlug = generateJobSlug(raw.title, raw.company_name, cityName || locationStr, raw.id);
@@ -349,6 +357,22 @@ export async function getJobs(params: {
       .filter(Boolean)
       .join(" ");
 
+    let effectiveExpId = params.experienceId;
+    if (!effectiveExpId && params.experienceSlug) {
+      try {
+        const ranges = await fetchExperienceRanges();
+        const matched = ranges.find(
+          (r) =>
+            r.id === params.experienceSlug ||
+            (params.experienceSlug === "freshers" &&
+              (r.label.toLowerCase().includes("fresher") || Number(r.min_experience) === 0))
+        );
+        if (matched) effectiveExpId = matched.id;
+      } catch {
+        // Fallback silently if masterdata fetch fails
+      }
+    }
+
     const apiParams: JobSearchParams = {
       page,
       page_size: limit,
@@ -358,7 +382,7 @@ export async function getJobs(params: {
       job_type: params.jobTypeId || params.jobType || undefined,
       work_mode: params.workModeId || params.workMode || undefined,
       work_shift: params.workShiftId || params.workShift || undefined,
-      experience_level: params.experienceId || undefined,
+      experience_level: effectiveExpId || undefined,
       salary_range: params.salaryRangeId || undefined,
       skills: params.skills || undefined,
       is_free_for_candidates: params.isFreeForCandidates || undefined,

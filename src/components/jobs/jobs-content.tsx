@@ -142,12 +142,25 @@ export function JobsContent({
 
   // Synchronize slug-based filters with masterdata store once loaded
   useEffect(() => {
-    if (!workModeSlug && !jobTypeSlug && !workShiftSlug) return;
+    if (!workModeSlug && !jobTypeSlug && !workShiftSlug && !experienceSlug) return;
 
     setFilters((prev) => {
       let updatedModeId = prev.workModeId;
       let updatedTypeId = prev.jobTypeId;
       let updatedShiftId = prev.workShiftId;
+      let updatedExpId = prev.experienceId;
+
+      if (experienceSlug) {
+        const direct = experienceRanges.find((x) => x.id === experienceSlug);
+        if (direct) {
+          updatedExpId = direct.id;
+        } else if (experienceSlug === "freshers" || experienceSlug.includes("fresher")) {
+          const e = experienceRanges.find(
+            (x) => x.label.toLowerCase().includes("fresher") || Number(x.min_experience) === 0
+          );
+          if (e) updatedExpId = e.id;
+        }
+      }
 
       if (workModeSlug) {
         const direct = workModes.find((x) => x.id === workModeSlug);
@@ -200,7 +213,8 @@ export function JobsContent({
       if (
         updatedModeId === prev.workModeId &&
         updatedTypeId === prev.jobTypeId &&
-        updatedShiftId === prev.workShiftId
+        updatedShiftId === prev.workShiftId &&
+        updatedExpId === prev.experienceId
       ) {
         return prev;
       }
@@ -210,9 +224,10 @@ export function JobsContent({
         workModeId: updatedModeId,
         jobTypeId: updatedTypeId,
         workShiftId: updatedShiftId,
+        experienceId: updatedExpId,
       };
     });
-  }, [workModeSlug, jobTypeSlug, workShiftSlug, workModes, jobTypes, workShifts]);
+  }, [workModeSlug, jobTypeSlug, workShiftSlug, experienceSlug, workModes, jobTypes, workShifts, experienceRanges]);
 
   // Smooth scroll into directory section if keyword is searching for directory
   useEffect(() => {
@@ -657,15 +672,24 @@ export function JobsContent({
             <button
               type="button"
               onClick={() => {
+                const fresherRange = experienceRanges.find(
+                  (e) => e.label.toLowerCase().includes("fresher") || Number(e.min_experience) === 0
+                );
+                const targetId = fresherRange ? fresherRange.id : "";
+                if (!targetId) return;
                 setFilters((f) => ({
                   ...f,
-                  experienceId: f.experienceId === "freshers" ? "" : "freshers",
+                  experienceId: f.experienceId === targetId ? "" : targetId,
                 }));
                 setCurrentPage(1);
               }}
               className={cn(
                 "rounded-lg border px-2.5 py-1 font-medium transition-colors cursor-pointer",
-                filters.experienceId === "freshers"
+                experienceRanges.some(
+                  (e) =>
+                    e.id === filters.experienceId &&
+                    (e.label.toLowerCase().includes("fresher") || Number(e.min_experience) === 0)
+                )
                   ? "border-brand-500 bg-brand-50 text-brand-700 dark:bg-brand-950/40 dark:text-brand-300 font-semibold"
                   : "border-border/70 bg-background/60 text-muted-foreground hover:border-brand-500/40 hover:text-foreground"
               )}

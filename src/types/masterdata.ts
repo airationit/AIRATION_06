@@ -6,6 +6,7 @@ export interface Currency {
   id: string;
   code: string;
   name: string;
+  symbol?: string;
 }
 
 export interface SalaryRange {

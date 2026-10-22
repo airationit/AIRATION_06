@@ -3,7 +3,7 @@ import { ApiResponse, PaginatedResponse } from "@/types/api";
 import { JobListItem, JobDetail, JobSearchParams, JobSitemapData } from "@/types/jobs";
 
 /**
- * Fetch candidate-facing public jobs list with filters and search (GET /jobs/)
+ * Fetch candidate-facing public jobs list with filters and search (GET /api/v1/jobs/)
  */
 export async function fetchJobs(
   params?: JobSearchParams,
@@ -13,6 +13,8 @@ export async function fetchJobs(
     const queryParams: Record<string, string | number | boolean | undefined> = {};
 
     if (params) {
+      if (params.company_id) queryParams.company_id = params.company_id;
+      if (params.category_id) queryParams.category_id = params.category_id;
       if (params.job_role) queryParams.job_role = params.job_role;
       if (params.job_type) queryParams.job_type = params.job_type;
       if (params.work_mode) queryParams.work_mode = params.work_mode;
@@ -20,6 +22,8 @@ export async function fetchJobs(
       if (params.experience_level) queryParams.experience_level = params.experience_level;
       if (params.city) queryParams.city = params.city;
       if (params.state) queryParams.state = params.state;
+      if (params.min_salary !== undefined) queryParams.min_salary = params.min_salary;
+      if (params.max_salary !== undefined) queryParams.max_salary = params.max_salary;
       if (params.salary_range) queryParams.salary_range = params.salary_range;
       if (params.skills) queryParams.skills = params.skills;
       if (params.is_free_for_candidates !== undefined) {
@@ -31,7 +35,7 @@ export async function fetchJobs(
       if (params.page_size) queryParams.page_size = params.page_size;
     }
 
-    const res = await apiClient<PaginatedResponse<JobListItem>>("/jobs/", {
+    const res = await apiClient<PaginatedResponse<JobListItem>>("/api/v1/jobs/", {
       params: queryParams,
       revalidate: options?.revalidate ?? 60, // 60s cache on Next.js server
     });
@@ -56,14 +60,14 @@ export async function fetchJobs(
 }
 
 /**
- * Fetch candidate-facing public job detail by ID/UUID (GET /jobs/{pk}/)
+ * Fetch candidate-facing public job detail by ID/UUID (GET /api/v1/jobs/{pk}/)
  */
 export async function fetchJobDetail(
   id: string,
   options?: { revalidate?: number | false }
 ): Promise<JobDetail | null> {
   try {
-    const res = await apiClient<ApiResponse<JobDetail>>(`/jobs/${id}/`, {
+    const res = await apiClient<ApiResponse<JobDetail>>(`/api/v1/jobs/${id}/`, {
       revalidate: options?.revalidate ?? 120,
     });
     return res.data || null;
