@@ -38,12 +38,13 @@ export function JobCard({ job, index = 0 }: JobCardProps) {
   const companySlug = job.companyId || generateCompanySlug(job.company, job.companyId);
 
   // Compact experience string
-  const formatExp = (exp: string) => {
-    if (!exp) return "Fresher";
-    const lower = exp.toLowerCase();
-    if (lower.includes("min") || lower.includes("fresher")) return exp;
+  const formatExp = (exp?: string) => {
+    if (!exp) return "";
+    const clean = exp.replace(/[\uFFFD\u2013\u2014]/g, "-").trim();
+    const lower = clean.toLowerCase();
+    if (lower.includes("min") || lower.includes("fresher")) return clean;
     if (lower.includes("0-1") || lower.includes("entry")) return "Fresher";
-    return `${exp.replace(/years?|yrs?/gi, "").trim()} yrs`;
+    return `${clean.replace(/years?|yrs?/gi, "").trim()} yrs`;
   };
 
   return (
@@ -153,10 +154,12 @@ export function JobCard({ job, index = 0 }: JobCardProps) {
           )}
 
           {/* Experience */}
-          <div className="inline-flex items-center gap-1 rounded-md bg-muted/50 px-2 py-0.5 text-[11px] font-medium text-foreground/80">
-            <Briefcase className="h-3 w-3 text-muted-foreground" />
-            <span>{formatExp(job.experience)}</span>
-          </div>
+          {job.experience && formatExp(job.experience) ? (
+            <div className="inline-flex items-center gap-1 rounded-md bg-muted/50 px-2 py-0.5 text-[11px] font-medium text-foreground/80">
+              <Briefcase className="h-3 w-3 text-muted-foreground" />
+              <span>{formatExp(job.experience)}</span>
+            </div>
+          ) : null}
         </div>
       </div>
 

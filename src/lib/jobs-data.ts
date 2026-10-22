@@ -77,7 +77,7 @@ export function formatSalary(
   const numMin = min ? Math.round(Number(min)) : 0;
   const numMax = max ? Math.round(Number(max)) : 0;
 
-  if (!numMin && !numMax) return "Competitive Salary";
+  if (!numMin && !numMax) return "";
 
   const isMonthly = (numMin > 0 && numMin < 150000) || (numMax > 0 && numMax < 150000);
   const period = isMonthly ? "/ mo" : "/ yr";
@@ -181,7 +181,7 @@ export function resolveCityFromLocation(cityNameRaw?: string, locationRaw?: stri
 
   const citySlug = normalizeCitySlug(rawSlug);
 
-  return { cityName: cityName || "India", citySlug };
+  return { cityName, citySlug };
 }
 
 /**
@@ -192,13 +192,11 @@ export function normalizeJobItem(raw: JobListItem | JobDetail): Job {
   const { cityName, citySlug } = resolveCityFromLocation(raw.city?.name, raw.location);
   const stateName = typeof raw.state === "object" ? raw.state?.name : "";
   const locationStr = raw.location?.trim()
-    ? raw.location
-    : cityName && stateName && cityName !== stateName
-    ? `${cityName}, ${stateName}`
-    : cityName || stateName || "India";
+    ? raw.location.trim()
+    : [cityName, stateName].filter(Boolean).join(", ");
 
   const roleName = raw.job_role?.name || raw.title;
-  const roleSlug = roleName.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+  const roleSlug = roleName ? roleName.toLowerCase().replace(/[^a-z0-9]+/g, "-") : "";
 
   const rawSkills = [
     ...(raw.required_skills?.map((s) => s.name) || []),
@@ -211,30 +209,24 @@ export function normalizeJobItem(raw: JobListItem | JobDetail): Job {
 
   // Experience level resolution
   const expObj = raw.experience_level as { id?: string; label?: string; name?: string } | null;
-  const expLabel = expObj?.label || expObj?.name || "1-3 yrs";
-  let expSlug = "mid-level";
-  const expLower = expLabel.toLowerCase();
-  if (expLower.includes("0-1") || expLower.includes("0-2") || expLower.includes("fresher") || expLower.includes("entry")) {
-    expSlug = "freshers";
-  } else if (expLower.includes("1-3") || expLower.includes("2-5") || expLower.includes("mid")) {
-    expSlug = "mid-level";
-  } else if (expLower.includes("5+") || expLower.includes("senior") || expLower.includes("lead")) {
-    expSlug = "senior-level";
+  const rawLabel = (expObj?.label || expObj?.name || "").replace(/[\uFFFD\u2013\u2014]/g, "-").trim();
+  const expLabel = rawLabel;
+  let expSlug = "";
+  if (expLabel) {
+    const expLower = expLabel.toLowerCase();
+    if (expLower.includes("0-1") || expLower.includes("0-2") || expLower.includes("fresher") || expLower.includes("entry")) {
+      expSlug = "freshers";
+    } else if (expLower.includes("1-3") || expLower.includes("2-5") || expLower.includes("mid")) {
+      expSlug = "mid-level";
+    } else if (expLower.includes("5+") || expLower.includes("senior") || expLower.includes("lead")) {
+      expSlug = "senior-level";
+    }
   }
 
-  const thresholdVal =
-    typeof raw.match_threshold === "number"
-      ? raw.match_threshold
-      : typeof raw.match_threshold === "string" && !isNaN(Number(raw.match_threshold))
-      ? Number(raw.match_threshold)
-      : 2;
-
-  const matchScore =
-    raw.compatibility_score ??
-    (raw.match_threshold ? Math.min(98, Math.max(82, 85 + thresholdVal * 5)) : 94);
+  const matchScore = typeof raw.compatibility_score === "number" ? raw.compatibility_score : 0;
 
   // Generate SEO-friendly slug
-  const seoSlug = generateJobSlug(raw.title, raw.company_name, cityName || locationStr, raw.id);
+  const seoSlug = generateJobSlug(raw.title, raw.company_name || "", cityName || locationStr, raw.id);
 
   return {
     id: raw.id,
@@ -245,7 +237,7 @@ export function normalizeJobItem(raw: JobListItem | JobDetail): Job {
     companyLogo: raw.company_logo || (raw as any).company?.company_logo,
     location: locationStr,
     cityId: raw.city?.id,
-    cityName: cityName || "India",
+    cityName: cityName,
     citySlug,
     stateId: raw.state?.id,
     stateName: stateName || undefined,
@@ -255,9 +247,9 @@ export function normalizeJobItem(raw: JobListItem | JobDetail): Job {
     roleCategoryId: raw.role_category?.id,
     roleCategoryName: raw.role_category?.name,
     jobTypeId: raw.job_type?.id,
-    jobType: raw.job_type?.name || "Full Time",
+    jobType: raw.job_type?.name || "",
     workModeId: raw.work_mode?.id,
-    workMode: raw.work_mode?.name || "Work from Office",
+    workMode: raw.work_mode?.name || "",
     workShiftId: raw.work_shift?.id,
     workShift: raw.work_shift?.name,
     experienceId: expObj?.id,
@@ -266,12 +258,12 @@ export function normalizeJobItem(raw: JobListItem | JobDetail): Job {
     salaryMin: raw.salary_min != null ? Number(raw.salary_min) : undefined,
     salaryMax: raw.salary_max != null ? Number(raw.salary_max) : undefined,
     salaryRange: formatSalary(raw.salary_min, raw.salary_max, raw.currency),
-    openings: raw.number_of_openings || 1,
+    openings: raw.number_of_openings ?? undefined,
     isFree: raw.is_free_for_candidates,
-    skills: cleanedSkills.length > 0 ? cleanedSkills : ["Communication", "Problem Solving"],
+    skills: cleanedSkills,
     requiredSkills: raw.required_skills || [],
     matchScore,
-    postedDate: raw.published_at || raw.created_at || new Date().toISOString(),
+    postedDate: raw.published_at || raw.created_at || "",
     isVerified: Boolean(
       raw.badge_active ??
       raw.is_verified ??
