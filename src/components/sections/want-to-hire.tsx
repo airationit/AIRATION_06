@@ -539,7 +539,7 @@ export function WantToHire() {
               className="text-balance text-2xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-3xl md:text-4xl lg:text-5xl leading-tight"
             >
               Post a Job. Let{" "}
-              <span className="italic font-bold">
+              <span className="italic font-medium">
                 Candidates Come to You.
               </span>
             </h2>

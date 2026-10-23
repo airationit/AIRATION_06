@@ -92,7 +92,7 @@ export function HeroVideoCard({ className, initialJobs }: HeroVideoCardProps) {
           loop
           playsInline
           preload="metadata"
-          className="h-full w-full object-cover object-center scale-[1.01] opacity-95 transition-opacity duration-700"
+          className="h-full w-full object-cover object-center scale-[1.02] opacity-95 transition-opacity duration-700"
           aria-hidden="true"
         />
 
