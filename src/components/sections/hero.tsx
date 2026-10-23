@@ -36,13 +36,11 @@ export function Hero() {
         aria-hidden="true"
       />
 
-      {/* Background ambient lighting */}
+      {/* Background bottom edge fade */}
       <div
         className="pointer-events-none absolute inset-0 -z-10"
         aria-hidden="true"
       >
-        <div className="absolute left-1/2 top-[12%] h-[26rem] w-[42rem] -translate-x-1/2 rounded-full bg-brand-400/15 blur-[120px]" />
-        <div className="absolute right-[-10%] top-[30%] h-[22rem] w-[28rem] rounded-full bg-sky-300/12 blur-[110px]" />
         <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-background via-background/70 to-transparent" />
       </div>
 

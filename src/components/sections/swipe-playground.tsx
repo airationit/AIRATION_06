@@ -585,15 +585,15 @@ export function SwipePlayground() {
   return (
     <section
       id="playground"
-      className="relative w-full overflow-hidden py-10 sm:py-14 lg:py-18"
+      className="relative w-full overflow-hidden py-10 sm:py-14 lg:py-18 bg-white dark:bg-slate-950"
       aria-labelledby="playground-heading"
     >
-      {/* Ambient background glow */}
+      {/* Background Subtle Divider */}
       <div
         className="pointer-events-none absolute inset-0 -z-10 overflow-hidden"
         aria-hidden="true"
       >
-        <div className="absolute left-1/3 top-1/2 h-[30rem] w-[40rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-to-br from-blue-500/10 via-indigo-500/8 to-cyan-500/5 blur-[120px]" />
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-border/80 to-transparent" />
       </div>
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full">
