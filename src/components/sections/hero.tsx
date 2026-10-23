@@ -164,7 +164,7 @@ export function Hero() {
 
       {/* HERO SHOWCASE BANNER ("Apply in Seconds. Match Instantly.") */}
       <div className="relative mx-auto w-full max-w-[1480px] 2xl:max-w-[1560px] px-2 sm:px-4 lg:px-6 mt-2 sm:mt-4 pb-12 sm:pb-16">
-        <HeroVideoCard className="w-full min-h-[480px] sm:min-h-[510px] md:min-h-[530px] lg:h-[550px] xl:h-[575px]" />
+        <HeroVideoCard className="w-full min-h-[490px] sm:min-h-[520px] md:min-h-[545px] lg:h-[565px] xl:h-[590px]" />
       </div>
     </section>
   );

@@ -118,7 +118,7 @@ export function HeroVideoCard({ className }: HeroVideoCardProps) {
       </button>
 
       {/* Main Content Area: Left & Right Wing Alignment across Full Card Width */}
-      <div className="relative z-20 h-full w-full overflow-hidden flex items-center justify-center px-4 xs:px-6 sm:px-8 md:px-10 lg:px-12 xl:px-16 2xl:px-24 py-4 sm:py-6 lg:py-8">
+      <div className="relative z-20 h-full w-full flex items-center justify-center px-4 xs:px-6 sm:px-8 md:px-10 lg:px-12 xl:px-16 2xl:px-24 py-3 sm:py-4 lg:py-5">
         <div className="flex flex-col lg:flex-row items-center justify-between gap-5 sm:gap-6 lg:gap-8 xl:gap-12 2xl:gap-16 w-full my-auto">
           {/* Left Column: Anchored to the LEFT Edge (Clean, Precise & Minimal) */}
           <motion.div
@@ -155,7 +155,7 @@ export function HeroVideoCard({ className }: HeroVideoCardProps) {
           </motion.div>
 
           {/* Right Column: Anchored to the RIGHT Edge with Responsive 3D Perspective */}
-          <div className="relative flex items-center justify-center lg:justify-end shrink-0 w-full lg:w-auto [perspective:1000px] py-0.5 sm:py-2">
+          <div className="relative flex items-center justify-center lg:justify-end shrink-0 w-full lg:w-auto [perspective:1000px] py-0.5 sm:py-1">
             {/* Multi-layered Neon Ambient Aura behind phone */}
             <div
               className="pointer-events-none absolute h-[180px] w-[180px] xs:h-[220px] xs:w-[220px] sm:h-[280px] sm:w-[280px] lg:h-[340px] lg:w-[340px] xl:h-[390px] xl:w-[390px] 2xl:h-[450px] 2xl:w-[450px] rounded-full bg-gradient-to-tr from-brand-500/30 via-blue-500/20 to-indigo-500/20 blur-[50px] xs:blur-[70px] sm:blur-[90px]"
@@ -168,7 +168,7 @@ export function HeroVideoCard({ className }: HeroVideoCardProps) {
                 "pointer-events-none absolute rounded-full bg-black/75 blur-xl transition-all duration-500",
                 mounted && isMobile
                   ? "-bottom-3 left-1/2 -translate-x-1/2 h-6 w-48 sm:w-56 opacity-60"
-                  : "-bottom-5 right-2 sm:right-5 lg:right-6 h-10 w-48 sm:w-56 lg:w-64 xl:w-72 2xl:w-80 transform rotate-3 opacity-80"
+                  : "-bottom-2 right-2 sm:right-5 lg:right-6 h-8 w-48 sm:w-56 lg:w-60 xl:w-68 transform rotate-3 opacity-70"
               )}
               aria-hidden="true"
             />
@@ -197,7 +197,7 @@ export function HeroVideoCard({ className }: HeroVideoCardProps) {
                 backfaceVisibility: "hidden",
                 WebkitBackfaceVisibility: "hidden",
               }}
-              className="relative flex justify-center items-center scale-[0.74] xs:scale-[0.78] sm:scale-[0.80] md:scale-[0.82] lg:scale-[0.80] xl:scale-[0.83] 2xl:scale-[0.88] origin-center lg:origin-right my-auto"
+              className="relative flex justify-center items-center scale-[0.70] xs:scale-[0.73] sm:scale-[0.75] md:scale-[0.77] lg:scale-[0.74] xl:scale-[0.76] 2xl:scale-[0.80] origin-center -translate-y-2 sm:-translate-y-3 lg:-translate-y-4 my-auto"
             >
               {/* 3D Phone Chassis with Physical Extrusion Edge & Deep Directional Shadow */}
               <div
