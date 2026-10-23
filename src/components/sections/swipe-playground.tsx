@@ -634,10 +634,10 @@ export function SwipePlayground({ initialJobs }: SwipePlaygroundProps = {}) {
           >
             <h2
               id="playground-heading"
-              className="text-balance text-2xl font-extrabold tracking-tight text-foreground sm:text-3xl md:text-4xl lg:text-5xl leading-tight"
+              className="text-balance text-2xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-3xl md:text-4xl lg:text-5xl leading-tight"
             >
-              Your Turn.{" "}
-              <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-brand-600 dark:from-brand-400 dark:via-indigo-300 dark:to-sky-300 bg-clip-text text-transparent">
+              Your Turn,{" "}
+              <span className="italic font-bold">
                 Swipe a Few Jobs.
               </span>
             </h2>

@@ -51,7 +51,7 @@ export function Hero({ initialJobs }: HeroProps = {}) {
       </div>
 
       {/* HERO COPY TEXT SECTION */}
-      <div className="relative z-0 flex items-center justify-center px-4 sm:px-6 lg:px-8 pb-6 sm:pb-8">
+      <div className="relative z-0 flex items-center justify-center px-4 sm:px-6 lg:px-8 pb-8 sm:pb-10 md:pb-12">
         <motion.div
           ref={copyRef}
           style={
@@ -84,14 +84,14 @@ export function Hero({ initialJobs }: HeroProps = {}) {
           </motion.p>
 
           {/* Headline Words: Swipe. Match. Get Hired. */}
-          <h1 className="max-w-4xl text-balance text-3xl sm:text-5xl lg:text-[3.85rem] font-bold leading-[1.1] tracking-tight">
+          <h1 className="max-w-4xl text-balance text-3xl sm:text-5xl lg:text-[3.85rem] font-semibold leading-[1.1] tracking-tight">
             <span className="mr-[0.22em] inline-block text-slate-900 dark:text-white">
               Swipe.
             </span>
             <span className="mr-[0.22em] inline-block text-slate-900 dark:text-white">
               Match.
             </span>
-            <span className="inline-block bg-gradient-to-r from-blue-600 via-sky-500 to-indigo-600 bg-clip-text text-transparent dark:from-blue-400 dark:via-sky-400 dark:to-indigo-300 font-bold">
+            <span className="inline-block bg-gradient-to-r from-blue-600 via-sky-500 to-indigo-600 bg-clip-text text-transparent dark:from-blue-400 dark:via-sky-400 dark:to-indigo-300 font-semibold">
               Get Hired.
             </span>
           </h1>
@@ -169,7 +169,7 @@ export function Hero({ initialJobs }: HeroProps = {}) {
       </div>
 
       {/* HERO SHOWCASE BANNER ("Apply in Seconds. Match Instantly.") */}
-      <div className="relative mx-auto w-full max-w-[1480px] 2xl:max-w-[1560px] px-2 sm:px-4 lg:px-6 mt-2 sm:mt-4 pb-12 sm:pb-16">
+      <div className="relative mx-auto w-full max-w-[1480px] 2xl:max-w-[1560px] px-2 sm:px-4 lg:px-6 mt-6 sm:mt-8 md:mt-12 lg:mt-14 pb-12 sm:pb-16">
         <HeroVideoCard initialJobs={initialJobs} className="w-full min-h-[490px] sm:min-h-[520px] md:min-h-[545px] lg:h-[565px] xl:h-[590px]" />
       </div>
     </section>

@@ -534,14 +534,13 @@ export function WantToHire() {
               For Employers &amp; Hiring Teams
             </p>
 
-            {/* Main Headline */}
             <h2
               id="want-to-hire-heading"
-              className="text-balance text-2xl font-extrabold tracking-tight text-foreground sm:text-3xl md:text-4xl lg:text-5xl leading-tight"
+              className="text-balance text-2xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-3xl md:text-4xl lg:text-5xl leading-tight"
             >
-              Post a Job. Let Candidates{" "}
-              <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-brand-600 dark:from-brand-400 dark:via-indigo-300 dark:to-sky-300 bg-clip-text text-transparent">
-                Come to You.
+              Post a Job. Let{" "}
+              <span className="italic font-bold">
+                Candidates Come to You.
               </span>
             </h2>
 
