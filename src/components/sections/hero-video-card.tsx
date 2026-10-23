@@ -89,7 +89,7 @@ export function HeroVideoCard({ className }: HeroVideoCardProps) {
           loop
           playsInline
           preload="metadata"
-          className="h-full w-full object-cover object-center scale-[1.03] filter blur-[2px] xs:blur-[3px] sm:blur-[4px] opacity-90 sm:opacity-95 transition-opacity duration-700"
+          className="h-full w-full object-cover object-center scale-[1.01] opacity-95 transition-opacity duration-700"
           aria-hidden="true"
         />
 
@@ -197,7 +197,7 @@ export function HeroVideoCard({ className }: HeroVideoCardProps) {
                 backfaceVisibility: "hidden",
                 WebkitBackfaceVisibility: "hidden",
               }}
-              className="relative flex justify-center items-center scale-[0.80] xs:scale-[0.85] sm:scale-[0.88] md:scale-[0.92] lg:scale-[0.82] xl:scale-[0.88] 2xl:scale-[1.04] origin-center lg:origin-right py-0.5 sm:py-1"
+              className="relative flex justify-center items-center scale-[0.74] xs:scale-[0.78] sm:scale-[0.80] md:scale-[0.82] lg:scale-[0.80] xl:scale-[0.83] 2xl:scale-[0.88] origin-center lg:origin-right my-auto"
             >
               {/* 3D Phone Chassis with Physical Extrusion Edge & Deep Directional Shadow */}
               <div

@@ -253,32 +253,39 @@ export function TrustedBy({ initialCompanies }: TrustedByProps) {
       </div>
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full">
-        {/* Clean, SEO-optimized Header */}
+        {/* Clean, SEO-optimized Header matching Figma */}
         <motion.div
           initial={reducedMotion ? false : { opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-48px" }}
           transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-          className="mx-auto max-w-3xl text-center mb-8 sm:mb-10"
+          className="relative mx-auto max-w-3xl text-center mb-8 sm:mb-10"
         >
+          {/* Subtle soft atmospheric blue glow behind text matching Figma */}
+          <div
+            className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-36 w-80 sm:w-[32rem] rounded-full bg-blue-200/40 dark:bg-blue-600/10 blur-3xl -z-10"
+            aria-hidden="true"
+          />
+
           <h2
             id="trusted-by-heading"
-            className="text-balance text-2xl font-extrabold tracking-tight text-foreground sm:text-3xl md:text-4xl lg:text-5xl leading-tight"
+            className="text-balance text-2xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-3xl md:text-4xl lg:text-[40px] leading-tight"
           >
             Companies Are Hiring on{" "}
-            <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-brand-600 dark:from-brand-400 dark:via-indigo-300 dark:to-sky-300 bg-clip-text text-transparent">
+            <span className="italic font-bold">
               Hirance
             </span>
           </h2>
-          <p className="mt-3 text-sm sm:text-base text-muted-foreground max-w-xl mx-auto">
+          <p className="mt-2 text-xs sm:text-sm text-slate-500 dark:text-slate-400 max-w-2xl mx-auto font-normal leading-relaxed">
             Built for modern hiring teams looking for better matches, faster applications and simpler hiring.
           </p>
-          <div className="mt-3 flex items-center justify-center">
+          <div className="mt-3 sm:mt-3.5 flex items-center justify-center">
             <Link
               href="/companies"
-              className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-blue-600 hover:text-blue-700 dark:text-blue-400 hover:underline transition-colors"
+              className="group inline-flex items-center gap-1.5 text-xs sm:text-[13px] font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition-colors"
             >
-              Explore Top Companies <ArrowRight className="w-3.5 h-3.5" />
+              <span>Explore Top Companies</span>
+              <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" />
             </Link>
           </div>
         </motion.div>
