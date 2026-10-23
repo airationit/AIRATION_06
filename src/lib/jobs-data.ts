@@ -316,7 +316,7 @@ export async function getJobs(params: {
   ordering?: JobSearchParams["ordering"];
 }): Promise<JobsQueryResponse> {
   const page = params.page || 1;
-  const limit = params.limit || 5;
+  const limit = params.limit || 12;
 
   try {
     let effectiveCityId = params.cityId;

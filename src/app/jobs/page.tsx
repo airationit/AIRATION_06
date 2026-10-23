@@ -70,7 +70,7 @@ export default async function JobsPage({ searchParams }: JobsPageProps) {
   const roleSlug = resolvedParams.role;
 
   const data = await getJobs({
-    limit: 5,
+    limit: 12,
     page: 1,
     search: keyword || undefined,
     workMode: workModeSlug,

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useCallback, useRef } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import Image from "next/image";
 import {
   motion,
@@ -27,6 +27,8 @@ import {
 } from "lucide-react";
 import { siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
+import { REAL_LIVE_JOBS, mapJobToPlaygroundJob } from "@/lib/live-jobs-mapper";
+import { JobListItem } from "@/types/jobs";
 
 export interface PlaygroundJob {
   id: string;
@@ -548,8 +550,32 @@ function DragCard({ job, onDecide, isTop }: DragCardProps) {
   );
 }
 
-export function SwipePlayground() {
+interface SwipePlaygroundProps {
+  initialJobs?: JobListItem[];
+}
+
+export function SwipePlayground({ initialJobs }: SwipePlaygroundProps = {}) {
   const reducedMotion = useReducedMotion();
+  const [jobs, setJobs] = useState<PlaygroundJob[]>(() => {
+    const list = initialJobs && initialJobs.length > 0 ? initialJobs : REAL_LIVE_JOBS;
+    return list.slice(0, 5).map((j, i) => mapJobToPlaygroundJob(j, i));
+  });
+
+  useEffect(() => {
+    if (initialJobs && initialJobs.length > 0) {
+      setJobs(initialJobs.slice(0, 5).map((j, i) => mapJobToPlaygroundJob(j, i)));
+    } else {
+      fetch("/api/v1/jobs/?page_size=5")
+        .then((r) => r.json())
+        .then((res) => {
+          if (res?.data && Array.isArray(res.data) && res.data.length > 0) {
+            setJobs(res.data.slice(0, 5).map((j: JobListItem, i: number) => mapJobToPlaygroundJob(j, i)));
+          }
+        })
+        .catch(() => {});
+    }
+  }, [initialJobs]);
+
   const [index, setIndex] = useState(0);
   const [applied, setApplied] = useState<PlaygroundJob[]>([]);
   const [skipped, setSkipped] = useState(0);
@@ -557,7 +583,7 @@ export function SwipePlayground() {
 
   const handleDecide = useCallback(
     (dir: "left" | "right", job: PlaygroundJob) => {
-      if (index >= PLAYGROUND_JOBS.length) return;
+      if (index >= jobs.length) return;
 
       if (dir === "right") {
         setApplied((prev) => [...prev, job]);
@@ -569,7 +595,7 @@ export function SwipePlayground() {
 
       setIndex((prev) => prev + 1);
     },
-    [index]
+    [index, jobs.length]
   );
 
   const handleRestart = () => {
@@ -578,9 +604,9 @@ export function SwipePlayground() {
     setSkipped(0);
   };
 
-  const done = index >= PLAYGROUND_JOBS.length;
-  const currentJob = PLAYGROUND_JOBS[index];
-  const nextJob = PLAYGROUND_JOBS[index + 1];
+  const done = index >= jobs.length;
+  const currentJob = jobs[index];
+  const nextJob = jobs[index + 1];
 
   return (
     <section
@@ -642,7 +668,7 @@ export function SwipePlayground() {
 
               <div className="rounded-2xl border border-border/80 bg-card p-3.5 sm:p-4 text-center shadow-xs">
                 <p className="text-2xl sm:text-3xl font-black text-foreground">
-                  {Math.min(index, PLAYGROUND_JOBS.length)}/{PLAYGROUND_JOBS.length}
+                  {Math.min(index, jobs.length)}/{jobs.length}
                 </p>
                 <p className="mt-0.5 text-xs text-muted-foreground font-medium">
                   Reviewed

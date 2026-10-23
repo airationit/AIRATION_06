@@ -394,9 +394,11 @@ export function TrustedBy({ initialCompanies }: TrustedByProps) {
     deduplicateCompanies(initialCompanies || [])
   );
 
-  // Only fetch on client if server-rendered initialCompanies was not provided
+  // Always fetch and sync real-time API companies
   useEffect(() => {
-    if (initialCompanies && initialCompanies.length > 0) return;
+    if (initialCompanies && initialCompanies.length > 0) {
+      setCompanyList(deduplicateCompanies(initialCompanies));
+    }
 
     let isMounted = true;
     fetchCompanies({ search: "", page_size: 100 })
@@ -405,96 +407,47 @@ export function TrustedBy({ initialCompanies }: TrustedByProps) {
           setCompanyList(deduplicateCompanies(res.data));
         }
       })
-      .catch(() => {
-        // Silently ignore network hiccup to prevent red error overlay
-      });
+      .catch(() => {});
 
     return () => {
       isMounted = false;
     };
   }, [initialCompanies]);
 
-  // Round-robin distribution into exactly 3 balanced rows matching the Figma reference pattern
+  // Distribute real-time API companies evenly across 3 balanced continuous rows
   const { row1, row2, row3 } = useMemo(() => {
-    // Curated top brand logos directly matching the Figma rows
-    const r1Brands: CompanyItem[] = [
-      { id: "brand-phonepe-1", company_name: "PhonePe", company_logo: "" },
-      { id: "brand-google-1", company_name: "Google", company_logo: "" },
-      { id: "brand-microsoft-1", company_name: "Microsoft", company_logo: "" },
-      { id: "brand-infosys-1", company_name: "Infosys", company_logo: "" },
-      { id: "brand-zomato-1", company_name: "Zomato", company_logo: "" },
-      { id: "brand-swiggy-1", company_name: "Swiggy", company_logo: "" },
-      { id: "brand-zepto-1", company_name: "Zepto", company_logo: "" },
-      { id: "brand-oyo-1", company_name: "OYO", company_logo: "" },
-      { id: "brand-deloitte-1", company_name: "Deloitte", company_logo: "" },
-      { id: "brand-phonepe-1b", company_name: "PhonePe", company_logo: "" },
-    ];
+    if (!companyList || companyList.length === 0) {
+      return { row1: [], row2: [], row3: [] };
+    }
 
-    const r2Brands: CompanyItem[] = [
-      { id: "brand-paytm-2", company_name: "Paytm", company_logo: "" },
-      { id: "brand-linkedin-2", company_name: "LinkedIn", company_logo: "" },
-      { id: "brand-infosys-2", company_name: "Infosys", company_logo: "" },
-      { id: "brand-tcs-2", company_name: "TCS", company_logo: "" },
-      { id: "brand-swiggy-2", company_name: "Swiggy", company_logo: "" },
-      { id: "brand-deloitte-2", company_name: "Deloitte", company_logo: "" },
-      { id: "brand-ibm-2", company_name: "IBM", company_logo: "" },
-      { id: "brand-adobe-2", company_name: "Adobe", company_logo: "" },
-      { id: "brand-wipro-2", company_name: "Wipro", company_logo: "" },
-      { id: "brand-intel-2", company_name: "Intel", company_logo: "" },
-    ];
+    // Separate companies with logos vs without logos to ensure each row has an appealing mix
+    const withLogos = companyList.filter((c) => Boolean(c.company_logo?.trim()));
+    const withoutLogos = companyList.filter((c) => !c.company_logo?.trim());
 
-    const r3Brands: CompanyItem[] = [
-      { id: "brand-phonepe-3", company_name: "PhonePe", company_logo: "" },
-      { id: "brand-google-3", company_name: "Google", company_logo: "" },
-      { id: "brand-microsoft-3", company_name: "Microsoft", company_logo: "" },
-      { id: "brand-infosys-3", company_name: "Infosys", company_logo: "" },
-      { id: "brand-zomato-3", company_name: "Zomato", company_logo: "" },
-      { id: "brand-swiggy-3", company_name: "Swiggy", company_logo: "" },
-      { id: "brand-zepto-3", company_name: "Zepto", company_logo: "" },
-      { id: "brand-oyo-3", company_name: "OYO", company_logo: "" },
-      { id: "brand-deloitte-3", company_name: "Deloitte", company_logo: "" },
-      { id: "brand-phonepe-3b", company_name: "PhonePe", company_logo: "" },
-    ];
+    const r1: CompanyItem[] = [];
+    const r2: CompanyItem[] = [];
+    const r3: CompanyItem[] = [];
 
-    // Filter out brands already represented from the API list to avoid duplication
-    const BRAND_KEYWORDS = [
-      "phonepe", "google", "microsoft", "infosys", "zomato",
-      "swiggy", "zepto", "oyo", "deloitte", "paytm",
-      "linkedin", "tcs", "adobe", "intel", "ibm", "wipro"
-    ];
-
-    const cleanApiList = companyList.filter((item) => {
-      const n = (item.company_name || "").toLowerCase().trim();
-      return !BRAND_KEYWORDS.some((k) => n.includes(k));
-    });
-
-    // Distribute API companies evenly across 3 rows
-    const api1: CompanyItem[] = [];
-    const api2: CompanyItem[] = [];
-    const api3: CompanyItem[] = [];
-
-    cleanApiList.forEach((item, idx) => {
+    // Distribute companies with logos across the 3 rows
+    withLogos.forEach((c, idx) => {
       const bucket = idx % 3;
-      if (bucket === 0) api1.push(item);
-      else if (bucket === 1) api2.push(item);
-      else api3.push(item);
+      if (bucket === 0) r1.push(c);
+      else if (bucket === 1) r2.push(c);
+      else r3.push(c);
     });
 
-    // Interleave: [Brand, API, Brand, API, ...]
-    const interleave = (brands: CompanyItem[], apiItems: CompanyItem[]) => {
-      const out: CompanyItem[] = [];
-      const len = Math.max(brands.length, apiItems.length);
-      for (let i = 0; i < len; i++) {
-        if (i < brands.length) out.push(brands[i]);
-        if (i < apiItems.length) out.push(apiItems[i]);
-      }
-      return out;
-    };
+    // Distribute all other real companies across the 3 rows
+    withoutLogos.forEach((c, idx) => {
+      const bucket = idx % 3;
+      if (bucket === 0) r1.push(c);
+      else if (bucket === 1) r2.push(c);
+      else r3.push(c);
+    });
 
     return {
-      row1: interleave(r1Brands, api1),
-      row2: interleave(r2Brands, api2),
-      row3: interleave(r3Brands, api3),
+      row1: r1,
+      row2: r2,
+      row3: r3,
     };
   }, [companyList]);
 

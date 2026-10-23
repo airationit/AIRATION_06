@@ -8,11 +8,14 @@ import { cn } from "@/lib/utils";
 import { useMediaQuery } from "@/hooks";
 import { CandidatePhoneMockup } from "./candidate-phone-mockup";
 
+import { JobListItem } from "@/types/jobs";
+
 interface HeroVideoCardProps {
   className?: string;
+  initialJobs?: JobListItem[];
 }
 
-export function HeroVideoCard({ className }: HeroVideoCardProps) {
+export function HeroVideoCard({ className, initialJobs }: HeroVideoCardProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const reducedMotion = useReducedMotion();
@@ -212,7 +215,7 @@ export function HeroVideoCard({ className }: HeroVideoCardProps) {
                   WebkitBackfaceVisibility: "hidden",
                 }}
               >
-                <CandidatePhoneMockup />
+                <CandidatePhoneMockup initialJobs={initialJobs} />
               </div>
             </motion.div>
           </div>

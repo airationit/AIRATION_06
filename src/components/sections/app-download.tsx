@@ -33,7 +33,13 @@ const POINTS = [
   },
 ];
 
-export function AppDownload() {
+import { JobListItem } from "@/types/jobs";
+
+interface AppDownloadProps {
+  initialJobs?: JobListItem[];
+}
+
+export function AppDownload({ initialJobs }: AppDownloadProps = {}) {
   const reducedMotion = useReducedMotion();
 
   return (
@@ -125,7 +131,7 @@ export function AppDownload() {
           >
             {/* Container with Phone Mockup */}
             <div className="relative w-full flex justify-center items-center">
-              <CandidatePhoneMockup />
+              <CandidatePhoneMockup initialJobs={initialJobs} />
             </div>
           </motion.div>
         </div>

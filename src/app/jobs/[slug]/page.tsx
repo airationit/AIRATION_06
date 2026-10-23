@@ -184,7 +184,7 @@ export default async function DynamicJobCategoryPage({ params }: PageProps) {
     jobType: parsed.jobTypeSlug,
     workShift: parsed.workShiftSlug,
     search: parsed.searchKeyword,
-    limit: 5,
+    limit: 12,
     page: 1,
   });
 

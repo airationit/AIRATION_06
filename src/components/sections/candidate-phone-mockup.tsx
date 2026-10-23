@@ -32,6 +32,8 @@ import {
   BarChart2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { REAL_LIVE_JOBS, mapJobToCardData } from "@/lib/live-jobs-mapper";
+import { JobListItem } from "@/types/jobs";
 
 export interface JobBreakdownItem {
   label: string;
@@ -440,7 +442,7 @@ function SwipeCard({
       className="touch-none select-none"
     >
       {/* Card Body with Exact Layout from the App */}
-      <div className="relative h-full w-full rounded-[22px] xs:rounded-[26px] border border-slate-200/90 bg-white p-3 xs:p-3.5 sm:p-4 shadow-lg flex flex-col justify-between dark:border-slate-800 dark:bg-slate-900 overflow-hidden">
+      <div className="relative h-full w-full rounded-[22px] xs:rounded-[26px] border border-slate-200/90 !bg-white p-3 xs:p-3.5 sm:p-4 shadow-lg flex flex-col justify-between dark:border-slate-800 dark:!bg-slate-900 overflow-hidden" style={{ backgroundColor: "#ffffff" }}>
         {/* Dynamic Stamp Overlays during manual drag OR programmatic auto-swiping */}
         {isTop && (
           <>
@@ -668,7 +670,34 @@ function SwipeCard({
   );
 }
 
-export function CandidatePhoneMockup() {
+interface CandidatePhoneMockupProps {
+  initialJobs?: JobListItem[];
+}
+
+export function CandidatePhoneMockup({ initialJobs }: CandidatePhoneMockupProps = {}) {
+  const [jobs, setJobs] = useState<JobCardData[]>(() => {
+    if (initialJobs && initialJobs.length > 0) {
+      return initialJobs.map((j, i) => mapJobToCardData(j, i));
+    }
+    return REAL_LIVE_JOBS.map((j, i) => mapJobToCardData(j, i));
+  });
+
+  useEffect(() => {
+    if (initialJobs && initialJobs.length > 0) {
+      setJobs(initialJobs.map((j, i) => mapJobToCardData(j, i)));
+    } else {
+      // Dynamic client-side fetch from live endpoint
+      fetch("/api/v1/jobs/?page_size=8")
+        .then((r) => r.json())
+        .then((res) => {
+          if (res?.data && Array.isArray(res.data) && res.data.length > 0) {
+            setJobs(res.data.map((j: JobListItem, i: number) => mapJobToCardData(j, i)));
+          }
+        })
+        .catch(() => {});
+    }
+  }, [initialJobs]);
+
   const [currentIndex, setCurrentIndex] = useState(0);
   const [autoSwipeTarget, setAutoSwipeTarget] = useState<{
     id: string;
@@ -692,9 +721,9 @@ export function CandidatePhoneMockup() {
 
   // Automatic Swiping Engine based on match score
   useEffect(() => {
-    if (reducedMotion || isPaused || autoSwipeTarget || JOBS_DATA.length === 0) return;
+    if (reducedMotion || isPaused || autoSwipeTarget || jobs.length === 0) return;
 
-    const currentJob = JOBS_DATA[currentIndex % JOBS_DATA.length];
+    const currentJob = jobs[currentIndex % jobs.length];
     if (!currentJob) return;
 
     // High match (>= 80) swipes right, otherwise left
@@ -707,22 +736,23 @@ export function CandidatePhoneMockup() {
     return () => {
       if (timerRef.current) clearTimeout(timerRef.current);
     };
-  }, [currentIndex, isPaused, autoSwipeTarget, reducedMotion]);
+  }, [currentIndex, isPaused, autoSwipeTarget, reducedMotion, jobs]);
 
   // Continuously show available job cards in an infinite deck cycle
   const visibleCards = useMemo(() => {
-    const count = Math.min(3, JOBS_DATA.length);
+    if (jobs.length === 0) return [];
+    const count = Math.min(3, jobs.length);
     const result: { job: JobCardData; key: string; indexOffset: number }[] = [];
     for (let offset = 0; offset < count; offset++) {
-      const idx = (currentIndex + offset) % JOBS_DATA.length;
+      const idx = (currentIndex + offset) % jobs.length;
       result.push({
-        job: JOBS_DATA[idx],
-        key: `${JOBS_DATA[idx].id}-${currentIndex + offset}`,
+        job: jobs[idx],
+        key: `${jobs[idx].id}-${currentIndex + offset}`,
         indexOffset: offset,
       });
     }
     return result;
-  }, [currentIndex]);
+  }, [currentIndex, jobs]);
 
   return (
     <div
