@@ -457,11 +457,12 @@ export function TrustedBy({ initialCompanies }: TrustedByProps) {
       className="relative w-full overflow-hidden py-12 sm:py-16 md:py-20 flex flex-col items-center justify-center min-h-0"
       aria-labelledby="trusted-by-heading"
     >
-      {/* Background Subtle Divider */}
+      {/* Background Radial Blue Glow matching reference image */}
       <div
         className="pointer-events-none absolute inset-0 -z-10 overflow-hidden"
         aria-hidden="true"
       >
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_65%_at_50%_48%,rgba(191,219,254,0.48),rgba(219,234,254,0.22)_45%,transparent_75%)] dark:bg-[radial-gradient(ellipse_80%_65%_at_50%_48%,rgba(37,99,235,0.18),rgba(15,23,42,0)_75%)]" />
         <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-border/80 to-transparent" />
       </div>
 
@@ -480,7 +481,7 @@ export function TrustedBy({ initialCompanies }: TrustedByProps) {
             className="text-balance text-2xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-3xl md:text-4xl lg:text-[40px] leading-tight"
           >
             Companies Are Hiring on{" "}
-            <span className="italic font-bold">
+            <span className="italic font-medium">
               Hirance
             </span>
           </h2>
