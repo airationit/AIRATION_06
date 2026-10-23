@@ -58,7 +58,7 @@ export const useJobsStore = create<JobsStoreState>((set, get) => ({
   totalJobs: 0,
   currentPage: 1,
   totalPages: 1,
-  pageSize: 12,
+  pageSize: 5,
   isLoading: false,
   error: null,
   filters: initialFilters,

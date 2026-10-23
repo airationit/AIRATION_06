@@ -86,10 +86,10 @@ export function JobsContent({
   const [totalJobs, setTotalJobs] = useState<number>(initialTotalJobs);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(
-    Math.max(1, Math.ceil(initialTotalJobs / 12))
+    Math.max(1, Math.ceil(initialTotalJobs / 5))
   );
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const pageSize = 12;
+  const pageSize = 5;
   const isInitialMount = useRef(true);
   const streamTopRef = useRef<HTMLDivElement>(null);
 
