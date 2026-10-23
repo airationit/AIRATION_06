@@ -22,9 +22,12 @@ export async function fetchJobs(
       if (params.experience_level) queryParams.experience_level = params.experience_level;
       if (params.city) queryParams.city = params.city;
       if (params.state) queryParams.state = params.state;
-      if (params.min_salary !== undefined) queryParams.min_salary = params.min_salary;
-      if (params.max_salary !== undefined) queryParams.max_salary = params.max_salary;
-      if (params.salary_range) queryParams.salary_range = params.salary_range;
+      if (params.min_salary !== undefined && params.min_salary !== null) {
+        queryParams.min_salary = Math.round(Number(params.min_salary));
+      }
+      if (params.max_salary !== undefined && params.max_salary !== null) {
+        queryParams.max_salary = Math.round(Number(params.max_salary));
+      }
       if (params.skills) queryParams.skills = params.skills;
       if (params.is_free_for_candidates !== undefined) {
         queryParams.is_free_for_candidates = params.is_free_for_candidates;

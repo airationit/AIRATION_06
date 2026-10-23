@@ -1,5 +1,5 @@
 import { fetchJobs as apiFetchJobs, fetchJobDetail as apiFetchJobDetail } from "@/lib/api/jobs";
-import { fetchExperienceRanges } from "@/lib/api/masterdata";
+import { fetchExperienceRanges, fetchSalaryRanges } from "@/lib/api/masterdata";
 import { JobListItem, JobDetail, JobSearchParams } from "@/types/jobs";
 
 export interface Job {
@@ -210,9 +210,9 @@ export function normalizeJobItem(raw: JobListItem | JobDetail): Job {
   // Experience level resolution
   const expObj = raw.experience_level as { id?: string; label?: string; name?: string } | null;
   const rawLabel = (expObj?.label || expObj?.name || "").replace(/[\uFFFD\u2013\u2014]/g, "-").trim();
-  const expLabel = rawLabel;
+  const expLabel = rawLabel || "Open to All";
   let expSlug = "";
-  if (expLabel) {
+  if (expLabel && expLabel.toLowerCase() !== "open to all") {
     const expLower = expLabel.toLowerCase();
     if (expLower.includes("0-1") || expLower.includes("0-2") || expLower.includes("fresher") || expLower.includes("entry")) {
       expSlug = "freshers";
@@ -306,6 +306,8 @@ export async function getJobs(params: {
   workShift?: string;
   workShiftId?: string;
   salaryRangeId?: string;
+  minSalary?: number;
+  maxSalary?: number;
   skills?: string;
   isFreeForCandidates?: boolean;
   search?: string;
@@ -365,6 +367,34 @@ export async function getJobs(params: {
       }
     }
 
+    // Resolve min_salary and max_salary amounts from salaryRangeId if not directly supplied
+    let resolvedMinSalary = params.minSalary;
+    let resolvedMaxSalary = params.maxSalary;
+
+    if (params.salaryRangeId && (resolvedMinSalary === undefined || resolvedMaxSalary === undefined)) {
+      try {
+        const ranges = await fetchSalaryRanges();
+        const matched = ranges.find((r) => r.id === params.salaryRangeId || r.label === params.salaryRangeId);
+        if (matched) {
+          if (matched.min_salary != null && Number(matched.min_salary) > 0) {
+            resolvedMinSalary = Math.round(Number(matched.min_salary));
+          }
+          if (matched.max_salary != null && Number(matched.max_salary) > 0) {
+            resolvedMaxSalary = Math.round(Number(matched.max_salary));
+          }
+        }
+      } catch {
+        // Fallback silently if masterdata fetch fails
+      }
+
+      if (resolvedMinSalary === undefined && resolvedMaxSalary === undefined) {
+        if (params.salaryRangeId === "sal-1") resolvedMaxSalary = 25000;
+        else if (params.salaryRangeId === "sal-2") { resolvedMinSalary = 25000; resolvedMaxSalary = 50000; }
+        else if (params.salaryRangeId === "sal-3") { resolvedMinSalary = 50000; resolvedMaxSalary = 100000; }
+        else if (params.salaryRangeId === "sal-4") { resolvedMinSalary = 100000; }
+      }
+    }
+
     const apiParams: JobSearchParams = {
       page,
       page_size: limit,
@@ -375,7 +405,8 @@ export async function getJobs(params: {
       work_mode: params.workModeId || params.workMode || undefined,
       work_shift: params.workShiftId || params.workShift || undefined,
       experience_level: effectiveExpId || undefined,
-      salary_range: params.salaryRangeId || undefined,
+      min_salary: resolvedMinSalary != null ? Math.round(Number(resolvedMinSalary)) : undefined,
+      max_salary: resolvedMaxSalary != null ? Math.round(Number(resolvedMaxSalary)) : undefined,
       skills: params.skills || undefined,
       is_free_for_candidates: params.isFreeForCandidates || undefined,
       search: searchTerms || undefined,

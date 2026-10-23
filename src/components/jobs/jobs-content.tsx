@@ -262,6 +262,27 @@ export function JobsContent({
               .join(",")
             : undefined;
 
+        const salObj = activeFilters.salaryRangeId
+          ? salaryRanges.find((s) => s.id === activeFilters.salaryRangeId)
+          : undefined;
+
+        let resolvedMinSalary =
+          salObj?.min_salary != null && Number(salObj.min_salary) > 0
+            ? Math.round(Number(salObj.min_salary))
+            : undefined;
+        let resolvedMaxSalary =
+          salObj?.max_salary != null && Number(salObj.max_salary) > 0
+            ? Math.round(Number(salObj.max_salary))
+            : undefined;
+
+        // Fallback for default UI IDs if masterdata is still syncing
+        if (activeFilters.salaryRangeId && resolvedMinSalary === undefined && resolvedMaxSalary === undefined) {
+          if (activeFilters.salaryRangeId === "sal-1") resolvedMaxSalary = 25000;
+          else if (activeFilters.salaryRangeId === "sal-2") { resolvedMinSalary = 25000; resolvedMaxSalary = 50000; }
+          else if (activeFilters.salaryRangeId === "sal-3") { resolvedMinSalary = 50000; resolvedMaxSalary = 100000; }
+          else if (activeFilters.salaryRangeId === "sal-4") { resolvedMinSalary = 100000; }
+        }
+
         const res = await getJobs({
           roleSlug: activeFilters.roleSlug,
           roleId: activeFilters.roleId,
@@ -271,6 +292,8 @@ export function JobsContent({
           experienceSlug: activeFilters.experienceId,
           experienceId: activeFilters.experienceId,
           salaryRangeId: activeFilters.salaryRangeId,
+          minSalary: resolvedMinSalary,
+          maxSalary: resolvedMaxSalary,
           jobTypeId: activeFilters.jobTypeId,
           workModeId: activeFilters.workModeId,
           workShiftId: activeFilters.workShiftId,
@@ -291,7 +314,7 @@ export function JobsContent({
         setIsLoading(false);
       }
     },
-    [skills, pageSize]
+    [skills, salaryRanges, pageSize]
   );
 
   // Trigger server-side fetch on page or filter changes (debounced for search text)
@@ -424,10 +447,16 @@ export function JobsContent({
     }
 
     if (filters.salaryRangeId) {
-      const salObj = salaryRanges.find((s) => s.id === filters.salaryRangeId);
+      const salObj = salaryRanges.find((s) => s.id === filters.salaryRangeId || s.label === filters.salaryRangeId);
+      const fallbackLabels: Record<string, string> = {
+        "sal-1": "Up to ₹25,000 / mo",
+        "sal-2": "₹25,000 - ₹50,000 / mo",
+        "sal-3": "₹50,000 - ₹1,00,000 / mo",
+        "sal-4": "₹1,00,000+ / mo",
+      };
       tags.push({
         id: "salary",
-        label: salObj?.label || "Salary Range",
+        label: salObj?.label || fallbackLabels[filters.salaryRangeId] || "Salary Range",
         onRemove: () => setFilters((f) => ({ ...f, salaryRangeId: "" })),
       });
     }

@@ -270,15 +270,11 @@ export function JobDetailContent({ job, relatedJobs = [] }: JobDetailContentProp
 
           {/* Quick Meta Ribbon — Above the horizontal line */}
           <div className="mt-4 flex flex-wrap items-center gap-x-3.5 sm:gap-x-4 gap-y-2 text-xs sm:text-sm text-muted-foreground">
-            {job.experience ? (
-              <>
-                <span className="flex items-center gap-1.5 font-normal text-muted-foreground/70">
-                  <Briefcase className="h-4 w-4 text-muted-foreground/60 shrink-0" />
-                  {job.experience}
-                </span>
-                <span className="text-border/80 hidden sm:inline">|</span>
-              </>
-            ) : null}
+            <span className="flex items-center gap-1.5 font-normal text-muted-foreground/70">
+              <Briefcase className="h-4 w-4 text-muted-foreground/60 shrink-0" />
+              {job.experience || "Open to All"}
+            </span>
+            <span className="text-border/80 hidden sm:inline">|</span>
             {job.salaryRange ? (
               <>
                 <span className="flex items-center gap-1.5 font-normal text-muted-foreground/70">
@@ -525,7 +521,7 @@ export function JobDetailContent({ job, relatedJobs = [] }: JobDetailContentProp
                           <div className="flex items-center gap-2.5">
                             <span className="flex items-center gap-1.5">
                               <Briefcase className="h-3.5 w-3.5 shrink-0" />
-                              {relJob.experience}
+                              {relJob.experience || "Open to All"}
                             </span>
                             <span className="flex items-center gap-1.5">
                               <Clock className="h-3.5 w-3.5 shrink-0" />
