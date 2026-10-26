@@ -360,7 +360,7 @@ export function mapJobToCardData(raw: JobListItem, index = 0): JobCardData {
     salary: salaryText,
     experience: expLabel,
     type: raw.job_type?.name || workModeText,
-    tags: skills.slice(0, 4),
+    tags: skills.slice(0, 3),
     breakdown,
     logoColor: GRADIENTS[index % GRADIENTS.length],
     logoLetter: (raw.company_name || "H").charAt(0).toUpperCase(),
@@ -397,7 +397,7 @@ export function mapJobToPlaygroundJob(raw: JobListItem, index = 0): PlaygroundJo
     salary: salaryText,
     experience: expLabel,
     type: raw.job_type?.name || "Full Time",
-    tags: skills.slice(0, 4),
+    tags: skills.slice(0, 3),
     breakdown: {
       skills: `${Math.round((matchScore / 100) * 40)}/40`,
       skillsOk: matchScore >= 80,

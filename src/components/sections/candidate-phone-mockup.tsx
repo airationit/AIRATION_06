@@ -577,15 +577,14 @@ function SwipeCard({
 
           {/* Skill Tags */}
           <div className="mt-2 flex items-center gap-1.5 overflow-hidden">
-            {job.tags.map((tag, tagIdx) => (
+            {job.tags.slice(0, 3).map((tag, tagIdx) => (
               <span
                 key={`${tag}-${tagIdx}`}
-                className="rounded-lg bg-blue-50/80 border border-blue-100/50 px-2 xs:px-2.5 py-0.5 xs:py-1 text-[8.5px] xs:text-[9px] font-medium text-slate-700 dark:bg-blue-950/40 dark:border-blue-900/40 dark:text-blue-200 whitespace-nowrap"
+                className="max-w-[85px] xs:max-w-[95px] truncate rounded-lg bg-blue-50/80 border border-blue-100/50 px-2 xs:px-2.5 py-0.5 xs:py-1 text-[8.5px] xs:text-[9px] font-medium text-slate-700 dark:bg-blue-950/40 dark:border-blue-900/40 dark:text-blue-200"
               >
                 {tag}
               </span>
             ))}
-            <span className="text-slate-400 text-xs font-bold shrink-0">›</span>
           </div>
         </div>
 

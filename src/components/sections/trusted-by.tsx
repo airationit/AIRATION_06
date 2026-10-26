@@ -94,7 +94,7 @@ function BrandIcon({ name }: { name: string }) {
   // 4. PhonePe (Purple circle with Hindi 'पे')
   if (lower.includes("phonepe") || lower.includes("phone pe")) {
     return (
-      <div className="w-[78%] h-[78%] rounded-full bg-[#5F259F] flex items-center justify-center text-white shadow-xs">
+      <div className="w-full h-full rounded-full bg-[#5F259F] flex items-center justify-center text-white shadow-xs">
         <span className="font-bold text-sm sm:text-base md:text-lg select-none leading-none -mt-0.5">
           पे
         </span>
@@ -105,8 +105,8 @@ function BrandIcon({ name }: { name: string }) {
   // 5. Zomato (Red circle with white zomato text)
   if (lower.includes("zomato")) {
     return (
-      <div className="w-[78%] h-[78%] rounded-full bg-[#E23744] flex items-center justify-center text-white shadow-xs px-1">
-        <span className="font-bold italic text-[8.5px] sm:text-[9.5px] md:text-[11px] tracking-tight select-none">
+      <div className="w-full h-full rounded-full bg-[#E23744] flex items-center justify-center text-white shadow-xs px-1">
+        <span className="font-bold italic text-[9px] sm:text-[10px] md:text-[11.5px] tracking-tight select-none">
           zomato
         </span>
       </div>
@@ -116,8 +116,8 @@ function BrandIcon({ name }: { name: string }) {
   // 6. OYO (Red circle with white OYO)
   if (lower.includes("oyo")) {
     return (
-      <div className="w-[78%] h-[78%] rounded-full bg-[#EE2E24] flex items-center justify-center text-white shadow-xs">
-        <span className="font-black text-[11px] sm:text-xs md:text-sm tracking-tighter select-none">
+      <div className="w-full h-full rounded-full bg-[#EE2E24] flex items-center justify-center text-white shadow-xs">
+        <span className="font-black text-xs sm:text-sm md:text-base tracking-tighter select-none">
           OYO
         </span>
       </div>
@@ -127,7 +127,7 @@ function BrandIcon({ name }: { name: string }) {
   // 7. Zepto (Yellow rounded square with '7')
   if (lower.includes("zepto")) {
     return (
-      <div className="w-[72%] h-[72%] rounded-2xl bg-[#FFDE00] flex items-center justify-center text-[#1E293B] shadow-xs">
+      <div className="w-full h-full rounded-full bg-[#FFDE00] flex items-center justify-center text-[#1E293B] shadow-xs">
         <span className="font-black text-xs sm:text-sm md:text-base select-none">7</span>
       </div>
     );
@@ -136,7 +136,7 @@ function BrandIcon({ name }: { name: string }) {
   // 8. LinkedIn (Blue rounded square with 'in')
   if (lower.includes("linkedin")) {
     return (
-      <div className="w-[70%] h-[70%] rounded-lg bg-[#0A66C2] flex items-center justify-center text-white shadow-xs">
+      <div className="w-full h-full rounded-full bg-[#0A66C2] flex items-center justify-center text-white shadow-xs">
         <span className="font-bold text-xs sm:text-sm md:text-base select-none">in</span>
       </div>
     );
@@ -192,8 +192,8 @@ function BrandIcon({ name }: { name: string }) {
   // 14. Intel
   if (lower.includes("intel")) {
     return (
-      <div className="w-[74%] h-[74%] rounded-full border-2 border-[#0071C5] flex items-center justify-center text-[#0071C5]">
-        <span className="font-bold text-[9px] sm:text-[10.5px] select-none lowercase">intel</span>
+      <div className="w-[86%] h-[86%] rounded-full border-2 border-[#0071C5] flex items-center justify-center text-[#0071C5]">
+        <span className="font-bold text-[9.5px] sm:text-[11px] select-none lowercase">intel</span>
       </div>
     );
   }
@@ -201,8 +201,8 @@ function BrandIcon({ name }: { name: string }) {
   // 15. Swiggy
   if (lower.includes("swiggy")) {
     return (
-      <div className="w-[78%] h-[78%] rounded-full bg-[#FC8019] flex items-center justify-center text-white shadow-xs">
-        <svg className="w-4 h-4 sm:w-5 sm:h-5 md:w-5.5 md:h-5.5" viewBox="0 0 24 24" fill="currentColor">
+      <div className="w-[86%] h-[86%] rounded-full bg-[#FC8019] flex items-center justify-center text-white shadow-xs">
+        <svg className="w-4.5 h-4.5 sm:w-5.5 sm:h-5.5 md:w-6 md:h-6" viewBox="0 0 24 24" fill="currentColor">
           <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
         </svg>
       </div>
@@ -282,32 +282,31 @@ const AppIconCompanyCard = memo(function AppIconCompanyCard({
         className={cn(
           "relative flex items-center justify-center overflow-hidden select-none rounded-full bg-white dark:bg-slate-900",
           "w-14 h-14 sm:w-16 sm:h-16 md:w-[72px] md:h-[72px] lg:w-[76px] lg:h-[76px]",
-          "border border-slate-100/90 dark:border-slate-800",
-          "shadow-[0_4px_16px_rgba(0,0,0,0.05),0_1px_3px_rgba(0,0,0,0.03)] dark:shadow-[0_4px_16px_rgba(0,0,0,0.35)]",
+          "shadow-[0_4px_16px_rgba(0,0,0,0.06),0_1px_3px_rgba(0,0,0,0.03)] dark:shadow-[0_4px_16px_rgba(0,0,0,0.35)]",
           "transition-all duration-300 ease-out hover:scale-108 hover:shadow-[0_8px_24px_rgba(37,99,235,0.12)] active:scale-95"
         )}
       >
         {/* Centered Content: Brand Icon, Official Logo, or Circular Brand Monogram */}
         <div
           suppressHydrationWarning
-          className="relative z-10 flex h-full w-full items-center justify-center p-2 sm:p-2.5"
+          className="relative z-10 flex h-full w-full items-center justify-center overflow-hidden rounded-full"
         >
           {brandIcon ? (
             brandIcon
           ) : hasLogo ? (
-            <div className="relative flex h-full w-full items-center justify-center overflow-hidden rounded-full">
+            <div className="relative flex h-full w-full items-center justify-center overflow-hidden rounded-full p-2 sm:p-2.5">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={logoUrl}
                 alt={name}
-                width={44}
-                height={44}
+                width={48}
+                height={48}
                 loading="lazy"
                 decoding="async"
                 suppressHydrationWarning
                 className={cn(
                   "object-contain select-none transition-transform duration-200",
-                  "max-h-7 max-w-7 sm:max-h-8 sm:max-w-8 md:max-h-9 md:max-w-9 lg:max-h-10 lg:max-w-10"
+                  "max-h-8 max-w-8 sm:max-h-9 sm:max-w-9 md:max-h-10 md:max-w-10 lg:max-h-11 lg:max-w-11"
                 )}
                 onError={() => setFailed(true)}
               />
@@ -317,12 +316,11 @@ const AppIconCompanyCard = memo(function AppIconCompanyCard({
               aria-hidden="true"
               suppressHydrationWarning
               className={cn(
-                "flex items-center justify-center rounded-full font-bold select-none shadow-xs bg-gradient-to-br",
-                fallbackGradient,
-                "w-[76%] h-[76%]"
+                "flex items-center justify-center rounded-full font-bold select-none shadow-xs bg-gradient-to-br w-full h-full",
+                fallbackGradient
               )}
             >
-              <span className="text-xs sm:text-[13px] md:text-sm font-bold tracking-tight text-white drop-shadow-xs">
+              <span className="text-xs sm:text-[13.5px] md:text-sm font-bold tracking-tight text-white drop-shadow-xs">
                 {initials(name)}
               </span>
             </div>
@@ -478,7 +476,7 @@ export function TrustedBy({ initialCompanies }: TrustedByProps) {
 
           <h2
             id="trusted-by-heading"
-            className="text-balance text-2xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-3xl md:text-4xl lg:text-[40px] leading-tight"
+            className="text-balance text-2xl font-semibold tracking-tight text-slate-900 dark:text-white sm:text-3xl md:text-4xl lg:text-[40px] leading-tight"
           >
             Companies Are Hiring on{" "}
             <span className="italic font-medium">

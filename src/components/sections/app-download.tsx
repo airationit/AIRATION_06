@@ -69,10 +69,10 @@ export function AppDownload({ initialJobs }: AppDownloadProps = {}) {
             {/* Main Headline matching Figma */}
             <h2
               id="candidate-experience-heading"
-              className="text-balance text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-slate-900 dark:text-white leading-[1.15]"
+              className="text-balance text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight text-slate-900 dark:text-white leading-[1.15]"
             >
               Stop Applying,{" "}
-              <span className="italic font-normal">
+              <span className="italic font-medium">
                 Start Swiping.
               </span>
             </h2>
@@ -104,7 +104,7 @@ export function AppDownload({ initialJobs }: AppDownloadProps = {}) {
                       <Icon className="h-5 w-5 stroke-[2.2]" />
                     </div>
                     <div className="pt-0.5">
-                      <h3 className="text-base font-bold text-slate-900 dark:text-white sm:text-lg leading-snug">
+                      <h3 className="text-base font-semibold text-slate-900 dark:text-white sm:text-lg leading-snug">
                         {p.title}
                       </h3>
                       <p className="mt-0.5 text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
