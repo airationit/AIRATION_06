@@ -169,8 +169,8 @@ export function Hero({ initialJobs }: HeroProps = {}) {
       </div>
 
       {/* HERO SHOWCASE BANNER ("Apply in Seconds. Match Instantly.") */}
-      <div className="relative mx-auto w-full max-w-[1480px] lg:max-w-[96vw] 2xl:max-w-[1900px] px-2 sm:px-4 lg:px-5 xl:px-6 mt-8 sm:mt-10 md:mt-16 lg:mt-20 xl:mt-24 pb-12 sm:pb-16">
-        <HeroVideoCard initialJobs={initialJobs} className="w-full min-h-[490px] sm:min-h-[520px] md:min-h-[545px] lg:h-[575px] xl:h-[610px] 2xl:h-[640px]" />
+      <div className="relative mx-auto w-full max-w-[1540px] xl:max-w-[1680px] 2xl:max-w-[1800px] px-2 sm:px-4 lg:px-6 mt-8 sm:mt-10 md:mt-16 lg:mt-20 xl:mt-24 pb-12 sm:pb-16">
+        <HeroVideoCard initialJobs={initialJobs} className="w-full min-h-[500px] sm:min-h-[530px] md:min-h-[560px] lg:h-[620px] xl:h-[660px] 2xl:h-[700px]" />
       </div>
     </section>
   );

@@ -5,8 +5,6 @@ import { motion, useReducedMotion } from "framer-motion";
 import { Volume2, VolumeX, ArrowRight } from "lucide-react";
 import { siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
-import { useMediaQuery } from "@/hooks";
-import { CandidatePhoneMockup } from "./candidate-phone-mockup";
 
 import { JobListItem } from "@/types/jobs";
 
@@ -15,20 +13,12 @@ interface HeroVideoCardProps {
   initialJobs?: JobListItem[];
 }
 
-export function HeroVideoCard({ className, initialJobs }: HeroVideoCardProps) {
+export function HeroVideoCard({ className }: HeroVideoCardProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const reducedMotion = useReducedMotion();
 
-  const [mounted, setMounted] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
-
-  const isMobile = useMediaQuery("(max-width: 639px)");
-  const isTablet = useMediaQuery("(min-width: 640px) and (max-width: 1023px)");
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   // Auto play/pause video when in viewport for optimal performance
   useEffect(() => {
@@ -57,18 +47,6 @@ export function HeroVideoCard({ className, initialJobs }: HeroVideoCardProps) {
     setIsMuted(!isMuted);
   };
 
-  // Adaptive 3D orientation per device:
-  // Mobile (<640px): Straight-on for ergonomic touch interactions and 0 edge clipping.
-  // Tablet (640-1023px): Subtle 3D tilt (-10°) for clean balanced stage.
-  // Laptop/Desktop (>=1024px): Full rich cinematic 3D perspective (-22°).
-  const rotationValues = mounted
-    ? isMobile
-      ? { rotateY: 0, rotateX: 0, rotateZ: 0 }
-      : isTablet
-      ? { rotateY: -10, rotateX: 4, rotateZ: 1.5 }
-      : { rotateY: -22, rotateX: 6, rotateZ: 3.5 }
-    : { rotateY: -22, rotateX: 6, rotateZ: 3.5 };
-
   return (
     <figure
       ref={containerRef}
@@ -92,9 +70,12 @@ export function HeroVideoCard({ className, initialJobs }: HeroVideoCardProps) {
           loop
           playsInline
           preload="metadata"
-          className="h-full w-full object-cover object-center scale-[1.02] opacity-95 transition-opacity duration-700"
+          className="h-full w-full object-cover object-[center_35%] blur-[2px] scale-[1.02] opacity-95 transition-opacity duration-700"
           aria-hidden="true"
         />
+
+        {/* Subtle Brand Blue Atmosphere Tint */}
+        <div className="absolute inset-0 bg-gradient-to-tr from-brand-950/30 via-blue-950/20 to-transparent pointer-events-none" />
 
         {/* Mobile & Tablet Portrait: Top-to-bottom subtle gradient overlay for guaranteed text legibility */}
         <div className="absolute inset-0 bg-gradient-to-b from-slate-950/85 via-slate-950/50 to-slate-950/85 lg:hidden" />
@@ -120,15 +101,15 @@ export function HeroVideoCard({ className, initialJobs }: HeroVideoCardProps) {
         )}
       </button>
 
-      {/* Main Content Area: Left & Right Wing Alignment across Full Card Width */}
-      <div className="relative z-20 h-full w-full flex items-center justify-center px-4 xs:px-6 sm:px-8 md:px-10 lg:px-12 xl:px-16 2xl:px-24 py-3 sm:py-4 lg:py-5">
-        <div className="flex flex-col lg:flex-row items-center justify-between gap-5 sm:gap-6 lg:gap-8 xl:gap-12 2xl:gap-16 w-full my-auto">
-          {/* Left Column: Anchored to the LEFT Edge (Clean, Precise & Minimal) */}
+      {/* Main Content Area: Left Column Anchored over Video */}
+      <div className="relative z-20 h-full w-full flex items-center px-6 xs:px-8 sm:px-10 md:px-12 lg:px-16 xl:px-20 2xl:px-24 py-6 sm:py-8 lg:py-10">
+        <div className="flex flex-col lg:flex-row items-center justify-between gap-6 sm:gap-8 w-full my-auto">
+          {/* Left Column: Headline, subtext, and CTA */}
           <motion.div
             initial={reducedMotion ? false : { opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-            className="flex flex-col items-center text-center lg:items-start lg:text-left justify-center space-y-2.5 xs:space-y-3 sm:space-y-4 lg:space-y-5 max-w-sm xs:max-w-md md:max-w-lg lg:max-w-md xl:max-w-lg 2xl:max-w-xl w-full"
+            className="flex flex-col items-center text-center lg:items-start lg:text-left justify-center space-y-2.5 xs:space-y-3 sm:space-y-4 lg:space-y-5 max-w-sm xs:max-w-md md:max-w-lg lg:max-w-md xl:max-w-lg 2xl:max-w-xl"
           >
             {/* Main Headline */}
             <h2 className="text-xl xs:text-2xl sm:text-3xl md:text-4xl lg:text-[2.5rem] xl:text-5xl 2xl:text-6xl font-extrabold tracking-tight text-white leading-[1.12] sm:leading-[1.1] drop-shadow-md">
@@ -156,69 +137,6 @@ export function HeroVideoCard({ className, initialJobs }: HeroVideoCardProps) {
               </a>
             </div>
           </motion.div>
-
-          {/* Right Column: Anchored to the RIGHT Edge with Responsive 3D Perspective */}
-          <div className="relative flex items-center justify-center lg:justify-end shrink-0 w-full lg:w-auto [perspective:1000px] py-0.5 sm:py-1">
-            {/* Multi-layered Neon Ambient Aura behind phone */}
-            <div
-              className="pointer-events-none absolute h-[180px] w-[180px] xs:h-[220px] xs:w-[220px] sm:h-[280px] sm:w-[280px] lg:h-[340px] lg:w-[340px] xl:h-[390px] xl:w-[390px] 2xl:h-[450px] 2xl:w-[450px] rounded-full bg-gradient-to-tr from-brand-500/30 via-blue-500/20 to-indigo-500/20 blur-[50px] xs:blur-[70px] sm:blur-[90px]"
-              aria-hidden="true"
-            />
-
-            {/* 3D Ground Cast Shadow */}
-            <div
-              className={cn(
-                "pointer-events-none absolute rounded-full bg-black/75 blur-xl transition-all duration-500",
-                mounted && isMobile
-                  ? "-bottom-3 left-1/2 -translate-x-1/2 h-6 w-48 sm:w-56 opacity-60"
-                  : "-bottom-2 right-2 sm:right-5 lg:right-6 h-8 w-48 sm:w-56 lg:w-60 xl:w-68 transform rotate-3 opacity-70"
-              )}
-              aria-hidden="true"
-            />
-
-            {/* 3D Tilted Mockup Stage (Compact on laptops, expansive on large desktop) */}
-            <motion.div
-              initial={
-                reducedMotion
-                  ? false
-                  : { opacity: 0, scale: 0.85, ...rotationValues }
-              }
-              animate={{
-                opacity: 1,
-                scale: 1,
-                ...rotationValues,
-              }}
-              whileHover={
-                mounted && !isMobile && !reducedMotion
-                  ? { rotateY: -16, rotateX: 4, rotateZ: 2, transition: { duration: 0.3 } }
-                  : undefined
-              }
-              transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-              style={{
-                transformStyle: "preserve-3d",
-                willChange: "transform",
-                backfaceVisibility: "hidden",
-                WebkitBackfaceVisibility: "hidden",
-              }}
-              className="relative flex justify-center items-center scale-[0.70] xs:scale-[0.73] sm:scale-[0.75] md:scale-[0.77] lg:scale-[0.74] xl:scale-[0.76] 2xl:scale-[0.80] origin-center -translate-y-2 sm:-translate-y-3 lg:-translate-y-4 my-auto"
-            >
-              {/* 3D Phone Chassis with Physical Extrusion Edge & Deep Directional Shadow */}
-              <div
-                className="relative rounded-[36px] xs:rounded-[40px] sm:rounded-[44px] ring-1 ring-white/15"
-                style={{
-                  boxShadow:
-                    mounted && isMobile
-                      ? "0 18px 40px -10px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.15)"
-                      : "-1px 0 0 rgba(255, 255, 255, 0.25), 2px 2px 0 #334155, 4px 4px 0 #1e293b, 6px 6px 0 #0f172a, 8px 8px 0 #020617, -24px 32px 60px -10px rgba(0, 0, 0, 0.8), -8px 14px 26px rgba(0, 0, 0, 0.5)",
-                  transform: "translate3d(0, 0, 0)",
-                  backfaceVisibility: "hidden",
-                  WebkitBackfaceVisibility: "hidden",
-                }}
-              >
-                <CandidatePhoneMockup initialJobs={initialJobs} />
-              </div>
-            </motion.div>
-          </div>
         </div>
       </div>
     </figure>

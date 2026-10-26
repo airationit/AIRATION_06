@@ -9,7 +9,6 @@ import {
 } from "@/components/sections";
 import {
   Footer,
-  InteractiveDots,
   FloatingAppBanner,
 } from "@/components/shared";
 import { fetchCompanies, fetchJobs } from "@/lib/api";
@@ -37,11 +36,6 @@ export default async function Home() {
 
   return (
     <main className="relative flex min-h-dvh flex-col overflow-x-clip">
-      {/* Unified interactive dot canvas spanning all home page sections */}
-      <div className="pointer-events-none absolute inset-0 -z-10">
-        <InteractiveDots />
-      </div>
-
       {/* Hero section */}
       <Hero initialJobs={liveJobs} />
 
