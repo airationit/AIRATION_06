@@ -77,7 +77,6 @@ const COLS: FooterColumn[] = [
   {
     title: "Company",
     links: [
-      { label: "About Us", href: "/about-us" },
       { label: "Blog", href: "/blog" },
       { label: "Contact", href: "/contact" },
       { label: "Trust & Safety", href: "/trust-and-safety" },

@@ -26,24 +26,34 @@ import {
   User,
   Wifi,
   Signal,
+  Award,
+  ShoppingBag,
+  LayoutGrid,
+  BarChart2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { REAL_LIVE_JOBS, mapJobToCardData } from "@/lib/live-jobs-mapper";
+import { JobListItem } from "@/types/jobs";
 
 export interface JobBreakdownItem {
   label: string;
   score: string;
   status: "high" | "mid" | "low";
+  icon?: "chart" | "briefcase" | "badge" | "bag" | "grid";
 }
 
 export interface JobCardData {
   id: string;
   department: string;
+  postedTime?: string;
   title: string;
   company: string;
+  companyLocation?: string;
   companyLogo?: string | null;
   verified: boolean;
   verifiedText: string;
   matchScore: number;
+  matchLabel?: string;
   aiNote: React.ReactNode;
   location: string;
   salary: string;
@@ -51,113 +61,59 @@ export interface JobCardData {
   type: string;
   tags: string[];
   breakdown: JobBreakdownItem[];
-  logoType?: "hirance" | "nexus" | "pixel" | "cerebra";
+  logoType?: "riveyra" | "hirance" | "nexus" | "pixel" | "cerebra";
   logoColor?: string;
   logoLetter?: string;
 }
 
 const JOBS_DATA: JobCardData[] = [
   {
-    id: "job-sales-manager",
-    department: "Sales & Distribution",
-    title: "Area Sales Manager",
-    company: "Hirance Private L...",
-    verified: false,
-    verifiedText: "Employer Not Verified",
-    matchScore: 33,
-    aiNote: (
-      <>
-        Perfect for Distributor/Dealer Management professionals with{" "}
-        <strong className="font-bold text-indigo-950 dark:text-indigo-200">2-5 Years</strong>{" "}
-        looking for{" "}
-        <strong className="font-bold text-indigo-950 dark:text-indigo-200">Work from Office</strong>{" "}
-        job...
-      </>
-    ),
-    location: "Bareilly",
-    salary: "Not Disclosed",
-    experience: "2-5 Years",
-    type: "Full Time",
-    tags: ["Distributor/Dealer Management", "Regional Market Strategy"],
-    breakdown: [
-      { label: "Skills", score: "0/40", status: "low" },
-      { label: "Experience", score: "5.2/13", status: "low" },
-      { label: "Location", score: "7/7", status: "high" },
-      { label: "Salary", score: "2.5/5", status: "mid" },
-    ],
-    logoType: "hirance",
-  },
-  {
-    id: "job-software-engineer",
-    department: "Engineering & Technology",
-    title: "Senior Full Stack Engineer",
-    company: "Nexus Cloud Systems",
+    id: "job-dba-riveyra",
+    department: "IT / Software Roles",
+    postedTime: "Posted 1 hr ago",
+    title: "Database Administrator (DBA)",
+    company: "Riveyra Infotech Pvt. Ltd.",
+    companyLocation: "Kanpur",
     verified: true,
-    verifiedText: "Verified Employer",
-    matchScore: 94,
+    verifiedText: "Kanpur",
+    matchScore: 41,
+    matchLabel: "MODERATE MATCH",
     aiNote: (
       <>
-        High match for Next.js, TypeScript & React microservices with{" "}
-        <strong className="font-bold text-indigo-950 dark:text-indigo-200">3-5 Years</strong>{" "}
-        looking for{" "}
-        <strong className="font-bold text-indigo-950 dark:text-indigo-200">Hybrid / Remote</strong>{" "}
-        job...
+        Perfect for{" "}
+        <strong className="font-bold text-indigo-950 dark:text-indigo-200">
+          Database Administrator (DBA)
+        </strong>{" "}
+        professionals with{" "}
+        <strong className="font-bold text-indigo-950 dark:text-indigo-200">
+          3-5 Years
+        </strong>{" "}
+        experience.
       </>
     ),
-    location: "Bengaluru",
-    salary: "₹ 18 - 28 LPA",
+    location: "Onsite",
+    salary: "₹ 20K - 30K/Mo",
     experience: "3-5 Years",
     type: "Full Time",
-    tags: ["Next.js", "TypeScript", "Node.js"],
+    tags: ["Backup/recovery", "SQL Server/MSSQL", "PROBLEM SOLVING"],
     breakdown: [
-      { label: "Skills", score: "38/40", status: "high" },
-      { label: "Experience", score: "12/13", status: "high" },
-      { label: "Location", score: "7/7", status: "high" },
-      { label: "Salary", score: "5/5", status: "high" },
+      { label: "Skills", score: "0/35", status: "low", icon: "chart" },
+      { label: "Experience", score: "12/20", status: "mid", icon: "briefcase" },
+      { label: "Role Fit", score: "10.5/15", status: "mid", icon: "badge" },
+      { label: "Salary", score: "10/10", status: "high", icon: "bag" },
+      { label: "Other", score: "4/20", status: "low", icon: "grid" },
     ],
-    logoType: "nexus",
-    logoColor: "from-blue-600 to-indigo-600",
-    logoLetter: "N",
-  },
-  {
-    id: "job-product-designer",
-    department: "Design & Creative",
-    title: "Lead Product Designer (UI/UX)",
-    company: "PixelCraft Studios",
-    verified: true,
-    verifiedText: "Verified Employer",
-    matchScore: 88,
-    aiNote: (
-      <>
-        Strong synergy for mobile UI design systems, Figma workflows with{" "}
-        <strong className="font-bold text-indigo-950 dark:text-indigo-200">3-5 Years</strong>{" "}
-        looking for{" "}
-        <strong className="font-bold text-indigo-950 dark:text-indigo-200">Work from Office</strong>{" "}
-        job...
-      </>
-    ),
-    location: "Mumbai",
-    salary: "₹ 14 - 22 LPA",
-    experience: "3-5 Years",
-    type: "Full Time",
-    tags: ["Figma", "Design Systems", "UI/UX"],
-    breakdown: [
-      { label: "Skills", score: "36/40", status: "high" },
-      { label: "Experience", score: "11/13", status: "high" },
-      { label: "Location", score: "7/7", status: "high" },
-      { label: "Salary", score: "4.5/5", status: "high" },
-    ],
-    logoType: "pixel",
-    logoColor: "from-rose-500 to-amber-500",
-    logoLetter: "P",
+    logoType: "riveyra",
   },
   {
     id: "job-ai-engineer",
     department: "Data & AI Research",
+    postedTime: "Posted 2 hrs ago",
     title: "AI / ML Research Engineer",
     company: "Cerebra AI Labs",
+    companyLocation: "Gurugram",
     verified: true,
-    verifiedText: "Verified Employer",
+    verifiedText: "Gurugram",
     matchScore: 64,
     aiNote: (
       <>
@@ -174,16 +130,107 @@ const JOBS_DATA: JobCardData[] = [
     type: "Full Time",
     tags: ["PyTorch", "LLM Ops", "CUDA"],
     breakdown: [
-      { label: "Skills", score: "24/40", status: "mid" },
-      { label: "Experience", score: "9/13", status: "mid" },
-      { label: "Location", score: "7/7", status: "high" },
-      { label: "Salary", score: "5/5", status: "high" },
+      { label: "Skills", score: "24/40", status: "mid", icon: "chart" },
+      { label: "Experience", score: "9/13", status: "mid", icon: "briefcase" },
+      { label: "Location", score: "7/7", status: "high", icon: "badge" },
+      { label: "Salary", score: "5/5", status: "high", icon: "bag" },
+      { label: "Other", score: "4/10", status: "mid", icon: "grid" },
     ],
     logoType: "cerebra",
     logoColor: "from-purple-600 to-pink-600",
     logoLetter: "C",
   },
+  {
+    id: "job-software-engineer",
+    department: "Engineering & Technology",
+    postedTime: "Posted 3 hrs ago",
+    title: "Senior Full Stack Engineer",
+    company: "Nexus Cloud Systems",
+    companyLocation: "Bengaluru",
+    verified: true,
+    verifiedText: "Bengaluru",
+    matchScore: 94,
+    aiNote: (
+      <>
+        High match for Next.js, TypeScript & React microservices with{" "}
+        <strong className="font-bold text-indigo-950 dark:text-indigo-200">3-5 Years</strong>{" "}
+        looking for{" "}
+        <strong className="font-bold text-indigo-950 dark:text-indigo-200">Hybrid / Remote</strong>{" "}
+        job...
+      </>
+    ),
+    location: "Bengaluru",
+    salary: "₹ 18 - 28 LPA",
+    experience: "3-5 Years",
+    type: "Full Time",
+    tags: ["Next.js", "TypeScript", "Node.js"],
+    breakdown: [
+      { label: "Skills", score: "38/40", status: "high", icon: "chart" },
+      { label: "Experience", score: "12/13", status: "high", icon: "briefcase" },
+      { label: "Location", score: "7/7", status: "high", icon: "badge" },
+      { label: "Salary", score: "5/5", status: "high", icon: "bag" },
+      { label: "Other", score: "8/10", status: "high", icon: "grid" },
+    ],
+    logoType: "nexus",
+    logoColor: "from-blue-600 to-indigo-600",
+    logoLetter: "N",
+  },
 ];
+
+/** Riveyra logo matching Figma */
+function RiveyraLogo({ className }: { className?: string }) {
+  return (
+    <div
+      className={cn(
+        "h-8 w-8 xs:h-9 xs:w-9 shrink-0 rounded-xl bg-slate-950 flex items-center justify-center p-1 border border-slate-800 shadow-xs",
+        className
+      )}
+    >
+      <svg viewBox="0 0 40 40" className="h-full w-full" fill="none">
+        <path
+          d="M14 10 C14 10, 26 10, 26 18 C26 23, 20 24, 14 24"
+          stroke="url(#r-pink-grad)"
+          strokeWidth="3.5"
+          strokeLinecap="round"
+        />
+        <path
+          d="M14 10 V30"
+          stroke="url(#r-pink-grad)"
+          strokeWidth="3.5"
+          strokeLinecap="round"
+        />
+        <path
+          d="M20 24 L27 30"
+          stroke="url(#r-pink-grad)"
+          strokeWidth="3.5"
+          strokeLinecap="round"
+        />
+        <defs>
+          <linearGradient id="r-pink-grad" x1="10" y1="10" x2="30" y2="30" gradientUnits="userSpaceOnUse">
+            <stop stopColor="#F43F5E" />
+            <stop offset="1" stopColor="#EC4899" />
+          </linearGradient>
+        </defs>
+      </svg>
+    </div>
+  );
+}
+
+function MetricIcon({ type }: { type?: string }) {
+  if (type === "briefcase") {
+    return <Briefcase className="h-3 w-3 text-purple-600 dark:text-purple-400 stroke-[2]" />;
+  }
+  if (type === "badge") {
+    return <Award className="h-3 w-3 text-amber-500 dark:text-amber-400 stroke-[2]" />;
+  }
+  if (type === "bag") {
+    return <ShoppingBag className="h-3 w-3 text-emerald-600 dark:text-emerald-400 stroke-[2]" />;
+  }
+  if (type === "grid") {
+    return <LayoutGrid className="h-3 w-3 text-slate-500 dark:text-slate-400 stroke-[2]" />;
+  }
+  return <BarChart2 className="h-3 w-3 text-sky-500 dark:text-sky-400 stroke-[2]" />;
+}
 
 function HiranceSwirlLogo({ className }: { className?: string }) {
   return (
@@ -395,7 +442,7 @@ function SwipeCard({
       className="touch-none select-none"
     >
       {/* Card Body with Exact Layout from the App */}
-      <div className="relative h-full w-full rounded-[22px] xs:rounded-[26px] border border-slate-200/90 bg-white p-3 xs:p-3.5 sm:p-4 shadow-lg flex flex-col justify-between dark:border-slate-800 dark:bg-slate-900 overflow-hidden">
+      <div className="relative h-full w-full rounded-[22px] xs:rounded-[26px] border border-slate-200/90 !bg-white p-3 xs:p-3.5 sm:p-4 shadow-lg flex flex-col justify-between dark:border-slate-800 dark:!bg-slate-900 overflow-hidden" style={{ backgroundColor: "#ffffff" }}>
         {/* Dynamic Stamp Overlays during manual drag OR programmatic auto-swiping */}
         {isTop && (
           <>
@@ -433,7 +480,9 @@ function SwipeCard({
           <div className="flex items-start justify-between gap-2">
             {/* Company Logo & Details */}
             <div className="flex items-center gap-2 min-w-0">
-              {job.companyLogo ? (
+              {job.logoType === "riveyra" ? (
+                <RiveyraLogo />
+              ) : job.companyLogo ? (
                 <img
                   src={job.companyLogo}
                   alt={job.company}
@@ -460,22 +509,29 @@ function SwipeCard({
                   {job.company}
                 </p>
                 <p className="truncate text-[9.5px] xs:text-[10px] text-slate-500 dark:text-slate-400 font-normal leading-tight">
-                  {job.verifiedText}
+                  {job.companyLocation || job.verifiedText}
                 </p>
               </div>
             </div>
 
-            {/* Exact Circular Match Gauge */}
+            {/* Circular Match Gauge matching Figma */}
             <CircularMatchGauge score={job.matchScore} />
           </div>
 
-          {/* Job Title */}
-          <h3 className="mt-2 text-sm xs:text-base sm:text-[17px] font-black tracking-tight text-slate-900 dark:text-white leading-tight truncate">
-            {job.title}
-          </h3>
+          {/* Job Title & Subtitle */}
+          <div className="mt-1.5">
+            <h3 className="text-sm xs:text-base font-black tracking-tight text-slate-900 dark:text-white leading-tight truncate">
+              {job.title}
+            </h3>
+            {job.department && (
+              <p className="text-[9.5px] xs:text-[10px] text-slate-400 dark:text-slate-500 mt-0.5 truncate">
+                {job.department} {job.postedTime ? `• ${job.postedTime}` : ""}
+              </p>
+            )}
+          </div>
 
           {/* AI Match Insight Box (Lavender / Soft Purple) */}
-          <div className="mt-2 rounded-xl xs:rounded-2xl border border-purple-200/60 bg-purple-50/40 p-2 xs:p-2.5 dark:border-purple-950 dark:bg-purple-950/20">
+          <div className="mt-2 rounded-xl xs:rounded-2xl border border-purple-200/60 bg-purple-50/50 p-2 xs:p-2.5 dark:border-purple-950 dark:bg-purple-950/20">
             <div className="flex items-start gap-1.5">
               <Sparkles className="h-3.5 w-3.5 text-purple-600 dark:text-purple-400 shrink-0 mt-0.5" />
               <p className="text-[9.5px] xs:text-[10px] leading-snug text-slate-700 dark:text-slate-300 font-medium line-clamp-2">
@@ -520,11 +576,11 @@ function SwipeCard({
           </div>
 
           {/* Skill Tags */}
-          <div className="mt-2 flex flex-wrap gap-1.5">
-            {job.tags.map((tag, tagIdx) => (
+          <div className="mt-2 flex items-center gap-1.5 overflow-hidden">
+            {job.tags.slice(0, 3).map((tag, tagIdx) => (
               <span
                 key={`${tag}-${tagIdx}`}
-                className="rounded-lg bg-blue-50/80 border border-blue-100/50 px-2 xs:px-2.5 py-0.5 xs:py-1 text-[9px] xs:text-[9.5px] font-medium text-slate-800 dark:bg-blue-950/40 dark:border-blue-900/40 dark:text-blue-200"
+                className="max-w-[85px] xs:max-w-[95px] truncate rounded-lg bg-blue-50/80 border border-blue-100/50 px-2 xs:px-2.5 py-0.5 xs:py-1 text-[8.5px] xs:text-[9px] font-medium text-slate-700 dark:bg-blue-950/40 dark:border-blue-900/40 dark:text-blue-200"
               >
                 {tag}
               </span>
@@ -532,52 +588,39 @@ function SwipeCard({
           </div>
         </div>
 
-        {/* Why Match Section */}
-        <div className="mt-2.5 rounded-2xl bg-emerald-50/40 border border-emerald-100/60 p-2 xs:p-2.5 dark:bg-emerald-950/20 dark:border-emerald-900/40">
-          <p className="text-[11px] xs:text-xs font-bold text-emerald-700 dark:text-emerald-400 mb-1.5">
-            Why {job.matchScore}% Match?
-          </p>
-          <div className="grid grid-cols-4 gap-1 xs:gap-1.5">
+        {/* Why Match Section matching Figma */}
+        <div className="mt-2 rounded-2xl bg-emerald-50/40 border border-emerald-100/60 p-2 xs:p-2.5 dark:bg-emerald-950/20 dark:border-emerald-900/40">
+          <div className="flex items-center justify-between mb-1.5">
+            <p className="text-[10.5px] xs:text-[11px] font-bold text-emerald-800 dark:text-emerald-400">
+              Why {job.matchScore}% Match?
+            </p>
+            <span className="rounded-full bg-emerald-100/80 dark:bg-emerald-900/40 border border-emerald-200/80 dark:border-emerald-800 px-1.5 py-0.2 text-[7px] xs:text-[7.5px] font-bold text-emerald-700 dark:text-emerald-300">
+              {job.matchLabel || "MODERATE MATCH"} ⓘ
+            </span>
+          </div>
+
+          <div className="grid grid-cols-5 gap-1 text-center">
             {job.breakdown.map((item) => (
               <div
                 key={item.label}
-                className="flex items-center gap-1 xs:gap-1.5 min-w-0"
+                className="flex flex-col items-center justify-center min-w-0"
               >
-                {/* Vertical colored indicator line */}
-                <div
-                  className={cn(
-                    "w-0.5 h-6 rounded-full shrink-0",
-                    item.status === "high"
-                      ? "bg-emerald-500"
-                      : item.status === "mid"
-                      ? "bg-amber-500"
-                      : "bg-rose-500"
-                  )}
-                />
-                <div className="flex flex-col text-left min-w-0">
-                  <span className="text-[8px] xs:text-[8.5px] text-slate-500 dark:text-slate-400 font-medium truncate">
-                    {item.label}
-                  </span>
-                  <span
-                    className={cn(
-                      "text-[10px] xs:text-[10.5px] font-bold leading-tight truncate",
-                      item.status === "high"
-                        ? "text-emerald-600 dark:text-emerald-400"
-                        : item.status === "mid"
-                        ? "text-amber-600 dark:text-amber-400"
-                        : "text-rose-600 dark:text-rose-400"
-                    )}
-                  >
-                    {item.score}
-                  </span>
+                <div className="mb-0.5">
+                  <MetricIcon type={item.icon} />
                 </div>
+                <span className="text-[7.5px] xs:text-[8px] text-slate-500 dark:text-slate-400 font-medium truncate">
+                  {item.label}
+                </span>
+                <span className="text-[8.5px] xs:text-[9.5px] font-bold text-slate-800 dark:text-slate-200 leading-tight truncate">
+                  {item.score}
+                </span>
               </div>
             ))}
           </div>
         </div>
 
-        {/* Action Buttons on Card */}
-        <div className="mt-2.5 flex items-center justify-between gap-2 pt-0.5">
+        {/* Action Buttons on Card matching Figma */}
+        <div className="mt-2 flex items-center justify-between gap-2 pt-0.5">
           {/* Skip Button */}
           <button
             type="button"
@@ -586,20 +629,25 @@ function SwipeCard({
               performSwipe("left");
             }}
             aria-label="Skip Job"
-            className="flex-1 flex items-center justify-center gap-1.5 rounded-full bg-rose-50/90 border border-rose-200/80 py-2 text-[11px] xs:text-xs font-bold text-rose-800 transition-all hover:bg-rose-100 active:scale-95 dark:bg-rose-950/40 dark:border-rose-900/60 dark:text-rose-300 cursor-pointer shadow-xs"
+            className="flex-1 flex items-center justify-center gap-1 rounded-full bg-rose-50 border border-rose-200/80 py-2 text-[11px] xs:text-xs font-bold text-rose-600 transition-all hover:bg-rose-100 active:scale-95 dark:bg-rose-950/40 dark:border-rose-900/60 dark:text-rose-300 cursor-pointer shadow-xs"
           >
-            <X className="h-3.5 w-3.5 text-rose-700 dark:text-rose-300 stroke-[2.5]" />
+            <X className="h-3.5 w-3.5 stroke-[2.5]" />
             <span>Skip</span>
           </button>
 
-          {/* Bookmark Button */}
+          {/* Center Floating Hirance "H" Button matching Figma */}
           <button
             type="button"
             onClick={(e) => e.stopPropagation()}
-            aria-label="Save Job"
-            className="h-8.5 w-8.5 xs:h-9 xs:w-9 shrink-0 flex items-center justify-center rounded-full border border-slate-200 bg-white text-slate-700 transition-all hover:bg-slate-50 active:scale-95 dark:border-slate-800 dark:bg-slate-800 dark:text-slate-300 cursor-pointer shadow-xs"
+            aria-label="Hirance Action"
+            className="h-9 w-9 shrink-0 flex items-center justify-center rounded-full border border-slate-100 bg-white shadow-md hover:scale-105 active:scale-95 transition-all dark:bg-slate-800 dark:border-slate-700 cursor-pointer"
           >
-            <Bookmark className="h-4 w-4 stroke-[2]" />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/images/icon.png"
+              alt="Hirance"
+              className="h-4.5 w-4.5 object-contain"
+            />
           </button>
 
           {/* Apply Button */}
@@ -610,7 +658,7 @@ function SwipeCard({
               performSwipe("right");
             }}
             aria-label="Apply to Job"
-            className="flex-1 flex items-center justify-center gap-1.5 rounded-full bg-emerald-600 py-2 text-[11px] xs:text-xs font-bold text-white shadow-md shadow-emerald-600/25 transition-all hover:bg-emerald-500 active:scale-95 cursor-pointer"
+            className="flex-1 flex items-center justify-center gap-1 rounded-full bg-[#00a86b] hover:bg-[#00925d] py-2 text-[11px] xs:text-xs font-bold text-white shadow-md shadow-[#00a86b]/25 transition-all active:scale-95 cursor-pointer"
           >
             <Check className="h-4 w-4 stroke-[3]" />
             <span>Apply</span>
@@ -621,7 +669,34 @@ function SwipeCard({
   );
 }
 
-export function CandidatePhoneMockup() {
+interface CandidatePhoneMockupProps {
+  initialJobs?: JobListItem[];
+}
+
+export function CandidatePhoneMockup({ initialJobs }: CandidatePhoneMockupProps = {}) {
+  const [jobs, setJobs] = useState<JobCardData[]>(() => {
+    if (initialJobs && initialJobs.length > 0) {
+      return initialJobs.map((j, i) => mapJobToCardData(j, i));
+    }
+    return REAL_LIVE_JOBS.map((j, i) => mapJobToCardData(j, i));
+  });
+
+  useEffect(() => {
+    if (initialJobs && initialJobs.length > 0) {
+      setJobs(initialJobs.map((j, i) => mapJobToCardData(j, i)));
+    } else {
+      // Dynamic client-side fetch from live endpoint
+      fetch("/api/v1/jobs/?page_size=8")
+        .then((r) => r.json())
+        .then((res) => {
+          if (res?.data && Array.isArray(res.data) && res.data.length > 0) {
+            setJobs(res.data.map((j: JobListItem, i: number) => mapJobToCardData(j, i)));
+          }
+        })
+        .catch(() => {});
+    }
+  }, [initialJobs]);
+
   const [currentIndex, setCurrentIndex] = useState(0);
   const [autoSwipeTarget, setAutoSwipeTarget] = useState<{
     id: string;
@@ -645,9 +720,9 @@ export function CandidatePhoneMockup() {
 
   // Automatic Swiping Engine based on match score
   useEffect(() => {
-    if (reducedMotion || isPaused || autoSwipeTarget || JOBS_DATA.length === 0) return;
+    if (reducedMotion || isPaused || autoSwipeTarget || jobs.length === 0) return;
 
-    const currentJob = JOBS_DATA[currentIndex % JOBS_DATA.length];
+    const currentJob = jobs[currentIndex % jobs.length];
     if (!currentJob) return;
 
     // High match (>= 80) swipes right, otherwise left
@@ -655,27 +730,28 @@ export function CandidatePhoneMockup() {
 
     timerRef.current = setTimeout(() => {
       setAutoSwipeTarget({ id: currentJob.id, direction: targetDirection });
-    }, 2800);
+    }, 3200);
 
     return () => {
       if (timerRef.current) clearTimeout(timerRef.current);
     };
-  }, [currentIndex, isPaused, autoSwipeTarget, reducedMotion]);
+  }, [currentIndex, isPaused, autoSwipeTarget, reducedMotion, jobs]);
 
-  // Continuously show available job cards in an infinite deck cycle (No "All Caught Up!" screen)
+  // Continuously show available job cards in an infinite deck cycle
   const visibleCards = useMemo(() => {
-    const count = Math.min(3, JOBS_DATA.length);
+    if (jobs.length === 0) return [];
+    const count = Math.min(3, jobs.length);
     const result: { job: JobCardData; key: string; indexOffset: number }[] = [];
     for (let offset = 0; offset < count; offset++) {
-      const idx = (currentIndex + offset) % JOBS_DATA.length;
+      const idx = (currentIndex + offset) % jobs.length;
       result.push({
-        job: JOBS_DATA[idx],
-        key: `${JOBS_DATA[idx].id}-${currentIndex + offset}`,
+        job: jobs[idx],
+        key: `${jobs[idx].id}-${currentIndex + offset}`,
         indexOffset: offset,
       });
     }
     return result;
-  }, [currentIndex]);
+  }, [currentIndex, jobs]);
 
   return (
     <div
@@ -685,9 +761,9 @@ export function CandidatePhoneMockup() {
       onTouchStart={() => setIsPaused(true)}
       onTouchEnd={() => setIsPaused(false)}
     >
-      {/* Smartphone Chassis */}
+      {/* Smartphone Chassis matching Figma */}
       <div
-        className="relative w-[260px] xs:w-[278px] sm:w-[292px] md:w-[305px] lg:w-[295px] xl:w-[310px] 2xl:w-[330px] rounded-[34px] xs:rounded-[38px] sm:rounded-[42px] border-[6px] xs:border-[7px] sm:border-[8px] border-slate-900 bg-slate-900 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.45),0_0_0_1px_rgba(255,255,255,0.1)] ring-1 ring-black/80 dark:border-slate-800 dark:ring-white/10 overflow-hidden"
+        className="relative w-[265px] xs:w-[280px] sm:w-[295px] md:w-[310px] lg:w-[305px] xl:w-[320px] rounded-[38px] border-[7px] border-slate-900 bg-slate-900 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.45)] ring-1 ring-black/80 dark:border-slate-800 dark:ring-white/10 overflow-hidden"
         style={{
           transformStyle: "flat",
           transform: "translateZ(0)",
@@ -695,15 +771,14 @@ export function CandidatePhoneMockup() {
           WebkitBackfaceVisibility: "hidden",
         }}
       >
-        {/* Dynamic Island Notch */}
-        <div className="absolute top-1.5 xs:top-2 left-1/2 -translate-x-1/2 z-50 flex h-3 xs:h-3.5 w-18 xs:w-20 items-center justify-between rounded-full bg-black px-1.5 py-0.5">
-          <div className="h-1.5 xs:h-2 w-1.5 xs:w-2 rounded-full bg-slate-900 border border-slate-800" />
-          <div className="h-1 xs:h-1.5 w-1 xs:w-1.5 rounded-full bg-blue-950" />
+        {/* Center Punch Hole Camera matching Figma */}
+        <div className="absolute top-2.5 left-1/2 -translate-x-1/2 z-50 flex items-center justify-center">
+          <div className="h-2.5 w-2.5 rounded-full bg-black ring-1 ring-slate-800" />
         </div>
 
         {/* Screen Area */}
         <div
-          className="relative flex h-[485px] xs:h-[510px] sm:h-[530px] md:h-[545px] lg:h-[525px] xl:h-[550px] 2xl:h-[570px] w-full flex-col justify-between bg-slate-50 dark:bg-slate-950 overflow-hidden pt-4 xs:pt-5"
+          className="relative flex h-[500px] xs:h-[525px] sm:h-[545px] md:h-[560px] lg:h-[540px] xl:h-[560px] w-full flex-col justify-between bg-slate-50 dark:bg-slate-950 overflow-hidden pt-3.5"
           style={{
             isolation: "isolate",
             transformStyle: "flat",
@@ -712,21 +787,20 @@ export function CandidatePhoneMockup() {
             WebkitBackfaceVisibility: "hidden",
           }}
         >
-          {/* Status Bar (12:29 & 100% Battery) */}
-          <div className="px-3.5 xs:px-4 flex items-center justify-between text-[9.5px] xs:text-[10px] font-bold text-slate-800 dark:text-slate-200 select-none">
-            <span>12:29</span>
+          {/* Status Bar (11:06 matching Figma) */}
+          <div className="px-4 flex items-center justify-between text-[10px] font-bold text-slate-800 dark:text-slate-200 select-none">
+            <span>11:06</span>
             <div className="flex items-center gap-1.5 text-slate-700 dark:text-slate-300">
-              <Wifi className="h-3 w-3" />
               <Signal className="h-3 w-3" />
-              {/* Battery indicator with 100 */}
+              <Wifi className="h-3 w-3" />
               <div className="flex items-center rounded-2xs border border-slate-700 dark:border-slate-300 px-1 py-0.2 text-[8px] font-mono leading-none">
-                <span>100</span>
+                <span>90</span>
               </div>
             </div>
           </div>
 
-          {/* App Header with 99+ notifications badge */}
-          <div className="px-3 xs:px-3.5 py-1 xs:py-1.5 flex items-center justify-between select-none">
+          {/* App Header with 10 notifications badge matching Figma */}
+          <div className="px-3 xs:px-3.5 py-1 flex items-center justify-between select-none">
             <button
               type="button"
               className="flex h-7 w-7 items-center justify-center rounded-lg text-slate-800 dark:text-slate-200 hover:bg-slate-200/50"
@@ -747,10 +821,19 @@ export function CandidatePhoneMockup() {
               >
                 <Bell className="h-4 w-4 stroke-[2]" />
               </button>
-              <span className="absolute -top-1 -right-1 flex items-center justify-center rounded-full bg-blue-600 px-1 py-0.2 text-[7.5px] font-black text-white shadow-xs">
-                99+
+              <span className="absolute -top-1 -right-1 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-blue-600 text-[7.5px] font-black text-white shadow-xs">
+                10
               </span>
             </div>
+          </div>
+
+          {/* Persistent Green Toast Banner matching Figma */}
+          <div className="mx-2 xs:mx-2.5 mb-1 flex items-center justify-between rounded-lg bg-[#00a86b] px-3 py-1.5 text-white shadow-xs select-none">
+            <div className="flex items-center gap-1.5 text-[9.5px] xs:text-[10px] font-semibold">
+              <Check className="h-3.5 w-3.5 stroke-[3]" />
+              <span>Application #74 Sent! Recruiter notified.</span>
+            </div>
+            <span className="text-amber-300 text-xs font-bold select-none leading-none">✦</span>
           </div>
 
           {/* Card Stack Playground Area */}
@@ -810,9 +893,6 @@ export function CandidatePhoneMockup() {
                 <MessageSquare className="h-4 w-4 stroke-[2]" />
                 <span className="text-[8.5px] font-medium">Messages</span>
               </button>
-              <span className="absolute -top-1 -right-1 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-blue-500 text-[7px] font-black text-white">
-                10
-              </span>
             </div>
 
             {/* Profile */}

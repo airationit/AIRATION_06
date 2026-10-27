@@ -20,43 +20,44 @@ export interface JobCompanyRef {
 }
 
 /**
- * Public Job List Item (JobListSerializer)
+ * Public Job List Item (JobListFlatSerializer / JobListSerializer)
  */
 export interface JobListItem {
   id: string;
   title: string;
-  company_id?: string;
+  company_id?: string | null;
   company_name: string;
   company_logo: string | null;
   job_role: EntityRef | null;
   role_category?: EntityRef | null;
   job_type: EntityRef | null;
-  work_mode: EntityRef | null;
-  work_shift?: EntityRef | null;
-  experience_level: EntityRef | null;
+  work_mode: (EntityRef & { display_order?: number }) | null;
+  work_shift?: (EntityRef & { display_order?: number }) | null;
+  experience_level: { id?: string; label?: string; name?: string } | null;
+  notice_period?: number | null;
   salary_min: number | string | null;
   salary_max: number | string | null;
   currency: Currency | null;
   number_of_openings: number;
   location: string;
-  city: EntityRef | null;
-  state: EntityRef | null;
-  match_threshold?: number;
+  city: (EntityRef & { state?: string }) | null;
+  state: (EntityRef & { country?: string | EntityRef }) | null;
+  match_threshold?: number | string;
   is_free_for_candidates?: boolean;
   required_skills: EntityRef[];
   additional_skills?: EntityRef[];
   custom_skills?: string[];
   compatibility_score?: number | null;
-  compatibility_tips?: string[];
-  compatibility_breakdown?: Record<string, unknown> | null;
+  compatibility_tips?: string[] | any[];
+  compatibility_breakdown?: unknown[] | Record<string, unknown> | null;
   can_apply?: boolean;
   reason?: string | null;
   badge_active?: boolean;
   is_verified?: boolean;
   isVerified?: boolean;
   applied?: boolean;
-  status: string;
-  published_at: string;
+  status: string | number;
+  published_at: string | null;
   application_deadline?: string | null;
   views_count?: number;
   applications_count?: number;
@@ -138,21 +139,24 @@ export interface JobSitemapData {
 }
 
 /**
- * Query search parameters for GET /jobs/
+ * Query search parameters for GET /api/v1/jobs/
  */
 export interface JobSearchParams {
-  company_id?: string; // Company UUID filter
-  job_role?: string; // UUID or comma-separated UUIDs
-  job_type?: string; // UUID
-  work_mode?: string; // UUID
-  work_shift?: string; // UUID
-  experience_level?: string; // UUID
-  city?: string; // UUID
-  state?: string; // UUID
-  salary_range?: string; // UUID
+  company_id?: string; // Comma-separated company UUIDs; matches any company
+  category_id?: string; // Comma-separated role category UUIDs; matches any category
+  job_role?: string; // Comma-separated job role UUIDs; matches any role
+  job_type?: string; // Comma-separated job type UUIDs; matches any type
+  work_mode?: string; // Comma-separated work mode UUIDs; matches any mode
+  work_shift?: string; // Comma-separated work shift UUIDs; matches any shift
+  experience_level?: string; // Comma-separated experience level UUIDs
+  city?: string; // Comma-separated city UUIDs; matches any city ID or close location spelling
+  state?: string; // Comma-separated state UUIDs; matches any state
+  min_salary?: number; // Jobs whose maximum salary is at least this value
+  max_salary?: number; // Jobs whose minimum salary is at most this value
+  salary_range?: string; // Backwards compatible UUID or range
   skills?: string; // Comma-separated skill UUIDs
-  is_free_for_candidates?: boolean;
-  search?: string;
+  is_free_for_candidates?: boolean; // Jobs that do not consume daily apply quota
+  search?: string; // Text search in title/description
   ordering?:
     | "relevance"
     | "-relevance"
@@ -162,6 +166,6 @@ export interface JobSearchParams {
     | "published_at"
     | "-created_at"
     | "created_at";
-  page?: number;
-  page_size?: number;
+  page?: number; // Default 1
+  page_size?: number; // Default 10, max 100
 }

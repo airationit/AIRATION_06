@@ -472,20 +472,15 @@ export function WantToHire() {
   return (
     <section
       id="want-to-hire"
-      className="relative w-full overflow-hidden pt-14 pb-12 sm:pt-18 sm:pb-16 lg:pt-24 lg:pb-20 flex items-center justify-center min-h-0"
+      className="relative w-full overflow-hidden pt-14 pb-12 sm:pt-18 sm:pb-16 lg:pt-24 lg:pb-20 flex items-center justify-center min-h-0 bg-white dark:bg-slate-950"
       aria-labelledby="want-to-hire-heading"
     >
-      {/* Ambient Mesh Glow Background */}
+      {/* Background Subtle Divider */}
       <div
         className="pointer-events-none absolute inset-0 -z-10 overflow-hidden"
         aria-hidden="true"
       >
         <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-border/80 to-transparent" />
-        <div className="absolute left-1/2 top-1/2 h-[34rem] w-[50rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-to-br from-brand-500/15 via-indigo-500/10 to-sky-500/5 blur-[140px]" />
-        <div className="absolute right-10 top-1/4 h-[22rem] w-[22rem] rounded-full bg-blue-600/10 blur-[100px]" />
-
-        {/* Subtle geometric grid backdrop */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)]" />
       </div>
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full">
@@ -539,14 +534,13 @@ export function WantToHire() {
               For Employers &amp; Hiring Teams
             </p>
 
-            {/* Main Headline */}
             <h2
               id="want-to-hire-heading"
-              className="text-balance text-2xl font-extrabold tracking-tight text-foreground sm:text-3xl md:text-4xl lg:text-5xl leading-tight"
+              className="text-balance text-2xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-3xl md:text-4xl lg:text-5xl leading-tight"
             >
-              Post a Job. Let Candidates{" "}
-              <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-brand-600 dark:from-brand-400 dark:via-indigo-300 dark:to-sky-300 bg-clip-text text-transparent">
-                Come to You.
+              Post a Job. Let{" "}
+              <span className="italic font-medium">
+                Candidates Come to You.
               </span>
             </h2>
 

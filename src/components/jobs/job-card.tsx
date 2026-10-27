@@ -38,12 +38,14 @@ export function JobCard({ job, index = 0 }: JobCardProps) {
   const companySlug = job.companyId || generateCompanySlug(job.company, job.companyId);
 
   // Compact experience string
-  const formatExp = (exp: string) => {
-    if (!exp) return "Fresher";
-    const lower = exp.toLowerCase();
-    if (lower.includes("min") || lower.includes("fresher")) return exp;
+  const formatExp = (exp?: string) => {
+    if (!exp) return "Open to All";
+    const clean = exp.replace(/[\uFFFD\u2013\u2014]/g, "-").trim();
+    const lower = clean.toLowerCase();
+    if (lower === "open to all" || lower.includes("open to all") || lower === "open") return "Open to All";
+    if (lower.includes("min") || lower.includes("fresher")) return clean;
     if (lower.includes("0-1") || lower.includes("entry")) return "Fresher";
-    return `${exp.replace(/years?|yrs?/gi, "").trim()} yrs`;
+    return `${clean.replace(/years?|yrs?/gi, "").trim()} yrs`;
   };
 
   return (
