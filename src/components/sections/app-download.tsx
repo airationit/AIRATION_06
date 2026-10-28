@@ -45,7 +45,7 @@ export function AppDownload({ initialJobs }: AppDownloadProps = {}) {
   return (
     <section
       id="candidate-experience"
-      className="relative w-full overflow-hidden py-14 sm:py-18 lg:py-24 flex items-center justify-center min-h-0 bg-white dark:bg-slate-950"
+      className="section-blue-glow relative w-full overflow-hidden py-14 sm:py-18 lg:py-24 flex items-center justify-center min-h-0 bg-white dark:bg-slate-950"
       aria-labelledby="candidate-experience-heading"
     >
       {/* Background Subtle Divider */}

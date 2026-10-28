@@ -35,12 +35,17 @@ export function Hero({ initialJobs }: HeroProps = {}) {
   const copyY = useTransform(copyScrollProgress, [0, 0.8], [0, -30]);
 
   return (
-    <section ref={sectionRef} className="relative overflow-x-clip pt-24 sm:pt-28 md:pt-32">
-      {/* Background with Figma geometric diagonal chevron pattern overlay */}
+    <section
+      ref={sectionRef}
+      className="relative overflow-x-clip pt-[var(--hero-top)] [--hero-top:6rem] [--header-height:3.75rem] [--video-height:500px] sm:[--hero-top:7rem] sm:[--header-height:4.5rem] sm:[--video-height:530px] md:[--hero-top:8rem] md:[--video-height:560px] lg:[--header-height:4.75rem] lg:[--video-height:620px] xl:[--video-height:660px] 2xl:[--video-height:700px]"
+    >
+      {/* Extend one continuous background behind the transparent homepage navbar. */}
       <div
-        className="pointer-events-none absolute inset-0 -z-10 bg-[url('/images/figma-hero-bg.png')] bg-cover bg-center opacity-90 dark:opacity-10"
+        className="pointer-events-none absolute inset-x-0 -top-[4.5rem] bottom-0 -z-10 overflow-hidden sm:-top-20"
         aria-hidden="true"
-      />
+      >
+        <div className="absolute -inset-2 bg-[url('/images/figma-hero-bg.png')] bg-cover bg-center opacity-90 blur-[4px] dark:opacity-10" />
+      </div>
 
       {/* Background bottom edge fade */}
       <div
@@ -51,7 +56,8 @@ export function Hero({ initialJobs }: HeroProps = {}) {
       </div>
 
       {/* HERO COPY TEXT SECTION */}
-      <div className="relative z-0 flex items-center justify-center px-4 sm:px-6 lg:px-8 pb-8 sm:pb-10 md:pb-12">
+      {/* Reserve the first viewport for the copy and a 10% preview of the video. */}
+      <div className="relative z-0 flex min-h-[calc(100svh_-_var(--header-height)_-_var(--hero-top)_-_var(--video-height)*0.2)] items-center justify-center px-4 sm:px-6 lg:px-8 pb-8 sm:pb-10 md:pb-12">
         <motion.div
           ref={copyRef}
           style={
@@ -63,7 +69,7 @@ export function Hero({ initialJobs }: HeroProps = {}) {
                   y: copyY,
                 }
           }
-          className="mx-auto flex w-full max-w-5xl flex-col items-center justify-center text-center will-change-transform"
+          className="mx-auto flex w-full max-w-5xl flex-col items-center justify-center text-center will-change-transform pb-8"
         >
           {/* Eyebrow Typography matching Screenshot 2 */}
           <motion.p
@@ -91,7 +97,7 @@ export function Hero({ initialJobs }: HeroProps = {}) {
             <span className="mr-[0.22em] inline-block text-slate-900 dark:text-white">
               Match.
             </span>
-            <span className="inline-block bg-gradient-to-r from-blue-600 via-sky-500 to-indigo-600 bg-clip-text text-transparent dark:from-blue-400 dark:via-sky-400 dark:to-indigo-300 font-semibold">
+            <span className="inline-block text-blue-600 font-semibold">
               Get Hired.
             </span>
           </h1>
@@ -169,8 +175,8 @@ export function Hero({ initialJobs }: HeroProps = {}) {
       </div>
 
       {/* HERO SHOWCASE BANNER ("Apply in Seconds. Match Instantly.") */}
-      <div className="relative mx-auto w-full max-w-[1540px] xl:max-w-[1680px] 2xl:max-w-[1800px] px-2 sm:px-4 lg:px-6 mt-8 sm:mt-10 md:mt-16 lg:mt-20 xl:mt-24 pb-12 sm:pb-16">
-        <HeroVideoCard initialJobs={initialJobs} className="w-full min-h-[500px] sm:min-h-[530px] md:min-h-[560px] lg:h-[620px] xl:h-[660px] 2xl:h-[700px]" />
+      <div className="relative mx-auto w-full max-w-[1540px] xl:max-w-[1680px] 2xl:max-w-[1800px] px-2 sm:px-4 lg:px-6 pb-12 sm:pb-16">
+        <HeroVideoCard initialJobs={initialJobs} className="w-full min-h-[var(--video-height)] lg:h-[var(--video-height)]" />
       </div>
     </section>
   );

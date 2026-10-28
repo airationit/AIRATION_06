@@ -28,6 +28,7 @@ import { Job } from "@/lib/jobs-data";
 import { siteConfig } from "@/config/site";
 import { formatRelativeTime } from "@/lib/html-utils";
 import { RichDescription } from "./rich-description";
+import { HiddenCompanyName } from "./hidden-company-name";
 import { Footer, InteractiveDots } from "@/components/shared";
 
 interface JobDetailContentProps {
@@ -98,7 +99,7 @@ export function JobDetailContent({ job, relatedJobs = [] }: JobDetailContentProp
           <span key={index}>
             {part}
             {index < parts.length - 1 && (
-              <span className="blur-[3px] select-none">{job.company}</span>
+              <HiddenCompanyName name={job.company} />
             )}
           </span>
         ))}
@@ -178,9 +179,7 @@ export function JobDetailContent({ job, relatedJobs = [] }: JobDetailContentProp
 
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2">
-                    <span className="text-xs font-medium text-muted-foreground truncate blur-[3px] select-none">
-                      {job.company}
-                    </span>
+                    <HiddenCompanyName name={job.company} className="text-xs font-medium text-muted-foreground" />
                     {job.isVerified && (
                       <span className="inline-flex items-center text-xs text-brand-600 dark:text-brand-400">
                         <CheckCircle2 className="h-3 w-3" />
@@ -267,7 +266,7 @@ export function JobDetailContent({ job, relatedJobs = [] }: JobDetailContentProp
           <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-5 sm:gap-6">
             <div className="flex items-start gap-3.5 sm:gap-5 flex-1 min-w-0">
               {/* Company Logo / Avatar */}
-              <Link href={`/company/${job.companyId || job.company}`} className="flex h-12 w-12 sm:h-16 sm:w-16 shrink-0 items-center justify-center rounded-xl sm:rounded-2xl border border-border/80 bg-muted/50 font-mono text-sm sm:text-base font-bold text-brand-600 dark:text-brand-400 shadow-2xs overflow-hidden hover:opacity-80 transition-opacity">
+              <div className="flex h-12 w-12 sm:h-16 sm:w-16 shrink-0 items-center justify-center rounded-xl sm:rounded-2xl border border-border/80 bg-muted/50 font-mono text-sm sm:text-base font-bold text-brand-600 dark:text-brand-400 shadow-2xs overflow-hidden hover:opacity-80 transition-opacity">
                 {job.companyLogo && !imgError ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
@@ -279,14 +278,12 @@ export function JobDetailContent({ job, relatedJobs = [] }: JobDetailContentProp
                 ) : (
                   <span>{initials}</span>
                 )}
-              </Link>
+              </div>
 
               {/* Title & Metadata */}
               <div className="min-w-0 flex-1">
                 <div className="flex flex-wrap items-center gap-2">
-                  <Link href={`/company/${job.companyId || job.company}`} className="text-xs sm:text-sm font-semibold text-foreground/90 hover:text-brand-600 dark:hover:text-brand-400 transition-colors blur-[3px] select-none pointer-events-none">
-                    {job.company}
-                  </Link>
+                  <HiddenCompanyName name={job.company} className="text-xs sm:text-sm font-semibold text-foreground/90" />
                   {job.isVerified && (
                     <span
                       title="Verified Employer"
@@ -435,7 +432,7 @@ export function JobDetailContent({ job, relatedJobs = [] }: JobDetailContentProp
                     content={job.description}
                     fallbackText={
                       <>
-                        We are hiring a {job.title} to join <span className="blur-[3px] select-none">{job.company}</span>. You will collaborate with the team on key objectives, deliver quality outcomes, and advance your career in a dynamic environment.
+                        We are hiring a {job.title} to join <HiddenCompanyName name={job.company} />. You will collaborate with the team on key objectives, deliver quality outcomes, and advance your career in a dynamic environment.
                       </>
                     }
                   />
@@ -570,9 +567,7 @@ export function JobDetailContent({ job, relatedJobs = [] }: JobDetailContentProp
                           <h4 className="text-sm font-semibold text-foreground group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors line-clamp-1">
                             {relJob.title}
                           </h4>
-                          <p className="mt-0.5 text-xs text-muted-foreground line-clamp-1 font-medium blur-[3px] select-none">
-                            {relJob.company}
-                          </p>
+                          <HiddenCompanyName name={relJob.company} className="mt-0.5 text-xs text-muted-foreground font-medium" />
                         </div>
                       </div>
 
@@ -644,7 +639,7 @@ export function JobDetailContent({ job, relatedJobs = [] }: JobDetailContentProp
               </div>
 
               <p className="text-xs text-muted-foreground leading-relaxed">
-                Connect directly with <span className="blur-[3px] select-none">{job.company}</span>&apos;s recruitment team. Download the mobile app and swipe to apply instantly.
+                Connect directly with <HiddenCompanyName name={job.company} />&apos;s recruitment team. Download the mobile app and swipe to apply instantly.
               </p>
 
               <a
@@ -670,7 +665,7 @@ export function JobDetailContent({ job, relatedJobs = [] }: JobDetailContentProp
               </span>
             </h2>
             <p className="text-xs sm:text-sm text-muted-foreground text-center">
-              Common questions about this {job.title} opening at <span className="blur-[3px] select-none">{job.company}</span>.
+              Common questions about this {job.title} opening at <HiddenCompanyName name={job.company} />.
             </p>
           </div>
 

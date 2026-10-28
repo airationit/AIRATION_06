@@ -669,28 +669,14 @@ export function SwipePlayground({ initialJobs }: SwipePlaygroundProps = {}) {
   return (
     <section
       id="playground"
-      className="relative w-full overflow-hidden py-10 sm:py-14 lg:py-18 bg-white dark:bg-slate-950"
+      className="section-blue-glow relative w-full overflow-hidden py-10 sm:py-14 lg:py-18 bg-white dark:bg-slate-950"
       aria-labelledby="playground-heading"
     >
-      {/* Background Radial Blue Glow in center part */}
+      {/* Subtle section divider; the shared CSS supplies the center glow. */}
       <div
         className="pointer-events-none absolute inset-0 -z-10 overflow-hidden"
         aria-hidden="true"
       >
-        <div
-          className="absolute inset-0 dark:hidden"
-          style={{
-            background:
-              "radial-gradient(ellipse 75% 65% at 50% 50%, rgba(191, 219, 254, 0.65) 0%, rgba(219, 234, 254, 0.3) 50%, transparent 75%)",
-          }}
-        />
-        <div
-          className="absolute inset-0 hidden dark:block"
-          style={{
-            background:
-              "radial-gradient(ellipse 75% 65% at 50% 50%, rgba(37, 99, 235, 0.2) 0%, rgba(30, 58, 138, 0.08) 50%, transparent 75%)",
-          }}
-        />
         <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-border/80 to-transparent" />
       </div>
 

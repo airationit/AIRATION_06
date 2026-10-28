@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import Link from "next/link";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import {
   Building2,
@@ -10,46 +9,40 @@ import {
   Handshake,
   Check,
   ArrowRight,
-  Loader2,
   Star,
   CalendarCheck,
   MapPin,
-  Briefcase,
-  Sparkles,
   X,
   Tag,
 } from "lucide-react";
 import { siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
-import { SwipePlayground } from "./swipe-playground";
 import { JobPostDemo } from "./job-post-demo";
-import { CandidateCTA } from "./candidate-cta";
-import { EmployerCTA } from "./employer-cta";
 import { PricingModal } from "./pricing-modal";
 
 const STEPS = [
   {
     n: "01",
     icon: Building2,
-    title: "Create Company Profile",
+    title: "Create your company profile",
     text: "Add your company name, logo, industry & culture.",
   },
   {
     n: "02",
     icon: SlidersHorizontal,
-    title: "Post Job & Set Filter",
+    title: "Post a job & set filters",
     text: "Post your role and choose how candidates match you.",
   },
   {
     n: "03",
     icon: UserCheck,
-    title: "Shortlist Candidates",
+    title: "Shortlist candidates",
     text: "Review swipes and shortlist your favourites in seconds.",
   },
   {
     n: "04",
     icon: Handshake,
-    title: "Interview & Hire",
+    title: "Interview & hire",
     text: "Schedule interviews and send the offer — all in-app.",
   },
 ];
@@ -63,7 +56,7 @@ const CANDIDATES = [
     location: "Bengaluru",
     match: 96,
     initials: "AS",
-    color: "from-blue-600 to-indigo-600",
+    color: "bg-blue-600",
   },
   {
     id: "c2",
@@ -73,7 +66,7 @@ const CANDIDATES = [
     location: "Mumbai",
     match: 92,
     initials: "RV",
-    color: "from-indigo-600 to-purple-600",
+    color: "bg-slate-700",
   },
   {
     id: "c3",
@@ -83,7 +76,7 @@ const CANDIDATES = [
     location: "Delhi NCR",
     match: 89,
     initials: "PN",
-    color: "from-emerald-600 to-teal-600",
+    color: "bg-emerald-600",
   },
 ];
 
@@ -96,7 +89,7 @@ const MiniProfile = () => (
       animate={{ opacity: 1, y: 0 }}
       className="flex items-center gap-2.5 rounded-xl border border-border/80 bg-background/90 p-2.5 shadow-2xs"
     >
-      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-blue-600 to-indigo-600 text-white font-black text-xs shadow-xs">
+      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-blue-600 text-white font-semibold text-xs">
         TN
       </div>
       <div className="min-w-0 flex-1">
@@ -112,7 +105,7 @@ const MiniProfile = () => (
       </span>
     </motion.div>
 
-    <div className="grid grid-cols-2 gap-2">
+    <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
       {[
         { l: "Team size", v: "120+ members" },
         { l: "Culture", v: "Fast & Hybrid" },
@@ -183,7 +176,7 @@ const MiniPostFilter = () => {
                 className={cn(
                   "shrink-0 w-4 h-4 rounded-full flex items-center justify-center",
                   on
-                    ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white"
+                    ? "bg-blue-600 text-white"
                     : "border-2 border-border"
                 )}
               >
@@ -209,7 +202,7 @@ const MiniShortlist = () => (
       >
         <div
           className={cn(
-            "w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center text-white text-[10px] sm:text-xs font-black shrink-0 bg-gradient-to-br",
+            "w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center text-white text-[10px] sm:text-xs font-semibold shrink-0",
             c.color
           )}
         >
@@ -219,7 +212,7 @@ const MiniShortlist = () => (
           <p className="text-xs font-bold text-foreground leading-tight truncate">
             {c.name}
           </p>
-          <p className="text-[10px] text-muted-foreground truncate flex items-center gap-1">
+          <p className="text-[10px] text-muted-foreground flex flex-wrap items-center gap-1">
             {c.role} · {c.exp}{" "}
             <span className="inline-flex items-center gap-0.5 text-muted-foreground">
               <MapPin size={8} />
@@ -254,13 +247,13 @@ const MiniHire = () => (
       initial={{ opacity: 0, scale: 0.96 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ delay: 0.1 }}
-      className="rounded-xl p-2.5 text-center text-white bg-gradient-to-r from-emerald-600 to-teal-600 shadow-sm"
+      className="rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-center text-emerald-800 dark:border-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300"
     >
       <div className="flex items-center justify-center gap-1.5">
         <Handshake size={15} />
-        <p className="text-xs sm:text-[13px] font-black">Offer Sent — Candidate Hired! 🎉</p>
+        <p className="text-xs sm:text-[13px] font-semibold">Offer sent. Your next hire is ready.</p>
       </div>
-      <p className="text-[10px] text-white/85 mt-0.5">
+      <p className="text-[10px] text-emerald-700 dark:text-emerald-400 mt-0.5">
         Ananya joins in 30 days · Match confirmed
       </p>
     </motion.div>
@@ -271,164 +264,53 @@ const MINI_COMPONENTS = [MiniProfile, MiniPostFilter, MiniShortlist, MiniHire];
 
 /* ---------- Interactive Progressive Recruiter Dashboard Mockup ---------- */
 
-function RecruiterDashboardMockup({
-  active,
-  onStepClick,
-}: {
+function RecruiterDashboardMockup({ active, onStepClick }: {
   active: number;
   onStepClick: (stepIndex: number) => void;
 }) {
-  const completed = Math.min(active, 4);
+  const reducedMotion = useReducedMotion();
 
   return (
-    <div className="w-full max-w-xl lg:max-w-none min-h-[580px] sm:min-h-[610px] lg:min-h-[640px] flex flex-col justify-between rounded-2xl sm:rounded-3xl bg-card/95 border border-border/80 shadow-2xl shadow-slate-950/15 dark:shadow-white/5 overflow-hidden backdrop-blur-md">
-      {/* Browser Window Chrome */}
-      <div className="flex items-center gap-2 px-5 py-3.5 border-b border-border/70 bg-muted/40 shrink-0 select-none">
-        <span className="w-3 h-3 rounded-full bg-rose-400/90" />
-        <span className="w-3 h-3 rounded-full bg-amber-400/90" />
-        <span className="w-3 h-3 rounded-full bg-emerald-400/90" />
-        <span className="ml-2.5 font-mono text-[11px] text-muted-foreground">
-          employer.hirance.com
-        </span>
-        <span className="ml-auto font-mono text-[11px] font-bold text-blue-600 dark:text-blue-400">
-          {completed}/4 done
-        </span>
+    <div className="w-full max-w-xl overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900 lg:max-w-none">
+      <div className="flex items-center gap-1.5 border-b border-border/70 bg-slate-50 px-4 py-4 sm:px-5 dark:bg-slate-900">
+        <span className="h-2 w-2 rounded-full bg-slate-300 dark:bg-slate-600" />
+        <span className="h-2 w-2 rounded-full bg-slate-300 dark:bg-slate-600" />
+        <span className="h-2 w-2 rounded-full bg-slate-300 dark:bg-slate-600" />
+        <span className="ml-2 text-[11px] text-muted-foreground sm:text-xs">employer.hirance.com</span>
+        <span className="ml-auto text-[11px] font-medium text-blue-600 dark:text-blue-400">{Math.min(active + 1, 4)} / 4</span>
       </div>
-
-      {/* Progress Line */}
-      <div className="h-1 bg-muted/70 w-full overflow-hidden shrink-0">
-        <motion.div
-          className="h-full bg-gradient-to-r from-blue-600 via-indigo-600 to-brand-500"
-          animate={{ width: `${(completed / 4) * 100}%` }}
-          transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-        />
+      <div className="h-1 bg-slate-100 dark:bg-slate-800" aria-hidden="true">
+        <motion.div className="h-full bg-blue-600" animate={{ width: active >= 4 ? "100%" : ((active + 1) / STEPS.length) * 100 + "%" }} transition={{ duration: reducedMotion ? 0 : 0.3 }} />
       </div>
-
-      {/* Steps Accordion View */}
-      <div className="p-4 sm:p-5 space-y-2.5 flex-1 flex flex-col justify-between">
-        {STEPS.map((s, i) => {
-          const isDone = i < active;
-          const isActive = i === active;
-          const Mini = MINI_COMPONENTS[i];
-
+      <div className="flex min-h-[540px] flex-col gap-2 p-3 sm:min-h-[560px] sm:gap-2.5 sm:p-5">
+        {STEPS.map((step, index) => {
+          const selected = active === index;
+          const done = index < active;
+          const Mini = MINI_COMPONENTS[index];
           return (
-            <div
-              key={s.n}
-              onClick={() => onStepClick(i)}
-              className={cn(
-                "rounded-xl sm:rounded-2xl border transition-colors duration-200 cursor-pointer overflow-hidden",
-                isActive
-                  ? "border-blue-500/70 bg-blue-50/40 dark:border-blue-500/50 dark:bg-blue-950/25 shadow-xs"
-                  : isDone
-                  ? "border-emerald-500/30 bg-emerald-50/20 dark:border-emerald-500/20 dark:bg-emerald-950/10"
-                  : "border-border/60 bg-card/60 hover:bg-muted/30"
-              )}
-            >
-              <div className="flex items-center gap-3 px-3.5 sm:px-4 py-2.5 sm:py-3">
-                {/* Status Indicator Icon */}
-                <div
-                  className={cn(
-                    "shrink-0 w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center text-white transition-colors",
-                    isDone
-                      ? "bg-emerald-500 shadow-xs"
-                      : isActive
-                      ? "bg-gradient-to-br from-blue-600 to-indigo-600 shadow-xs"
-                      : "bg-muted text-muted-foreground"
-                  )}
-                >
-                  <AnimatePresence mode="wait">
-                    {isDone ? (
-                      <motion.span
-                        key="check"
-                        initial={{ scale: 0, rotate: -20 }}
-                        animate={{ scale: 1, rotate: 0 }}
-                        className="flex items-center justify-center"
-                      >
-                        <Check size={16} strokeWidth={3} />
-                      </motion.span>
-                    ) : (
-                      <motion.span
-                        key="icon"
-                        className={isActive ? "text-white" : "text-muted-foreground"}
-                      >
-                        <s.icon size={16} />
-                      </motion.span>
-                    )}
-                  </AnimatePresence>
-                </div>
-
-                <div className="min-w-0 flex-1 text-left">
-                  <p className="text-[9px] font-extrabold uppercase tracking-widest text-muted-foreground">
-                    Step {s.n}
-                  </p>
-                  <p
-                    className={cn(
-                      "text-xs sm:text-sm font-bold leading-tight",
-                      isDone || isActive ? "text-foreground" : "text-muted-foreground"
-                    )}
-                  >
-                    {s.title}
-                  </p>
-                </div>
-
-                {/* Status Pill */}
-                {isDone ? (
-                  <motion.span
-                    initial={{ opacity: 0, x: 6 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    className="flex items-center gap-1 text-[10px] font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 rounded-full px-2.5 py-0.5"
-                  >
-                    <Check size={11} strokeWidth={3} /> Done
-                  </motion.span>
-                ) : isActive ? (
-                  <span className="flex items-center gap-1 text-[10px] font-bold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/60 rounded-full px-2.5 py-0.5">
-                    <Loader2 size={11} className="animate-spin" /> In progress
-                  </span>
-                ) : (
-                  <span className="text-[10px] font-medium text-muted-foreground/60">
-                    Pending
-                  </span>
-                )}
+            <div key={step.n} className={cn("overflow-hidden rounded-xl border transition-colors duration-200", selected ? "border-blue-200 bg-blue-50/40 dark:border-blue-800 dark:bg-blue-950/20" : "border-border/60 bg-transparent")}>
+              <button type="button" onClick={() => onStepClick(index)} aria-expanded={selected} aria-controls={"employer-step-" + index} className="flex min-h-16 w-full items-center gap-3 px-3 py-3 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-500 sm:px-4">
+                <span className={cn("flex h-8 w-8 shrink-0 items-center justify-center rounded-lg", selected ? "bg-blue-600 text-white" : done ? "bg-emerald-50 text-emerald-600 dark:bg-emerald-950/50 dark:text-emerald-400" : "bg-slate-100 text-slate-400 dark:bg-slate-800")}>
+                  {done ? <Check className="h-4 w-4" aria-hidden="true" /> : <step.icon className="h-4 w-4" aria-hidden="true" />}
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className="mb-0.5 block text-[10px] font-medium text-muted-foreground">Step {step.n}</span>
+                  <span className="block text-xs font-semibold leading-snug text-foreground sm:text-sm">{step.title}</span>
+                </span>
+                <span className={cn("text-[10px] font-medium", done ? "text-emerald-600 dark:text-emerald-400" : selected ? "text-blue-600 dark:text-blue-400" : "text-muted-foreground")}>
+                  {done ? "Done" : selected ? "In progress" : "Pending"}
+                </span>
+              </button>
+              <div id={"employer-step-" + index} hidden={!selected}>
+                {selected && <motion.div initial={reducedMotion ? false : { opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }} className="border-t border-blue-100 px-3 pb-4 pt-3 sm:px-4 dark:border-blue-900/60"><Mini /></motion.div>}
               </div>
-
-              {/* Expandable Mini Graphic when active */}
-              <AnimatePresence initial={false}>
-                {isActive && (
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: "auto", opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-                    className="px-3.5 sm:px-4 pb-3 pt-0.5 overflow-hidden"
-                  >
-                    <Mini />
-                  </motion.div>
-                )}
-              </AnimatePresence>
             </div>
           );
         })}
-
-        {/* 4 Steps Completed Banner */}
-        <AnimatePresence>
-          {active >= 4 && (
-            <motion.div
-              initial={{ opacity: 0, y: 6 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.25 }}
-              className="rounded-xl sm:rounded-2xl p-3 text-center text-white bg-gradient-to-r from-blue-600 to-indigo-600 shadow-md mt-auto"
-            >
-              <div className="flex items-center justify-center gap-1.5">
-                <Sparkles size={15} className="text-sky-200" />
-                <p className="text-xs sm:text-sm font-black">From profile to hire — done!</p>
-              </div>
-              <p className="text-[10px] sm:text-[11px] text-white/85 mt-0.5">
-                All 4 steps seamlessly managed inside Hirance.
-              </p>
-            </motion.div>
-          )}
-        </AnimatePresence>
+        {active >= 4 && <div className="mt-auto rounded-xl bg-blue-50 px-4 py-4 text-center dark:bg-blue-950/40">
+          <p className="text-sm font-semibold text-blue-600 dark:text-blue-400">From profile to hire.</p>
+          <p className="mt-1 text-xs text-muted-foreground">Your hiring journey, all in one place.</p>
+        </div>}
       </div>
     </div>
   );
@@ -441,15 +323,6 @@ export function WantToHire() {
   const [isDemoModalOpen, setIsDemoModalOpen] = useState(false);
   const [isPricingModalOpen, setIsPricingModalOpen] = useState(false);
   const reducedMotion = useReducedMotion();
-
-  // Auto-advance stepper every 3.5 seconds
-  useEffect(() => {
-    if (reducedMotion || isDemoModalOpen || isPricingModalOpen) return;
-    const interval = setInterval(() => {
-      setActive((prev) => (prev >= 4 ? 0 : prev + 1));
-    }, 3500);
-    return () => clearInterval(interval);
-  }, [reducedMotion, isDemoModalOpen, isPricingModalOpen]);
 
   // Handle escape key and body scroll locking for the demo modal
   useEffect(() => {
@@ -465,6 +338,14 @@ export function WantToHire() {
     };
   }, [isDemoModalOpen]);
 
+  useEffect(() => {
+    if (reducedMotion || isDemoModalOpen || isPricingModalOpen) return;
+    const timeout = setTimeout(() => {
+      setActive((previous) => previous >= STEPS.length ? 0 : previous + 1);
+    }, 3500);
+    return () => clearTimeout(timeout);
+  }, [active, reducedMotion, isDemoModalOpen, isPricingModalOpen]);
+
   const jumpToStep = (index: number) => {
     setActive(index);
   };
@@ -472,7 +353,7 @@ export function WantToHire() {
   return (
     <section
       id="want-to-hire"
-      className="relative w-full overflow-hidden pt-14 pb-12 sm:pt-18 sm:pb-16 lg:pt-24 lg:pb-20 flex items-center justify-center min-h-0 bg-white dark:bg-slate-950"
+      className="section-blue-glow relative w-full overflow-hidden pt-14 pb-12 sm:pt-18 sm:pb-16 lg:pt-24 lg:pb-20 flex items-center justify-center min-h-0 bg-white dark:bg-slate-950"
       aria-labelledby="want-to-hire-heading"
     >
       {/* Background Subtle Divider */}
@@ -480,7 +361,7 @@ export function WantToHire() {
         className="pointer-events-none absolute inset-0 -z-10 overflow-hidden"
         aria-hidden="true"
       >
-        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-border/80 to-transparent" />
+        <div className="absolute inset-x-0 top-0 h-px bg-border/70" />
       </div>
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full">
@@ -498,23 +379,6 @@ export function WantToHire() {
               onStepClick={jumpToStep}
             />
 
-            {/* Stepper Navigation Indicator Dots */}
-            <div className="flex items-center gap-2 mt-4 select-none">
-              {STEPS.map((_, i) => (
-                <button
-                  key={i}
-                  type="button"
-                  onClick={() => jumpToStep(i)}
-                  aria-label={`Jump to Step ${i + 1}`}
-                  className={cn(
-                    "h-1.5 rounded-full transition-all duration-300",
-                    i === Math.min(active, 3)
-                      ? "w-7 bg-blue-600 dark:bg-blue-400"
-                      : "w-2 bg-border hover:bg-muted-foreground/40"
-                  )}
-                />
-              ))}
-            </div>
           </motion.div>
 
           {/* Right Column: High-Impact Employer Content & Clickable Steps */}
@@ -549,45 +413,20 @@ export function WantToHire() {
               Built for employers: post any role in 60 seconds. Our match engine filters applicants in real time so you only talk to the best fits.
             </p>
 
-            {/* 4 Interactive Step Highlight Cards (2x2 Grid) */}
-            <div className="mt-6 sm:mt-8 grid grid-cols-1 sm:grid-cols-2 gap-3 w-full">
-              {STEPS.map((s, i) => {
-                const done = i < active;
-                const on = i === active;
-
+            {/* Step highlights stay in sync with the automatic walkthrough. */}
+            <div className="mt-6 grid w-full grid-cols-1 gap-3 sm:mt-8 sm:grid-cols-2" aria-label="Hiring process">
+              {STEPS.map((step, index) => {
+                const selected = active === index;
+                const done = index < active;
                 return (
-                  <button
-                    key={s.n}
-                    type="button"
-                    onClick={() => jumpToStep(i)}
-                    className={cn(
-                      "text-left rounded-xl p-3.5 border transition-all duration-200 hover:-translate-y-0.5",
-                      on
-                        ? "border-blue-500 bg-blue-50/60 dark:border-blue-500/50 dark:bg-blue-950/20 shadow-xs ring-1 ring-blue-500/20"
-                        : done
-                        ? "border-emerald-500/30 bg-emerald-50/30 dark:border-emerald-500/20 dark:bg-emerald-950/10"
-                        : "border-border/70 bg-card/60 hover:bg-muted/40"
-                    )}
-                  >
-                    <div className="flex items-center justify-between gap-2 mb-1">
-                      <span className="text-[10px] font-extrabold text-blue-600 dark:text-blue-400 font-mono">
-                        {s.n}
-                      </span>
-                      {done ? (
-                        <Check size={14} className="text-emerald-500" strokeWidth={3} />
-                      ) : (
-                        <s.icon
-                          size={14}
-                          className={cn(on ? "text-blue-600 dark:text-blue-400" : "text-muted-foreground")}
-                        />
-                      )}
-                    </div>
-                    <p className="text-sm font-semibold text-foreground leading-snug">
-                      {s.title}
-                    </p>
-                    <p className="text-[11px] text-muted-foreground mt-0.5 leading-relaxed line-clamp-2">
-                      {s.text}
-                    </p>
+                  <button key={step.n} type="button" onClick={() => jumpToStep(index)} aria-pressed={selected} aria-controls={"employer-step-" + index}
+                    className={cn("rounded-xl border p-4 text-left transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500", selected ? "border-blue-300 bg-blue-50/60 dark:border-blue-700 dark:bg-blue-950/25" : "border-border/70 bg-transparent hover:border-slate-300 hover:bg-slate-50 dark:hover:border-slate-600 dark:hover:bg-slate-900")}>
+                    <span className="mb-3 flex items-center justify-between gap-3">
+                      <span className={cn("text-xs font-semibold tabular-nums", selected ? "text-blue-600 dark:text-blue-400" : "text-muted-foreground")}>{step.n}</span>
+                      {done ? <Check className="h-4 w-4 text-emerald-600 dark:text-emerald-400" aria-hidden="true" /> : <step.icon className={cn("h-4 w-4", selected ? "text-blue-600 dark:text-blue-400" : "text-muted-foreground")} aria-hidden="true" />}
+                    </span>
+                    <span className="block text-sm font-semibold leading-snug text-foreground">{step.title}</span>
+                    <span className="mt-1.5 block text-xs leading-relaxed text-muted-foreground">{step.text}</span>
                   </button>
                 );
               })}

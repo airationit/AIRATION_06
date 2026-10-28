@@ -281,7 +281,7 @@ const AppIconCompanyCard = memo(function AppIconCompanyCard({
         suppressHydrationWarning
         className={cn(
           "relative flex items-center justify-center overflow-hidden select-none rounded-full bg-white dark:bg-slate-900",
-          "w-14 h-14 sm:w-16 sm:h-16 md:w-[72px] md:h-[72px] lg:w-[76px] lg:h-[76px]",
+          "h-11 w-11 sm:h-12 sm:w-12 md:h-14 md:w-14 lg:h-15 lg:w-15",
           "shadow-[0_4px_16px_rgba(0,0,0,0.06),0_1px_3px_rgba(0,0,0,0.03)] dark:shadow-[0_4px_16px_rgba(0,0,0,0.35)]",
           "transition-all duration-300 ease-out hover:scale-108 hover:shadow-[0_8px_24px_rgba(37,99,235,0.12)] active:scale-95"
         )}
@@ -294,7 +294,7 @@ const AppIconCompanyCard = memo(function AppIconCompanyCard({
           {brandIcon ? (
             brandIcon
           ) : hasLogo ? (
-            <div className="relative flex h-full w-full items-center justify-center overflow-hidden rounded-full p-2 sm:p-2.5">
+            <div className="relative flex h-full w-full items-center justify-center overflow-hidden rounded-full p-1.5 sm:p-2">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={logoUrl}
@@ -306,7 +306,7 @@ const AppIconCompanyCard = memo(function AppIconCompanyCard({
                 suppressHydrationWarning
                 className={cn(
                   "object-contain select-none transition-transform duration-200",
-                  "max-h-8 max-w-8 sm:max-h-9 sm:max-w-9 md:max-h-10 md:max-w-10 lg:max-h-11 lg:max-w-11"
+                  "max-h-7 max-w-7 sm:max-h-8 sm:max-w-8 md:max-h-9 md:max-w-9"
                 )}
                 onError={() => setFailed(true)}
               />
@@ -320,7 +320,7 @@ const AppIconCompanyCard = memo(function AppIconCompanyCard({
                 fallbackGradient
               )}
             >
-              <span className="text-xs sm:text-[13.5px] md:text-sm font-bold tracking-tight text-white drop-shadow-xs">
+              <span className="text-[11px] sm:text-xs md:text-[13px] font-bold tracking-tight text-white drop-shadow-xs">
                 {initials(name)}
               </span>
             </div>
@@ -362,7 +362,7 @@ function ContinuousMarqueeRow({
     >
       <div
         suppressHydrationWarning
-        className="flex shrink-0 gap-3.5 sm:gap-4 md:gap-5 animate-marquee will-change-transform items-center"
+        className="flex shrink-0 gap-3 sm:gap-3.5 md:gap-4 animate-marquee will-change-transform items-center"
         style={
           {
             "--marquee-duration": speed,
@@ -503,7 +503,7 @@ export function TrustedBy({ initialCompanies }: TrustedByProps) {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-48px" }}
           transition={{ duration: 0.6, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
-          className="space-y-3 sm:space-y-3.5 md:space-y-4 marquee-mask py-2"
+          className="space-y-2 sm:space-y-2.5 md:space-y-3 marquee-mask py-2"
         >
           {/* Row 1: Leftward continuous scroll */}
           <ContinuousMarqueeRow

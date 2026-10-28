@@ -83,7 +83,7 @@ export function Navbar({ className }: NavbarProps) {
           "w-full transition-all duration-300 ease-out",
           "relative z-50 py-4 sm:py-5",
           isHome
-            ? "border-b border-transparent bg-transparent"
+            ? "border-b border-transparent bg-transparent shadow-none dark:bg-transparent"
             : "border-b border-border/50 bg-white shadow-2xs dark:border-slate-800 dark:bg-slate-950",
           "px-6 sm:px-10 lg:px-16 xl:px-24",
           className
@@ -358,7 +358,9 @@ export function Navbar({ className }: NavbarProps) {
           "focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-brand-500/40",
           scrolled || menuOpen
             ? "border-border/50 bg-white/95 shadow-[0_10px_36px_-18px_rgba(15,23,42,0.22)] backdrop-blur-md dark:bg-slate-900/95"
-            : "border-border/40 bg-white/90 hover:bg-muted dark:bg-slate-900/90"
+            : isHome
+              ? "border-transparent bg-transparent hover:bg-white/30 dark:hover:bg-slate-900/30"
+              : "border-border/40 bg-white/90 hover:bg-muted dark:bg-slate-900/90"
         )}
       >
         {menuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
