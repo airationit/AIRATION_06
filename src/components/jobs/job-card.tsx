@@ -104,12 +104,12 @@ export function JobCard({ job, index = 0 }: JobCardProps) {
                 {companySlug ? (
                   <Link
                     href={`/company/${companySlug}`}
-                    className="truncate max-w-[200px] hover:text-brand-600 dark:hover:text-brand-400 transition-colors"
+                    className="truncate max-w-[200px] hover:text-brand-600 dark:hover:text-brand-400 transition-colors blur-[3px] select-none pointer-events-none"
                   >
                     {job.company}
                   </Link>
                 ) : (
-                  <span className="truncate max-w-[200px]">{job.company}</span>
+                  <span className="truncate max-w-[200px] blur-[3px] select-none">{job.company}</span>
                 )}
                 {job.isVerified && (
                   <CheckCircle2

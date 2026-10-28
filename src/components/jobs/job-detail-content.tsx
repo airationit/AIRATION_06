@@ -85,6 +85,64 @@ export function JobDetailContent({ job, relatedJobs = [] }: JobDetailContentProp
   const shareUrl = `${siteConfig.url}/jobs/view/${job.slug}`;
   const shareText = `Check out this opening for ${job.title} at ${job.company} on Hirance!`;
 
+  // Helper function to blur company name in text
+  const blurCompanyInText = (text: string) => {
+    const companyPattern = new RegExp(`\\b${job.company.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'gi');
+    const parts = text.split(companyPattern);
+    
+    if (parts.length === 1) return text; // No company name found
+    
+    return (
+      <>
+        {parts.map((part, index) => (
+          <span key={index}>
+            {part}
+            {index < parts.length - 1 && (
+              <span className="blur-[3px] select-none">{job.company}</span>
+            )}
+          </span>
+        ))}
+      </>
+    );
+  };
+
+  const faqs = [
+    // 4 English FAQs (1-4)
+    {
+      q: `What is the eligibility criteria to apply for this ${job.title} job in ${job.cityName || job.location || "Lucknow"}?`,
+      a: `Candidates must have ${job.educationLevel || "Graduation / Diploma or equivalent"} qualification and ${job.experience || "relevant"} experience for this ${job.title} job in ${job.cityName || job.location || "Lucknow"}.`,
+    },
+    {
+      q: `How much salary can I expect for this ${job.title} job at ${job.company}?`,
+      a: `You can expect a monthly salary range of ${job.salaryRange.replace(/^₹\s*/, "₹")} for this ${job.title} vacancy at ${job.company} in ${job.cityName || job.location || "Lucknow"}.`,
+    },
+    {
+      q: `Is this ${job.title} vacancy in ${job.cityName || job.location || "Lucknow"} a work from home job?`,
+      a: job.workMode && job.workMode.toLowerCase().includes("home")
+        ? `Yes, this is a remote / work from home ${job.title} job at ${job.company}.`
+        : `No, this is an on-site ${job.workMode || "Work from Office"} job based in ${job.location || "Lucknow"}.`,
+    },
+    {
+      q: `How do I apply for this ${job.title} job at ${job.company}?`,
+      a: `Click "Swipe to Apply" on Hirance, download the mobile app, and apply directly to ${job.company}'s recruitment team for ${job.title} jobs in ${job.cityName || job.location || "Lucknow"}.`,
+    },
+    // 3 Hinglish FAQs (5-7 for SEO)
+    {
+      q: `Kya is ${job.title} job in ${job.cityName || job.location || "Lucknow"} ke liye freshers apply kar sakte hain?`,
+      a: job.experience && (job.experience.toLowerCase().includes("fresher") || job.experience.toLowerCase().includes("0-1"))
+        ? `Haan, ${job.company} mein is ${job.title} job in ${job.cityName || job.location || "Lucknow"} ke liye freshers bhi apply kar sakte hain.`
+        : `Is role ke liye minimum ${job.experience || "relevant experience"} required hai. Detailed eligibility ke liye candidate profile check karein.`,
+    },
+    {
+      q: `${job.company} mein is ${job.title} job in ${job.cityName || job.location || "Lucknow"} ki exact location kya hai?`,
+      a: `Is ${job.title} job in ${job.cityName || job.location || "Lucknow"} ki official hiring location ${job.location || "Lucknow"} hai. Direct HR connection ke liye Hirance app se apply karein.`,
+    },
+    {
+      q: `Hirance app par ${job.title} jobs in ${job.cityName || job.location || "Lucknow"} ke liye apply karne ka koi charge hai kya?`,
+      a: `Nahi, Hirance app par ${job.title} jobs in ${job.cityName || job.location || "Lucknow"} ke liye apply karna 100% free hai. Aap direct employer hiring team se bina kisi middleman ke connect kar sakte hain.`,
+    },
+  ];
+
   return (
     <main className="relative flex min-h-dvh flex-col overflow-x-clip bg-background text-foreground">
       {/* Background Interactive Dots Canvas */}
@@ -120,7 +178,7 @@ export function JobDetailContent({ job, relatedJobs = [] }: JobDetailContentProp
 
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2">
-                    <span className="text-xs font-medium text-muted-foreground truncate">
+                    <span className="text-xs font-medium text-muted-foreground truncate blur-[3px] select-none">
                       {job.company}
                     </span>
                     {job.isVerified && (
@@ -226,7 +284,7 @@ export function JobDetailContent({ job, relatedJobs = [] }: JobDetailContentProp
               {/* Title & Metadata */}
               <div className="min-w-0 flex-1">
                 <div className="flex flex-wrap items-center gap-2">
-                  <Link href={`/company/${job.companyId || job.company}`} className="text-xs sm:text-sm font-semibold text-foreground/90 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">
+                  <Link href={`/company/${job.companyId || job.company}`} className="text-xs sm:text-sm font-semibold text-foreground/90 hover:text-brand-600 dark:hover:text-brand-400 transition-colors blur-[3px] select-none pointer-events-none">
                     {job.company}
                   </Link>
                   {job.isVerified && (
@@ -375,7 +433,11 @@ export function JobDetailContent({ job, relatedJobs = [] }: JobDetailContentProp
                 <div className="mt-3 sm:mt-4">
                   <RichDescription
                     content={job.description}
-                    fallbackText={`We are hiring a ${job.title} to join ${job.company}. You will collaborate with the team on key objectives, deliver quality outcomes, and advance your career in a dynamic environment.`}
+                    fallbackText={
+                      <>
+                        We are hiring a {job.title} to join <span className="blur-[3px] select-none">{job.company}</span>. You will collaborate with the team on key objectives, deliver quality outcomes, and advance your career in a dynamic environment.
+                      </>
+                    }
                   />
                 </div>
               </section>
@@ -508,7 +570,7 @@ export function JobDetailContent({ job, relatedJobs = [] }: JobDetailContentProp
                           <h4 className="text-sm font-semibold text-foreground group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors line-clamp-1">
                             {relJob.title}
                           </h4>
-                          <p className="mt-0.5 text-xs text-muted-foreground line-clamp-1 font-medium">
+                          <p className="mt-0.5 text-xs text-muted-foreground line-clamp-1 font-medium blur-[3px] select-none">
                             {relJob.company}
                           </p>
                         </div>
@@ -582,7 +644,7 @@ export function JobDetailContent({ job, relatedJobs = [] }: JobDetailContentProp
               </div>
 
               <p className="text-xs text-muted-foreground leading-relaxed">
-                Connect directly with {job.company}&apos;s recruitment team. Download the mobile app and swipe to apply instantly.
+                Connect directly with <span className="blur-[3px] select-none">{job.company}</span>&apos;s recruitment team. Download the mobile app and swipe to apply instantly.
               </p>
 
               <a
@@ -608,47 +670,12 @@ export function JobDetailContent({ job, relatedJobs = [] }: JobDetailContentProp
               </span>
             </h2>
             <p className="text-xs sm:text-sm text-muted-foreground text-center">
-              Common questions about this {job.title} opening at {job.company}.
+              Common questions about this {job.title} opening at <span className="blur-[3px] select-none">{job.company}</span>.
             </p>
           </div>
 
           <div className="rounded-2xl border border-border/80 bg-card p-6 sm:p-8 shadow-2xs divide-y divide-border/60">
-            {[
-              // 4 English FAQs (1-4)
-              {
-                q: `What is the eligibility criteria to apply for this ${job.title} job in ${job.cityName || job.location || "Lucknow"}?`,
-                a: `Candidates must have ${job.educationLevel || "Graduation / Diploma or equivalent"} qualification and ${job.experience || "relevant"} experience for this ${job.title} job in ${job.cityName || job.location || "Lucknow"}.`,
-              },
-              {
-                q: `How much salary can I expect for this ${job.title} job at ${job.company}?`,
-                a: `You can expect a monthly salary range of ${job.salaryRange.replace(/^₹\s*/, "₹")} for this ${job.title} vacancy at ${job.company} in ${job.cityName || job.location || "Lucknow"}.`,
-              },
-              {
-                q: `Is this ${job.title} vacancy in ${job.cityName || job.location || "Lucknow"} a work from home job?`,
-                a: job.workMode && job.workMode.toLowerCase().includes("home")
-                  ? `Yes, this is a remote / work from home ${job.title} job at ${job.company}.`
-                  : `No, this is an on-site ${job.workMode || "Work from Office"} job based in ${job.location || "Lucknow"}.`,
-              },
-              {
-                q: `How do I apply for this ${job.title} job at ${job.company}?`,
-                a: `Click "Swipe to Apply" on Hirance, download the mobile app, and apply directly to ${job.company}'s recruitment team for ${job.title} jobs in ${job.cityName || job.location || "Lucknow"}.`,
-              },
-              // 3 Hinglish FAQs (5-7 for SEO)
-              {
-                q: `Kya is ${job.title} job in ${job.cityName || job.location || "Lucknow"} ke liye freshers apply kar sakte hain?`,
-                a: job.experience && (job.experience.toLowerCase().includes("fresher") || job.experience.toLowerCase().includes("0-1"))
-                  ? `Haan, ${job.company} mein is ${job.title} job in ${job.cityName || job.location || "Lucknow"} ke liye freshers bhi apply kar sakte hain.`
-                  : `Is role ke liye minimum ${job.experience || "relevant experience"} required hai. Detailed eligibility ke liye candidate profile check karein.`,
-              },
-              {
-                q: `${job.company} mein is ${job.title} job in ${job.cityName || job.location || "Lucknow"} ki exact location kya hai?`,
-                a: `Is ${job.title} job in ${job.cityName || job.location || "Lucknow"} ki official hiring location ${job.location || "Lucknow"} hai. Direct HR connection ke liye Hirance app se apply karein.`,
-              },
-              {
-                q: `Hirance app par ${job.title} jobs in ${job.cityName || job.location || "Lucknow"} ke liye apply karne ka koi charge hai kya?`,
-                a: `Nahi, Hirance app par ${job.title} jobs in ${job.cityName || job.location || "Lucknow"} ke liye apply karna 100% free hai. Aap direct employer hiring team se bina kisi middleman ke connect kar sakte hain.`,
-              },
-            ].map((faq, idx) => {
+            {faqs.map((faq, idx) => {
               const isOpen = openFaq === idx;
               return (
                 <div key={idx} className="py-3 sm:py-3.5 first:pt-0 last:pb-0">
@@ -660,7 +687,7 @@ export function JobDetailContent({ job, relatedJobs = [] }: JobDetailContentProp
                     className="flex w-full items-start justify-between gap-4 text-left group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-lg py-1"
                   >
                     <span className="text-sm font-medium text-foreground group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors leading-snug">
-                      {faq.q}
+                      {blurCompanyInText(faq.q)}
                     </span>
                     <span
                       className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full transition-all duration-200 ${isOpen
@@ -683,7 +710,7 @@ export function JobDetailContent({ job, relatedJobs = [] }: JobDetailContentProp
                         className="overflow-hidden"
                       >
                         <p className="pt-2 pb-1 text-sm leading-relaxed text-muted-foreground">
-                          {faq.a}
+                          {blurCompanyInText(faq.a)}
                         </p>
                       </motion.div>
                     )}

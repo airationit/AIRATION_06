@@ -536,16 +536,16 @@ export function WantToHire() {
 
             <h2
               id="want-to-hire-heading"
-              className="text-balance text-2xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-3xl md:text-4xl lg:text-5xl leading-tight"
+              className="text-balance text-2xl font-semibold tracking-tight text-slate-900 dark:text-white sm:text-3xl md:text-4xl lg:text-5xl leading-tight"
             >
-              Post a Job. Let{" "}
+              Post a Job. {" "}
               <span className="italic font-medium">
-                Candidates Come to You.
+                Let Candidates Come to You.
               </span>
             </h2>
 
             {/* Subtext */}
-            <p className="mt-3.5 max-w-xl text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
+            <p className="mt-3.5 max-w-xl text-pretty text-base leading-relaxed text-muted-foreground">
               Built for employers: post any role in 60 seconds. Our match engine filters applicants in real time so you only talk to the best fits.
             </p>
 
@@ -582,10 +582,10 @@ export function WantToHire() {
                         />
                       )}
                     </div>
-                    <p className="text-xs font-bold text-foreground leading-snug">
+                    <p className="text-sm font-semibold text-foreground leading-snug">
                       {s.title}
                     </p>
-                    <p className="text-[10.5px] text-muted-foreground mt-0.5 leading-relaxed line-clamp-2">
+                    <p className="text-[11px] text-muted-foreground mt-0.5 leading-relaxed line-clamp-2">
                       {s.text}
                     </p>
                   </button>
@@ -603,20 +603,24 @@ export function WantToHire() {
                 duration: 0.5,
                 ease: [0.16, 1, 0.3, 1],
               }}
-              className="relative mt-6 sm:mt-8 w-full overflow-hidden rounded-2xl sm:rounded-3xl border border-blue-100/90 dark:border-blue-900/40 bg-gradient-to-br from-blue-50/80 via-indigo-50/30 to-background dark:from-blue-950/30 dark:via-indigo-950/20 dark:to-card p-6 sm:p-7 lg:p-8 text-left shadow-lg shadow-blue-500/5 dark:shadow-none backdrop-blur-sm"
+              style={{
+                backgroundColor: '#F8FAFF',
+                borderColor: '#BBCFFB',
+              }}
+              className="relative mt-6 sm:mt-8 w-full overflow-hidden rounded-2xl sm:rounded-3xl border dark:border-slate-800/60 dark:bg-slate-900/20 p-6 sm:p-7 lg:p-8 text-left shadow-sm backdrop-blur-sm"
             >
               {/* Subtle ambient gradient shimmer glow in background */}
               <div
-                className="pointer-events-none absolute -right-10 -bottom-10 h-40 w-40 rounded-full bg-blue-500/10 dark:bg-blue-500/15 blur-3xl"
+                className="pointer-events-none absolute -right-10 -bottom-10 h-40 w-40 rounded-full bg-slate-200/30 dark:bg-slate-700/20 blur-3xl"
                 aria-hidden="true"
               />
               <div
-                className="pointer-events-none absolute -left-10 -top-10 h-32 w-32 rounded-full bg-indigo-500/10 dark:bg-indigo-500/15 blur-2xl"
+                className="pointer-events-none absolute -left-10 -top-10 h-32 w-32 rounded-full bg-slate-200/30 dark:bg-slate-700/20 blur-2xl"
                 aria-hidden="true"
               />
 
               <div className="relative z-10">
-                <h3 className="text-xl sm:text-2xl font-extrabold tracking-tight text-foreground leading-tight">
+                <h3 className="text-[20px] font-semibold tracking-tight text-foreground leading-tight">
                   Post Any Job in 1 Minute.
                 </h3>
                 <p className="mt-1.5 text-sm sm:text-base text-muted-foreground leading-relaxed">
@@ -631,7 +635,7 @@ export function WantToHire() {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label="Post a Job on Hirance employer portal"
-                    className="group inline-flex items-center justify-center gap-2 rounded-full bg-[#0077c8] hover:bg-[#0066ad] dark:bg-brand-600 dark:hover:bg-brand-500 px-6 sm:px-7 py-3 text-sm sm:text-base font-semibold text-white shadow-md shadow-[#0077c8]/25 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-brand-500/40"
+                    className="group inline-flex items-center justify-center gap-2 rounded-full bg-brand-600 hover:bg-brand-500 dark:bg-brand-600 dark:hover:bg-brand-500 px-6 sm:px-7 py-3 text-sm sm:text-base font-semibold text-white shadow-md shadow-brand-500/25 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-brand-500/40"
                   >
                     <span>Post a Job</span>
                     <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />

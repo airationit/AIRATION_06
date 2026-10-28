@@ -69,13 +69,18 @@ export async function fetchJobDetail(
   id: string,
   options?: { revalidate?: number | false }
 ): Promise<JobDetail | null> {
+  console.log('[fetchJobDetail] Fetching job ID:', id);
+  console.log('[fetchJobDetail] API URL:', `${process.env.NEXT_PUBLIC_API_URL || 'https://api.hirance.com'}/api/v1/jobs/${id}/`);
+  
   try {
     const res = await apiClient<ApiResponse<JobDetail>>(`/api/v1/jobs/${id}/`, {
       revalidate: options?.revalidate ?? 120,
     });
+    console.log('[fetchJobDetail] Response received:', res ? 'Data exists' : 'No data');
+    console.log('[fetchJobDetail] Response data:', JSON.stringify(res, null, 2));
     return res.data || null;
   } catch (error) {
-    console.error(`fetchJobDetail error for ID ${id}:`, error);
+    console.error(`[fetchJobDetail] Error for ID ${id}:`, error);
     return null;
   }
 }

@@ -240,7 +240,7 @@ export default function CompanyContent({
         <p className="text-xs text-slate-500 mb-4">
           Finding active company opportunities for you
         </p>
-        <Link href="/companies" className="text-xs font-semibold text-blue-600 hover:underline">
+        <Link href="/jobs" className="text-xs font-semibold text-blue-600 hover:underline">
           Click here if not redirected automatically
         </Link>
       </main>
@@ -296,7 +296,7 @@ export default function CompanyContent({
         <div className="text-xs text-slate-500 mb-6 flex items-center gap-2">
           <Link href="/" className="hover:text-blue-600 transition-colors">Home</Link>
           <span>›</span>
-          <Link href="/companies" className="hover:text-blue-600 transition-colors">Top Companies</Link>
+          <Link href="/jobs" className="hover:text-blue-600 transition-colors">Jobs</Link>
           <span>›</span>
           <span className="font-semibold text-slate-700">{company.company_name} Overview</span>
         </div>

@@ -488,10 +488,10 @@ export function TrustedBy({ initialCompanies }: TrustedByProps) {
           </p>
           <div className="mt-3.5 flex items-center justify-center">
             <Link
-              href="/companies"
+              href="/jobs"
               className="group inline-flex items-center gap-1.5 text-xs sm:text-[13.5px] font-semibold text-[#2563eb] hover:text-[#1d4ed8] dark:text-blue-400 dark:hover:text-blue-300 transition-colors"
             >
-              <span>Explore Top Companies</span>
+              <span>Explore All Jobs</span>
               <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" />
             </Link>
           </div>
