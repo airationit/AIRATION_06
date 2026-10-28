@@ -119,11 +119,21 @@ export function JobDetailContent({ job, relatedJobs = [] }: JobDetailContentProp
                 </div>
 
                 <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-medium text-muted-foreground truncate">
+                      {job.company}
+                    </span>
+                    {job.isVerified && (
+                      <span className="inline-flex items-center text-xs text-brand-600 dark:text-brand-400">
+                        <CheckCircle2 className="h-3 w-3" />
+                      </span>
+                    )}
+                  </div>
                   <h3 className="text-sm sm:text-base font-semibold text-foreground truncate leading-tight">
                     {job.title}
                   </h3>
                   {job.department && (
-                    <p className="text-[11px] text-muted-foreground truncate">
+                    <p className="text-[11px] text-muted-foreground truncate hidden sm:block">
                       {job.department}
                     </p>
                   )}
@@ -199,7 +209,7 @@ export function JobDetailContent({ job, relatedJobs = [] }: JobDetailContentProp
           <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-5 sm:gap-6">
             <div className="flex items-start gap-3.5 sm:gap-5 flex-1 min-w-0">
               {/* Company Logo / Avatar */}
-              <div className="flex h-12 w-12 sm:h-16 sm:w-16 shrink-0 items-center justify-center rounded-xl sm:rounded-2xl border border-border/80 bg-muted/50 font-mono text-sm sm:text-base font-bold text-brand-600 dark:text-brand-400 shadow-2xs overflow-hidden">
+              <Link href={`/company/${job.companyId || job.company}`} className="flex h-12 w-12 sm:h-16 sm:w-16 shrink-0 items-center justify-center rounded-xl sm:rounded-2xl border border-border/80 bg-muted/50 font-mono text-sm sm:text-base font-bold text-brand-600 dark:text-brand-400 shadow-2xs overflow-hidden hover:opacity-80 transition-opacity">
                 {job.companyLogo && !imgError ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
@@ -211,11 +221,27 @@ export function JobDetailContent({ job, relatedJobs = [] }: JobDetailContentProp
                 ) : (
                   <span>{initials}</span>
                 )}
-              </div>
+              </Link>
 
               {/* Title & Metadata */}
               <div className="min-w-0 flex-1">
-                <h1 className="text-xl font-semibold tracking-tight text-foreground sm:text-3xl lg:text-2xl leading-tight break-words [overflow-wrap:anywhere]">
+                <div className="flex flex-wrap items-center gap-2">
+                  <Link href={`/company/${job.companyId || job.company}`} className="text-xs sm:text-sm font-semibold text-foreground/90 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">
+                    {job.company}
+                  </Link>
+                  {job.isVerified && (
+                    <span
+                      title="Verified Employer"
+                      className="inline-flex items-center gap-1 text-xs font-medium text-brand-600 dark:text-brand-400"
+                    >
+                      <CheckCircle2 className="h-3.5 w-3.5" />
+                      <span className="text-[11px]">Verified</span>
+                    </span>
+                  )}
+
+                </div>
+
+                <h1 className="mt-1 text-xl font-semibold tracking-tight text-foreground sm:text-3xl lg:text-2xl leading-tight break-words [overflow-wrap:anywhere]">
                   {job.title}
                 </h1>
 
@@ -223,16 +249,6 @@ export function JobDetailContent({ job, relatedJobs = [] }: JobDetailContentProp
                   <p className="mt-1 text-xs sm:text-sm text-muted-foreground">
                     {job.department}
                   </p>
-                )}
-
-                {job.isVerified && (
-                  <span
-                    title="Verified Employer"
-                    className="inline-flex items-center gap-1 text-xs font-medium text-brand-600 dark:text-brand-400 mt-1.5"
-                  >
-                    <CheckCircle2 className="h-3.5 w-3.5" />
-                    <span className="text-[11px]">Verified</span>
-                  </span>
                 )}
               </div>
             </div>
@@ -489,9 +505,12 @@ export function JobDetailContent({ job, relatedJobs = [] }: JobDetailContentProp
                           )}
                         </div>
                         <div className="min-w-0 flex-1">
-                          <h4 className="text-sm font-semibold text-foreground group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors line-clamp-2">
+                          <h4 className="text-sm font-semibold text-foreground group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors line-clamp-1">
                             {relJob.title}
                           </h4>
+                          <p className="mt-0.5 text-xs text-muted-foreground line-clamp-1 font-medium">
+                            {relJob.company}
+                          </p>
                         </div>
                       </div>
 

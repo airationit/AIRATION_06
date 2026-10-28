@@ -59,6 +59,7 @@ const COLS: FooterColumn[] = [
     title: "Candidates",
     links: [
       { label: "Find Jobs", href: "/jobs" },
+      { label: "Top Companies", href: "/companies" },
       { label: "Download App", href: siteConfig.links.playStore },
       { label: "Candidate Feedback", href: "/feedback?role=candidate" },
       { label: "Mobile Privacy Policy", href: "/mobile-privacy-policy" },
