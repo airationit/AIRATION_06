@@ -36,12 +36,13 @@ export async function apiClient<T>(
   const { params, timeoutMs = 15000, revalidate = 60, headers = {}, signal, ...fetchOptions } = options;
   const queryString = buildQueryString(params);
 
+  const isServer = typeof window === "undefined";
+
   // Normalize endpoint URL
   const cleanEndpoint = endpoint.startsWith("/") ? endpoint : `/${endpoint}`;
+  // Use BASE_URL (defaults to process.env.NEXT_PUBLIC_API_URL || https://api.hirance.com)
   const effectiveBaseUrl = BASE_URL;
   const fullUrl = `${effectiveBaseUrl}${cleanEndpoint}${queryString}`;
-
-  const isServer = typeof window === "undefined";
 
   let controller: AbortController | null = null;
   let timeoutId: NodeJS.Timeout | null = null;
@@ -76,21 +77,30 @@ export async function apiClient<T>(
     const res = await fetch(fullUrl, fetchInit);
     if (timeoutId) clearTimeout(timeoutId);
 
+    const text = await res.text();
+
     if (!res.ok) {
       let serverErrorMsg = `API Error: ${res.status} ${res.statusText} at ${cleanEndpoint}`;
       try {
-        const errorJson = (await res.json()) as Record<string, unknown>;
-        if (errorJson && typeof errorJson === "object" && "message" in errorJson) {
-          serverErrorMsg = String(errorJson.message);
+        const errorJson = JSON.parse(text) as Record<string, unknown>;
+        if (errorJson && typeof errorJson === "object") {
+          if ("message" in errorJson) {
+            serverErrorMsg = String(errorJson.message);
+          } else if ("detail" in errorJson) {
+            serverErrorMsg = String(errorJson.detail);
+          }
         }
       } catch {
-        // Ignore json parsing error for non-JSON response bodies
+        // Non-JSON error body (e.g. HTML 502/404)
       }
       throw new Error(serverErrorMsg);
     }
 
-    const json = (await res.json()) as T;
-    return json;
+    try {
+      return JSON.parse(text) as T;
+    } catch {
+      throw new Error(`Invalid JSON response from ${cleanEndpoint}`);
+    }
   } catch (error) {
     if (timeoutId) clearTimeout(timeoutId);
     if (error instanceof Error && (error.name === "AbortError" || error.message.includes("aborted"))) {

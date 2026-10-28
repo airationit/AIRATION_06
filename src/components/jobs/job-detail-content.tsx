@@ -29,6 +29,7 @@ import { siteConfig } from "@/config/site";
 import { formatRelativeTime } from "@/lib/html-utils";
 import { generateCompanySlug } from "@/lib/api/companies";
 import { RichDescription } from "./rich-description";
+import { HiddenCompanyName } from "./hidden-company-name";
 import { Footer, InteractiveDots } from "@/components/shared";
 
 interface JobDetailContentProps {
@@ -88,6 +89,64 @@ export function JobDetailContent({ job, relatedJobs = [] }: JobDetailContentProp
   const shareUrl = `${siteConfig.url}/jobs/view/${job.slug}`;
   const shareText = `Check out this opening for ${job.title} at ${job.company} on Hirance!`;
 
+  // Helper function to blur company name in text
+  const blurCompanyInText = (text: string) => {
+    const companyPattern = new RegExp(`\\b${job.company.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'gi');
+    const parts = text.split(companyPattern);
+    
+    if (parts.length === 1) return text; // No company name found
+    
+    return (
+      <>
+        {parts.map((part, index) => (
+          <span key={index}>
+            {part}
+            {index < parts.length - 1 && (
+              <HiddenCompanyName name={job.company} />
+            )}
+          </span>
+        ))}
+      </>
+    );
+  };
+
+  const faqs = [
+    // 4 English FAQs (1-4)
+    {
+      q: `What is the eligibility criteria to apply for this ${job.title} job in ${job.cityName || job.location || "Lucknow"}?`,
+      a: `Candidates must have ${job.educationLevel || "Graduation / Diploma or equivalent"} qualification and ${job.experience || "relevant"} experience for this ${job.title} job in ${job.cityName || job.location || "Lucknow"}.`,
+    },
+    {
+      q: `How much salary can I expect for this ${job.title} job at ${job.company}?`,
+      a: `You can expect a monthly salary range of ${job.salaryRange.replace(/^₹\s*/, "₹")} for this ${job.title} vacancy at ${job.company} in ${job.cityName || job.location || "Lucknow"}.`,
+    },
+    {
+      q: `Is this ${job.title} vacancy in ${job.cityName || job.location || "Lucknow"} a work from home job?`,
+      a: job.workMode && job.workMode.toLowerCase().includes("home")
+        ? `Yes, this is a remote / work from home ${job.title} job at ${job.company}.`
+        : `No, this is an on-site ${job.workMode || "Work from Office"} job based in ${job.location || "Lucknow"}.`,
+    },
+    {
+      q: `How do I apply for this ${job.title} job at ${job.company}?`,
+      a: `Click "Swipe to Apply" on Hirance, download the mobile app, and apply directly to ${job.company}'s recruitment team for ${job.title} jobs in ${job.cityName || job.location || "Lucknow"}.`,
+    },
+    // 3 Hinglish FAQs (5-7 for SEO)
+    {
+      q: `Kya is ${job.title} job in ${job.cityName || job.location || "Lucknow"} ke liye freshers apply kar sakte hain?`,
+      a: job.experience && (job.experience.toLowerCase().includes("fresher") || job.experience.toLowerCase().includes("0-1"))
+        ? `Haan, ${job.company} mein is ${job.title} job in ${job.cityName || job.location || "Lucknow"} ke liye freshers bhi apply kar sakte hain.`
+        : `Is role ke liye minimum ${job.experience || "relevant experience"} required hai. Detailed eligibility ke liye candidate profile check karein.`,
+    },
+    {
+      q: `${job.company} mein is ${job.title} job in ${job.cityName || job.location || "Lucknow"} ki exact location kya hai?`,
+      a: `Is ${job.title} job in ${job.cityName || job.location || "Lucknow"} ki official hiring location ${job.location || "Lucknow"} hai. Direct HR connection ke liye Hirance app se apply karein.`,
+    },
+    {
+      q: `Hirance app par ${job.title} jobs in ${job.cityName || job.location || "Lucknow"} ke liye apply karne ka koi charge hai kya?`,
+      a: `Nahi, Hirance app par ${job.title} jobs in ${job.cityName || job.location || "Lucknow"} ke liye apply karna 100% free hai. Aap direct employer hiring team se bina kisi middleman ke connect kar sakte hain.`,
+    },
+  ];
+
   return (
     <main className="relative flex min-h-dvh flex-col overflow-x-clip bg-background text-foreground">
       {/* Background Interactive Dots Canvas */}
@@ -123,9 +182,7 @@ export function JobDetailContent({ job, relatedJobs = [] }: JobDetailContentProp
 
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2">
-                    <span className="text-xs font-medium text-muted-foreground truncate">
-                      {job.company}
-                    </span>
+                    <HiddenCompanyName name={job.company} className="text-xs font-medium text-muted-foreground" />
                     {job.isVerified && (
                       <span className="inline-flex items-center text-xs text-brand-600 dark:text-brand-400">
                         <CheckCircle2 className="h-3 w-3" />
@@ -212,7 +269,7 @@ export function JobDetailContent({ job, relatedJobs = [] }: JobDetailContentProp
           <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-5 sm:gap-6">
             <div className="flex items-start gap-3.5 sm:gap-5 flex-1 min-w-0">
               {/* Company Logo / Avatar */}
-              <Link href={`/company/${companySlug}`} className="flex h-12 w-12 sm:h-16 sm:w-16 shrink-0 items-center justify-center rounded-xl sm:rounded-2xl border border-border/80 bg-muted/50 font-mono text-sm sm:text-base font-bold text-brand-600 dark:text-brand-400 shadow-2xs overflow-hidden hover:opacity-80 transition-opacity">
+              <div className="flex h-12 w-12 sm:h-16 sm:w-16 shrink-0 items-center justify-center rounded-xl sm:rounded-2xl border border-border/80 bg-muted/50 font-mono text-sm sm:text-base font-bold text-brand-600 dark:text-brand-400 shadow-2xs overflow-hidden hover:opacity-80 transition-opacity">
                 {job.companyLogo && !imgError ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
@@ -224,14 +281,12 @@ export function JobDetailContent({ job, relatedJobs = [] }: JobDetailContentProp
                 ) : (
                   <span>{initials}</span>
                 )}
-              </Link>
+              </div>
 
               {/* Title & Metadata */}
               <div className="min-w-0 flex-1">
                 <div className="flex flex-wrap items-center gap-2">
-                  <Link href={`/company/${companySlug}`} className="text-xs sm:text-sm font-semibold text-foreground/90 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">
-                    {job.company}
-                  </Link>
+                  <HiddenCompanyName name={job.company} className="text-xs sm:text-sm font-semibold text-foreground/90" />
                   {job.isVerified && (
                     <span
                       title="Verified Employer"
@@ -275,28 +330,42 @@ export function JobDetailContent({ job, relatedJobs = [] }: JobDetailContentProp
           <div className="mt-4 flex flex-wrap items-center gap-x-3.5 sm:gap-x-4 gap-y-2 text-xs sm:text-sm text-muted-foreground">
             <span className="flex items-center gap-1.5 font-normal text-muted-foreground/70">
               <Briefcase className="h-4 w-4 text-muted-foreground/60 shrink-0" />
-              {job.experience}
+              {job.experience || "Open to All"}
             </span>
             <span className="text-border/80 hidden sm:inline">|</span>
-            <span className="flex items-center gap-1.5 font-normal text-muted-foreground/70">
-              <IndianRupee className="h-3.5 w-3.5 text-muted-foreground/60 shrink-0" />
-              {job.salaryRange.replace(/^₹\s*/, "")}
-            </span>
-            <span className="text-border/80 hidden sm:inline">|</span>
-            <span className="flex items-center gap-1.5 font-normal text-muted-foreground/70">
-              <Building2 className="h-4 w-4 text-muted-foreground/60 shrink-0" />
-              {job.workMode || "Work from Office"}
-            </span>
-            <span className="text-border/80 hidden sm:inline">|</span>
-            <span className="flex items-center gap-1.5 font-normal text-muted-foreground/70">
-              <Clock className="h-4 w-4 text-muted-foreground/60 shrink-0" />
-              {job.jobType}
-            </span>
-            <span className="text-border/80 hidden sm:inline">|</span>
-            <span className="flex items-center gap-1.5 font-normal text-muted-foreground/70">
-              <MapPin className="h-4 w-4 text-muted-foreground/60 shrink-0" />
-              {job.location}
-            </span>
+            {job.salaryRange ? (
+              <>
+                <span className="flex items-center gap-1.5 font-normal text-muted-foreground/70">
+                  <IndianRupee className="h-3.5 w-3.5 text-muted-foreground/60 shrink-0" />
+                  {job.salaryRange.replace(/^₹\s*/, "")}
+                </span>
+                <span className="text-border/80 hidden sm:inline">|</span>
+              </>
+            ) : null}
+            {job.workMode ? (
+              <>
+                <span className="flex items-center gap-1.5 font-normal text-muted-foreground/70">
+                  <Building2 className="h-4 w-4 text-muted-foreground/60 shrink-0" />
+                  {job.workMode}
+                </span>
+                <span className="text-border/80 hidden sm:inline">|</span>
+              </>
+            ) : null}
+            {job.jobType ? (
+              <>
+                <span className="flex items-center gap-1.5 font-normal text-muted-foreground/70">
+                  <Clock className="h-4 w-4 text-muted-foreground/60 shrink-0" />
+                  {job.jobType}
+                </span>
+                {job.location ? <span className="text-border/80 hidden sm:inline">|</span> : null}
+              </>
+            ) : null}
+            {job.location ? (
+              <span className="flex items-center gap-1.5 font-normal text-muted-foreground/70">
+                <MapPin className="h-4 w-4 text-muted-foreground/60 shrink-0" />
+                {job.location}
+              </span>
+            ) : null}
           </div>
 
           {/* Horizontal Line Divider & Bottom Row — Compact Spacing */}
@@ -364,7 +433,11 @@ export function JobDetailContent({ job, relatedJobs = [] }: JobDetailContentProp
                 <div className="mt-3 sm:mt-4">
                   <RichDescription
                     content={job.description}
-                    fallbackText={`We are hiring a ${job.title} to join ${job.company}. You will collaborate with the team on key objectives, deliver quality outcomes, and advance your career in a dynamic environment.`}
+                    fallbackText={
+                      <>
+                        We are hiring a {job.title} to join <HiddenCompanyName name={job.company} />. You will collaborate with the team on key objectives, deliver quality outcomes, and advance your career in a dynamic environment.
+                      </>
+                    }
                   />
                 </div>
               </section>
@@ -497,9 +570,7 @@ export function JobDetailContent({ job, relatedJobs = [] }: JobDetailContentProp
                           <h4 className="text-sm font-semibold text-foreground group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors line-clamp-1">
                             {relJob.title}
                           </h4>
-                          <p className="mt-0.5 text-xs text-muted-foreground line-clamp-1 font-medium">
-                            {relJob.company}
-                          </p>
+                          <HiddenCompanyName name={relJob.company} className="mt-0.5 text-xs text-muted-foreground font-medium" />
                         </div>
                       </div>
 
@@ -510,7 +581,7 @@ export function JobDetailContent({ job, relatedJobs = [] }: JobDetailContentProp
                           <div className="flex items-center gap-2.5">
                             <span className="flex items-center gap-1.5">
                               <Briefcase className="h-3.5 w-3.5 shrink-0" />
-                              {relJob.experience}
+                              {relJob.experience || "Open to All"}
                             </span>
                             <span className="flex items-center gap-1.5">
                               <Clock className="h-3.5 w-3.5 shrink-0" />
@@ -571,7 +642,7 @@ export function JobDetailContent({ job, relatedJobs = [] }: JobDetailContentProp
               </div>
 
               <p className="text-xs text-muted-foreground leading-relaxed">
-                Connect directly with {job.company}&apos;s recruitment team. Download the mobile app and swipe to apply instantly.
+                Connect directly with <HiddenCompanyName name={job.company} />&apos;s recruitment team. Download the mobile app and swipe to apply instantly.
               </p>
 
               <a
@@ -597,47 +668,12 @@ export function JobDetailContent({ job, relatedJobs = [] }: JobDetailContentProp
               </span>
             </h2>
             <p className="text-xs sm:text-sm text-muted-foreground text-center">
-              Common questions about this {job.title} opening at {job.company}.
+              Common questions about this {job.title} opening at <HiddenCompanyName name={job.company} />.
             </p>
           </div>
 
           <div className="rounded-2xl border border-border/80 bg-card p-6 sm:p-8 shadow-2xs divide-y divide-border/60">
-            {[
-              // 4 English FAQs (1-4)
-              {
-                q: `What is the eligibility criteria to apply for this ${job.title} job in ${job.cityName || job.location || "Lucknow"}?`,
-                a: `Candidates must have ${job.educationLevel || "Graduation / Diploma or equivalent"} qualification and ${job.experience || "relevant"} experience for this ${job.title} job in ${job.cityName || job.location || "Lucknow"}.`,
-              },
-              {
-                q: `How much salary can I expect for this ${job.title} job at ${job.company}?`,
-                a: `You can expect a monthly salary range of ${job.salaryRange.replace(/^₹\s*/, "₹")} for this ${job.title} vacancy at ${job.company} in ${job.cityName || job.location || "Lucknow"}.`,
-              },
-              {
-                q: `Is this ${job.title} vacancy in ${job.cityName || job.location || "Lucknow"} a work from home job?`,
-                a: job.workMode && job.workMode.toLowerCase().includes("home")
-                  ? `Yes, this is a remote / work from home ${job.title} job at ${job.company}.`
-                  : `No, this is an on-site ${job.workMode || "Work from Office"} job based in ${job.location || "Lucknow"}.`,
-              },
-              {
-                q: `How do I apply for this ${job.title} job at ${job.company}?`,
-                a: `Click "Swipe to Apply" on Hirance, download the mobile app, and apply directly to ${job.company}'s recruitment team for ${job.title} jobs in ${job.cityName || job.location || "Lucknow"}.`,
-              },
-              // 3 Hinglish FAQs (5-7 for SEO)
-              {
-                q: `Kya is ${job.title} job in ${job.cityName || job.location || "Lucknow"} ke liye freshers apply kar sakte hain?`,
-                a: job.experience && (job.experience.toLowerCase().includes("fresher") || job.experience.toLowerCase().includes("0-1"))
-                  ? `Haan, ${job.company} mein is ${job.title} job in ${job.cityName || job.location || "Lucknow"} ke liye freshers bhi apply kar sakte hain.`
-                  : `Is role ke liye minimum ${job.experience || "relevant experience"} required hai. Detailed eligibility ke liye candidate profile check karein.`,
-              },
-              {
-                q: `${job.company} mein is ${job.title} job in ${job.cityName || job.location || "Lucknow"} ki exact location kya hai?`,
-                a: `Is ${job.title} job in ${job.cityName || job.location || "Lucknow"} ki official hiring location ${job.location || "Lucknow"} hai. Direct HR connection ke liye Hirance app se apply karein.`,
-              },
-              {
-                q: `Hirance app par ${job.title} jobs in ${job.cityName || job.location || "Lucknow"} ke liye apply karne ka koi charge hai kya?`,
-                a: `Nahi, Hirance app par ${job.title} jobs in ${job.cityName || job.location || "Lucknow"} ke liye apply karna 100% free hai. Aap direct employer hiring team se bina kisi middleman ke connect kar sakte hain.`,
-              },
-            ].map((faq, idx) => {
+            {faqs.map((faq, idx) => {
               const isOpen = openFaq === idx;
               return (
                 <div key={idx} className="py-3 sm:py-3.5 first:pt-0 last:pb-0">
@@ -649,7 +685,7 @@ export function JobDetailContent({ job, relatedJobs = [] }: JobDetailContentProp
                     className="flex w-full items-start justify-between gap-4 text-left group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-lg py-1"
                   >
                     <span className="text-sm font-medium text-foreground group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors leading-snug">
-                      {faq.q}
+                      {blurCompanyInText(faq.q)}
                     </span>
                     <span
                       className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full transition-all duration-200 ${isOpen
@@ -672,7 +708,7 @@ export function JobDetailContent({ job, relatedJobs = [] }: JobDetailContentProp
                         className="overflow-hidden"
                       >
                         <p className="pt-2 pb-1 text-sm leading-relaxed text-muted-foreground">
-                          {faq.a}
+                          {blurCompanyInText(faq.a)}
                         </p>
                       </motion.div>
                     )}

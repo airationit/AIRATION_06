@@ -88,11 +88,59 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function JobDetailPage({ params }: PageProps) {
   const { id } = await params;
+  
+  console.log('[JobDetailPage] Rendering page for ID:', id);
 
   // Reuses the already-fetched (cached) job — zero extra API call
   const job = await getCachedJob(id);
+  
+  console.log('[JobDetailPage] Job data:', job ? `Found: ${job.title}` : 'Not found');
 
   if (!job) {
+    console.error('[JobDetailPage] Job not found, returning 404 for ID:', id);
+    
+    // In development, show more helpful error
+    if (process.env.NODE_ENV === 'development') {
+      return (
+        <div className="flex min-h-screen flex-col items-center justify-center p-8">
+          <div className="max-w-2xl rounded-lg border border-red-200 bg-red-50 p-6 dark:bg-red-950/20">
+            <h1 className="text-2xl font-bold text-red-600 dark:text-red-400">Job Not Found (404)</h1>
+            <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+              Could not fetch job data from API for ID: <code className="rounded bg-gray-100 px-2 py-1 dark:bg-gray-800">{id}</code>
+            </p>
+            <div className="mt-4 space-y-2 text-sm">
+              <p className="font-semibold">Possible reasons:</p>
+              <ul className="list-disc pl-5 space-y-1">
+                <li>Job ID does not exist in the backend database</li>
+                <li>Job has been deleted or expired</li>
+                <li>API endpoint is not responding correctly</li>
+                <li>Network connectivity issue</li>
+              </ul>
+            </div>
+            <div className="mt-4">
+              <p className="text-sm font-semibold mb-2">Check your terminal for detailed logs:</p>
+              <code className="block rounded bg-gray-100 p-3 text-xs dark:bg-gray-800 overflow-x-auto">
+                [getJobById] and [fetchJobDetail] logs
+              </code>
+            </div>
+            <div className="mt-6 flex gap-3">
+              <a href="/jobs" className="rounded bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-500">
+                View All Jobs
+              </a>
+              <a 
+                href={`https://api.hirance.com/api/v1/jobs/${id}/`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rounded border border-gray-300 px-4 py-2 text-sm font-semibold hover:bg-gray-50 dark:border-gray-700 dark:hover:bg-gray-800"
+              >
+                Test API Directly
+              </a>
+            </div>
+          </div>
+        </div>
+      );
+    }
+    
     notFound();
   }
 

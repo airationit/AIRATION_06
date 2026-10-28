@@ -9,10 +9,9 @@ import {
 } from "@/components/sections";
 import {
   Footer,
-  InteractiveDots,
   FloatingAppBanner,
 } from "@/components/shared";
-import { fetchCompanies } from "@/lib/api";
+import { fetchCompanies, fetchJobs } from "@/lib/api";
 
 export const metadata: Metadata = {
   title: "Hirance — Next-Gen Swipe-Based Hiring Platform | Swipe. Match. Get Hired.",
@@ -26,22 +25,24 @@ export const metadata: Metadata = {
 };
 
 export default async function Home() {
-  const companiesRes = await fetchCompanies({ search: "", page_size: 100 });
+  const [companiesRes, jobsRes] = await Promise.all([
+    fetchCompanies({ search: "", page_size: 100 }),
+    fetchJobs({ page_size: 10 }),
+  ]);
+
+  const liveJobs = jobsRes?.data && Array.isArray(jobsRes.data) && jobsRes.data.length > 0
+    ? jobsRes.data
+    : undefined;
 
   return (
     <main className="relative flex min-h-dvh flex-col overflow-x-clip">
-      {/* Unified interactive dot canvas spanning all home page sections */}
-      <div className="pointer-events-none absolute inset-0 -z-10">
-        <InteractiveDots />
-      </div>
-
       {/* Hero section */}
-      <Hero />
+      <Hero initialJobs={liveJobs} />
 
       {/* Main content sections scrolling normally */}
       <TrustedBy initialCompanies={companiesRes?.data} />
-      <AppDownload />
-      <SwipePlayground />
+      <AppDownload initialJobs={liveJobs} />
+      <SwipePlayground initialJobs={liveJobs ? liveJobs.slice(0, 5) : undefined} />
       <WantToHire />
       <BrandStatement />
       <Footer />

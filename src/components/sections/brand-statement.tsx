@@ -4,40 +4,45 @@ import React from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { Zap, Target, MessageSquare, BadgeCheck } from "lucide-react";
 import { Logo } from "@/components/shared/logo";
+import { cn } from "@/lib/utils";
 
-// First-timer friendly value highlights
+// First-timer friendly value highlights matching reference image
 const HIGHLIGHTS = [
   {
     icon: Zap,
     step: "01",
     title: "Apply in 2 seconds",
     text: "One swipe right. No forms or cover letters.",
-    gradient: "from-[#0077c8] to-[#00a2ff]",
-    glow: "bg-[#0077c8]/25",
+    iconBg: "bg-[#0091FF]",
+    iconShadow: "shadow-[0_4px_20px_rgba(0,145,255,0.45)]",
+    glow: "bg-[#0091FF]/25",
   },
   {
     icon: Target,
     step: "02",
     title: "See your match %",
-    text: "Know your fit score before applying.",
-    gradient: "from-indigo-500 to-blue-600",
-    glow: "bg-indigo-500/25",
+    text: "Instantly know your fit score before applying.",
+    iconBg: "bg-[#A855F7]",
+    iconShadow: "shadow-[0_4px_20px_rgba(168,85,247,0.45)]",
+    glow: "bg-[#A855F7]/25",
   },
   {
     icon: MessageSquare,
     step: "03",
     title: "Chat with recruiters",
     text: "Direct connection. Zero application black holes.",
-    gradient: "from-sky-500 to-cyan-500",
-    glow: "bg-sky-500/25",
+    iconBg: "bg-[#0284C7]",
+    iconShadow: "shadow-[0_4px_20px_rgba(2,132,199,0.45)]",
+    glow: "bg-[#0284C7]/25",
   },
   {
     icon: BadgeCheck,
     step: "04",
     title: "Free for candidates",
-    text: "Always 100% free. Apply at zero cost.",
-    gradient: "from-emerald-500 to-teal-600",
-    glow: "bg-emerald-500/25",
+    text: "Always 100% free for candidates. Apply at zero cost.",
+    iconBg: "bg-[#10B981]",
+    iconShadow: "shadow-[0_4px_20px_rgba(16,185,129,0.45)]",
+    glow: "bg-[#10B981]/25",
   },
 ];
 
@@ -115,7 +120,7 @@ export function BrandStatement() {
                 transition={{ delay: i * 0.08, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
                 whileHover={reducedMotion ? undefined : { y: -4 }}
                 data-testid={`brand-highlight-${i}`}
-                className="group relative overflow-hidden rounded-xl sm:rounded-2xl lg:rounded-3xl border border-white/[0.08] bg-gradient-to-b from-white/[0.05] to-white/[0.015] p-3.5 sm:p-5 lg:p-6 text-left backdrop-blur-md transition-all duration-300 hover:border-white/20 hover:bg-white/[0.07] hover:shadow-xl hover:shadow-sky-500/5 flex flex-col justify-between"
+                className="group relative overflow-hidden rounded-2xl border border-white/[0.08] bg-[#0A1020]/90 p-5 sm:p-6 text-left backdrop-blur-md transition-all duration-300 hover:border-white/20 hover:bg-[#0D1528] hover:shadow-xl hover:shadow-sky-500/5 flex flex-col justify-between"
               >
                 {/* Subtle Hover Radial Spotlight */}
                 <div
@@ -123,23 +128,27 @@ export function BrandStatement() {
                 />
 
                 {/* Top Row: Icon + Step Index */}
-                <div className="flex items-center justify-between mb-3 sm:mb-5">
+                <div className="flex items-center justify-between mb-4 sm:mb-5">
                   <div
-                    className={`h-9 w-9 sm:h-11 sm:w-11 rounded-xl sm:rounded-2xl flex items-center justify-center text-white shadow-md border border-white/15 bg-gradient-to-br ${h.gradient}`}
+                    className={cn(
+                      "h-10 w-10 sm:h-11 sm:w-11 rounded-xl flex items-center justify-center text-white",
+                      h.iconBg,
+                      h.iconShadow
+                    )}
                   >
-                    <Icon className="h-4 w-4 sm:h-5 sm:w-5" strokeWidth={2.2} />
+                    <Icon className="h-5 w-5 sm:h-5.5 sm:w-5.5" strokeWidth={2.2} />
                   </div>
-                  <span className="font-mono text-[11px] sm:text-xs font-bold text-slate-500 group-hover:text-slate-300 transition-colors">
+                  <span className="font-mono text-xs sm:text-sm font-bold text-slate-500 group-hover:text-slate-300 transition-colors">
                     {h.step}
                   </span>
                 </div>
 
                 {/* Content */}
                 <div>
-                  <h3 className="font-display font-bold text-xs sm:text-sm lg:text-base text-white tracking-tight leading-snug">
+                  <h3 className="font-display font-bold text-sm sm:text-base text-white tracking-tight leading-snug">
                     {h.title}
                   </h3>
-                  <p className="text-[11px] sm:text-xs lg:text-[13px] text-slate-400 mt-1 sm:mt-1.5 leading-snug sm:leading-relaxed">
+                  <p className="text-xs sm:text-[13px] text-slate-400 mt-1.5 leading-relaxed">
                     {h.text}
                   </p>
                 </div>

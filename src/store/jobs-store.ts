@@ -7,10 +7,14 @@ import { fetchJobs as apiFetchJobs } from "@/lib/api/jobs";
 interface FilterState {
   search: string;
   jobRole: string; // UUID or empty
+  categoryId?: string; // UUID or empty
+  companyId?: string; // UUID or empty
   city: string; // UUID or empty
   jobType: string; // UUID or empty
   workMode: string; // UUID or empty
   experienceLevel: string; // UUID or empty
+  minSalary?: number;
+  maxSalary?: number;
   ordering: JobSearchParams["ordering"];
   isFreeForCandidates?: boolean;
 }
@@ -113,10 +117,14 @@ export const useJobsStore = create<JobsStoreState>((set, get) => ({
         page_size: pageSize,
         search: filters.search || undefined,
         job_role: filters.jobRole || undefined,
+        category_id: filters.categoryId || undefined,
+        company_id: filters.companyId || undefined,
         city: filters.city || undefined,
         job_type: filters.jobType || undefined,
         work_mode: filters.workMode || undefined,
         experience_level: filters.experienceLevel || undefined,
+        min_salary: filters.minSalary,
+        max_salary: filters.maxSalary,
         ordering: filters.ordering || undefined,
         is_free_for_candidates: filters.isFreeForCandidates,
       };

@@ -27,6 +27,8 @@ import {
   Sparkles,
   CheckCircle2,
   MapPin,
+  Copy,
+  Link2,
 } from "lucide-react";
 import { BlogCategory, BlogListItem, BlogTag } from "@/types/blogs";
 import { useBlogsStore } from "@/store/blogs-store";
@@ -41,6 +43,7 @@ interface BlogListContentProps {
   currentPage: number;
   totalPages: number;
   featuredJobs?: any[];
+  initialCategory?: string;
 }
 
 function formatDate(dateStr: string): string {
@@ -330,6 +333,7 @@ export function BlogListContent({
   currentPage: serverPage,
   totalPages: serverTotalPages,
   featuredJobs = [],
+  initialCategory,
 }: BlogListContentProps) {
   const [, startTransition] = useTransition();
 
@@ -351,8 +355,28 @@ export function BlogListContent({
 
   const [searchInput, setSearchInput] = useState<string>("");
   const [copiedSlug, setCopiedSlug] = useState<string | null>(null);
+  const [shareTarget, setShareTarget] = useState<{
+    title: string;
+    url: string;
+    slug?: string;
+    category?: string;
+    image?: string;
+  } | null>(null);
+  const [copiedLink, setCopiedLink] = useState<boolean>(false);
   const [showCategoryDropdown, setShowCategoryDropdown] = useState<boolean>(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // Close share modal on Escape key
+  useEffect(() => {
+    if (!shareTarget) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setShareTarget(null);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [shareTarget]);
 
   // Close category dropdown on click outside
   useEffect(() => {
@@ -386,6 +410,13 @@ export function BlogListContent({
     );
   }, [initialBlogs, totalCount, initialCategories, initialTags, serverPage, serverTotalPages, hydrate]);
 
+  // Sync initialCategory from URL parameter or category route
+  useEffect(() => {
+    if (initialCategory && initialCategory !== filters.category) {
+      setCategory(initialCategory);
+    }
+  }, [initialCategory, filters.category, setCategory]);
+
   // Debounced search handling
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -412,14 +443,72 @@ export function BlogListContent({
     }
   };
 
+  // Open rich share modal
+  const openShare = (
+    e: React.MouseEvent,
+    target: { title: string; slug?: string; category?: string; image?: string; url?: string }
+  ) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const origin =
+      typeof window !== "undefined" && window.location.origin
+        ? window.location.origin
+        : "https://hirance.com";
+    const url = target.url || `${origin}/blog/${target.slug || ""}`;
+    setCopiedLink(false);
+    setShareTarget({
+      title: target.title,
+      url,
+      slug: target.slug,
+      category: target.category,
+      image: target.image,
+    });
+  };
+
   // Filter display posts (use store blogs or initial SSR blogs, fallback if empty)
   const hasAppliedFilter = filters.category !== "all" || Boolean(filters.search) || Boolean(filters.tag);
   const displayPosts = useMemo(() => {
-    if (blogs && blogs.length > 0) return blogs;
-    if (hasAppliedFilter) return [];
-    if (initialBlogs && initialBlogs.length > 0) return initialBlogs;
-    return [];
-  }, [blogs, hasAppliedFilter, initialBlogs]);
+    const isCategoryMatch = (postCatSlug: string, postCatName: string, targetCat: string) => {
+      if (targetCat === "all") return true;
+      const target = targetCat.toLowerCase();
+      const pSlug = (postCatSlug || "").toLowerCase();
+      const pName = (postCatName || "").toLowerCase();
+      if (pSlug === target || pName === target) return true;
+      if (pSlug.includes(target) || target.includes(pSlug)) return true;
+      if (pName.includes(target) || target.includes(pName)) return true;
+      // Match words (e.g., 'interview' in 'interview-advice' matches 'interview-prep')
+      const targetWords = target.split(/[-_\s]+/).filter((w) => w.length > 3);
+      if (targetWords.some((w) => pSlug.includes(w) || pName.includes(w))) return true;
+      return false;
+    };
+
+    // If store has blogs
+    if (blogs && blogs.length > 0) {
+      if (!hasAppliedFilter) return blogs;
+      const filtered = blogs.filter((post) => {
+        const matchCat = isCategoryMatch(post.category?.slug || "", post.category?.name || "", filters.category);
+        const matchSearch =
+          !filters.search ||
+          post.title.toLowerCase().includes(filters.search.toLowerCase()) ||
+          post.excerpt?.toLowerCase().includes(filters.search.toLowerCase());
+        return matchCat && matchSearch;
+      });
+      if (filtered.length > 0) return filtered;
+    }
+
+    // Gracefully fallback to initial SSR blogs or fallback articles
+    const source = (initialBlogs && initialBlogs.length > 0) ? initialBlogs : FALLBACK_ARTICLES;
+    if (!hasAppliedFilter) return source;
+
+    return source.filter((post) => {
+      const matchCat = isCategoryMatch(post.category?.slug || "", post.category?.name || "", filters.category);
+      const matchSearch =
+        !filters.search ||
+        post.title.toLowerCase().includes(filters.search.toLowerCase()) ||
+        post.excerpt?.toLowerCase().includes(filters.search.toLowerCase());
+      return matchCat && matchSearch;
+    });
+  }, [blogs, hasAppliedFilter, initialBlogs, filters.category, filters.search]);
 
   const latestSidebarPosts = displayPosts.slice(0, 4);
   const displayJobs = (featuredJobs && featuredJobs.length > 0) ? featuredJobs.slice(0, 4) : [];
@@ -694,81 +783,100 @@ export function BlogListContent({
                 ---------------------------------------------------- */}
             <div className="flex-1 min-w-0 w-full">
               
-              {/* Quick Filter Category Pills */}
-              <div className="flex flex-wrap items-center gap-2 mb-1">
-                {visiblePills.map((cat) => {
-                  const isActive = filters.category === cat.slug;
-                  return (
-                    <button
-                      key={cat.slug}
-                      type="button"
-                      onClick={() => {
-                        setCategory(cat.slug);
-                        startTransition(() => {
-                          loadBlogs();
-                        });
-                      }}
-                      className={`inline-flex items-center rounded-full px-4 py-2 text-xs font-semibold transition-all cursor-pointer ${
-                        isActive
-                          ? "bg-blue-600 text-white shadow-sm shadow-blue-600/25"
-                          : "bg-white dark:bg-muted/40 text-slate-600 dark:text-slate-300 hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-950/30 border border-slate-200/60 dark:border-border/40"
-                      }`}
-                    >
-                      {cat.name}
-                    </button>
-                  );
-                })}
+              {/* Quick Filter Category Pills & Share Blog Option */}
+              <div className="flex flex-wrap items-center justify-between gap-2 mb-1">
+                <div className="flex flex-wrap items-center gap-2">
+                  {visiblePills.map((cat) => {
+                    const isActive = filters.category === cat.slug;
+                    return (
+                      <button
+                        key={cat.slug}
+                        type="button"
+                        onClick={() => {
+                          setCategory(cat.slug);
+                          startTransition(() => {
+                            loadBlogs();
+                          });
+                        }}
+                        className={`inline-flex items-center rounded-full px-4 py-2 text-xs font-semibold transition-all cursor-pointer ${
+                          isActive
+                            ? "bg-blue-600 text-white shadow-sm shadow-blue-600/25"
+                            : "bg-white dark:bg-muted/40 text-slate-600 dark:text-slate-300 hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-950/30 border border-slate-200/60 dark:border-border/40"
+                        }`}
+                      >
+                        {cat.name}
+                      </button>
+                    );
+                  })}
 
-                {/* More Categories Dropdown */}
-                {allBackendCategories.length > 5 && (
-                  <div className="relative" ref={dropdownRef}>
-                    <button
-                      type="button"
-                      onClick={() => setShowCategoryDropdown(!showCategoryDropdown)}
-                      className="inline-flex items-center gap-1 rounded-full px-4 py-2 text-xs font-semibold bg-white dark:bg-muted/40 text-slate-600 dark:text-slate-300 hover:bg-blue-50 hover:text-blue-600 border border-slate-200/60 dark:border-border/40 transition-all cursor-pointer"
-                    >
-                      More
-                      <ChevronDown className={`h-3 w-3 transition-transform ${showCategoryDropdown ? "rotate-180" : ""}`} />
-                    </button>
+                  {/* More Categories Dropdown */}
+                  {allBackendCategories.length > 5 && (
+                    <div className="relative" ref={dropdownRef}>
+                      <button
+                        type="button"
+                        onClick={() => setShowCategoryDropdown(!showCategoryDropdown)}
+                        className="inline-flex items-center gap-1 rounded-full px-4 py-2 text-xs font-semibold bg-white dark:bg-muted/40 text-slate-600 dark:text-slate-300 hover:bg-blue-50 hover:text-blue-600 border border-slate-200/60 dark:border-border/40 transition-all cursor-pointer"
+                      >
+                        More
+                        <ChevronDown className={`h-3 w-3 transition-transform ${showCategoryDropdown ? "rotate-180" : ""}`} />
+                      </button>
 
-                    <AnimatePresence>
-                      {showCategoryDropdown && (
-                        <motion.div
-                          initial={{ opacity: 0, y: 6, scale: 0.97 }}
-                          animate={{ opacity: 1, y: 0, scale: 1 }}
-                          exit={{ opacity: 0, y: 6, scale: 0.97 }}
-                          transition={{ duration: 0.15 }}
-                          className="absolute left-0 top-full mt-2 z-40 w-56 rounded-2xl border border-slate-200/90 dark:border-border bg-white dark:bg-card shadow-xl p-2 max-h-64 overflow-y-auto"
-                        >
-                          {allBackendCategories.slice(5).map((cat) => {
-                            const isActive = filters.category === cat.slug;
-                            return (
-                              <button
-                                key={cat.slug}
-                                type="button"
-                                onClick={() => {
-                                  setCategory(cat.slug);
-                                  setShowCategoryDropdown(false);
-                                  startTransition(() => {
-                                    loadBlogs();
-                                  });
-                                }}
-                                className={`w-full flex items-center justify-between rounded-xl px-3 py-2 text-xs font-medium transition-colors cursor-pointer ${
-                                  isActive
-                                    ? "bg-blue-50 text-blue-600 dark:bg-blue-950/40 dark:text-blue-400"
-                                    : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-muted/40"
-                                }`}
-                              >
-                                <span className="truncate">{cat.name}</span>
-                                {isActive && <Check className="h-3.5 w-3.5 shrink-0" />}
-                              </button>
-                            );
-                          })}
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </div>
-                )}
+                      <AnimatePresence>
+                        {showCategoryDropdown && (
+                          <motion.div
+                            initial={{ opacity: 0, y: 6, scale: 0.97 }}
+                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                            exit={{ opacity: 0, y: 6, scale: 0.97 }}
+                            transition={{ duration: 0.15 }}
+                            className="absolute left-0 top-full mt-2 z-40 w-56 rounded-2xl border border-slate-200/90 dark:border-border bg-white dark:bg-card shadow-xl p-2 max-h-64 overflow-y-auto"
+                          >
+                            {allBackendCategories.slice(5).map((cat) => {
+                              const isActive = filters.category === cat.slug;
+                              return (
+                                <button
+                                  key={cat.slug}
+                                  type="button"
+                                  onClick={() => {
+                                    setCategory(cat.slug);
+                                    setShowCategoryDropdown(false);
+                                    startTransition(() => {
+                                      loadBlogs();
+                                    });
+                                  }}
+                                  className={`w-full flex items-center justify-between rounded-xl px-3 py-2 text-xs font-medium transition-colors cursor-pointer ${
+                                    isActive
+                                      ? "bg-blue-50 text-blue-600 dark:bg-blue-950/40 dark:text-blue-400"
+                                      : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-muted/40"
+                                  }`}
+                                >
+                                  <span className="truncate">{cat.name}</span>
+                                  {isActive && <Check className="h-3.5 w-3.5 shrink-0" />}
+                                </button>
+                              );
+                            })}
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  )}
+                </div>
+
+                {/* Share Hirance Blog Page Button */}
+                <button
+                  type="button"
+                  onClick={(e) =>
+                    openShare(e, {
+                      title: "Hirance Blog & Hiring Insights - Fast, Swipe-Based Recruitment",
+                      url: typeof window !== "undefined" ? `${window.location.origin}/blog` : "https://hirance.com/blog",
+                      category: "HIRANCE BLOG",
+                    })
+                  }
+                  className="inline-flex items-center gap-1.5 rounded-full px-3.5 py-2 text-xs font-semibold bg-white dark:bg-card text-slate-700 dark:text-slate-300 hover:text-blue-600 hover:border-blue-200 border border-slate-200/80 dark:border-border/60 transition-all cursor-pointer shadow-2xs ml-auto"
+                  title="Share Hirance Blog"
+                >
+                  <Share2 className="h-3.5 w-3.5 text-blue-600" />
+                  <span>Share Blog</span>
+                </button>
               </div>
 
 
@@ -902,7 +1010,23 @@ export function BlogListContent({
                             </div>
                           </div>
 
-
+                          {/* Share Button */}
+                          <button
+                            type="button"
+                            onClick={(e) =>
+                              openShare(e, {
+                                title: post.title,
+                                slug: post.slug,
+                                category: post.category?.name,
+                                image: post.cover_image?.url,
+                              })
+                            }
+                            className="group/share relative flex items-center justify-center h-8 w-8 rounded-full border border-slate-200/80 dark:border-border/60 bg-white dark:bg-card text-slate-500 dark:text-slate-400 hover:text-blue-600 hover:border-blue-200 hover:bg-blue-50 dark:hover:bg-blue-950/40 transition-all cursor-pointer shrink-0 shadow-2xs"
+                            title="Share article"
+                            aria-label={`Share ${post.title}`}
+                          >
+                            <Share2 className="h-3.5 w-3.5 group-hover/share:scale-110 transition-transform" />
+                          </button>
                         </div>
 
                       </motion.article>
@@ -1144,6 +1268,10 @@ export function BlogListContent({
                           type="button"
                           onClick={() => {
                             setCategory(cat.slug);
+                            if (typeof window !== "undefined") {
+                              const newUrl = cat.slug && cat.slug !== "all" ? `/blog?category=${cat.slug}` : "/blog";
+                              window.history.replaceState(null, "", newUrl);
+                            }
                             window.scrollTo({ top: 380, behavior: "smooth" });
                           }}
                           className="w-full py-1.5 flex items-center justify-between text-left group cursor-pointer transition-colors"
@@ -1181,6 +1309,183 @@ export function BlogListContent({
 
       {/* 3. PRE-FOOTER CTA BANNER: "Experience Swipe-Based Hiring Today" */}
       <SwipeHiringCta className="pb-10 pt-6 sm:pb-14 sm:pt-8" />
+
+      {/* ========================================================
+          SHARE MODAL (Sleek, Modern & Humanized)
+          ======================================================== */}
+      <AnimatePresence>
+        {shareTarget && (
+          <div
+            className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-sm"
+            onClick={() => setShareTarget(null)}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="share-modal-title"
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.94, y: 10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.94, y: 10 }}
+              transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+              onClick={(e) => e.stopPropagation()}
+              className="relative w-full max-w-[420px] overflow-hidden rounded-[28px] border border-slate-200/90 dark:border-border/80 bg-white dark:bg-card p-6 shadow-[0_24px_50px_-12px_rgba(0,0,0,0.18)] dark:shadow-[0_24px_50px_-12px_rgba(0,0,0,0.6)]"
+            >
+              {/* Header */}
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-blue-50 dark:bg-blue-950/50 text-blue-600 shadow-2xs">
+                    <Share2 className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <h3 id="share-modal-title" className="text-[17px] font-bold text-slate-900 dark:text-white leading-tight">
+                      Share Article
+                    </h3>
+                    <p className="text-[12px] text-slate-500 dark:text-slate-400 mt-0.5">
+                      Share this insight with your network
+                    </p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setShareTarget(null)}
+                  className="rounded-full p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 dark:hover:bg-muted/50 transition-colors cursor-pointer shrink-0"
+                  aria-label="Close dialog"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+
+              {/* Article Preview Card */}
+              <div className="my-5 flex items-center gap-3.5 rounded-2xl border border-slate-200/70 dark:border-border/60 bg-slate-50/70 dark:bg-muted/20 p-3">
+                {shareTarget.image ? (
+                  <img
+                    src={shareTarget.image}
+                    alt={shareTarget.title}
+                    className="h-12 w-12 rounded-xl object-cover shrink-0 border border-slate-200/80 dark:border-border/50"
+                  />
+                ) : (
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-600/10 dark:bg-blue-950/50 text-blue-600 shrink-0">
+                    <FileText className="h-5 w-5" />
+                  </div>
+                )}
+                <div className="min-w-0 flex-1">
+                  {shareTarget.category && (
+                    <span className="text-[10px] font-bold tracking-wider text-blue-600 dark:text-blue-400 uppercase block truncate">
+                      {shareTarget.category}
+                    </span>
+                  )}
+                  <h4 className="text-[13px] font-semibold text-slate-900 dark:text-white line-clamp-2 leading-snug mt-0.5">
+                    {shareTarget.title}
+                  </h4>
+                </div>
+              </div>
+
+              {/* Social Channels Row */}
+              <div className="space-y-2">
+                <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
+                  Share to
+                </span>
+                <div className="grid grid-cols-4 gap-2.5 pt-0.5">
+                  {/* WhatsApp */}
+                  <a
+                    href={`https://api.whatsapp.com/send?text=${encodeURIComponent(shareTarget.title)}%20${encodeURIComponent(shareTarget.url)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group flex flex-col items-center gap-1.5 rounded-2xl border border-slate-100 dark:border-border/40 p-2.5 hover:border-emerald-200 hover:bg-emerald-50/40 dark:hover:bg-emerald-950/20 transition-all cursor-pointer"
+                  >
+                    <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#25D366] text-white shadow-xs group-hover:scale-105 transition-transform">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.888-.788-1.487-1.761-1.66-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                    </div>
+                    <span className="text-[11px] font-semibold text-slate-700 dark:text-slate-300">WhatsApp</span>
+                  </a>
+
+                  {/* LinkedIn */}
+                  <a
+                    href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareTarget.url)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group flex flex-col items-center gap-1.5 rounded-2xl border border-slate-100 dark:border-border/40 p-2.5 hover:border-blue-200 hover:bg-blue-50/40 dark:hover:bg-blue-950/20 transition-all cursor-pointer"
+                  >
+                    <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#0A66C2] text-white shadow-xs group-hover:scale-105 transition-transform">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                    </div>
+                    <span className="text-[11px] font-semibold text-slate-700 dark:text-slate-300">LinkedIn</span>
+                  </a>
+
+                  {/* X (Twitter) */}
+                  <a
+                    href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(shareTarget.url)}&text=${encodeURIComponent(shareTarget.title)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group flex flex-col items-center gap-1.5 rounded-2xl border border-slate-100 dark:border-border/40 p-2.5 hover:border-slate-300 hover:bg-slate-50 dark:hover:bg-muted/40 transition-all cursor-pointer"
+                  >
+                    <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-black dark:bg-white text-white dark:text-black shadow-xs group-hover:scale-105 transition-transform">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                    </div>
+                    <span className="text-[11px] font-semibold text-slate-700 dark:text-slate-300">X</span>
+                  </a>
+
+                  {/* Facebook */}
+                  <a
+                    href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareTarget.url)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group flex flex-col items-center gap-1.5 rounded-2xl border border-slate-100 dark:border-border/40 p-2.5 hover:border-blue-200 hover:bg-blue-50/40 dark:hover:bg-blue-950/20 transition-all cursor-pointer"
+                  >
+                    <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#1877F2] text-white shadow-xs group-hover:scale-105 transition-transform">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                    </div>
+                    <span className="text-[11px] font-semibold text-slate-700 dark:text-slate-300">Facebook</span>
+                  </a>
+                </div>
+              </div>
+
+              {/* Copy Link Container */}
+              <div className="mt-5 pt-4 border-t border-slate-100 dark:border-border/60">
+                <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 block mb-2">
+                  Copy Link
+                </span>
+                <div className="flex items-center gap-2 rounded-2xl border border-slate-200/90 dark:border-border bg-slate-50 dark:bg-muted/30 p-1.5 focus-within:border-blue-600 focus-within:ring-2 focus-within:ring-blue-100 dark:focus-within:ring-blue-950 transition-all">
+                  <Link2 className="h-4 w-4 text-slate-400 shrink-0 ml-2.5" />
+                  <input
+                    type="text"
+                    readOnly
+                    value={shareTarget.url}
+                    className="w-full bg-transparent px-2 text-xs text-slate-700 dark:text-slate-300 outline-none truncate font-medium select-all"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (navigator.clipboard) {
+                        navigator.clipboard.writeText(shareTarget.url);
+                        setCopiedLink(true);
+                        setTimeout(() => setCopiedLink(false), 2200);
+                      }
+                    }}
+                    className={`inline-flex items-center gap-1.5 rounded-xl px-4 py-2 text-xs font-semibold transition-all shrink-0 cursor-pointer ${
+                      copiedLink
+                        ? "bg-emerald-600 text-white shadow-xs"
+                        : "bg-blue-600 hover:bg-blue-700 text-white shadow-xs active:scale-95"
+                    }`}
+                  >
+                    {copiedLink ? (
+                      <>
+                        <Check className="h-3.5 w-3.5" />
+                        <span>Copied!</span>
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="h-3.5 w-3.5" />
+                        <span>Copy</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
 
       {/* ========================================================
           4. FOOTER (Shared Hirance Global Footer)
