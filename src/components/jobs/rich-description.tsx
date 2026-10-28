@@ -1,11 +1,11 @@
 "use client";
 
-import { useMemo } from "react";
+import React, { useMemo } from "react";
 import { cleanJobHtml } from "@/lib/html-utils";
 
 interface RichDescriptionProps {
   content?: string | null;
-  fallbackText?: string;
+  fallbackText?: string | React.ReactNode;
   className?: string;
 }
 

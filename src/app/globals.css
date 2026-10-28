@@ -4,6 +4,42 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* Shared center glow: adjust these values for all three homepage sections.
+   For one section only, override variables on #want-to-hire,
+   #playground, or #candidate-experience below this block. */
+.section-blue-glow {
+  --section-glow-width: min(80vw, 960px);
+  --section-glow-height: 460px;
+  --section-glow-roundness: 50%;
+  --section-glow-x: 50%;
+  --section-glow-y: 50%;
+  --section-glow-blur: 80px;
+  --section-glow-opacity: 0.45;
+  --section-glow-color: #93c5fd;
+  isolation: isolate;
+}
+
+.section-blue-glow::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  pointer-events: none;
+  left: var(--section-glow-x);
+  top: var(--section-glow-y);
+  width: var(--section-glow-width);
+  height: var(--section-glow-height);
+  border-radius: var(--section-glow-roundness);
+  background: radial-gradient(ellipse, var(--section-glow-color), transparent 72%);
+  filter: blur(var(--section-glow-blur));
+  opacity: var(--section-glow-opacity);
+  transform: translate(-50%, -50%);
+}
+
+.dark .section-blue-glow {
+  --section-glow-color: #2563eb;
+  --section-glow-opacity: 0.25;
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);

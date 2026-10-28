@@ -1,59 +1,63 @@
 "use client";
 
-import { useRef, useEffect } from "react";
+import { useRef } from "react";
 import {
   motion,
   useReducedMotion,
   useScroll,
   useTransform,
-  useMotionValueEvent,
 } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { siteConfig } from "@/config/site";
-import { GooglePlayButton } from "@/components/shared";
 import { HeroVideoCard } from "./hero-video-card";
 import { cn } from "@/lib/utils";
 
-const headlineWords = ["Swipe.", "Match.", "Get", "Hired."];
+import { JobListItem } from "@/types/jobs";
 
-export function Hero() {
+interface HeroProps {
+  initialJobs?: JobListItem[];
+}
+
+export function Hero({ initialJobs }: HeroProps = {}) {
   const sectionRef = useRef<HTMLElement>(null);
   const copyRef = useRef<HTMLDivElement>(null);
-  const demoSectionRef = useRef<HTMLDivElement>(null);
   const reducedMotion = useReducedMotion();
 
-  // Smooth scroll animations for Copy Text section (natural scale, elevation, fade & blur, 0% pinning jitter)
+  // Smooth scroll animations for Copy Text section
   const { scrollYProgress: copyScrollProgress } = useScroll({
     target: copyRef,
     offset: ["start start", "end start"],
   });
 
-  const copyScale = useTransform(copyScrollProgress, [0, 0.8], [1, 0.88]);
-  const copyOpacity = useTransform(copyScrollProgress, [0, 0.75], [1, 0]);
-  const copyY = useTransform(copyScrollProgress, [0, 0.8], [0, -50]);
-  const copyBlurNum = useTransform(copyScrollProgress, [0, 0.75], [0, 10]);
-  const copyFilter = useTransform(copyBlurNum, (v) => `blur(${v}px)`);
+  const copyScale = useTransform(copyScrollProgress, [0, 0.8], [1, 0.94]);
+  const copyOpacity = useTransform(copyScrollProgress, [0, 0.75], [1, 0.3]);
+  const copyY = useTransform(copyScrollProgress, [0, 0.8], [0, -30]);
 
   return (
-    <section ref={sectionRef} className="relative overflow-x-clip">
-      {/* Background ambient lighting */}
+    <section
+      ref={sectionRef}
+      className="relative overflow-x-clip pt-[var(--hero-top)] [--hero-top:6rem] [--header-height:3.75rem] [--video-height:500px] sm:[--hero-top:7rem] sm:[--header-height:4.5rem] sm:[--video-height:530px] md:[--hero-top:8rem] md:[--video-height:560px] lg:[--header-height:4.75rem] lg:[--video-height:620px] xl:[--video-height:660px] 2xl:[--video-height:700px]"
+    >
+      {/* Extend one continuous background behind the transparent homepage navbar. */}
+      <div
+        className="pointer-events-none absolute inset-x-0 -top-[4.5rem] bottom-0 -z-10 overflow-hidden sm:-top-20"
+        aria-hidden="true"
+      >
+        <div className="absolute -inset-2 bg-[url('/images/figma-hero-bg.png')] bg-cover bg-center opacity-90 blur-[4px] dark:opacity-10" />
+      </div>
+
+      {/* Background bottom edge fade */}
       <div
         className="pointer-events-none absolute inset-0 -z-10"
         aria-hidden="true"
       >
-        <div className="absolute left-1/2 top-[18%] h-[28rem] w-[42rem] -translate-x-1/2 rounded-full bg-brand-400/15 blur-[120px]" />
-        <div className="absolute right-[-10%] top-[42%] h-[24rem] w-[28rem] rounded-full bg-sky-300/12 blur-[110px]" />
-        <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-background via-background/70 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-background via-background/70 to-transparent" />
       </div>
 
-      {/* HERO COPY TEXT SECTION (Natural smooth Framer Motion scaling, elevation, fade & blur) */}
-      <div
-        className={cn(
-          "relative z-0 flex items-center justify-center px-6 pt-28 pb-16 sm:pt-36 sm:pb-20 lg:pt-44 lg:pb-24",
-          reducedMotion ? "min-h-auto" : "min-h-[72dvh] sm:min-h-[76dvh]"
-        )}
-      >
+      {/* HERO COPY TEXT SECTION */}
+      {/* Reserve the first viewport for the copy and a 10% preview of the video. */}
+      <div className="relative z-0 flex min-h-[calc(100svh_-_var(--header-height)_-_var(--hero-top)_-_var(--video-height)*0.2)] items-center justify-center px-4 sm:px-6 lg:px-8 pb-8 sm:pb-10 md:pb-12">
         <motion.div
           ref={copyRef}
           style={
@@ -63,12 +67,11 @@ export function Hero() {
                   scale: copyScale,
                   opacity: copyOpacity,
                   y: copyY,
-                  filter: copyFilter,
                 }
           }
-          className="mx-auto flex w-full max-w-5xl flex-col items-center justify-center text-center will-change-transform"
+          className="mx-auto flex w-full max-w-5xl flex-col items-center justify-center text-center will-change-transform pb-8"
         >
-          {/* Clean Kicker (No chip pill, pure crisp typography) */}
+          {/* Eyebrow Typography matching Screenshot 2 */}
           <motion.p
             initial={
               reducedMotion
@@ -81,39 +84,25 @@ export function Hero() {
               delay: reducedMotion ? 0 : 0.05,
               ease: [0.16, 1, 0.3, 1],
             }}
-            className="mb-4 text-xs sm:text-sm font-semibold tracking-wider uppercase text-brand-600 dark:text-brand-400"
+            className="mb-3 text-xs sm:text-[12.5px] font-semibold tracking-wider uppercase text-slate-500 dark:text-slate-400"
           >
-            Next-Gen Swipe-Based Hiring Platform
+            NEXT-GEN SWIPE-BASED HIRING PLATFORM
           </motion.p>
 
-          {/* Headline Words with 3D perspective entrance */}
-          <h1 className="max-w-4xl text-balance text-4xl font-bold leading-[1.02] tracking-tight sm:text-6xl lg:text-[4.75rem] [perspective:1000px]">
-            {headlineWords.map((word, i) => (
-              <motion.span
-                key={word}
-                initial={
-                  reducedMotion
-                    ? false
-                    : { opacity: 0, y: 40, rotateX: -25, filter: "blur(10px)" }
-                }
-                animate={{ opacity: 1, y: 0, rotateX: 0, filter: "blur(0px)" }}
-                transition={{
-                  duration: 0.8,
-                  delay: reducedMotion ? 0 : 0.12 + i * 0.08,
-                  ease: [0.16, 1, 0.3, 1],
-                }}
-                className={
-                  i >= 2
-                    ? "text-gradient mr-[0.22em] inline-block bg-gradient-to-r from-brand-600 via-sky-500 to-indigo-600 dark:from-brand-400 dark:via-sky-400 dark:to-indigo-300 bg-clip-text text-transparent"
-                    : "mr-[0.22em] inline-block"
-                }
-              >
-                {word}
-              </motion.span>
-            ))}
+          {/* Headline Words: Swipe. Match. Get Hired. */}
+          <h1 className="max-w-4xl text-balance text-3xl sm:text-5xl lg:text-[3.85rem] font-semibold leading-[1.1] tracking-tight">
+            <span className="mr-[0.22em] inline-block text-slate-900 dark:text-white">
+              Swipe.
+            </span>
+            <span className="mr-[0.22em] inline-block text-slate-900 dark:text-white">
+              Match.
+            </span>
+            <span className="inline-block text-blue-600 font-semibold">
+              Get Hired.
+            </span>
           </h1>
 
-          {/* Key Differentiator Subheading */}
+          {/* Subheading matching Screenshot 2 */}
           <motion.p
             initial={
               reducedMotion ? false : { opacity: 0, y: 18, filter: "blur(8px)" }
@@ -121,77 +110,73 @@ export function Hero() {
             animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
             transition={{
               duration: 0.7,
-              delay: reducedMotion ? 0 : 0.48,
+              delay: reducedMotion ? 0 : 0.38,
               ease: [0.16, 1, 0.3, 1],
             }}
-            className="mx-auto mt-6 max-w-4xl text-base sm:text-lg md:text-xl font-semibold text-foreground/90 leading-snug"
+            className="mx-auto mt-3 sm:mt-4 max-w-2xl text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed font-normal"
           >
-            Fastest way to Post &amp; Apply for jobs—{" "}
-            <span className="text-brand-600 dark:text-brand-400 font-bold">
-              No forms, No scrolling, No waiting.
-            </span>
+            Fastest way to Post &amp; Apply for jobs— No forms, No scrolling, No waiting.
           </motion.p>
 
-          {/* Crisp, Humanized Platform Description */}
-          {/* <motion.p
-            initial={
-              reducedMotion ? false : { opacity: 0, y: 18, filter: "blur(8px)" }
-            }
-            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-            transition={{
-              duration: 0.7,
-              delay: reducedMotion ? 0 : 0.62,
-              ease: [0.16, 1, 0.3, 1],
-            }}
-            className="mx-auto mt-4 max-w-2xl text-pretty text-sm sm:text-base text-muted-foreground leading-relaxed font-normal"
-          >
-            Hirance is the next-generation swipe-based hiring platform, built to solve the
-            biggest problem in job hunting and recruitment—speed. No more long forms,
-            resume uploads, or endless job scrolling. Candidates swipe right to apply and
-            left to skip, based on an AI-calculated match score for every job. Employers
-            post jobs in under a minute and get only relevant, pre-filtered candidates.
-            Smarter hiring starts here.
-          </motion.p> */}
-
-          {/* Action Buttons Row */}
+          {/* Action Buttons Row matching Screenshot 2 */}
           <motion.div
             initial={reducedMotion ? false : { opacity: 0, y: 20, scale: 0.96 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             transition={{
               duration: 0.65,
-              delay: reducedMotion ? 0 : 0.75,
+              delay: reducedMotion ? 0 : 0.48,
               ease: [0.16, 1, 0.3, 1],
             }}
-            className="mt-8 sm:mt-9 flex flex-col items-center gap-3 sm:flex-row sm:gap-4"
+            className="mt-6 sm:mt-7 flex flex-col items-center gap-3 sm:flex-row sm:gap-3.5 select-none"
           >
+            {/* Start hiring today Button (Solid Blue Pill) */}
             <Link
               href={siteConfig.links.employer}
-              className="group inline-flex h-12 min-w-[11rem] items-center justify-center gap-2 rounded-full bg-brand-600 px-7 text-sm font-semibold text-white transition-all duration-300 hover:bg-brand-700 hover:shadow-[0_0_24px_rgba(37,99,235,0.4)] focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-brand-500/40 hover:scale-[1.02] active:scale-[0.98]"
-              aria-label="Start hiring today"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group inline-flex h-11 min-w-[11rem] items-center justify-center gap-2 rounded-full bg-[#1d68f0] hover:bg-[#1557d0] dark:bg-brand-600 dark:hover:bg-brand-500 px-6 text-sm font-semibold text-white shadow-sm shadow-[#1d68f0]/25 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-brand-500/40"
+              aria-label="Start hiring today on Hirance"
               tabIndex={0}
             >
-              Start hiring today
+              <span>Start hiring today</span>
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
             </Link>
-            <GooglePlayButton animate={!reducedMotion} />
+
+            {/* Apply for Jobs Button (Solid Black Pill with Google Play Icon) */}
+            <a
+              href={siteConfig.links.playStore}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group inline-flex h-11 min-w-[11rem] items-center justify-center gap-2.5 rounded-full bg-slate-950 hover:bg-black px-6 text-sm font-semibold text-white shadow-sm shadow-black/25 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-brand-500/40"
+              aria-label="Apply for Jobs on Google Play"
+            >
+              <svg className="h-4 w-4 shrink-0" viewBox="0 0 512 512" fill="none" aria-hidden="true">
+                <path
+                  d="M47 24.6c-5.2 5.6-8.3 14.2-8.3 25.4v412c0 11.2 3.1 19.8 8.3 25.4l1.4 1.3 230.9-230.9v-5.4L48.4 23.4 47 24.6z"
+                  fill="#00D3FF"
+                />
+                <path
+                  d="M356.4 343.9l-77-77v-5.4l77-77 1.7 1 91.2 51.8c26 14.8 26 39 0 53.8l-91.2 51.8-1.7 1z"
+                  fill="#00F076"
+                />
+                <path
+                  d="M358.1 342.9l-78.7-78.7L47 497.3c8.6 9.1 22.7 10.2 38.7 1.1l272.4-155.5z"
+                  fill="#FFD900"
+                />
+                <path
+                  d="M358.1 185.5L85.7 30C69.7 20.9 55.6 22 47 31.1l232.4 232.4 78.7-78z"
+                  fill="#FF385C"
+                />
+              </svg>
+              <span>Apply for Jobs</span>
+            </a>
           </motion.div>
         </motion.div>
       </div>
 
-      {/* FULL-SCREEN VIDEO PLAYING MODERN CARD SECTION */}
-      <div
-        ref={demoSectionRef}
-        className={cn(
-          "relative w-full",
-          "h-[calc(105dvh+4.2rem)]"
-        )}
-      >
-        {/* Pinned Sticky Viewport (100vh x 100vw) */}
-        <div className="sticky top-0 h-[calc(105dvh+4.2rem)] w-full overflow-hidden bg-transparent text-white">
-          <div className="relative h-full w-full p-1.5 xs:p-2 sm:p-3 pt-14 xs:pt-16 sm:pt-18 lg:p-3.5 lg:pt-20 xl:pt-24 pb-1">
-            <HeroVideoCard className="h-full w-full" />
-          </div>
-        </div>
+      {/* HERO SHOWCASE BANNER ("Apply in Seconds. Match Instantly.") */}
+      <div className="relative mx-auto w-full max-w-[1540px] xl:max-w-[1680px] 2xl:max-w-[1800px] px-2 sm:px-4 lg:px-6 pb-12 sm:pb-16">
+        <HeroVideoCard initialJobs={initialJobs} className="w-full min-h-[var(--video-height)] lg:h-[var(--video-height)]" />
       </div>
     </section>
   );

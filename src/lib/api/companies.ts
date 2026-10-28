@@ -345,17 +345,18 @@ export async function fetchCompanyJobsList(
     // Suppressed
   }
 
-  // 2. Also check /jobs/?company_id= on api.hirance.com
+  // 2. Also check /api/v1/jobs/?company_id= on api.hirance.com
   try {
     const queryParams: Record<string, string | number | undefined> = {
       company_id: cleanId,
       page_size: 50,
     };
     if (categoryId) {
+      queryParams.category_id = categoryId;
       queryParams.role_category = categoryId;
     }
 
-    const jobsRes = await apiClient<{ success?: boolean; data?: any[] }>("/jobs/", {
+    const jobsRes = await apiClient<{ success?: boolean; data?: any[] }>("/api/v1/jobs/", {
       params: queryParams,
       revalidate: 60,
     });

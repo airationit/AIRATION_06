@@ -66,7 +66,9 @@ export async function fetchBlogs(
       },
     };
   } catch (error) {
-    console.error("fetchBlogs API error:", error);
+    if (typeof window === "undefined") {
+      console.error("fetchBlogs API error:", error);
+    }
     return {
       success: false,
       message: error instanceof Error ? error.message : "Failed to load blogs",
@@ -293,8 +295,8 @@ export async function recordBlogView(slug: string): Promise<boolean> {
     });
 
     return res?.success ?? false;
-  } catch (error) {
-    console.error(`recordBlogView for '${slug}' failed:`, error);
+  } catch {
+    // Analytics view count is optional; ignore if endpoint is not implemented on backend
     return false;
   }
 }

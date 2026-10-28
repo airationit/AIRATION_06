@@ -15,6 +15,7 @@ import {
 import { Job } from "@/lib/jobs-data";
 import { siteConfig } from "@/config/site";
 import { generateCompanySlug } from "@/lib/api/companies";
+import { HiddenCompanyName } from "./hidden-company-name";
 
 interface JobCardProps {
   job: Job;
@@ -38,12 +39,14 @@ export function JobCard({ job, index = 0 }: JobCardProps) {
   const companySlug = generateCompanySlug(job.company, job.companyId) || job.companyId || "";
 
   // Compact experience string
-  const formatExp = (exp: string) => {
-    if (!exp) return "Fresher";
-    const lower = exp.toLowerCase();
-    if (lower.includes("min") || lower.includes("fresher")) return exp;
+  const formatExp = (exp?: string) => {
+    if (!exp) return "Open to All";
+    const clean = exp.replace(/[\uFFFD\u2013\u2014]/g, "-").trim();
+    const lower = clean.toLowerCase();
+    if (lower === "open to all" || lower.includes("open to all") || lower === "open") return "Open to All";
+    if (lower.includes("min") || lower.includes("fresher")) return clean;
     if (lower.includes("0-1") || lower.includes("entry")) return "Fresher";
-    return `${exp.replace(/years?|yrs?/gi, "").trim()} yrs`;
+    return `${clean.replace(/years?|yrs?/gi, "").trim()} yrs`;
   };
 
   return (
@@ -59,14 +62,14 @@ export function JobCard({ job, index = 0 }: JobCardProps) {
           <div className="flex items-start gap-3 min-w-0 flex-1">
             {/* Company Logo */}
             {companySlug ? (
-              <Link
-                href={`/company/${companySlug}`}
+              <div
+                // href={`/company/${companySlug}`}
                 className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-border/80 bg-muted/40 font-mono text-xs font-bold text-brand-600 dark:text-brand-400 shadow-2xs hover:opacity-85 transition-opacity"
               >
                 {job.companyLogo && !imgError ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
-                    src={job.companyLogo}
+                    src={job.companyLogo} 
                     alt={job.company}
                     onError={() => setImgError(true)}
                     className="h-full w-full object-contain p-1"
@@ -74,7 +77,7 @@ export function JobCard({ job, index = 0 }: JobCardProps) {
                 ) : (
                   <span>{initials}</span>
                 )}
-              </Link>
+              </div>
             ) : (
               <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-border/80 bg-muted/40 font-mono text-xs font-bold text-brand-600 dark:text-brand-400 shadow-2xs">
                 {job.companyLogo && !imgError ? (
@@ -99,16 +102,7 @@ export function JobCard({ job, index = 0 }: JobCardProps) {
                 </h3>
               </Link>
               <div className="mt-0.5 flex items-center gap-1.5 text-xs text-muted-foreground font-semibold">
-                {companySlug ? (
-                  <Link
-                    href={`/company/${companySlug}`}
-                    className="truncate max-w-[200px] hover:text-brand-600 dark:hover:text-brand-400 transition-colors"
-                  >
-                    {job.company}
-                  </Link>
-                ) : (
-                  <span className="truncate max-w-[200px]">{job.company}</span>
-                )}
+                <HiddenCompanyName name={job.company} className="max-w-[200px]" />
                 {job.isVerified && (
                   <CheckCircle2
                     className="h-3.5 w-3.5 shrink-0 text-brand-600 dark:text-brand-400"
