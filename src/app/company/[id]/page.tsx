@@ -45,7 +45,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
           description,
           url: `${siteConfig.url}/company/${id}`,
           siteName: siteConfig.name,
-          images: company.company_logo ? [{ url: company.company_logo }] : undefined,
+          images: company.company_logo
+            ? [{ url: company.company_logo, alt: company.company_name }]
+            : [{ url: siteConfig.ogImage, width: 1200, height: 630, alt: "Careers on Hirance" }],
         },
       };
     }

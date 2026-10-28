@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { siteConfig } from "@/config/site";
 import BlogIndexPage from "@/app/blog/page";
 
 interface CategoryPageProps {
@@ -24,6 +25,9 @@ export async function generateMetadata({ params }: CategoryPageProps): Promise<M
       canonical: `https://hirance.com/blog/category/${rawCategory}`,
     },
     openGraph: {
+      type: "website",
+      siteName: siteConfig.name,
+      images: [{ url: siteConfig.ogImage, width: 1200, height: 630, alt: `${categoryName} hiring insights on Hirance` }],
       title: `${categoryName} Hiring Insights | Hirance`,
       description: `Explore ${categoryName} hiring insights, career growth strategies, and recruitment guides on Hirance.`,
       url: `https://hirance.com/blog/category/${rawCategory}`,
