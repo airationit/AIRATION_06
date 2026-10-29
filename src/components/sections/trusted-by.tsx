@@ -1,13 +1,11 @@
 "use client";
 
 import { useState, useEffect, useMemo, memo } from "react";
-import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
 import { getCompanyColorTheme, initials } from "@/config/companies";
 import { fetchCompanies } from "@/lib/api";
 import type { CompanyItem } from "@/types";
 import { cn } from "@/lib/utils";
-import { ArrowRight } from "lucide-react";
 
 /**
  * Deduplicate company items by normalized company name.
@@ -40,9 +38,7 @@ function deduplicateCompanies(list: CompanyItem[]): CompanyItem[] {
 }
 
 /**
- * App-icon squircle card for a company.
- * Clean, lightweight, and hardware-accelerated with subtle grey borders.
- * Uses real API company data (id, company_name, company_logo).
+ * Individual App-Icon styled company logo card (non-clickable).
  */
 const AppIconCompanyCard = memo(function AppIconCompanyCard({
   company,
@@ -59,12 +55,11 @@ const AppIconCompanyCard = memo(function AppIconCompanyCard({
   const theme = useMemo(() => getCompanyColorTheme(name, index), [name, index]);
 
   return (
-    <Link
-      href={company.id ? `/company/${company.id}` : `/jobs?search=${encodeURIComponent(name)}`}
+    <div
       title={name}
-      aria-label={`View ${name} company profile`}
+      aria-label={name}
       suppressHydrationWarning
-      className="relative flex shrink-0 items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 rounded-xl sm:rounded-[14px] md:rounded-2xl"
+      className="relative flex shrink-0 items-center justify-center rounded-xl sm:rounded-[14px] md:rounded-2xl select-none cursor-default"
     >
       {/* Squircle App-Icon Container with Light Background & Crisp Grey Border */}
       <div
@@ -74,8 +69,7 @@ const AppIconCompanyCard = memo(function AppIconCompanyCard({
           "w-11 h-11 sm:w-13 sm:h-13 md:w-14 md:h-14 lg:w-16 lg:h-16",
           "rounded-xl sm:rounded-[14px] md:rounded-2xl",
           "border-[1.5px] border-slate-300/90 dark:border-slate-700",
-          "shadow-[0_1px_4px_rgba(0,0,0,0.04)]",
-          "transition-transform duration-200 ease-out hover:scale-105"
+          "shadow-[0_1px_4px_rgba(0,0,0,0.04)]"
         )}
         style={{
           backgroundColor: theme.bg,
@@ -134,7 +128,7 @@ const AppIconCompanyCard = memo(function AppIconCompanyCard({
           )}
         </div>
       </div>
-    </Link>
+    </div>
   );
 });
 
@@ -273,14 +267,6 @@ export function TrustedBy({ initialCompanies }: TrustedByProps) {
           <p className="mt-3 text-sm sm:text-base text-muted-foreground max-w-xl mx-auto">
             Built for modern hiring teams looking for better matches, faster applications and simpler hiring.
           </p>
-          <div className="mt-3 flex items-center justify-center">
-            <Link
-              href="/companies"
-              className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-blue-600 hover:text-blue-700 dark:text-blue-400 hover:underline transition-colors"
-            >
-              Explore Top Companies <ArrowRight className="w-3.5 h-3.5" />
-            </Link>
-          </div>
         </motion.div>
 
         {/* 4-Row Continuous App-Icon Stream (Continuous, no pause on hover) */}

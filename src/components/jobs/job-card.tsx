@@ -14,7 +14,6 @@ import {
 } from "lucide-react";
 import { Job } from "@/lib/jobs-data";
 import { siteConfig } from "@/config/site";
-import { generateCompanySlug } from "@/lib/api/companies";
 
 interface JobCardProps {
   job: Job;
@@ -35,22 +34,19 @@ export function JobCard({ job, index = 0 }: JobCardProps) {
         .toUpperCase()
     : "HI";
 
-  const companySlug = job.companyId || generateCompanySlug(job.company, job.companyId);
-
   // Compact experience string
   const formatExp = (exp?: string) => {
     if (!exp) return "Open to All";
     const clean = exp.replace(/[\uFFFD\u2013\u2014]/g, "-").trim();
     const lower = clean.toLowerCase();
     if (lower === "open to all" || lower.includes("open to all") || lower === "open") return "Open to All";
-    if (lower.includes("min") || lower.includes("fresher")) return clean;
-    if (lower.includes("0-1") || lower.includes("entry")) return "Fresher";
-    return `${clean.replace(/years?|yrs?/gi, "").trim()} yrs`;
+    if (lower === "fresher" || lower.includes("fresher")) return "Fresher";
+    return clean;
   };
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 8 }}
+      initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.2, delay: Math.min(index * 0.02, 0.1) }}
       className="group relative flex flex-col justify-between rounded-xl border border-border/80 bg-card p-4 transition-all duration-200 hover:border-brand-500/40 hover:shadow-md hover:shadow-brand-500/5 dark:hover:border-brand-400/30"
@@ -60,38 +56,19 @@ export function JobCard({ job, index = 0 }: JobCardProps) {
         <div className="flex items-start justify-between gap-3">
           <div className="flex items-start gap-3 min-w-0 flex-1">
             {/* Company Logo */}
-            {companySlug ? (
-              <Link
-                href={`/company/${companySlug}`}
-                className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-border/80 bg-muted/40 font-mono text-xs font-bold text-brand-600 dark:text-brand-400 shadow-2xs hover:opacity-85 transition-opacity"
-              >
-                {job.companyLogo && !imgError ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={job.companyLogo}
-                    alt={job.company}
-                    onError={() => setImgError(true)}
-                    className="h-full w-full object-contain p-1"
-                  />
-                ) : (
-                  <span>{initials}</span>
-                )}
-              </Link>
-            ) : (
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-border/80 bg-muted/40 font-mono text-xs font-bold text-brand-600 dark:text-brand-400 shadow-2xs">
-                {job.companyLogo && !imgError ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={job.companyLogo}
-                    alt={job.company}
-                    onError={() => setImgError(true)}
-                    className="h-full w-full object-contain p-1"
-                  />
-                ) : (
-                  <span>{initials}</span>
-                )}
-              </div>
-            )}
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-border/80 bg-muted/40 font-mono text-xs font-bold text-brand-600 dark:text-brand-400 shadow-2xs">
+              {job.companyLogo && !imgError ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={job.companyLogo}
+                  alt={job.company}
+                  onError={() => setImgError(true)}
+                  className="h-full w-full object-contain p-1"
+                />
+              ) : (
+                <span>{initials}</span>
+              )}
+            </div>
 
             {/* Full Title (No truncate) & Company Name */}
             <div className="min-w-0 flex-1">
@@ -101,16 +78,7 @@ export function JobCard({ job, index = 0 }: JobCardProps) {
                 </h3>
               </Link>
               <div className="mt-0.5 flex items-center gap-1.5 text-xs text-muted-foreground font-semibold">
-                {companySlug ? (
-                  <Link
-                    href={`/company/${companySlug}`}
-                    className="truncate max-w-[200px] hover:text-brand-600 dark:hover:text-brand-400 transition-colors"
-                  >
-                    {job.company}
-                  </Link>
-                ) : (
-                  <span className="truncate max-w-[200px]">{job.company}</span>
-                )}
+                <span className="truncate max-w-[200px]">{job.company}</span>
                 {job.isVerified && (
                   <CheckCircle2
                     className="h-3.5 w-3.5 shrink-0 text-brand-600 dark:text-brand-400"
