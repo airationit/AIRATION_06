@@ -198,7 +198,7 @@ export function MobilePrivacyPolicyContent() {
               </div>
               <button
                 onClick={handlePrint}
-                className="w-full sm:w-auto shrink-0 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#2563EB] hover:bg-blue-600 text-white font-semibold text-xs sm:text-sm transition-colors shadow-md"
+                className="w-full sm:w-auto shrink-0 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-semibold text-xs sm:text-sm transition-colors shadow-md"
               >
                 <Download className="w-4 h-4" /> Save / Print PDF
               </button>

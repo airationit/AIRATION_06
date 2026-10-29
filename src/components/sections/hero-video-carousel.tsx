@@ -220,7 +220,7 @@ export function HeroVideoCarousel() {
             <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:gap-4">
               <Link
                 href={siteConfig.links.employer}
-                className="group inline-flex h-12 min-w-[11rem] items-center justify-center gap-2 rounded-full bg-brand-600 px-7 text-sm font-semibold text-white transition-all hover:bg-brand-500 hover:shadow-[0_0_24px_rgba(37,99,235,0.5)]"
+                className="group inline-flex h-12 min-w-[11rem] items-center justify-center gap-2 rounded-full bg-brand-600 px-7 text-sm font-semibold text-white transition-all hover:bg-brand-700 hover:shadow-[0_0_24px_rgba(37,99,235,0.4)]"
               >
                 Start hiring today
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
@@ -311,7 +311,7 @@ export function HeroVideoCarousel() {
               <div className="shrink-0">
                 <Link
                   href={siteConfig.links.employer}
-                  className="group inline-flex h-11 sm:h-12 items-center justify-center gap-2 rounded-full bg-gradient-to-r from-brand-600 to-sky-600 px-6 sm:px-7 text-xs sm:text-sm font-semibold text-white transition-all duration-300 hover:shadow-[0_0_20px_rgba(37,99,235,0.5)] hover:scale-[1.02]"
+                  className="group inline-flex h-11 sm:h-12 items-center justify-center gap-2 rounded-full bg-brand-600 hover:bg-brand-700 px-6 sm:px-7 text-xs sm:text-sm font-semibold text-white transition-all duration-300 hover:shadow-[0_0_20px_rgba(37,99,235,0.4)] hover:scale-[1.02]"
                 >
                   Explore Platform
                   <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />

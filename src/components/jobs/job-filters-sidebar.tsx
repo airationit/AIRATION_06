@@ -859,7 +859,7 @@ export function JobFiltersSidebar({
               <button
                 type="button"
                 onClick={onCloseMobileDrawer}
-                className="w-full rounded-xl bg-brand-600 py-2.5 text-sm font-bold text-white shadow-md hover:bg-brand-500 cursor-pointer"
+                className="w-full rounded-xl bg-brand-600 py-2.5 text-sm font-bold text-white shadow-sm hover:bg-brand-700 cursor-pointer"
               >
                 Apply Filters {totalJobsCount !== undefined ? `(${totalJobsCount})` : ""}
               </button>

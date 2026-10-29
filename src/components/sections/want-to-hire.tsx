@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
@@ -63,7 +63,7 @@ const CANDIDATES = [
     location: "Bengaluru",
     match: 96,
     initials: "AS",
-    color: "from-blue-600 to-indigo-600",
+    color: "bg-blue-600 text-white",
   },
   {
     id: "c2",
@@ -73,7 +73,7 @@ const CANDIDATES = [
     location: "Mumbai",
     match: 92,
     initials: "RV",
-    color: "from-indigo-600 to-purple-600",
+    color: "bg-slate-900 text-white",
   },
   {
     id: "c3",
@@ -83,7 +83,7 @@ const CANDIDATES = [
     location: "Delhi NCR",
     match: 89,
     initials: "PN",
-    color: "from-emerald-600 to-teal-600",
+    color: "bg-emerald-600 text-white",
   },
 ];
 
@@ -96,7 +96,7 @@ const MiniProfile = () => (
       animate={{ opacity: 1, y: 0 }}
       className="flex items-center gap-2.5 rounded-xl border border-border/80 bg-background/90 p-2.5 shadow-2xs"
     >
-      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-blue-600 to-indigo-600 text-white font-black text-xs shadow-xs">
+      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-slate-900 text-white dark:bg-slate-800 dark:text-white font-bold text-xs shadow-xs">
         TN
       </div>
       <div className="min-w-0 flex-1">
@@ -209,7 +209,7 @@ const MiniShortlist = () => (
       >
         <div
           className={cn(
-            "w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center text-white text-[10px] sm:text-xs font-black shrink-0 bg-gradient-to-br",
+            "w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center text-white text-[10px] sm:text-xs font-black shrink-0",
             c.color
           )}
         >
@@ -254,7 +254,7 @@ const MiniHire = () => (
       initial={{ opacity: 0, scale: 0.96 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ delay: 0.1 }}
-      className="rounded-xl p-2.5 text-center text-white bg-gradient-to-r from-emerald-600 to-teal-600 shadow-sm"
+      className="rounded-xl p-2.5 text-center text-white bg-brand-600 shadow-xs"
     >
       <div className="flex items-center justify-center gap-1.5">
         <Handshake size={15} />
@@ -298,7 +298,7 @@ function RecruiterDashboardMockup({
       {/* Progress Line */}
       <div className="h-1 bg-muted/70 w-full overflow-hidden shrink-0">
         <motion.div
-          className="h-full bg-gradient-to-r from-blue-600 via-indigo-600 to-brand-500"
+          className="h-full bg-blue-600 dark:bg-blue-500"
           animate={{ width: `${(completed / 4) * 100}%` }}
           transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
         />
@@ -417,7 +417,7 @@ function RecruiterDashboardMockup({
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.25 }}
-              className="rounded-xl sm:rounded-2xl p-3 text-center text-white bg-gradient-to-r from-blue-600 to-indigo-600 shadow-md mt-auto"
+              className="rounded-xl sm:rounded-2xl p-3 text-center text-white bg-brand-600 hover:bg-brand-700 shadow-xs mt-auto"
             >
               <div className="flex items-center justify-center gap-1.5">
                 <Sparkles size={15} className="text-sky-200" />
@@ -480,12 +480,7 @@ export function WantToHire() {
         className="pointer-events-none absolute inset-0 -z-10 overflow-hidden"
         aria-hidden="true"
       >
-        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-border/80 to-transparent" />
-        <div className="absolute left-1/2 top-1/2 h-[34rem] w-[50rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-to-br from-brand-500/15 via-indigo-500/10 to-sky-500/5 blur-[140px]" />
-        <div className="absolute right-10 top-1/4 h-[22rem] w-[22rem] rounded-full bg-blue-600/10 blur-[100px]" />
-
-        {/* Subtle geometric grid backdrop */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)]" />
+        <div className="absolute inset-x-0 top-0 h-px bg-slate-200/80 dark:bg-slate-800/80" />
       </div>
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full">
@@ -535,7 +530,7 @@ export function WantToHire() {
             className="flex flex-col justify-start items-center text-center lg:items-start lg:text-left lg:col-span-6 order-1 lg:order-2 w-full"
           >
             {/* Section Eyebrow (clean typography, no chip/badge) */}
-            <p className="mb-2.5 text-xs sm:text-sm font-bold tracking-widest uppercase text-brand-600 dark:text-brand-400">
+            <p className="mb-1.5 text-xs sm:text-sm font-bold tracking-widest uppercase text-brand-600 dark:text-brand-400">
               For Employers &amp; Hiring Teams
             </p>
 
@@ -551,12 +546,12 @@ export function WantToHire() {
             </h2>
 
             {/* Subtext */}
-            <p className="mt-3.5 max-w-xl text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
+            <p className="mt-2 max-w-xl text-pretty text-sm sm:text-base leading-relaxed text-muted-foreground">
               Built for employers: post any role in 60 seconds. Our match engine filters applicants in real time so you only talk to the best fits.
             </p>
 
             {/* 4 Interactive Step Highlight Cards (2x2 Grid) */}
-            <div className="mt-6 sm:mt-8 grid grid-cols-1 sm:grid-cols-2 gap-3 w-full">
+            <div className="mt-4 sm:mt-5 grid grid-cols-1 sm:grid-cols-2 gap-2.5 w-full">
               {STEPS.map((s, i) => {
                 const done = i < active;
                 const on = i === active;
@@ -567,7 +562,7 @@ export function WantToHire() {
                     type="button"
                     onClick={() => jumpToStep(i)}
                     className={cn(
-                      "text-left rounded-xl p-3.5 border transition-all duration-200 hover:-translate-y-0.5",
+                      "text-left rounded-xl p-2.5 sm:p-3 border transition-all duration-200 hover:-translate-y-0.5",
                       on
                         ? "border-blue-500 bg-blue-50/60 dark:border-blue-500/50 dark:bg-blue-950/20 shadow-xs ring-1 ring-blue-500/20"
                         : done
@@ -609,35 +604,26 @@ export function WantToHire() {
                 duration: 0.5,
                 ease: [0.16, 1, 0.3, 1],
               }}
-              className="relative mt-6 sm:mt-8 w-full overflow-hidden rounded-2xl sm:rounded-3xl border border-blue-100/90 dark:border-blue-900/40 bg-gradient-to-br from-blue-50/80 via-indigo-50/30 to-background dark:from-blue-950/30 dark:via-indigo-950/20 dark:to-card p-6 sm:p-7 lg:p-8 text-left shadow-lg shadow-blue-500/5 dark:shadow-none backdrop-blur-sm"
-            >
-              {/* Subtle ambient gradient shimmer glow in background */}
-              <div
-                className="pointer-events-none absolute -right-10 -bottom-10 h-40 w-40 rounded-full bg-blue-500/10 dark:bg-blue-500/15 blur-3xl"
-                aria-hidden="true"
-              />
-              <div
-                className="pointer-events-none absolute -left-10 -top-10 h-32 w-32 rounded-full bg-indigo-500/10 dark:bg-indigo-500/15 blur-2xl"
-                aria-hidden="true"
-              />
+              className="relative mt-3.5 sm:mt-4 w-full overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 sm:p-5 text-left shadow-sm">
+
 
               <div className="relative z-10">
-                <h3 className="text-xl sm:text-2xl font-extrabold tracking-tight text-foreground leading-tight">
+                <h3 className="text-lg sm:text-xl font-bold tracking-tight text-foreground leading-tight">
                   Post Any Job in 1 Minute.
                 </h3>
-                <p className="mt-1.5 text-sm sm:text-base text-muted-foreground leading-relaxed">
+                <p className="mt-1 text-xs sm:text-sm text-muted-foreground leading-relaxed">
                   For every job you post, someone can swipe in seconds.
                 </p>
 
                 {/* Actions Row */}
-                <div className="mt-5 sm:mt-6 flex flex-wrap items-center gap-4 sm:gap-6">
+                <div className="mt-3.5 sm:mt-4 flex flex-wrap items-center gap-3 sm:gap-4">
                   {/* Primary CTA */}
                   <a
                     href={siteConfig.links.employer}
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label="Post a Job on Hirance employer portal"
-                    className="group inline-flex items-center justify-center gap-2 rounded-full bg-[#0077c8] hover:bg-[#0066ad] dark:bg-brand-600 dark:hover:bg-brand-500 px-6 sm:px-7 py-3 text-sm sm:text-base font-semibold text-white shadow-md shadow-[#0077c8]/25 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-brand-500/40"
+                    className="group inline-flex items-center justify-center gap-2 rounded-full bg-brand-600 hover:bg-brand-700 px-5 sm:px-6 py-2.5 text-xs sm:text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-brand-500/40"
                   >
                     <span>Post a Job</span>
                     <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
@@ -648,7 +634,7 @@ export function WantToHire() {
                     type="button"
                     onClick={() => setIsDemoModalOpen(true)}
                     aria-label="See Hirance employer job posting interactive demo"
-                    className="inline-flex items-center gap-2 text-sm sm:text-base font-semibold text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40 rounded-md cursor-pointer"
+                    className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40 rounded-md cursor-pointer"
                   >
                     <svg
                       className="h-5 w-5 shrink-0 text-blue-600 dark:text-blue-400"
@@ -671,7 +657,7 @@ export function WantToHire() {
                     type="button"
                     onClick={() => setIsPricingModalOpen(true)}
                     aria-label="View employer hiring pricing plans"
-                    className="inline-flex items-center gap-1.5 text-sm sm:text-base font-semibold text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40 rounded-md cursor-pointer"
+                    className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40 rounded-md cursor-pointer"
                   >
                     <Tag className="h-4 w-4 sm:h-4.5 sm:w-4.5 shrink-0 text-blue-600 dark:text-blue-400" />
                     <span>View Pricing</span>

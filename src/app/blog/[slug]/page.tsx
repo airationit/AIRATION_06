@@ -93,7 +93,7 @@ export default async function BlogPostPage({ params }: PageProps) {
         <div className="max-w-md bg-white p-8 rounded-2xl border border-slate-200 shadow-sm">
           <h1 className="text-xl font-bold text-slate-900 mb-2">Article Not Found</h1>
           <p className="text-sm text-slate-500 mb-6">The requested article could not be loaded. Explore our latest hiring insights.</p>
-          <a href="/blog" className="inline-flex items-center px-4 py-2 rounded-lg bg-blue-600 text-white font-medium text-sm hover:bg-blue-700 transition-colors">
+          <a href="/blog" className="inline-flex items-center px-4 py-2 rounded-lg bg-brand-600 hover:bg-brand-700 text-white font-medium text-sm transition-colors">
             Back to Blog
           </a>
         </div>

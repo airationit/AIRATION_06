@@ -33,7 +33,7 @@ export function SwipeHiringCta({ className = "" }: SwipeHiringCtaProps) {
                   href="https://employer.hirance.com/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex h-11 sm:h-12 items-center justify-center rounded-full border border-slate-200/90 dark:border-border bg-white dark:bg-card px-6 sm:px-7 text-xs sm:text-sm font-bold text-slate-800 dark:text-white shadow-xs transition-all hover:bg-slate-50 dark:hover:bg-muted/80 active:scale-95"
+                  className="inline-flex h-11 sm:h-12 items-center justify-center rounded-full bg-brand-600 hover:bg-brand-700 px-6 sm:px-7 text-xs sm:text-sm font-semibold text-white shadow-sm transition-all hover:scale-[1.02] active:scale-[0.98]"
                 >
                   Post a Job in 60s
                 </a>

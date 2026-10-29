@@ -95,7 +95,7 @@ export function HeroVideoCard({ className }: HeroVideoCardProps) {
               href={siteConfig.links.playStore}
               target="_blank"
               rel="noopener noreferrer"
-              className="group inline-flex h-10 xs:h-11 sm:h-12 items-center justify-center gap-2 rounded-full bg-brand-600 px-5 xs:px-6 sm:px-7 text-xs sm:text-sm font-semibold text-white transition-all duration-200 hover:bg-brand-500 hover:shadow-[0_0_28px_rgba(37,99,235,0.6)] hover:scale-[1.02] active:scale-[0.98]"
+              className="group inline-flex h-10 xs:h-11 sm:h-12 items-center justify-center gap-2 rounded-full bg-brand-600 px-5 xs:px-6 sm:px-7 text-xs sm:text-sm font-semibold text-white transition-all duration-200 hover:bg-brand-700 hover:shadow-[0_0_28px_rgba(37,99,235,0.4)] hover:scale-[1.02] active:scale-[0.98]"
             >
               <span>Start Swiping</span>
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />

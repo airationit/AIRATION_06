@@ -666,7 +666,7 @@ export function JobsContent({
             {/* 4. Professional Search Button on Right */}
             <button
               type="submit"
-              className="inline-flex h-11 sm:h-12 items-center justify-center gap-2 rounded-xl bg-brand-600 px-6 sm:px-8 text-sm font-bold text-white shadow-sm transition-all hover:bg-brand-500 hover:shadow-md active:scale-98 cursor-pointer shrink-0"
+              className="inline-flex h-11 sm:h-12 items-center justify-center gap-2 rounded-xl bg-brand-600 px-6 sm:px-8 text-sm font-bold text-white shadow-sm transition-all hover:bg-brand-700 active:scale-98 cursor-pointer shrink-0"
             >
               <Search className="h-4 w-4" />
               <span>Search Jobs</span>
@@ -1162,7 +1162,7 @@ export function JobsContent({
                 <button
                   type="button"
                   onClick={handleResetFilters}
-                  className="mt-5 inline-flex items-center rounded-xl bg-brand-600 px-5 py-2.5 text-xs font-bold text-white hover:bg-brand-500 transition-colors shadow-sm cursor-pointer"
+                  className="mt-5 inline-flex items-center rounded-xl bg-brand-600 px-5 py-2.5 text-xs font-bold text-white hover:bg-brand-700 transition-colors shadow-sm cursor-pointer"
                 >
                   Reset All Filters
                 </button>

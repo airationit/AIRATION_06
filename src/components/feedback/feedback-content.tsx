@@ -451,7 +451,7 @@ export function FeedbackContent() {
                 href={siteConfig.links.playStore}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-xl bg-blue-600 hover:bg-blue-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-600/20 transition-all duration-200 active:scale-[0.98]"
+                className="inline-flex items-center gap-2 rounded-xl bg-brand-600 hover:bg-brand-700 px-6 py-3 text-sm font-semibold text-white shadow-sm transition-all duration-200 active:scale-[0.98]"
               >
                 <span>Get Hirance on Google Play</span>
                 <ArrowRight className="h-4 w-4" />

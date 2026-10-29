@@ -303,7 +303,7 @@ export function ContactContent() {
                   href="https://play.google.com/store/apps/details?id=com.hirance"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group inline-flex items-center gap-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 px-4 py-2.5 text-white shadow-md shadow-blue-600/20 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
+                  className="group inline-flex items-center gap-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 px-4 py-2.5 text-white shadow-sm transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
                 >
                   <svg className="h-4 w-4 fill-white" viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M3.18 23.76a2.23 2.23 0 0 1-1.18-.34V.58A2.23 2.23 0 0 1 3.18.24L13.7 12 3.18 23.76zM14.9 13.2l2.5 2.5-9.8 5.56 7.3-8.06zm2.5-4.9L14.9 10.8 7.6 2.74l9.8 5.56zM19.06 9.8l2.87 1.63a1.4 1.4 0 0 1 0 2.44l-2.87 1.63-2.7-2.7 2.7-3z" />
@@ -470,7 +470,7 @@ export function ContactContent() {
                     <button
                       type="submit"
                       disabled={submitting}
-                      className="inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-blue-600 hover:bg-blue-500 px-7 text-sm font-semibold text-white shadow-lg shadow-blue-600/25 transition-all duration-200 active:scale-[0.98] disabled:opacity-60"
+                      className="inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-brand-600 hover:bg-brand-700 px-7 text-sm font-semibold text-white shadow-sm transition-all duration-200 active:scale-[0.98] disabled:opacity-60"
                     >
                       {submitting ? (
                         <span>Sending...</span>
@@ -515,7 +515,7 @@ export function ContactContent() {
             href="https://www.google.com/maps?ll=26.923114,80.95313&z=15&t=m&hl=en&gl=IN&mapclient=embed&q=Jankipuram+Lucknow,+Uttar+Pradesh"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-xl border border-blue-500/20 bg-blue-500/10 hover:bg-blue-600 hover:text-white px-4 py-2.5 text-xs sm:text-sm font-semibold text-blue-600 transition-all duration-200 dark:bg-blue-950/60 dark:text-blue-400 dark:hover:bg-blue-600 dark:hover:text-white shadow-sm w-fit active:scale-[0.98]"
+            className="inline-flex items-center gap-2 rounded-xl border border-blue-500/20 bg-blue-500/10 hover:bg-brand-600 hover:text-white px-4 py-2.5 text-xs sm:text-sm font-semibold text-blue-600 transition-all duration-200 dark:bg-blue-950/60 dark:text-blue-400 dark:hover:bg-blue-600 dark:hover:text-white shadow-sm w-fit active:scale-[0.98]"
           >
             <Navigation className="h-4 w-4" />
             <span>Get Directions</span>

@@ -183,7 +183,7 @@ export function DeleteAccountContent() {
 
               <button
                 onClick={handleCopyEmail}
-                className="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-xl transition-all flex items-center gap-2 shrink-0 shadow-md cursor-pointer"
+                className="px-4 py-2.5 bg-brand-600 hover:bg-brand-700 text-white text-xs font-semibold rounded-xl transition-all flex items-center gap-2 shrink-0 shadow-md cursor-pointer"
               >
                 {copiedEmail ? (
                   <>

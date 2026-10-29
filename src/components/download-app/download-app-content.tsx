@@ -101,7 +101,7 @@ export function DownloadAppContent() {
                   href={siteConfig.links.playStore}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex h-13 items-center gap-3 rounded-2xl bg-brand-600 hover:bg-brand-500 px-6 py-3 text-base font-bold text-white shadow-lg shadow-brand-600/25 transition-all hover:scale-[1.02] cursor-pointer"
+                  className="inline-flex h-13 items-center gap-3 rounded-2xl bg-brand-600 hover:bg-brand-700 px-6 py-3 text-base font-bold text-white shadow-sm transition-all hover:scale-[1.02] cursor-pointer"
                 >
                   <Download className="h-5 w-5" />
                   <span>Download on Google Play</span>

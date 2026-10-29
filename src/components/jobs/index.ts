@@ -5,4 +5,4 @@ export * from "./job-seo-links";
 export * from "./jobs-content";
 export * from "./rich-description";
 export * from "./job-detail-content";
-
+export * from "./blurred-company-name";

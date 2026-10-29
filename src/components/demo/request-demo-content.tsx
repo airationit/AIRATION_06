@@ -322,7 +322,7 @@ export function RequestDemoContent() {
                     <button
                       type="submit"
                       disabled={submitting}
-                      className="inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-blue-600 hover:bg-blue-500 px-8 text-sm font-semibold text-white shadow-lg shadow-blue-600/25 transition-all duration-200 active:scale-[0.98] disabled:opacity-60 shrink-0"
+                      className="inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-brand-600 hover:bg-brand-700 px-8 text-sm font-semibold text-white shadow-sm transition-all duration-200 active:scale-[0.98] disabled:opacity-60 shrink-0"
                     >
                       {submitting ? (
                         <span>Submitting...</span>

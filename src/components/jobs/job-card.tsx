@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { Job } from "@/lib/jobs-data";
 import { siteConfig } from "@/config/site";
+import { BlurredCompanyName } from "./blurred-company-name";
 
 interface JobCardProps {
   job: Job;
@@ -63,10 +64,10 @@ export function JobCard({ job, index = 0 }: JobCardProps) {
                   src={job.companyLogo}
                   alt={job.company}
                   onError={() => setImgError(true)}
-                  className="h-full w-full object-contain p-1"
+                  className="h-full w-full object-contain p-1 filter blur-[2px]"
                 />
               ) : (
-                <span>{initials}</span>
+                <span className="filter blur-[1.5px] select-none">{initials}</span>
               )}
             </div>
 
@@ -78,7 +79,7 @@ export function JobCard({ job, index = 0 }: JobCardProps) {
                 </h3>
               </Link>
               <div className="mt-0.5 flex items-center gap-1.5 text-xs text-muted-foreground font-semibold">
-                <span className="truncate max-w-[200px]">{job.company}</span>
+                <BlurredCompanyName name={job.company} className="truncate max-w-[180px] sm:max-w-[220px]" />
                 {job.isVerified && (
                   <CheckCircle2
                     className="h-3.5 w-3.5 shrink-0 text-brand-600 dark:text-brand-400"
@@ -163,7 +164,7 @@ export function JobCard({ job, index = 0 }: JobCardProps) {
             href={siteConfig.links.playStore}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 rounded-lg bg-brand-600 px-3 py-1.5 text-xs font-bold text-white shadow-2xs transition-all hover:bg-brand-500 active:scale-95 cursor-pointer"
+            className="inline-flex items-center gap-1 rounded-lg bg-brand-600 px-3 py-1.5 text-xs font-bold text-white shadow-2xs transition-all hover:bg-brand-700 active:scale-95 cursor-pointer"
           >
             <span>Apply</span>
             <ArrowUpRight className="h-3 w-3" />

@@ -1,9 +1,8 @@
-"use client";
+﻿"use client";
 
 import React from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { Zap, Target, MessageSquare, BadgeCheck } from "lucide-react";
-import { Logo } from "@/components/shared/logo";
 
 // First-timer friendly value highlights
 const HIGHLIGHTS = [
@@ -78,28 +77,15 @@ export function BrandStatement() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative text-center">
-        {/* Centered Hirance Logo */}
-        <motion.div
-          initial={reducedMotion ? false : { opacity: 0, scale: 0.9 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.7 }}
-          className="flex justify-center mb-4 sm:mb-6 lg:mb-8"
-        >
-          <div className="scale-110 sm:scale-125">
-            <Logo dark href="/" />
-          </div>
-        </motion.div>
-
-        {/* Subtitle */}
+        {/* Heading */}
         <motion.p
           initial={reducedMotion ? false : { opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.1 }}
-          className="text-sm sm:text-base lg:text-lg text-slate-300 max-w-lg mx-auto leading-relaxed px-2"
+          className="text-base sm:text-lg lg:text-xl font-medium text-slate-300 max-w-lg mx-auto leading-relaxed px-2"
         >
-          Hirance — The Smarter Way to Hire &amp; Get Hired.
+          The Smarter Way to Hire &amp; Get Hired.
         </motion.p>
 
         {/* value highlights: 2x2 grid on mobile for compact, scannable layout; 4 columns on desktop */}
@@ -115,7 +101,7 @@ export function BrandStatement() {
                 transition={{ delay: i * 0.08, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
                 whileHover={reducedMotion ? undefined : { y: -4 }}
                 data-testid={`brand-highlight-${i}`}
-                className="group relative overflow-hidden rounded-xl sm:rounded-2xl lg:rounded-3xl border border-white/[0.08] bg-gradient-to-b from-white/[0.05] to-white/[0.015] p-3.5 sm:p-5 lg:p-6 text-left backdrop-blur-md transition-all duration-300 hover:border-white/20 hover:bg-white/[0.07] hover:shadow-xl hover:shadow-sky-500/5 flex flex-col justify-between"
+                className="group relative overflow-hidden rounded-xl sm:rounded-2xl lg:rounded-3xl border border-white/[0.08] bg-gradient-to-b from-white/[0.05] to-white/[0.015] p-3.5 sm:p-5 lg:p-6 text-left backdrop-blur-md transition-all duration-300 hover:border-white/20 hover:bg-white/[0.07] hover:shadow-xl hover:shadow-sky-500/5 flex flex-col justify-start"
               >
                 {/* Subtle Hover Radial Spotlight */}
                 <div
@@ -123,7 +109,7 @@ export function BrandStatement() {
                 />
 
                 {/* Top Row: Icon + Step Index */}
-                <div className="flex items-center justify-between mb-3 sm:mb-5">
+                <div className="flex items-center justify-between mb-4 sm:mb-5">
                   <div
                     className={`h-9 w-9 sm:h-11 sm:w-11 rounded-xl sm:rounded-2xl flex items-center justify-center text-white shadow-md border border-white/15 bg-gradient-to-br ${h.gradient}`}
                   >
@@ -135,7 +121,7 @@ export function BrandStatement() {
                 </div>
 
                 {/* Content */}
-                <div>
+                <div className="flex-1 flex flex-col justify-start">
                   <h3 className="font-display font-bold text-xs sm:text-sm lg:text-base text-white tracking-tight leading-snug">
                     {h.title}
                   </h3>

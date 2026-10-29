@@ -26,6 +26,7 @@ import {
 } from "lucide-react";
 import { Job } from "@/lib/jobs-data";
 import { siteConfig } from "@/config/site";
+import { BlurredCompanyName } from "./blurred-company-name";
 import { formatRelativeTime } from "@/lib/html-utils";
 import { RichDescription } from "./rich-description";
 import { Footer, InteractiveDots } from "@/components/shared";
@@ -111,7 +112,7 @@ export function JobDetailContent({ job, relatedJobs = [] }: JobDetailContentProp
                       src={job.companyLogo}
                       alt={job.company}
                       onError={() => setImgError(true)}
-                      className="h-full w-full object-contain p-1.5"
+                      className="h-full w-full object-contain p-1.5 filter blur-[2px]"
                     />
                   ) : (
                     <span>{initials}</span>
@@ -120,9 +121,7 @@ export function JobDetailContent({ job, relatedJobs = [] }: JobDetailContentProp
 
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2">
-                    <span className="text-xs font-medium text-muted-foreground truncate">
-                      {job.company}
-                    </span>
+                    <BlurredCompanyName name={job.company} className="text-xs font-medium text-muted-foreground truncate" />
                     {job.isVerified && (
                       <span className="inline-flex items-center text-xs text-brand-600 dark:text-brand-400">
                         <CheckCircle2 className="h-3 w-3" />
@@ -144,7 +143,7 @@ export function JobDetailContent({ job, relatedJobs = [] }: JobDetailContentProp
                 href={siteConfig.links.playStore}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 rounded-xl bg-brand-600 px-4 py-2 text-xs sm:text-sm font-bold text-white shadow-xs transition-all hover:bg-brand-500 active:scale-95 shrink-0 cursor-pointer"
+                className="inline-flex items-center gap-1.5 rounded-xl bg-brand-600 px-4 py-2 text-xs sm:text-sm font-bold text-white shadow-xs transition-all hover:bg-brand-700 active:scale-95 shrink-0 cursor-pointer"
               >
                 <Smartphone className="h-4 w-4" />
                 <span>Swipe to Apply</span>
@@ -216,7 +215,7 @@ export function JobDetailContent({ job, relatedJobs = [] }: JobDetailContentProp
                     src={job.companyLogo}
                     alt={job.company}
                     onError={() => setImgError(true)}
-                    className="h-full w-full object-contain p-1.5 sm:p-2"
+                    className="h-full w-full object-contain p-1.5 sm:p-2 filter blur-[2.5px]"
                   />
                 ) : (
                   <span>{initials}</span>
@@ -226,9 +225,7 @@ export function JobDetailContent({ job, relatedJobs = [] }: JobDetailContentProp
               {/* Title & Metadata */}
               <div className="min-w-0 flex-1">
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="text-xs sm:text-sm font-semibold text-foreground/90">
-                    {job.company}
-                  </span>
+                  <BlurredCompanyName name={job.company} className="text-xs sm:text-sm font-semibold text-foreground/90" />
                   {job.isVerified && (
                     <span
                       title="Verified Employer"
@@ -259,7 +256,7 @@ export function JobDetailContent({ job, relatedJobs = [] }: JobDetailContentProp
                 href={siteConfig.links.playStore}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-xl bg-brand-600 px-5 py-2.5 text-xs sm:text-sm font-bold text-white shadow-xs transition-all hover:bg-brand-500 hover:shadow-sm active:scale-95 shrink-0 cursor-pointer"
+                className="inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-xl bg-brand-600 px-5 py-2.5 text-xs sm:text-sm font-bold text-white shadow-xs transition-all hover:bg-brand-700 active:scale-95 shrink-0 cursor-pointer"
               >
                 <Smartphone className="h-4 w-4" />
                 <span>Swipe to Apply</span>
@@ -375,7 +372,7 @@ export function JobDetailContent({ job, relatedJobs = [] }: JobDetailContentProp
                 <div className="mt-3 sm:mt-4">
                   <RichDescription
                     content={job.description}
-                    fallbackText={`We are hiring a ${job.title} to join ${job.company}. You will collaborate with the team on key objectives, deliver quality outcomes, and advance your career in a dynamic environment.`}
+                    fallbackText={`We are hiring a ${job.title} to join the team. You will collaborate with the team on key objectives, deliver quality outcomes, and advance your career in a dynamic environment.`}
                   />
                 </div>
               </section>
@@ -508,9 +505,7 @@ export function JobDetailContent({ job, relatedJobs = [] }: JobDetailContentProp
                           <h4 className="text-sm font-semibold text-foreground group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors line-clamp-1">
                             {relJob.title}
                           </h4>
-                          <p className="mt-0.5 text-xs text-muted-foreground line-clamp-1 font-medium">
-                            {relJob.company}
-                          </p>
+                          <div className="mt-0.5"><BlurredCompanyName name={relJob.company} className="text-xs text-muted-foreground line-clamp-1 font-medium" /></div>
                         </div>
                       </div>
 
@@ -582,14 +577,14 @@ export function JobDetailContent({ job, relatedJobs = [] }: JobDetailContentProp
               </div>
 
               <p className="text-xs text-muted-foreground leading-relaxed">
-                Connect directly with {job.company}&apos;s recruitment team. Download the mobile app and swipe to apply instantly.
+                Connect directly with the hiring team on Hirance App. Download the mobile app and swipe to apply instantly.
               </p>
 
               <a
                 href={siteConfig.links.playStore}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex w-full items-center justify-center gap-2 rounded-xl bg-brand-600 px-4 py-2.5 text-xs font-bold text-white shadow-xs transition-all hover:bg-brand-500 active:scale-98 cursor-pointer"
+                className="flex w-full items-center justify-center gap-2 rounded-xl bg-brand-600 px-4 py-2.5 text-xs font-bold text-white shadow-xs transition-all hover:bg-brand-700 active:scale-98 cursor-pointer"
               >
                 <span>Download App & Apply</span>
                 <ArrowUpRight className="h-4 w-4" />
@@ -608,7 +603,7 @@ export function JobDetailContent({ job, relatedJobs = [] }: JobDetailContentProp
               </span>
             </h2>
             <p className="text-xs sm:text-sm text-muted-foreground text-center">
-              Common questions about this {job.title} opening at {job.company}.
+              Common questions about this {job.title} opening.
             </p>
           </div>
 
@@ -620,28 +615,28 @@ export function JobDetailContent({ job, relatedJobs = [] }: JobDetailContentProp
                 a: `Candidates must have ${job.educationLevel || "Graduation / Diploma or equivalent"} qualification and ${job.experience || "relevant"} experience for this ${job.title} job in ${job.cityName || job.location || "Lucknow"}.`,
               },
               {
-                q: `How much salary can I expect for this ${job.title} job at ${job.company}?`,
-                a: `You can expect a monthly salary range of ${job.salaryRange.replace(/^₹\s*/, "₹")} for this ${job.title} vacancy at ${job.company} in ${job.cityName || job.location || "Lucknow"}.`,
+                q: `How much salary can I expect for this ${job.title} job?`,
+                a: `You can expect a monthly salary range of ${job.salaryRange.replace(/^₹\s*/, "₹")} for this ${job.title} vacancy in ${job.cityName || job.location || "Lucknow"}. Recruiter and company details are verified on the Hirance App.`,
               },
               {
                 q: `Is this ${job.title} vacancy in ${job.cityName || job.location || "Lucknow"} a work from home job?`,
                 a: job.workMode && job.workMode.toLowerCase().includes("home")
-                  ? `Yes, this is a remote / work from home ${job.title} job at ${job.company}.`
+                  ? `Yes, this is a remote / work from home ${job.title} job. Company and recruiter profiles are accessible on the mobile app.`
                   : `No, this is an on-site ${job.workMode || "Work from Office"} job based in ${job.location || "Lucknow"}.`,
               },
               {
-                q: `How do I apply for this ${job.title} job at ${job.company}?`,
-                a: `Click "Swipe to Apply" on Hirance, download the mobile app, and apply directly to ${job.company}'s recruitment team for ${job.title} jobs in ${job.cityName || job.location || "Lucknow"}.`,
+                q: `How do I apply for this ${job.title} job?`,
+                a: `Click "Swipe to Apply" on Hirance, download the mobile app, and apply directly to the recruitment team for ${job.title} jobs in ${job.cityName || job.location || "Lucknow"}.`,
               },
               // 3 Hinglish FAQs (5-7 for SEO)
               {
                 q: `Kya is ${job.title} job in ${job.cityName || job.location || "Lucknow"} ke liye freshers apply kar sakte hain?`,
                 a: job.experience && (job.experience.toLowerCase().includes("fresher") || job.experience.toLowerCase().includes("0-1"))
-                  ? `Haan, ${job.company} mein is ${job.title} job in ${job.cityName || job.location || "Lucknow"} ke liye freshers bhi apply kar sakte hain.`
+                  ? `Haan, is ${job.title} job in ${job.cityName || job.location || "Lucknow"} ke liye freshers bhi apply kar sakte hain.`
                   : `Is role ke liye minimum ${job.experience || "relevant experience"} required hai. Detailed eligibility ke liye candidate profile check karein.`,
               },
               {
-                q: `${job.company} mein is ${job.title} job in ${job.cityName || job.location || "Lucknow"} ki exact location kya hai?`,
+                q: `Is ${job.title} job in ${job.cityName || job.location || "Lucknow"} ki exact location kya hai?`,
                 a: `Is ${job.title} job in ${job.cityName || job.location || "Lucknow"} ki official hiring location ${job.location || "Lucknow"} hai. Direct HR connection ke liye Hirance app se apply karein.`,
               },
               {
@@ -711,7 +706,7 @@ export function JobDetailContent({ job, relatedJobs = [] }: JobDetailContentProp
             href={siteConfig.links.playStore}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 rounded-xl bg-brand-600 px-4 py-2 text-xs font-bold text-white shadow-xs transition-all hover:bg-brand-500 shrink-0 cursor-pointer"
+            className="inline-flex items-center gap-1.5 rounded-xl bg-brand-600 px-4 py-2 text-xs font-bold text-white shadow-xs transition-all hover:bg-brand-700 shrink-0 cursor-pointer"
           >
             <Smartphone className="h-3.5 w-3.5" />
             <span>Apply on App</span>

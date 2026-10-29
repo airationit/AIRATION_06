@@ -254,7 +254,7 @@ export const ContactForm = () => {
           <Button
             type="submit"
             disabled={submitting}
-            className="h-11 min-w-[140px] px-5 bg-blue-600 hover:bg-blue-700 text-white"
+            className="h-11 min-w-[140px] px-5 bg-brand-600 hover:bg-brand-700 text-white shadow-sm"
             aria-label="Send message"
           >
             {submitting ? "Sending…" : "Send message"}

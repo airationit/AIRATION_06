@@ -79,7 +79,7 @@ export function EmployerCTA({
               type="button"
               onClick={onPostJob}
               data-testid="employer-cta-post-job-button"
-              className="group flex items-center justify-center gap-2.5 font-bold text-[#060c18] bg-[#67e8f9] hover:bg-cyan-300 px-8 py-3.5 sm:py-4 rounded-full transition-all duration-200 shadow-lg shadow-cyan-500/20 hover:scale-[1.02] active:scale-[0.98]"
+              className="group flex items-center justify-center gap-2.5 font-bold text-white bg-brand-600 hover:bg-brand-700 px-8 py-3.5 sm:py-4 rounded-full transition-all duration-200 shadow-sm hover:scale-[1.02] active:scale-[0.98]"
             >
               <span>Post a Job</span>
               <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />

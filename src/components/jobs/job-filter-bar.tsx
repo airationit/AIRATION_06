@@ -154,7 +154,7 @@ export function JobFilterBar({
         {/* Find Jobs Button */}
         <button
           type="submit"
-          className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-brand-600 px-6 text-sm font-bold text-white shadow-sm transition-all hover:bg-brand-500 hover:shadow-md shrink-0 cursor-pointer"
+          className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-brand-600 px-6 text-sm font-bold text-white shadow-sm transition-all hover:bg-brand-700 shrink-0 cursor-pointer"
         >
           <span>Find Jobs</span>
           <ArrowRight className="h-4 w-4" />

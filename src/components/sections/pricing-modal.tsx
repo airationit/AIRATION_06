@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -258,7 +258,7 @@ function PlanCard({ plan, onStartHiring, index }: PlanCardProps) {
               className={cn(
                 "group w-full flex items-center justify-center gap-1.5 font-semibold py-2 rounded-xl text-xs sm:text-[13px] transition-all duration-200 cursor-pointer shadow-xs active:scale-[0.98]",
                 popular
-                  ? "bg-[#0077c8] hover:bg-[#0066ad] dark:bg-brand-600 dark:hover:bg-brand-500 text-white shadow-sm shadow-[#0077c8]/25"
+                  ? "bg-brand-600 hover:bg-brand-700 text-white shadow-sm"
                   : "border border-border hover:border-blue-600 bg-background text-foreground hover:text-blue-600 dark:hover:text-blue-400 hover:bg-slate-50 dark:hover:bg-slate-800"
               )}
             >
@@ -274,7 +274,7 @@ function PlanCard({ plan, onStartHiring, index }: PlanCardProps) {
               className={cn(
                 "group w-full flex items-center justify-center gap-1.5 font-semibold py-2 rounded-xl text-xs sm:text-[13px] transition-all duration-200 shadow-xs active:scale-[0.98]",
                 popular
-                  ? "bg-[#0077c8] hover:bg-[#0066ad] dark:bg-brand-600 dark:hover:bg-brand-500 text-white shadow-sm shadow-[#0077c8]/25"
+                  ? "bg-brand-600 hover:bg-brand-700 text-white shadow-sm"
                   : "border border-border hover:border-blue-600 bg-background text-foreground hover:text-blue-600 dark:hover:text-blue-400 hover:bg-slate-50 dark:hover:bg-slate-800"
               )}
             >

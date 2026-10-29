@@ -424,7 +424,7 @@ export function JobAlertsContent() {
                     <button
                       type="submit"
                       disabled={isSubmitting}
-                      className="w-full h-12 rounded-xl bg-gradient-to-r from-emerald-600 via-brand-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-sm shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+                      className="w-full h-12 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-bold text-sm shadow-sm transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
                     >
                       {isSubmitting ? (
                         <span>Activating...</span>

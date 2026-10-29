@@ -149,7 +149,7 @@ export function Hero2() {
           >
             <Link
               href={siteConfig.links.employer}
-              className="group inline-flex h-11 sm:h-12 items-center justify-center gap-2 rounded-full bg-gradient-to-r from-brand-600 to-sky-600 px-6 sm:px-7 text-xs sm:text-sm font-semibold text-white transition-all duration-300 hover:shadow-[0_0_20px_rgba(37,99,235,0.5)] hover:scale-[1.02]"
+              className="group inline-flex h-11 sm:h-12 items-center justify-center gap-2 rounded-full bg-brand-600 hover:bg-brand-700 px-6 sm:px-7 text-xs sm:text-sm font-semibold text-white transition-all duration-300 hover:shadow-[0_0_20px_rgba(37,99,235,0.4)] hover:scale-[1.02]"
             >
               Explore Platform
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />

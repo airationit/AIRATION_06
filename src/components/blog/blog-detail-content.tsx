@@ -701,7 +701,7 @@ export function BlogDetailContent({ post, featuredJobs = [] }: BlogDetailContent
                     href={buttonUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="shrink-0 inline-flex items-center justify-center rounded-full bg-blue-600 px-7 py-3 text-[15px] font-bold text-white hover:bg-blue-700 transition-colors shadow-[0_4px_14px_0_rgba(37,99,235,0.39)] hover:shadow-[0_6px_20px_rgba(37,99,235,0.23)]"
+                    className="shrink-0 inline-flex items-center justify-center rounded-full bg-brand-600 px-7 py-3 text-[15px] font-bold text-white hover:bg-brand-700 transition-colors shadow-sm"
                   >
                     {buttonText} <ArrowRight className="ml-2 h-4 w-4 stroke-[2.5]" />
                   </a>
@@ -1025,7 +1025,7 @@ export function BlogDetailContent({ post, featuredJobs = [] }: BlogDetailContent
             </div>
             <h3 className="text-[20px] font-extrabold text-slate-900 dark:text-white mb-2">Get Hired Faster</h3>
             <p className="text-[13.5px] text-slate-600 dark:text-slate-400 mb-7 leading-relaxed max-w-[240px] mx-auto">Join thousands of candidates already getting hired faster with Hirance.</p>
-            <a href={siteConfig.links.playStore} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-[#2962ff] to-[#5138ed] px-6 py-3.5 text-[14.5px] font-bold text-white hover:opacity-95 transition-opacity w-full shadow-[0_8px_20px_-6px_rgba(41,98,255,0.5)]">
+            <a href={siteConfig.links.playStore} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center rounded-full bg-brand-600 hover:bg-brand-700 px-6 py-3.5 text-[14.5px] font-bold text-white shadow-sm transition-colors w-full">
               Download App <ArrowRight className="ml-2 h-4 w-4 stroke-[2.5]" />
             </a>
           </div>
@@ -1125,7 +1125,7 @@ export function BlogDetailContent({ post, featuredJobs = [] }: BlogDetailContent
                         </span>
                         <Link
                           href={`/blog/${relPost.slug}`}
-                          className="flex h-7 w-7 items-center justify-center rounded-full bg-blue-600 text-white transition-all duration-200 hover:bg-blue-500 shadow-xs"
+                          className="flex h-7 w-7 items-center justify-center rounded-full bg-brand-600 hover:bg-brand-700 text-white transition-all duration-200 shadow-xs"
                           aria-label={`Read ${relPost.title}`}
                         >
                           <ArrowUpRight className="h-3.5 w-3.5" />

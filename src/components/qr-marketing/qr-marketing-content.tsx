@@ -1,3 +1,4 @@
+import { BlurredCompanyName } from "@/components/jobs/blurred-company-name";
 "use client";
 
 import React, { useState } from "react";
@@ -240,7 +241,7 @@ function InteractiveJobSwipeShowcase() {
               href={siteConfig.links.playStore}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-full bg-[#0077c8] hover:bg-[#0066ad] dark:bg-brand-600 dark:hover:bg-brand-500 text-white px-6 py-3 text-sm sm:text-base font-bold shadow-md shadow-[#0077c8]/25 transition-all hover:scale-[1.02] active:scale-[0.98]"
+              className="inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-full bg-brand-600 hover:bg-brand-700 text-white px-6 py-3 text-sm sm:text-base font-bold shadow-sm transition-all hover:scale-[1.02] active:scale-[0.98]"
             >
               <Download className="h-4 w-4" />
               <span>Start Swiping on Hirance</span>
@@ -322,7 +323,7 @@ function InteractiveJobSwipeShowcase() {
                         </div>
                         <div className="min-w-0">
                           <p className="truncate text-xs sm:text-sm font-bold text-slate-900 dark:text-white leading-tight">
-                            {currentJob.company}
+                            <BlurredCompanyName name={currentJob.company} />
                           </p>
                           <div className="flex items-center gap-1 mt-0.5">
                             <BadgeCheck className="h-3 w-3 text-blue-500 shrink-0" />
@@ -641,7 +642,7 @@ export function QrMarketingContent() {
                   href={siteConfig.links.playStore}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex w-full sm:w-auto items-center justify-center gap-2.5 rounded-2xl bg-[#2563EB] hover:bg-blue-700 text-white px-8 py-3.5 text-base sm:text-lg font-bold shadow-lg shadow-blue-600/25 transition-all duration-200 hover:scale-[1.01] active:scale-[0.99] focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-brand-500/40"
+                  className="inline-flex w-full sm:w-auto items-center justify-center gap-2.5 rounded-2xl bg-brand-600 hover:bg-brand-700 text-white px-8 py-3.5 text-base sm:text-lg font-bold shadow-sm transition-all duration-200 hover:scale-[1.01] active:scale-[0.99] focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-brand-500/40"
                 >
                   <Download className="h-5 w-5" />
                   <span>Download Hirance App</span>
