@@ -11,6 +11,7 @@ import {
   ArrowRight,
   Star,
   CalendarCheck,
+  Timer,
   MapPin,
   X,
   Tag,
@@ -24,26 +25,26 @@ const STEPS = [
   {
     n: "01",
     icon: Building2,
-    title: "Create your company profile",
-    text: "Add your company name, logo, industry & culture.",
+    title: "Create Company Profile",
+    text: "Build your company profile and culture.",
   },
   {
     n: "02",
     icon: SlidersHorizontal,
-    title: "Post a job & set filters",
-    text: "Post your role and choose how candidates match you.",
+    title: "Post Job & Set Filter",
+    text: "Define your matching preferences.",
   },
   {
     n: "03",
     icon: UserCheck,
-    title: "Shortlist candidates",
-    text: "Review swipes and shortlist your favourites in seconds.",
+    title: "Shortlist Candidates",
+    text: "Swipe, review, and shortlist instantly.",
   },
   {
     n: "04",
     icon: Handshake,
-    title: "Interview & hire",
-    text: "Schedule interviews and send the offer — all in-app.",
+    title: "Interview & Hire",
+    text: "Schedule interviews and hire easily.",
   },
 ];
 
@@ -271,18 +272,20 @@ function RecruiterDashboardMockup({ active, onStepClick }: {
   const reducedMotion = useReducedMotion();
 
   return (
-    <div className="w-full max-w-xl overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900 lg:max-w-none">
+    <div className="flex w-full max-w-xl flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900 lg:h-full lg:max-w-none">
       <div className="flex items-center gap-1.5 border-b border-border/70 bg-slate-50 px-4 py-4 sm:px-5 dark:bg-slate-900">
-        <span className="h-2 w-2 rounded-full bg-slate-300 dark:bg-slate-600" />
-        <span className="h-2 w-2 rounded-full bg-slate-300 dark:bg-slate-600" />
-        <span className="h-2 w-2 rounded-full bg-slate-300 dark:bg-slate-600" />
+        <div className="flex shrink-0 items-center gap-1.5" aria-hidden="true">
+          <span className="h-2.5 w-2.5 rounded-full border border-black/10 bg-[#FF5F57] sm:h-3 sm:w-3" />
+          <span className="h-2.5 w-2.5 rounded-full border border-black/10 bg-[#FEBC2E] sm:h-3 sm:w-3" />
+          <span className="h-2.5 w-2.5 rounded-full border border-black/10 bg-[#28C840] sm:h-3 sm:w-3" />
+        </div>
         <span className="ml-2 text-[11px] text-muted-foreground sm:text-xs">employer.hirance.com</span>
         <span className="ml-auto text-[11px] font-medium text-blue-600 dark:text-blue-400">{Math.min(active + 1, 4)} / 4</span>
       </div>
       <div className="h-1 bg-slate-100 dark:bg-slate-800" aria-hidden="true">
         <motion.div className="h-full bg-blue-600" animate={{ width: active >= 4 ? "100%" : ((active + 1) / STEPS.length) * 100 + "%" }} transition={{ duration: reducedMotion ? 0 : 0.3 }} />
       </div>
-      <div className="flex min-h-[540px] flex-col gap-2 p-3 sm:min-h-[560px] sm:gap-2.5 sm:p-5">
+      <div className="flex min-h-[540px] flex-1 flex-col gap-2 p-3 sm:min-h-[560px] sm:gap-2.5 sm:p-5">
         {STEPS.map((step, index) => {
           const selected = active === index;
           const done = index < active;
@@ -365,14 +368,14 @@ export function WantToHire() {
       </div>
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full">
-        <div className="grid grid-cols-1 items-start gap-10 lg:grid-cols-12 lg:gap-14">
+        <div className="grid grid-cols-1 items-start gap-10 lg:grid-cols-12 lg:items-stretch lg:gap-12">
           {/* Left Column: Interactive Progressive Recruiter Dashboard Mockup */}
           <motion.div
             initial={reducedMotion ? false : { opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: "-48px" }}
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-            className="flex flex-col items-center justify-start lg:col-span-6 order-2 lg:order-1 w-full"
+            className="flex flex-col items-center justify-start lg:col-span-6 order-2 lg:order-1 w-full lg:h-full"
           >
             <RecruiterDashboardMockup
               active={active}
@@ -391,37 +394,37 @@ export function WantToHire() {
               delay: reducedMotion ? 0 : 0.1,
               ease: [0.16, 1, 0.3, 1],
             }}
-            className="flex flex-col justify-start items-center text-center lg:items-start lg:text-left lg:col-span-6 order-1 lg:order-2 w-full"
+            className="flex flex-col justify-start items-center text-center lg:items-start lg:text-left lg:col-span-6 order-1 lg:order-2 w-full lg:h-full"
           >
             {/* Section Eyebrow (clean typography, no chip/badge) */}
-            <p className="mb-2.5 text-xs sm:text-sm font-bold tracking-widest uppercase text-brand-600 dark:text-brand-400">
+            <p className="mb-3 text-[10px] sm:text-[11px] font-semibold tracking-wider uppercase text-brand-600 dark:text-brand-400">
               For Employers &amp; Hiring Teams
             </p>
 
             <h2
               id="want-to-hire-heading"
-              className="text-balance text-2xl font-semibold tracking-tight text-slate-900 dark:text-white sm:text-3xl md:text-4xl lg:text-5xl leading-tight"
+              className="text-balance text-2xl font-semibold tracking-tight text-slate-900 dark:text-white sm:text-3xl md:text-4xl xl:text-[2.75rem] leading-[1.12]"
             >
-              Post a Job. {" "}
-              <span className="italic font-medium">
-                Let Candidates Come to You.
+              Post a Job. Let{" "}
+              <span className="block italic font-medium">
+                Candidates Come to You.
               </span>
             </h2>
 
             {/* Subtext */}
-            <p className="mt-3.5 max-w-xl text-pretty text-base leading-relaxed text-muted-foreground">
-              Built for employers: post any role in 60 seconds. Our match engine filters applicants in real time so you only talk to the best fits.
+            <p className="mt-3 max-w-xl text-pretty text-sm leading-relaxed text-muted-foreground">
+              Post roles in 60 seconds and match with top candidates instantly.
             </p>
 
             {/* Step highlights stay in sync with the automatic walkthrough. */}
-            <div className="mt-6 grid w-full grid-cols-1 gap-3 sm:mt-8 sm:grid-cols-2" aria-label="Hiring process">
+            <div className="mt-6 grid w-full grid-cols-1 gap-3 sm:grid-cols-2 lg:mb-6" aria-label="Hiring process">
               {STEPS.map((step, index) => {
                 const selected = active === index;
                 const done = index < active;
                 return (
                   <button key={step.n} type="button" onClick={() => jumpToStep(index)} aria-pressed={selected} aria-controls={"employer-step-" + index}
-                    className={cn("rounded-xl border p-4 text-left transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500", selected ? "border-blue-300 bg-blue-50/60 dark:border-blue-700 dark:bg-blue-950/25" : "border-border/70 bg-transparent hover:border-slate-300 hover:bg-slate-50 dark:hover:border-slate-600 dark:hover:bg-slate-900")}>
-                    <span className="mb-3 flex items-center justify-between gap-3">
+                    className={cn("rounded-xl border p-3.5 text-left transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500", selected ? "border-blue-300 bg-blue-50/60 dark:border-blue-700 dark:bg-blue-950/25" : "border-border/70 bg-transparent hover:border-slate-300 hover:bg-slate-50 dark:hover:border-slate-600 dark:hover:bg-slate-900")}>
+                    <span className="mb-2 flex items-center justify-between gap-3">
                       <span className={cn("text-xs font-semibold tabular-nums", selected ? "text-blue-600 dark:text-blue-400" : "text-muted-foreground")}>{step.n}</span>
                       {done ? <Check className="h-4 w-4 text-emerald-600 dark:text-emerald-400" aria-hidden="true" /> : <step.icon className={cn("h-4 w-4", selected ? "text-blue-600 dark:text-blue-400" : "text-muted-foreground")} aria-hidden="true" />}
                     </span>
@@ -442,53 +445,46 @@ export function WantToHire() {
                 duration: 0.5,
                 ease: [0.16, 1, 0.3, 1],
               }}
-              style={{
-                backgroundColor: '#F8FAFF',
-                borderColor: '#BBCFFB',
-              }}
-              className="relative mt-6 sm:mt-8 w-full overflow-hidden rounded-2xl sm:rounded-3xl border dark:border-slate-800/60 dark:bg-slate-900/20 p-6 sm:p-7 lg:p-8 text-left shadow-sm backdrop-blur-sm"
+              className="relative mt-6 w-full overflow-hidden rounded-2xl border border-blue-200/70 bg-blue-50/60 p-5 text-left shadow-[0_3px_16px_-8px_rgba(37,99,235,0.15)] dark:border-blue-900/60 dark:bg-slate-900/60 sm:p-6 lg:mt-auto"
             >
-              {/* Subtle ambient gradient shimmer glow in background */}
-              <div
-                className="pointer-events-none absolute -right-10 -bottom-10 h-40 w-40 rounded-full bg-slate-200/30 dark:bg-slate-700/20 blur-3xl"
-                aria-hidden="true"
-              />
-              <div
-                className="pointer-events-none absolute -left-10 -top-10 h-32 w-32 rounded-full bg-slate-200/30 dark:bg-slate-700/20 blur-2xl"
-                aria-hidden="true"
-              />
-
               <div className="relative z-10">
-                <h3 className="text-[20px] font-semibold tracking-tight text-foreground leading-tight">
-                  Post Any Job in 1 Minute.
-                </h3>
-                <p className="mt-1.5 text-sm sm:text-base text-muted-foreground leading-relaxed">
-                  For every job you post, someone can swipe in seconds.
-                </p>
+                <div className="flex items-start justify-between gap-4">
+                  <div className="min-w-0">
+                    <h3 className="text-lg font-semibold tracking-tight text-slate-900 leading-snug dark:text-white sm:text-xl">
+                      Post Any Job in{" "}
+                      <span className="whitespace-nowrap text-blue-600 dark:text-blue-400">1 Minute.</span>
+                    </h3>
+                    <p className="mt-2 max-w-sm text-[13px] text-muted-foreground leading-relaxed">
+                      Your next hire starts with one simple post.
+                    </p>
+                  </div>
+                  <Timer className="mt-0.5 h-9 w-9 shrink-0 text-blue-600/70 dark:text-blue-400/80" strokeWidth={1.5} aria-hidden="true" />
+                </div>
 
                 {/* Actions Row */}
-                <div className="mt-5 sm:mt-6 flex flex-wrap items-center gap-4 sm:gap-6">
+                <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-3 border-t border-blue-200/60 pt-4 dark:border-blue-900/50">
                   {/* Primary CTA */}
                   <a
                     href={siteConfig.links.employer}
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label="Post a Job on Hirance employer portal"
-                    className="group inline-flex items-center justify-center gap-2 rounded-full bg-brand-600 hover:bg-brand-500 dark:bg-brand-600 dark:hover:bg-brand-500 px-6 sm:px-7 py-3 text-sm sm:text-base font-semibold text-white shadow-md shadow-brand-500/25 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-brand-500/40"
+                    className="group inline-flex min-h-11 w-full items-center justify-center gap-3 rounded-full bg-blue-600 px-5 text-sm font-semibold text-white shadow-sm shadow-blue-600/15 transition-colors hover:bg-blue-700 active:bg-blue-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900 sm:w-auto"
                   >
                     <span>Post a Job</span>
                     <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
                   </a>
 
+                  <div className="flex w-full items-center justify-center gap-5 sm:w-auto sm:flex-1 sm:justify-end">
                   {/* See demo Action */}
                   <button
                     type="button"
                     onClick={() => setIsDemoModalOpen(true)}
                     aria-label="See Hirance employer job posting interactive demo"
-                    className="inline-flex items-center gap-2 text-sm sm:text-base font-semibold text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40 rounded-md cursor-pointer"
+                    className="inline-flex min-h-11 items-center gap-1.5 whitespace-nowrap rounded-md text-xs font-medium text-slate-600 transition-colors hover:text-blue-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40 dark:text-slate-300 dark:hover:text-blue-400"
                   >
                     <svg
-                      className="h-5 w-5 shrink-0 text-blue-600 dark:text-blue-400"
+                      className="h-4 w-4 shrink-0"
                       viewBox="0 0 24 24"
                       fill="none"
                       stroke="currentColor"
@@ -508,11 +504,12 @@ export function WantToHire() {
                     type="button"
                     onClick={() => setIsPricingModalOpen(true)}
                     aria-label="View employer hiring pricing plans"
-                    className="inline-flex items-center gap-1.5 text-sm sm:text-base font-semibold text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40 rounded-md cursor-pointer"
+                    className="inline-flex min-h-11 items-center gap-1.5 whitespace-nowrap rounded-md text-xs font-medium text-slate-600 transition-colors hover:text-blue-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40 dark:text-slate-300 dark:hover:text-blue-400"
                   >
-                    <Tag className="h-4 w-4 sm:h-4.5 sm:w-4.5 shrink-0 text-blue-600 dark:text-blue-400" />
+                    <Tag className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
                     <span>View Pricing</span>
                   </button>
+                  </div>
                 </div>
               </div>
             </motion.div>

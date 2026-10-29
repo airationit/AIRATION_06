@@ -33,6 +33,8 @@ import {
 import { cn } from "@/lib/utils";
 import { JobListItem } from "@/types/jobs";
 
+const SWIPES_PER_ROUND = 5;
+
 export interface PlaygroundJob {
   id: string;
   department: string;
@@ -646,25 +648,43 @@ export function SwipePlayground({ initialJobs }: SwipePlaygroundProps = {}) {
   const [applied, setApplied] = useState<PlaygroundJob[]>([]);
   const [skipped, setSkipped] = useState(0);
   const [showAppliedToast, setShowAppliedToast] = useState(false);
+  const swipeCountRef = useRef(0);
+  const toastTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => () => {
+    if (toastTimeoutRef.current) clearTimeout(toastTimeoutRef.current);
+  }, []);
 
   const handleDecide = useCallback(
     (dir: "left" | "right", job: PlaygroundJob) => {
-      if (dir === "right") {
-        setApplied((prev) => [...prev, job]);
-        setShowAppliedToast(true);
-        setTimeout(() => setShowAppliedToast(false), 2200);
-      } else {
-        setSkipped((prev) => prev + 1);
-      }
+      const roundIndex = swipeCountRef.current % SWIPES_PER_ROUND;
+      if (job.id !== jobs[roundIndex % jobs.length]?.id) return;
 
-      setIndex((prev) => prev + 1);
+      const startsNewRound = swipeCountRef.current > 0 && roundIndex === 0;
+      swipeCountRef.current += 1;
+      if (startsNewRound) {
+        if (toastTimeoutRef.current) clearTimeout(toastTimeoutRef.current);
+        setApplied(dir === "right" ? [job] : []);
+        setSkipped(dir === "left" ? 1 : 0);
+        setShowAppliedToast(false);
+      }
+      if (dir === "right") {
+        if (!startsNewRound) setApplied((previous) => [...previous, job]);
+        setShowAppliedToast(true);
+        if (toastTimeoutRef.current) clearTimeout(toastTimeoutRef.current);
+        toastTimeoutRef.current = setTimeout(() => setShowAppliedToast(false), 2200);
+      } else if (!startsNewRound) {
+        setSkipped((previous) => previous + 1);
+      }
+      setIndex(swipeCountRef.current);
     },
-    []
+    [jobs]
   );
 
-  const currentJob = jobs[index % jobs.length];
-  const nextJob = jobs[(index + 1) % jobs.length];
-  const reviewedCount = index === 0 ? 0 : ((index - 1) % 5) + 1;
+  const reviewedCount = index === 0 ? 0 : ((index - 1) % SWIPES_PER_ROUND) + 1;
+  const cardIndex = index % SWIPES_PER_ROUND;
+  const currentJob = jobs[cardIndex % jobs.length];
+  const nextJob = jobs[((cardIndex + 1) % SWIPES_PER_ROUND) % jobs.length];
 
   return (
     <section
@@ -726,7 +746,7 @@ export function SwipePlayground({ initialJobs }: SwipePlaygroundProps = {}) {
 
               <div className="rounded-2xl border border-[#E2E8F0] bg-[#FBFBFB] dark:bg-card dark:border-border p-3.5 sm:p-4 text-center shadow-xs">
                 <p className="text-2xl sm:text-3xl font-semibold text-foreground">
-                  {reviewedCount}/5
+                  {reviewedCount}/{SWIPES_PER_ROUND}
                 </p>
                 <p className="mt-0.5 text-xs text-muted-foreground font-medium">
                   Reviewed
@@ -876,7 +896,7 @@ export function SwipePlayground({ initialJobs }: SwipePlaygroundProps = {}) {
                   {/* Active Top Draggable Card */}
                   <AnimatePresence mode="popLayout">
                     <DragCard
-                      key={`${currentJob.id}-${index}`}
+                      key={currentJob.id + "-" + index}
                       job={currentJob}
                       onDecide={handleDecide}
                       isTop={true}
