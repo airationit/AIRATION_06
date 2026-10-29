@@ -11,6 +11,7 @@ interface GooglePlayButtonProps {
   sublabel?: string;
   label?: string;
   href?: string;
+  variant?: "black" | "blue";
 }
 
 /**
@@ -24,6 +25,7 @@ export function GooglePlayButton({
   sublabel = "Candidate App",
   label = "Apply for Jobs",
   href = siteConfig.links.playStore,
+  variant = "black",
 }: GooglePlayButtonProps) {
   const Tag = animate ? motion.a : "a";
   const motionProps = animate
@@ -34,6 +36,11 @@ export function GooglePlayButton({
       }
     : {};
 
+  const bgStyle =
+    variant === "blue"
+      ? "bg-blue-600 hover:bg-blue-700 text-white shadow-blue-600/25 focus-visible:ring-blue-500/30"
+      : "bg-black hover:bg-neutral-900 dark:bg-slate-950 dark:hover:bg-slate-900 dark:border dark:border-slate-800 text-white shadow-black/20 focus-visible:ring-neutral-400/40";
+
   return (
     <Tag
       href={href}
@@ -42,7 +49,8 @@ export function GooglePlayButton({
       aria-label={`${sublabel ? `${sublabel}: ` : ""}${label} - Hirance`}
       {...(motionProps as Record<string, unknown>)}
       className={cn(
-        "group inline-flex h-12 items-center justify-center gap-3 rounded-full bg-blue-600 hover:bg-blue-700 px-5 sm:px-6 text-left text-white shadow-md shadow-blue-600/25 transition-all duration-300 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-blue-500/30 hover:scale-[1.02] active:scale-[0.98]",
+        "group inline-flex h-12 items-center justify-center gap-3 rounded-full px-5 sm:px-6 text-left text-white shadow-md transition-all duration-300 focus-visible:outline-none focus-visible:ring-3 hover:scale-[1.02] active:scale-[0.98]",
+        bgStyle,
         animate && "glow-hover",
         className
       )}

@@ -1,24 +1,24 @@
-﻿import type { Metadata } from "next";
+import type { Metadata } from "next";
 import { GalleryContent } from "@/components/gallery/gallery-content";
 
 export const metadata: Metadata = {
-  title: "Gallery | Hirance - Launch Event Photos & Videos",
-  description: "Explore highlights from the Hirance official launch event — keynotes, app demos, team moments, media coverage, and networking sessions from India's next-gen hiring platform.",
-  keywords: ["Hirance launch event", "Hirance gallery", "Hirance photos", "hiring platform launch India", "Hirance team", "Swipe Match Get Hired event"],
+  title: "Team & Culture Gallery | Hirance",
+  description: "Explore life at Hirance — the passionate team of builders, engineers, and talent specialists creating India's next-generation hiring platform.",
+  keywords: ["Hirance team", "Hirance gallery", "Hirance culture", "life at Hirance", "tech team India", "Hirance team photos"],
   alternates: { canonical: "https://hirance.com/gallery" },
   openGraph: {
     type: "website",
     locale: "en_US",
     url: "https://hirance.com/gallery",
-    title: "Gallery | Hirance Launch Event",
-    description: "Photos and videos from the Hirance official launch event in Bengaluru, India.",
+    title: "Team & Culture Gallery | Hirance",
+    description: "Meet the passionate team behind Hirance — the builders shaping modern hiring in India.",
     siteName: "Hirance",
-    images: [{ url: "/images/gallery/launch-event.jpg", width: 1200, height: 800, alt: "Hirance Official Launch Event" }],
+    images: [{ url: "https://cdn.hirance.com/library/1539226f-d31e-42c2-849a-5f53097cb00a.webp", width: 1200, height: 800, alt: "Hirance Team" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Gallery | Hirance Launch Event",
-    description: "Behind every swipe is a story. Explore the Hirance launch event gallery.",
+    title: "Team & Culture Gallery | Hirance",
+    description: "Meet the passionate builders and minds behind Hirance.",
   },
 };
 
@@ -26,9 +26,9 @@ export default function GalleryPage() {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "ImageGallery",
-    name: "Hirance Official Launch Event Gallery",
+    name: "Hirance Team & Culture Gallery",
     url: "https://hirance.com/gallery",
-    description: "Photos and videos from the Hirance official product launch event held in Bengaluru, India in March 2025.",
+    description: "Photos and moments showcasing the passionate team and culture behind Hirance.",
     publisher: {
       "@type": "Organization",
       name: "Hirance",

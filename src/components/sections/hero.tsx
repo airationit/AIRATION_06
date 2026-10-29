@@ -37,15 +37,7 @@ export function Hero() {
 
   return (
     <section ref={sectionRef} className="relative overflow-x-clip">
-      {/* Background ambient lighting */}
-      <div
-        className="pointer-events-none absolute inset-0 -z-10"
-        aria-hidden="true"
-      >
-        <div className="absolute left-1/2 top-[18%] h-[28rem] w-[42rem] -translate-x-1/2 rounded-full bg-brand-400/15 blur-[120px]" />
-        <div className="absolute right-[-10%] top-[42%] h-[24rem] w-[28rem] rounded-full bg-sky-300/12 blur-[110px]" />
-        <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-background via-background/70 to-transparent" />
-      </div>
+      {/* Clean neutral background */}    <div className="pointer-events-none absolute inset-0 -z-10" aria-hidden="true" />
 
       {/* HERO COPY TEXT SECTION (Natural smooth Framer Motion scaling, elevation, fade & blur) */}
       <div

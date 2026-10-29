@@ -37,7 +37,7 @@ const GALLERY_ITEMS: GalleryItem[] = [
     src: "https://cdn.hirance.com/library/767fed1f-20e1-4df5-9d1f-56b10bc0a690.webp",
     alt: "Hirance Team",
     title: "Our Team",
-    caption: "The core team behind the successful launch.",
+    caption: "The passionate builders, engineers, and leaders behind Hirance.",
     date: "Lucknow Event",
     aspectRatio: "aspect-[16/9]",
   },
@@ -201,56 +201,6 @@ const GALLERY_ITEMS: GalleryItem[] = [
     date: "Lucknow Event",
     aspectRatio: "aspect-[4/3]",
   },
-  {
-    id: 8,
-    category: "networking",
-    src: "https://cdn.hirance.com/library/60643e5e-c81e-423e-a18b-bf62e8599725.webp",
-    alt: "Industry Leaders Discussion Panel Lucknow",
-    title: "Leadership Panel",
-    caption: "Chairing discussions on modern tech talent acquisition.",
-    date: "Lucknow Event",
-    aspectRatio: "aspect-[4/3]",
-  },
-  {
-    id: 15,
-    category: "highlights",
-    src: "https://cdn.hirance.com/library/4017e041-0a9b-404e-b91b-328d7046dfde.webp",
-    alt: "Stage Presentation at Lucknow Event",
-    title: "Stage Presentation",
-    caption: "Unfolding AI candidate matching technology at the launch.",
-    date: "Lucknow Event",
-    aspectRatio: "aspect-[4/3]",
-  },
-  {
-    id: 10,
-    category: "keynote",
-    src: "https://cdn.hirance.com/library/4a31c1d2-4504-4d12-9da9-45f822dc0415.webp",
-    alt: "Closing Keynote & Remarks at Lucknow Launch",
-    title: "Closing Remarks",
-    caption: "Delivering vote of thanks to all attendees and partners.",
-    date: "Lucknow Event",
-    aspectRatio: "aspect-[4/3]",
-  },
-  {
-    id: 17,
-    category: "team",
-    src: "https://cdn.hirance.com/library/cda472b9-adc0-4e5e-8af2-2b4b273ae587.webp",
-    alt: "Hirance Support and Growth Team in Lucknow",
-    title: "Growth Team Briefing",
-    caption: "Empowering candidates and employers at scale across Uttar Pradesh.",
-    date: "Lucknow Event",
-    aspectRatio: "aspect-[4/3]",
-  },
-  {
-    id: 6,
-    category: "highlights",
-    src: "https://cdn.hirance.com/library/624229dd-5a8f-40d3-9860-d8b7098de70e.webp",
-    alt: "Hirance Product Experience Zone Lucknow",
-    title: "Product Experience Zone",
-    caption: "Showcasing mobile app swipe workflows to event guests.",
-    date: "Lucknow Event",
-    aspectRatio: "aspect-[4/3]",
-  },
 
 ];
 
@@ -282,8 +232,7 @@ export function GalleryContent() {
   }, [lightboxIndex, closeLightbox, goPrev, goNext]);
 
   const heroItem = GALLERY_ITEMS.find((i) => i.id === 999);
-  const footerItems = GALLERY_ITEMS.filter((i) => i.id === 10 || i.id === 6);
-  const gridItems = GALLERY_ITEMS.filter((i) => i.id !== 999 && i.id !== 10 && i.id !== 6);
+  const gridItems = GALLERY_ITEMS.filter((i) => i.id !== 999);
   const current = lightboxIndex !== null ? GALLERY_ITEMS[lightboxIndex] : null;
 
   const renderItem = (item: GalleryItem, index: number, isHero = false) => {
@@ -355,12 +304,12 @@ export function GalleryContent() {
               </svg>
 
               <h1 className="relative z-10 text-xl sm:text-2xl lg:text-3xl font-semibold text-[#0f172a] dark:text-white tracking-tight">
-                Highlights from our Lucknow launch event.
+                Meet the passionate team behind Hirance.
               </h1>
             </div>
             {
               // <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 max-w-xl mx-auto">
-              //   Highlights from our Lucknow launch event.
+              //   Meet the passionate team behind Hirance.
               // </p>
             }
           </div>
@@ -381,15 +330,6 @@ export function GalleryContent() {
                 {gridItems.map((item, index) => renderItem(item, index + 1))}
               </div>
             </AnimatePresence>
-
-            {/* Bottom Row: 2 Images per row */}
-            <AnimatePresence mode="popLayout">
-              {footerItems.length > 0 && (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-7">
-                  {footerItems.map((item, index) => renderItem(item, index + gridItems.length + 1))}
-                </div>
-              )}
-            </AnimatePresence>
           </div>
         </section>
 
@@ -400,7 +340,7 @@ export function GalleryContent() {
               Watch The Highlights
             </h2>
             <p className="text-sm text-slate-600 dark:text-slate-400 max-w-xl mx-auto">
-              Relive the best moments of our launch event in this recap video.
+              Relive key team moments and highlights in this recap video.
             </p>
           </div>
           <div className="relative overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-950 shadow-2xl w-full max-w-5xl mx-auto aspect-video">
