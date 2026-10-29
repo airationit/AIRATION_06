@@ -15,7 +15,7 @@ import {
 import { fetchCompanies } from "@/lib/api";
 
 export const metadata: Metadata = {
-  title: "Hirance — Next-Gen Swipe-Based Hiring Platform | Swipe. Match. Get Hired.",
+  title: "Hirance | Swipe. Match. Get Hired.",
   description:
     "Fastest way to Post & Apply for jobs — No forms, No scrolling, No waiting. AI-calculated match scores for candidates and 60-second job postings for employers.",
   alternates: {
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_IN",
     url: "https://hirance.com",
-    title: "Hirance — Next-Gen Swipe-Based Hiring Platform | Swipe. Match. Get Hired.",
+    title: "Hirance | Swipe. Match. Get Hired.",
     description:
       "Fastest way to Post & Apply for jobs — No forms, No scrolling, No waiting. Match directly with verified talent and employers.",
     siteName: "Hirance",
@@ -34,7 +34,7 @@ export const metadata: Metadata = {
         url: "/og.png",
         width: 1200,
         height: 630,
-        alt: "Hirance — Next-Gen Swipe-Based Hiring Platform",
+        alt: "Hirance — Swipe. Match. Get Hired.",
         type: "image/png",
       },
       {
@@ -48,7 +48,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Hirance — Next-Gen Swipe-Based Hiring Platform | Swipe. Match. Get Hired.",
+    title: "Hirance | Swipe. Match. Get Hired.",
     description:
       "Fastest way to Post & Apply for jobs — No forms, No scrolling, No waiting. Direct connection, zero spam, instant matchmaking.",
     images: ["/og.png"],

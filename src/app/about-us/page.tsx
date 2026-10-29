@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { AboutContent } from "@/components/about/about-content";
 
 export const metadata: Metadata = {
-  title: "About Us | Hirance - Next-Gen Swipe-Based Hiring Platform",
+  title: "About Us | Hirance — Swipe. Match. Get Hired.",
   description:
     "Hirance is a next-generation swipe-based hiring platform. Swipe. Match. Get Hired. Post jobs in under 1 minute & apply instantly with zero forms, zero scrolling, and zero waiting.",
   keywords: [
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: "https://hirance.com/about-us",
-    title: "About Us | Hirance - Next-Gen Swipe-Based Hiring Platform",
+    title: "About Us | Hirance — Swipe. Match. Get Hired.",
     description:
       "Hirance is a next-generation swipe-based hiring platform built to solve recruitment speed for candidates and employers.",
     siteName: "Hirance",
@@ -36,13 +36,13 @@ export const metadata: Metadata = {
         url: "/og.png",
         width: 1200,
         height: 630,
-        alt: "About Us - Hirance - Next-Gen Swipe-Based Hiring Platform",
+        alt: "About Us - Hirance — Swipe. Match. Get Hired.",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "About Us | Hirance - Next-Gen Swipe-Based Hiring Platform",
+    title: "About Us | Hirance — Swipe. Match. Get Hired.",
     description:
       "Swipe. Match. Get Hired. Fastest way to Post & Apply for jobs with real-time Smart Scores.",
   },

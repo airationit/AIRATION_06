@@ -1,6 +1,6 @@
 export const siteConfig = {
   name: "Hirance",
-  tagline: "Next-Gen Swipe-Based Hiring Platform",
+  tagline: "Swipe. Match. Get Hired.",
   description:
     "Hirance is a next-generation swipe-based hiring platform. Fastest way to post & apply for jobs with zero forms, zero scrolling, zero waiting, and instant AI match scores.",
   url: "https://hirance.com",

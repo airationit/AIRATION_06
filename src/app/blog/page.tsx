@@ -7,7 +7,7 @@ import {
 } from "@/lib/api/blogs";
 
 export const metadata: Metadata = {
-  title: "Blog & Hiring Insights | Hirance - Next-Gen Swipe-Based Hiring Platform",
+  title: "Blog & Hiring Insights | Hirance — Swipe. Match. Get Hired.",
   description:
     "Explore the latest insights on swipe-based hiring, candidate Smart Scores, 60-second job postings, tech industry salary trends, and recruitment strategies.",
   keywords: [
