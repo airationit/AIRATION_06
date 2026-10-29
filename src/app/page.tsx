@@ -10,7 +10,6 @@ import {
 import {
   Footer,
   InteractiveDots,
-  FloatingAppBanner,
 } from "@/components/shared";
 import { fetchCompanies } from "@/lib/api";
 
@@ -75,9 +74,6 @@ export default async function Home() {
       <WantToHire />
       <BrandStatement />
       <Footer />
-
-      {/* Fixed app download banner */}
-      <FloatingAppBanner />
     </main>
   );
 }
