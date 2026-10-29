@@ -1,3 +1,4 @@
+import { siteConfig } from "@/config/site";
 import type { Metadata } from "next";
 import { AboutContent } from "@/components/about/about-content";
 
@@ -25,7 +26,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     type: "website",
-    locale: "en_US",
+    locale: "en_IN",
     url: "https://hirance.com/about-us",
     title: "About Us | Hirance - Next-Gen Swipe-Based Hiring Platform",
     description:
@@ -33,7 +34,7 @@ export const metadata: Metadata = {
     siteName: "Hirance",
     images: [
       {
-        url: "/og.png",
+        url: siteConfig.ogImage,
         width: 1200,
         height: 630,
         alt: "About Us - Hirance - Next-Gen Swipe-Based Hiring Platform",
@@ -45,6 +46,7 @@ export const metadata: Metadata = {
     title: "About Us | Hirance - Next-Gen Swipe-Based Hiring Platform",
     description:
       "Swipe. Match. Get Hired. Fastest way to Post & Apply for jobs with real-time Smart Scores.",
+    images: [{ url: siteConfig.ogImage, alt: "Hirance — Swipe. Match. Get Hired." }],
   },
 };
 
@@ -61,7 +63,7 @@ export default function AboutUsPage() {
         "@type": "Organization",
         name: "Hirance",
         url: "https://hirance.com",
-        logo: "https://hirance.com/og.png",
+        logo: siteConfig.logo,
         slogan: "Swipe. Match. Get Hired.",
         description:
           "India's swipe-based hiring platform connecting candidates and employers faster.",

@@ -1,3 +1,4 @@
+import { siteConfig } from "@/config/site";
 import type { Metadata } from "next";
 import { DownloadAppContent } from "@/components/download-app/download-app-content";
 
@@ -19,7 +20,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     type: "website",
-    locale: "en_US",
+    locale: "en_IN",
     url: "https://hirance.com/download-app",
     title: "Download Hirance Mobile App | Swipe. Match. Get Hired.",
     description:
@@ -27,7 +28,7 @@ export const metadata: Metadata = {
     siteName: "Hirance",
     images: [
       {
-        url: "/og.png",
+        url: siteConfig.ogImage,
         width: 1200,
         height: 630,
         alt: "Download Hirance App",

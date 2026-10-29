@@ -1,3 +1,4 @@
+import { siteConfig } from "@/config/site";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { fetchBlogBySlug, fetchBlogSitemap, fetchBlogs } from "@/lib/api/blogs";
@@ -37,7 +38,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const metaDesc = post.seo?.meta_description || post.excerpt;
   const canonicalUrl = post.seo?.canonical_url || `https://hirance.com/blog/${post.slug}`;
   const keywords = post.seo?.keywords && post.seo.keywords.length > 0 ? post.seo.keywords : post.tags;
-  const ogImageUrl = post.cover_image?.url || "/og.png";
+  const ogImageUrl = post.cover_image?.url || siteConfig.ogImage;
 
   return {
     title: metaTitle,
@@ -48,7 +49,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     },
     openGraph: {
       type: "article",
-      locale: "en_US",
+      locale: "en_IN",
       url: canonicalUrl,
       title: metaTitle,
       description: metaDesc,
@@ -148,13 +149,13 @@ export default async function BlogPostPage({ params }: PageProps) {
       "@type": "Organization",
       name: "Hirance",
       url: "https://hirance.com",
-      logo: "https://hirance.com/og.png",
+      logo: siteConfig.logo,
     },
     mainEntityOfPage: {
       "@type": "WebPage",
       "@id": post.seo?.canonical_url || `https://hirance.com/blog/${post.slug}`,
     },
-    image: post.cover_image?.url || "https://hirance.com/og.png",
+    image: post.cover_image?.url || siteConfig.ogImage,
     keywords: (post.tags || []).join(", "),
   };
 

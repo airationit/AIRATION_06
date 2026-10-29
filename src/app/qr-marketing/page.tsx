@@ -25,7 +25,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     type: "website",
-    locale: "en_US",
+    locale: "en_IN",
     url: `${siteConfig.url}/qr-marketing`,
     title: "Download Hirance App | Fast Mobile Job Search & Instant HR Chat",
     description:

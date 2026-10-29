@@ -1,3 +1,4 @@
+import { siteConfig } from "@/config/site";
 ﻿import type { Metadata } from "next";
 import { GalleryContent } from "@/components/gallery/gallery-content";
 
@@ -8,17 +9,18 @@ export const metadata: Metadata = {
   alternates: { canonical: "https://hirance.com/gallery" },
   openGraph: {
     type: "website",
-    locale: "en_US",
+    locale: "en_IN",
     url: "https://hirance.com/gallery",
     title: "Gallery | Hirance Launch Event",
     description: "Photos and videos from the Hirance official launch event in Bengaluru, India.",
     siteName: "Hirance",
-    images: [{ url: "/og.png", width: 1200, height: 630, alt: "Hirance — Swipe. Match. Get Hired." }],
+    images: [{ url: siteConfig.ogImage, width: 1200, height: 630, alt: "Hirance — Swipe. Match. Get Hired." }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Gallery | Hirance Launch Event",
     description: "Behind every swipe is a story. Explore the Hirance launch event gallery.",
+    images: [{ url: siteConfig.ogImage, alt: "Hirance — Swipe. Match. Get Hired." }],
   },
 };
 

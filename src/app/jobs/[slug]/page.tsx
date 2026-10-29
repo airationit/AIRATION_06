@@ -151,7 +151,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     },
     openGraph: {
       type: "website",
-      locale: "en_US",
+      locale: "en_IN",
       url: seo.canonicalUrl,
       title: seo.metaTitle,
       description: seo.metaDescription,
@@ -162,6 +162,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       card: "summary_large_image",
       title: seo.metaTitle,
       description: seo.metaDescription,
+      images: [{ url: siteConfig.ogImage, alt: "Hirance — Swipe. Match. Get Hired." }],
     },
   };
 }

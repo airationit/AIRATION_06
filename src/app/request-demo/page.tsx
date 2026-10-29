@@ -1,3 +1,4 @@
+import { siteConfig } from "@/config/site";
 import type { Metadata } from "next";
 import { RequestDemoContent } from "@/components/demo/request-demo-content";
 
@@ -19,7 +20,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     type: "website",
-    locale: "en_US",
+    locale: "en_IN",
     url: "https://hirance.com/request-demo",
     title: "Request a Demo | Hirance",
     description:
@@ -27,7 +28,7 @@ export const metadata: Metadata = {
     siteName: "Hirance",
     images: [
       {
-        url: "/og.png",
+        url: siteConfig.ogImage,
         width: 1200,
         height: 630,
         alt: "Request a Demo - Hirance",
@@ -39,6 +40,7 @@ export const metadata: Metadata = {
     title: "Request a Demo | Hirance",
     description:
       "Experience fast, AI-matched hiring in action. Book a live demo with the Hirance team.",
+    images: [{ url: siteConfig.ogImage, alt: "Hirance — Swipe. Match. Get Hired." }],
   },
 };
 
@@ -54,7 +56,7 @@ export default function RequestDemoPage() {
       "@type": "Organization",
       name: "Hirance",
       url: "https://hirance.com",
-      logo: "https://hirance.com/og.png",
+      logo: siteConfig.logo,
       slogan: "Swipe. Match. Get Hired.",
     },
     mainEntity: {

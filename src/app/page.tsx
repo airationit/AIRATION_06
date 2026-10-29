@@ -24,15 +24,14 @@ export const metadata: Metadata = {
     url: siteConfig.url,
     siteName: siteConfig.name,
     images: [{ url: siteConfig.ogImage, width: 1200, height: 630, alt: "Hirance — Swipe. Match. Get Hired." }],
-    title: "Hirance — Next-Gen Swipe-Based Hiring Platform",
-    description:
-      "Swipe. Match. Get Hired. Fastest way to Post & Apply for jobs—No forms, No scrolling, No waiting.",
+    title: siteConfig.socialTitle,
+    description: siteConfig.socialDescription,
   },
   twitter: {
     card: "summary_large_image",
-    title: "Hirance — Swipe. Match. Get Hired.",
-    description: "Your next job. Your next hire. One swipe away.",
-    images: [siteConfig.ogImage],
+    title: siteConfig.socialTitle,
+    description: siteConfig.socialDescription,
+    images: [{ url: siteConfig.ogImage, alt: "Hirance — Swipe. Match. Get Hired." }],
   },
   alternates: { canonical: siteConfig.url },
 };

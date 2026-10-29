@@ -4,7 +4,10 @@ export const siteConfig = {
   description:
     "Hirance is a next-generation swipe-based hiring platform. Fastest way to post & apply for jobs with zero forms, zero scrolling, zero waiting, and instant AI match scores.",
   url: "https://hirance.com",
-  ogImage: "/og.png",
+  ogImage: "https://hirance.com/images/hirance-social.png",
+  logo: "https://hirance.com/images/icon.png",
+  socialTitle: "Hirance — Next-Gen Swipe-Based Hiring Platform",
+  socialDescription: "Discover job opportunities and connect with employers on Hirance.",
   links: {
     // Google Play store listing
     playStore: "https://play.google.com/store/apps/details?id=com.hirance",

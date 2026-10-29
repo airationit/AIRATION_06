@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import { pageMetadata } from "@/lib/seo/page-metadata"
 import {
   InlineLink,
   LegalMeta,
@@ -7,6 +8,7 @@ import {
 } from "@/components/shared"
 
 export const metadata: Metadata = {
+  ...pageMetadata("Cookie Policy", "Learn how Hirance uses cookies and similar technologies on our website and hiring platform.", "/cookies"),
   title: "Cookie Policy",
   description:
     "Learn how Hirance uses cookies and similar technologies on our website and hiring platform.",

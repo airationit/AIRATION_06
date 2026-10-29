@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { fontSans, fontMono } from "@/lib/fonts";
 import { Providers } from "@/providers";
-import { Navbar, GradientBackground, LaunchWrapper } from "@/components/shared";
+import { Navbar, GradientBackground } from "@/components/shared";
 import { siteConfig } from "@/config/site";
 import "./globals.css";
 
@@ -38,17 +38,18 @@ export const metadata: Metadata = {
   },
   openGraph: {
     type: "website",
-    locale: "en_US",
+    locale: "en_IN",
     url: siteConfig.url,
-    title: siteConfig.name,
-    description: siteConfig.description,
+    title: siteConfig.socialTitle,
+    description: siteConfig.socialDescription,
     siteName: siteConfig.name,
     images: [{ url: siteConfig.ogImage, width: 1200, height: 630, alt: "Hirance — Swipe. Match. Get Hired." }],
   },
   twitter: {
     card: "summary_large_image",
-    title: siteConfig.name,
-    description: siteConfig.description,
+    title: siteConfig.socialTitle,
+    description: siteConfig.socialDescription,
+    images: [{ url: siteConfig.ogImage, alt: "Hirance — Swipe. Match. Get Hired." }],
   },
 };
 

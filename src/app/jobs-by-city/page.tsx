@@ -1,3 +1,4 @@
+import { siteConfig } from "@/config/site";
 import type { Metadata } from "next";
 import { JobsByCityContent } from "../../components/jobs/jobs-by-city-content";
 
@@ -20,7 +21,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     type: "website",
-    locale: "en_US",
+    locale: "en_IN",
     url: "https://hirance.com/jobs-by-city",
     title: "Jobs By City in India | Hirance Directory",
     description:
@@ -28,7 +29,7 @@ export const metadata: Metadata = {
     siteName: "Hirance",
     images: [
       {
-        url: "/og.png",
+        url: siteConfig.ogImage,
         width: 1200,
         height: 630,
         alt: "Hirance Jobs By City Directory",

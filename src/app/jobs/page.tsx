@@ -4,8 +4,14 @@ import { generateJobSeoData, generateJobsJsonLd } from "@/lib/seo-engine";
 import { JobsContent } from "@/components/jobs/jobs-content";
 import { faqs } from "@/components/jobs/jobs-faq-data";
 import { siteConfig } from "@/config/site";
+import { pageMetadata } from "@/lib/seo/page-metadata";
 
 export const metadata: Metadata = {
+  ...pageMetadata(
+    "Search Jobs & Career Opportunities | Hirance",
+    "Explore verified job vacancies across top tech companies & startups in India. Swipe to apply directly on Hirance.",
+    "/jobs",
+  ),
   title: "Search Jobs & Career Opportunities in India (2026) | Hirance",
   description:
     "Explore verified job openings in tech, sales, design, and operations on Hirance. Swipe right to apply, get instant AI fit scores, and chat directly with employers.",
@@ -38,7 +44,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     type: "website",
-    locale: "en_US",
+    locale: "en_IN",
     url: `${siteConfig.url}/jobs`,
     title: "Search Jobs & Career Opportunities | Hirance",
     description:

@@ -1,3 +1,4 @@
+import { siteConfig } from "@/config/site";
 import type { Metadata } from "next";
 import { JobAlertsContent } from "@/components/job-alerts/job-alerts-content";
 
@@ -20,7 +21,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     type: "website",
-    locale: "en_US",
+    locale: "en_IN",
     url: "https://hirance.com/free-job-alerts",
     title: "Free Job Alerts on WhatsApp & Email | Hirance",
     description:
@@ -28,7 +29,7 @@ export const metadata: Metadata = {
     siteName: "Hirance",
     images: [
       {
-        url: "/og.png",
+        url: siteConfig.ogImage,
         width: 1200,
         height: 630,
         alt: "Hirance Free Job Alerts",
