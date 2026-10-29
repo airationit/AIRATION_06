@@ -78,7 +78,7 @@ export function AppDownload({ initialJobs }: AppDownloadProps = {}) {
             </h2>
 
             {/* Subtext */}
-            <p className="mt-3.5 max-w-xl text-pretty text-base leading-relaxed text-slate-600 dark:text-slate-400 sm:text-lg">
+            <p className="mt-3.5 max-w-xl text-pretty text-base leading-relaxed text-slate-600 dark:text-slate-400">
               No endless forms. No complicated applications. Just discover, swipe and get hired on the go.
             </p>
 
@@ -104,7 +104,7 @@ export function AppDownload({ initialJobs }: AppDownloadProps = {}) {
                       <Icon className="h-5 w-5 stroke-[2.2]" />
                     </div>
                     <div className="pt-0.5">
-                      <h3 className="text-base font-semibold text-slate-900 dark:text-white sm:text-lg leading-snug">
+                      <h3 className="text-base font-semibold text-slate-900 dark:text-white leading-snug">
                         {p.title}
                       </h3>
                       <p className="mt-0.5 text-sm text-slate-500 dark:text-slate-400 leading-relaxed">

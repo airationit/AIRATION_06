@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     title: "Gallery | Hirance Launch Event",
     description: "Photos and videos from the Hirance official launch event in Bengaluru, India.",
     siteName: "Hirance",
-    images: [{ url: "/images/gallery/launch-event.jpg", width: 1200, height: 800, alt: "Hirance Official Launch Event" }],
+    images: [{ url: "/og.png", width: 1200, height: 630, alt: "Hirance — Swipe. Match. Get Hired." }],
   },
   twitter: {
     card: "summary_large_image",

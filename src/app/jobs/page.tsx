@@ -44,6 +44,7 @@ export const metadata: Metadata = {
     description:
       "Explore verified job vacancies across top tech companies & startups in India. Swipe to apply directly on Hirance.",
     siteName: "Hirance",
+    images: [{ url: siteConfig.ogImage, width: 1200, height: 630, alt: "Find your next job on Hirance" }],
   },
 };
 

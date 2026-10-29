@@ -706,7 +706,7 @@ export function SwipePlayground({ initialJobs }: SwipePlaygroundProps = {}) {
 
             {/* Live Tally Cards */}
             <div className="mt-7 grid grid-cols-3 gap-3 w-full max-w-md">
-              <div className="rounded-2xl border border-border/80 bg-card p-3.5 sm:p-4 text-center shadow-xs">
+              <div className="rounded-2xl border border-[#D1FAE5] bg-[#F6FFF9] dark:bg-emerald-950/20 dark:border-emerald-900/40 p-3.5 sm:p-4 text-center shadow-xs">
                 <p className="text-2xl sm:text-3xl font-semibold text-emerald-600 dark:text-emerald-400">
                   {applied.length}
                 </p>
@@ -715,7 +715,7 @@ export function SwipePlayground({ initialJobs }: SwipePlaygroundProps = {}) {
                 </p>
               </div>
 
-              <div className="rounded-2xl border border-border/80 bg-card p-3.5 sm:p-4 text-center shadow-xs">
+              <div className="rounded-2xl border border-[#FFE4E6] bg-[#FFF7F7] dark:bg-rose-950/20 dark:border-rose-900/40 p-3.5 sm:p-4 text-center shadow-xs">
                 <p className="text-2xl sm:text-3xl font-semibold text-rose-500 dark:text-rose-400">
                   {skipped}
                 </p>
@@ -724,7 +724,7 @@ export function SwipePlayground({ initialJobs }: SwipePlaygroundProps = {}) {
                 </p>
               </div>
 
-              <div className="rounded-2xl border border-border/80 bg-card p-3.5 sm:p-4 text-center shadow-xs">
+              <div className="rounded-2xl border border-[#E2E8F0] bg-[#FBFBFB] dark:bg-card dark:border-border p-3.5 sm:p-4 text-center shadow-xs">
                 <p className="text-2xl sm:text-3xl font-semibold text-foreground">
                   {reviewedCount}/5
                 </p>

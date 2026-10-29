@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { siteConfig } from "@/config/site";
 import {
   Hero,
   TrustedBy,
@@ -18,10 +19,22 @@ export const metadata: Metadata = {
   description:
     "Fastest way to Post & Apply for jobs—No forms, No scrolling, No waiting. AI-calculated match scores for candidates and 60-second job postings for employers.",
   openGraph: {
+    type: "website",
+    locale: "en_IN",
+    url: siteConfig.url,
+    siteName: siteConfig.name,
+    images: [{ url: siteConfig.ogImage, width: 1200, height: 630, alt: "Hirance — Swipe. Match. Get Hired." }],
     title: "Hirance — Next-Gen Swipe-Based Hiring Platform",
     description:
       "Swipe. Match. Get Hired. Fastest way to Post & Apply for jobs—No forms, No scrolling, No waiting.",
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "Hirance — Swipe. Match. Get Hired.",
+    description: "Your next job. Your next hire. One swipe away.",
+    images: [siteConfig.ogImage],
+  },
+  alternates: { canonical: siteConfig.url },
 };
 
 export default async function Home() {
