@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
-import { usePathname } from "next/navigation"
+import { usePathname, useSelectedLayoutSegment } from "next/navigation"
 import Image from "next/image"
 import Link from "next/link"
 import { AnimatePresence, motion } from "framer-motion"
@@ -19,7 +19,9 @@ const isExternalHref = (href: string) =>
 
 export function Navbar({ className }: NavbarProps) {
   const pathname = usePathname()
-  const isHome = pathname === "/"
+  // Detect the rendered page from the root layout, including during prerendering.
+  const segment = useSelectedLayoutSegment()
+  const isHome = segment === null
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const [mobileJobsOpen, setMobileJobsOpen] = useState(false)
