@@ -60,23 +60,7 @@ export function Hero() {
           }
           className="mx-auto flex w-full max-w-5xl flex-col items-center justify-center text-center will-change-transform"
         >
-          {/* Clean Kicker (No chip pill, pure crisp typography) */}
-          <motion.p
-            initial={
-              reducedMotion
-                ? false
-                : { opacity: 0, y: 16, filter: "blur(6px)" }
-            }
-            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-            transition={{
-              duration: 0.6,
-              delay: reducedMotion ? 0 : 0.05,
-              ease: [0.16, 1, 0.3, 1],
-            }}
-            className="mb-4 text-xs sm:text-sm font-semibold tracking-wider uppercase text-brand-600 dark:text-brand-400"
-          >
-            Next-Gen Swipe-Based Hiring Platform
-          </motion.p>
+          
 
           {/* Headline Words with 3D perspective entrance */}
           <h1 className="max-w-4xl text-balance text-4xl font-bold leading-[1.02] tracking-tight sm:text-6xl lg:text-[4.75rem] [perspective:1000px]">

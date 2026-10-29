@@ -4,11 +4,10 @@ import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
-import { X, Play, ChevronLeft, ChevronRight, Maximize2, Video, ArrowUpRight, Camera } from "lucide-react";
+import { X, ChevronLeft, ChevronRight, Maximize2, Video, ArrowUpRight, Camera } from "lucide-react";
 import { Footer } from "@/components/shared";
 
 // Replace with your official YouTube launch video ID (e.g. from youtube.com/watch?v=VIDEO_ID)
-const YOUTUBE_VIDEO_ID = "tBPsumzal-U";
 
 const CATEGORIES = [
   { id: "all", label: "All Photos" },
@@ -207,8 +206,7 @@ const GALLERY_ITEMS: GalleryItem[] = [
 export function GalleryContent() {
   const reducedMotion = useReducedMotion();
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
-  const [videoOpen, setVideoOpen] = useState(false);
-
+  
   const openLightbox = (index: number) => setLightboxIndex(index);
   const closeLightbox = useCallback(() => setLightboxIndex(null), []);
 
@@ -285,33 +283,9 @@ export function GalleryContent() {
         <section aria-label="Event photo showcase">
 
           <div className="mb-8 text-center flex flex-col items-center pt-8">
-            <div className="relative inline-block px-4 sm:px-6 py-2 mb-1">
-              {/* Transparent Brush Stroke Background PNG Spanning Full Text */}
-              <div className="absolute inset-0 w-[120%] h-[160%] -left-[10%] -top-[30%] pointer-events-none opacity-90">
-                {/* eslint-disable-next-alt */}
-                <img
-                  src="https://cdn.hirance.com/library/0453b6e6-642d-43c1-b6f7-0c5a2193cd90.webp"
-                  alt=""
-                  className="w-full h-full object-fill"
-                />
-              </div>
-
-              {/* Subtle Accent Rays on Upper Right */}
-              <svg className="absolute -top-3.5 -right-6 w-7 h-7 text-blue-600 dark:text-blue-400 pointer-events-none z-10" viewBox="0 0 28 28" fill="none">
-                <path d="M 6 18 L 14 6" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round" />
-                <path d="M 13 22 L 20 12" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round" />
-                <path d="M 19 25 L 25 20" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round" />
-              </svg>
-
-              <h1 className="relative z-10 text-xl sm:text-2xl lg:text-3xl font-semibold text-[#0f172a] dark:text-white tracking-tight">
-                Meet the passionate team behind Hirance.
-              </h1>
-            </div>
-            {
-              // <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 max-w-xl mx-auto">
-              //   Meet the passionate team behind Hirance.
-              // </p>
-            }
+            <h1 className="text-xl sm:text-2xl lg:text-3xl font-semibold text-[#0f172a] dark:text-white tracking-tight">
+              Meet the passionate team behind Hirance.
+            </h1>
           </div>
 
           <div className="space-y-8">
@@ -333,65 +307,7 @@ export function GalleryContent() {
           </div>
         </section>
 
-        {/* ── CINEMATIC VIDEO RECAP (LAST) ───── */}
-        <section aria-label="Event Video Highlight" className="flex flex-col justify-center py-2 mt-16">
-          <div className="mb-8 text-center flex flex-col items-center">
-            <h2 className="text-2xl lg:text-3xl font-semibold text-[#0f172a] dark:text-white tracking-tight mb-2">
-              Watch The Highlights
-            </h2>
-            <p className="text-sm text-slate-600 dark:text-slate-400 max-w-xl mx-auto">
-              Relive key team moments and highlights in this recap video.
-            </p>
-          </div>
-          <div className="relative overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-950 shadow-2xl w-full max-w-5xl mx-auto aspect-video">
-            {!videoOpen ? (
-              <button
-                id="gallery-play-btn"
-                onClick={() => setVideoOpen(true)}
-                className="group relative flex w-full h-full items-end justify-start overflow-hidden cursor-pointer p-6 sm:p-8"
-                aria-label="Play Hirance official launch event video"
-              >
-                <Image
-                  src="https://cdn.hirance.com/library/f6239f05-2463-4236-9155-f02bf29d6745.webp"
-                  alt="Hirance Launch Event Video Preview"
-                  fill
-                  className="object-cover brightness-75"
-                  priority
-                />
-
-                {/* Bottom Gradient Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/30 to-transparent" />
-
-                {/* Play Container & Text with Bold Left Line at Bottom Left */}
-                <div className="relative z-10 flex items-center gap-4 text-left">
-                  <div className="relative flex h-14 w-14 sm:h-16 sm:w-16 shrink-0 items-center justify-center rounded-full border border-white/40 bg-white/20 backdrop-blur-md transition-all duration-300 group-hover:scale-110 group-hover:bg-brand-600 group-hover:border-brand-400 shadow-xl">
-                    <Play className="h-6 w-6 sm:h-7 sm:w-7 text-white fill-white ml-0.5" />
-                  </div>
-                  <div className="border-l-4 border-brand-500 pl-4 py-0.5">
-                    <h3 className="text-base sm:text-xl font-bold text-white tracking-tight drop-shadow-sm">
-                      Hirance Official Launch Event
-                    </h3>
-                    <p className="text-xs text-slate-200 mt-1 font-medium drop-shadow-sm">
-                      20 Sep 2026 · Click to play launch video
-                    </p>
-                  </div>
-                </div>
-              </button>
-            ) : (
-              <div className="w-full h-full">
-                <iframe
-                  className="w-full h-full"
-                  src={`https://www.youtube.com/embed/${YOUTUBE_VIDEO_ID}?autoplay=1&rel=0&modestbranding=1&enablejsapi=1`}
-                  title="Hirance Official Launch Video 2026"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  allowFullScreen
-                />
-              </div>
-            )}
-          </div>
-        </section>
-
-      </div>
+</div>
 
       {/* ── LIGHTBOX MODAL ─────────────────────────────────────── */}
       <AnimatePresence>
