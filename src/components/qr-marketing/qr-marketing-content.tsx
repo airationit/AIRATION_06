@@ -1,5 +1,6 @@
-import { BlurredCompanyName } from "@/components/jobs/blurred-company-name";
 "use client";
+
+import { BlurredCompanyName } from "@/components/jobs/blurred-company-name";
 
 import React, { useState } from "react";
 import Image from "next/image";
