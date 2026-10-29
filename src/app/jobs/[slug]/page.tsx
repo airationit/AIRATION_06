@@ -151,16 +151,26 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     },
     openGraph: {
       type: "website",
-      locale: "en_US",
+      locale: "en_IN",
       url: seo.canonicalUrl,
       title: seo.metaTitle,
       description: seo.metaDescription,
       siteName: siteConfig.name,
+      images: [
+        {
+          url: "/og.png",
+          width: 1200,
+          height: 630,
+          alt: seo.metaTitle,
+          type: "image/png",
+        },
+      ],
     },
     twitter: {
       card: "summary_large_image",
       title: seo.metaTitle,
       description: seo.metaDescription,
+      images: ["/og.png"],
     },
   };
 }

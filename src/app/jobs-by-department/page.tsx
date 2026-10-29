@@ -36,8 +36,13 @@ export const metadata: Metadata = {
       },
     ],
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "Jobs By Department in India | Hirance Directory",
+    description: "Explore verified job openings across active hiring departments in India. Apply with zero forms on Hirance.",
+    images: ["/og.png"],
+  },
 };
-
 export default function JobsByDepartmentPage() {
   const jsonLd = {
     "@context": "https://schema.org",

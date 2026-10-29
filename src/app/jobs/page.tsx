@@ -38,12 +38,28 @@ export const metadata: Metadata = {
   },
   openGraph: {
     type: "website",
-    locale: "en_US",
+    locale: "en_IN",
     url: `${siteConfig.url}/jobs`,
     title: "Search Jobs & Career Opportunities | Hirance",
     description:
       "Explore verified job vacancies across top tech companies & startups in India. Swipe to apply directly on Hirance.",
     siteName: "Hirance",
+    images: [
+      {
+        url: "/og.png",
+        width: 1200,
+        height: 630,
+        alt: "Search Jobs & Career Opportunities | Hirance",
+        type: "image/png",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Search Jobs & Career Opportunities | Hirance",
+    description:
+      "Explore verified job vacancies across top tech companies & startups in India. Swipe to apply directly on Hirance.",
+    images: ["/og.png"],
   },
 };
 

@@ -34,8 +34,13 @@ export const metadata: Metadata = {
       },
     ],
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "Download Hirance Mobile App | Swipe. Match. Get Hired.",
+    description: "Download the Hirance Mobile App. Form-free job search, 1-tap swipe application, and direct HR chats.",
+    images: ["/og.png"],
+  },
 };
-
 export default function DownloadAppPage() {
   return <DownloadAppContent />;
 }

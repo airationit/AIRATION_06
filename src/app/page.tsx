@@ -17,11 +17,41 @@ import { fetchCompanies } from "@/lib/api";
 export const metadata: Metadata = {
   title: "Hirance — Next-Gen Swipe-Based Hiring Platform | Swipe. Match. Get Hired.",
   description:
-    "Fastest way to Post & Apply for jobs—No forms, No scrolling, No waiting. AI-calculated match scores for candidates and 60-second job postings for employers.",
+    "Fastest way to Post & Apply for jobs — No forms, No scrolling, No waiting. AI-calculated match scores for candidates and 60-second job postings for employers.",
+  alternates: {
+    canonical: "https://hirance.com",
+  },
   openGraph: {
-    title: "Hirance — Next-Gen Swipe-Based Hiring Platform",
+    type: "website",
+    locale: "en_IN",
+    url: "https://hirance.com",
+    title: "Hirance — Next-Gen Swipe-Based Hiring Platform | Swipe. Match. Get Hired.",
     description:
-      "Swipe. Match. Get Hired. Fastest way to Post & Apply for jobs—No forms, No scrolling, No waiting.",
+      "Fastest way to Post & Apply for jobs — No forms, No scrolling, No waiting. Match directly with verified talent and employers.",
+    siteName: "Hirance",
+    images: [
+      {
+        url: "/og.png",
+        width: 1200,
+        height: 630,
+        alt: "Hirance — Next-Gen Swipe-Based Hiring Platform",
+        type: "image/png",
+      },
+      {
+        url: "/hirance-social.png",
+        width: 1200,
+        height: 630,
+        alt: "Hirance — Swipe. Match. Get Hired.",
+        type: "image/png",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Hirance — Next-Gen Swipe-Based Hiring Platform | Swipe. Match. Get Hired.",
+    description:
+      "Fastest way to Post & Apply for jobs — No forms, No scrolling, No waiting. Direct connection, zero spam, instant matchmaking.",
+    images: ["/og.png"],
   },
 };
 

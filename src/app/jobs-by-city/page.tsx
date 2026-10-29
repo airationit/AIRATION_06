@@ -35,8 +35,13 @@ export const metadata: Metadata = {
       },
     ],
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "Jobs By City in India | Hirance Directory",
+    description: "Explore verified job openings across 74+ major cities in India. Apply with zero forms on Hirance.",
+    images: ["/og.png"],
+  },
 };
-
 export default function JobsByCityPage() {
   const jsonLd = {
     "@context": "https://schema.org",

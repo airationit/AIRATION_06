@@ -14,21 +14,28 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   icons: {
     icon: [
-      { url: "/favicons/favicon.ico", sizes: "any" },
-      { url: "/favicons/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+      { url: "/images/icon.png", sizes: "958x888", type: "image/png" },
       { url: "/favicons/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+      { url: "/favicons/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+      { url: "/favicons/favicon.ico", sizes: "any" },
     ],
+    shortcut: "/images/icon.png",
     apple: [
+      { url: "/images/icon.png", sizes: "180x180", type: "image/png" },
       { url: "/favicons/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
     ],
     other: [
       {
+        rel: "apple-touch-icon",
+        url: "/images/icon.png",
+      },
+      {
         rel: "android-chrome-192x192",
-        url: "/favicons/android-chrome-192x192.png",
+        url: "/images/icon.png",
       },
       {
         rel: "android-chrome-512x512",
-        url: "/favicons/android-chrome-512x512.png",
+        url: "/images/icon.png",
       },
     ],
   },
@@ -38,16 +45,36 @@ export const metadata: Metadata = {
   },
   openGraph: {
     type: "website",
-    locale: "en_US",
+    locale: "en_IN",
+    alternateLocale: ["en_US"],
     url: siteConfig.url,
-    title: siteConfig.name,
+    title: "Hirance — Next-Gen Swipe-Based Hiring Platform | Swipe. Match. Get Hired.",
     description: siteConfig.description,
     siteName: siteConfig.name,
+    images: [
+      {
+        url: "/og.png",
+        width: 1200,
+        height: 630,
+        alt: "Hirance — Next-Gen Swipe-Based Hiring Platform",
+        type: "image/png",
+      },
+      {
+        url: "/hirance-social.png",
+        width: 1200,
+        height: 630,
+        alt: "Hirance — Swipe. Match. Get Hired.",
+        type: "image/png",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
-    title: siteConfig.name,
+    title: "Hirance — Next-Gen Swipe-Based Hiring Platform | Swipe. Match. Get Hired.",
     description: siteConfig.description,
+    images: ["/og.png"],
+    creator: "@hiranceapp",
+    site: "@hiranceapp",
   },
 };
 

@@ -35,8 +35,13 @@ export const metadata: Metadata = {
       },
     ],
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "Free Job Alerts on WhatsApp & Email | Hirance",
+    description: "Instant free job alerts delivered to your phone and email. Zero spam, 100% verified corporate hiring managers.",
+    images: ["/og.png"],
+  },
 };
-
 export default function FreeJobAlertsPage() {
   return <JobAlertsContent />;
 }
