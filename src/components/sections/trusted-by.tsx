@@ -5,53 +5,77 @@ import { motion, useReducedMotion } from "framer-motion";
 import { getCompanyColorTheme, initials } from "@/config/companies";
 import { fetchCompanies } from "@/lib/api";
 import type { CompanyItem } from "@/types";
-import { cn } from "@/lib/utils";
+
+interface ProdCompany {
+  name: string;
+  logoUrl?: string;
+}
 
 /**
- * Deduplicate company items by normalized company name.
- * Keeps entry with valid logo when duplicates exist.
+ * Filter and deduplicate companies strictly from the Production API.
+ * Cleans out obvious test entries and prioritizes profiles with verified logos.
  */
-function deduplicateCompanies(list: CompanyItem[]): CompanyItem[] {
-  if (!Array.isArray(list) || list.length === 0) return [];
-  const map = new Map<string, CompanyItem>();
+function cleanProdApiCompanies(apiCompanies: CompanyItem[]): ProdCompany[] {
+  if (!Array.isArray(apiCompanies) || apiCompanies.length === 0) return [];
 
-  for (const item of list) {
-    if (!item || !item.company_name) continue;
+  const map = new Map<string, ProdCompany>();
+
+  for (const item of apiCompanies) {
+    if (!item?.company_name) continue;
     const name = item.company_name.trim();
-    if (!name) continue;
+    if (name.length < 3) continue;
 
-    // Normalize: alphanumeric only, lowercase
+    // Filter out test/junk entries from prod database
+    if (
+      /^(67567|dummy|test|asdf|qwerty|jhg|ppppp|wewrr|wddw|eretrete|guty|hdfg|dgrgt|dfsddf|ddfdf|yu7i|kmjuhnh|buhbh|wrtfuh|xyzpriv|JHHG|I am user)/i.test(
+        name
+      )
+    ) {
+      continue;
+    }
+    if (/[;'"\\]/.test(name)) continue;
+
     const key = name.toLowerCase().replace(/[^a-z0-9]/g, "");
+    if (!key) continue;
+
+    const logoUrl = item.company_logo?.trim() || undefined;
     const existing = map.get(key);
 
     if (!existing) {
-      map.set(key, item);
+      map.set(key, { name, logoUrl });
     } else {
-      // Prioritize entry with valid company_logo
-      if (!existing.company_logo?.trim() && item.company_logo?.trim()) {
-        map.set(key, item);
+      // Prioritize entry with valid logo
+      if (!existing.logoUrl && logoUrl) {
+        existing.logoUrl = logoUrl;
       }
     }
   }
 
-  return Array.from(map.values());
+  // Prioritize companies with valid logos, then alphabetically
+  return Array.from(map.values()).sort((a, b) => {
+    const aLogo = Boolean(a.logoUrl);
+    const bLogo = Boolean(b.logoUrl);
+    if (aLogo && !bLogo) return -1;
+    if (!aLogo && bLogo) return 1;
+    return a.name.localeCompare(b.name);
+  });
 }
 
 /**
- * Individual App-Icon styled company logo card (non-clickable).
+ * Clean, prominent company badge exclusively featuring production API data.
+ * Displays large company logo/avatar and bold typography.
  */
-const AppIconCompanyCard = memo(function AppIconCompanyCard({
+const CompanyBadge = memo(function CompanyBadge({
   company,
   index,
 }: {
-  company: CompanyItem;
+  company: ProdCompany;
   index: number;
 }) {
-  const [failed, setFailed] = useState(false);
-  const name = company.company_name?.trim() || "Company";
-  const logoUrl = company.company_logo?.trim() || "";
-  const hasLogo = Boolean(logoUrl) && !failed;
-
+  const [logoFailed, setLogoFailed] = useState(false);
+  const name = company.name?.trim() || "Company";
+  const logoUrl = company.logoUrl?.trim() || "";
+  const hasLogo = Boolean(logoUrl) && !logoFailed;
   const theme = useMemo(() => getCompanyColorTheme(name, index), [name, index]);
 
   return (
@@ -59,89 +83,53 @@ const AppIconCompanyCard = memo(function AppIconCompanyCard({
       title={name}
       aria-label={name}
       suppressHydrationWarning
-      className="relative flex shrink-0 items-center justify-center rounded-xl sm:rounded-[14px] md:rounded-2xl select-none cursor-default"
+      className="group relative flex shrink-0 items-center gap-3.5 sm:gap-4 md:gap-4.5 rounded-2xl border border-slate-200/90 dark:border-slate-800 bg-white/95 dark:bg-slate-900/90 px-4.5 sm:px-6 md:px-7 py-3 sm:py-3.5 md:py-4 shadow-2xs hover:border-blue-400 hover:shadow-md transition-all duration-200 select-none cursor-default"
     >
-      {/* Squircle App-Icon Container with Light Background & Crisp Grey Border */}
+      {/* Prominent Logo / Monogram Container */}
       <div
-        suppressHydrationWarning
-        className={cn(
-          "relative flex items-center justify-center overflow-hidden select-none",
-          "w-11 h-11 sm:w-13 sm:h-13 md:w-14 md:h-14 lg:w-16 lg:h-16",
-          "rounded-xl sm:rounded-[14px] md:rounded-2xl",
-          "border-[1.5px] border-slate-300/90 dark:border-slate-700",
-          "shadow-[0_1px_4px_rgba(0,0,0,0.04)]"
-        )}
-        style={{
-          backgroundColor: theme.bg,
-        }}
+        className="flex h-9 w-9 sm:h-11 sm:w-11 md:h-12 md:w-12 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/80 p-1.5 shadow-2xs"
+        style={!hasLogo ? { backgroundColor: theme.bg } : undefined}
       >
-        {/* Content: Centered Logo or Monogram with Balanced Proportions */}
-        <div
-          suppressHydrationWarning
-          className="relative z-10 flex h-full w-full items-center justify-center p-1.5 sm:p-2 md:p-2.5"
-        >
-          {!hasLogo ? (
-            <span
-              aria-hidden="true"
-              suppressHydrationWarning
-              className="grid h-full w-full place-items-center text-xs sm:text-sm font-bold select-none tracking-tight rounded-md"
-              style={{
-                color: theme.textColor || (theme.isLight ? "#1E293B" : "#FFFFFF"),
-              }}
-            >
-              {initials(name)}
-            </span>
-          ) : theme.isLight ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={logoUrl}
-              alt={name}
-              width={36}
-              height={36}
-              loading="lazy"
-              decoding="async"
-              suppressHydrationWarning
-              className={cn(
-                "object-contain select-none rounded-md sm:rounded-lg",
-                "max-h-6 max-w-6 sm:max-h-7 sm:max-w-7 md:max-h-8 md:max-w-8 lg:max-h-9 lg:max-w-9"
-              )}
-              onError={() => setFailed(true)}
-            />
-          ) : (
-            <div
-              suppressHydrationWarning
-              className="flex h-7 w-7 sm:h-8 sm:w-8 md:h-9 md:w-9 lg:h-10 lg:w-10 items-center justify-center rounded-lg sm:rounded-[10px] bg-white p-1 shadow-xs overflow-hidden"
-            >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={logoUrl}
-                alt={name}
-                width={28}
-                height={28}
-                loading="lazy"
-                decoding="async"
-                suppressHydrationWarning
-                className="max-h-5 max-w-5 sm:max-h-6 sm:max-w-6 md:max-h-7 md:max-w-7 lg:max-h-8 lg:max-w-8 object-contain select-none rounded-sm sm:rounded-md"
-                onError={() => setFailed(true)}
-              />
-            </div>
-          )}
-        </div>
+        {hasLogo ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={logoUrl}
+            alt={name}
+            width={36}
+            height={36}
+            loading="lazy"
+            decoding="async"
+            className="h-full w-full object-contain select-none"
+            onError={() => setLogoFailed(true)}
+          />
+        ) : (
+          <span
+            className="text-xs sm:text-sm md:text-base font-bold"
+            style={{ color: theme.textColor || (theme.isLight ? "#0F172A" : "#FFFFFF") }}
+          >
+            {initials(name)}
+          </span>
+        )}
       </div>
+
+      {/* Prominent Company Name */}
+      <span className="text-sm sm:text-base md:text-[17px] font-bold text-foreground/90 whitespace-nowrap tracking-tight">
+        {name}
+      </span>
     </div>
   );
 });
 
 /**
- * Continuous infinite marquee row that never stops on hover.
+ * Continuous infinite marquee row with smooth GPU-accelerated motion at an easy, readable pace.
  */
 function ContinuousMarqueeRow({
   items,
   direction = "normal",
-  speed = "70s",
+  speed = "120s",
   startIndex = 0,
 }: {
-  items: CompanyItem[];
+  items: ProdCompany[];
   direction?: "normal" | "reverse";
   speed?: string;
   startIndex?: number;
@@ -159,11 +147,11 @@ function ContinuousMarqueeRow({
   return (
     <div
       suppressHydrationWarning
-      className="relative flex overflow-hidden py-1 sm:py-1.5 select-none [contain:layout_paint]"
+      className="relative flex overflow-hidden py-1.5 sm:py-2 select-none [contain:layout_paint]"
     >
       <div
         suppressHydrationWarning
-        className="flex shrink-0 gap-2.5 sm:gap-3 md:gap-3.5 animate-marquee will-change-transform items-center"
+        className="flex shrink-0 gap-3.5 sm:gap-4.5 md:gap-5 animate-marquee will-change-transform items-center"
         style={
           {
             "--marquee-duration": speed,
@@ -172,8 +160,8 @@ function ContinuousMarqueeRow({
         }
       >
         {duplicatedItems.map((company, idx) => (
-          <AppIconCompanyCard
-            key={`${company.id || company.company_name}-${startIndex}-${idx}`}
+          <CompanyBadge
+            key={`${company.name}-${startIndex}-${idx}`}
             company={company}
             index={startIndex + idx}
           />
@@ -189,11 +177,11 @@ interface TrustedByProps {
 
 export function TrustedBy({ initialCompanies }: TrustedByProps) {
   const reducedMotion = useReducedMotion();
-  const [companyList, setCompanyList] = useState<CompanyItem[]>(() =>
-    deduplicateCompanies(initialCompanies || [])
+  const [companyList, setCompanyList] = useState<ProdCompany[]>(() =>
+    cleanProdApiCompanies(initialCompanies || [])
   );
 
-  // Only fetch on client if server-rendered initialCompanies was not provided
+  // Client-side refresh exclusively from prod API if server rendered data wasn't provided
   useEffect(() => {
     if (initialCompanies && initialCompanies.length > 0) return;
 
@@ -201,7 +189,7 @@ export function TrustedBy({ initialCompanies }: TrustedByProps) {
     fetchCompanies({ search: "", page_size: 100 })
       .then((res) => {
         if (isMounted && res.data && res.data.length > 0) {
-          setCompanyList(deduplicateCompanies(res.data));
+          setCompanyList(cleanProdApiCompanies(res.data));
         }
       })
       .catch(() => {
@@ -213,22 +201,20 @@ export function TrustedBy({ initialCompanies }: TrustedByProps) {
     };
   }, [initialCompanies]);
 
-  // Round-robin distribution into 4 balanced rows to mix brand logos and monograms evenly
-  const { row1, row2, row3, row4 } = useMemo(() => {
-    const r1: CompanyItem[] = [];
-    const r2: CompanyItem[] = [];
-    const r3: CompanyItem[] = [];
-    const r4: CompanyItem[] = [];
+  // Split into 2 balanced rows for optimal visual spacing
+  const { row1, row2 } = useMemo(() => {
+    const r1: ProdCompany[] = [];
+    const r2: ProdCompany[] = [];
 
     companyList.forEach((item, idx) => {
-      const targetRow = idx % 4;
-      if (targetRow === 0) r1.push(item);
-      else if (targetRow === 1) r2.push(item);
-      else if (targetRow === 2) r3.push(item);
-      else r4.push(item);
+      if (idx % 2 === 0) {
+        r1.push(item);
+      } else {
+        r2.push(item);
+      }
     });
 
-    return { row1: r1, row2: r2, row3: r3, row4: r4 };
+    return { row1: r1, row2: r2 };
   }, [companyList]);
 
   return (
@@ -237,23 +223,23 @@ export function TrustedBy({ initialCompanies }: TrustedByProps) {
       className="relative w-full overflow-hidden py-12 sm:py-16 md:py-20 flex flex-col items-center justify-center min-h-0"
       aria-labelledby="trusted-by-heading"
     >
-      {/* Background Ambient Glows */}
+      {/* Ambient Glows matching site standard */}
       <div
         className="pointer-events-none absolute inset-0 -z-10 overflow-hidden"
         aria-hidden="true"
       >
         <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-border/80 to-transparent" />
-        <div className="absolute left-1/2 top-1/2 h-[32rem] w-[50rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-to-tr from-brand-500/8 via-indigo-500/6 to-sky-500/5 blur-[140px]" />
+        <div className="absolute left-1/2 top-1/2 h-[28rem] w-[46rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-to-tr from-brand-500/8 via-indigo-500/6 to-sky-500/5 blur-[140px]" />
       </div>
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full">
-        {/* Clean, SEO-optimized Header */}
+        {/* Header - Clean, Crisp, Focused */}
         <motion.div
           initial={reducedMotion ? false : { opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-48px" }}
           transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-          className="mx-auto max-w-3xl text-center mb-8 sm:mb-10"
+          className="mx-auto max-w-3xl text-center mb-6 sm:mb-8"
         >
           <h2
             id="trusted-by-heading"
@@ -264,50 +250,31 @@ export function TrustedBy({ initialCompanies }: TrustedByProps) {
               Hirance
             </span>
           </h2>
-          <p className="mt-3 text-sm sm:text-base text-muted-foreground max-w-xl mx-auto">
-            Built for modern hiring teams looking for better matches, faster applications and simpler hiring.
-          </p>
         </motion.div>
 
-        {/* 4-Row Continuous App-Icon Stream (Continuous, no pause on hover) */}
+        {/* 2-Row Streamlined Company Marquee with Smooth, Gentle Glide */}
         {companyList.length > 0 && (
           <motion.div
             initial={reducedMotion ? false : { opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-48px" }}
             transition={{ duration: 0.6, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
-            className="space-y-2 sm:space-y-2.5 md:space-y-3 marquee-mask"
+            className="space-y-3.5 sm:space-y-4.5 marquee-mask"
           >
-            {/* Row 1: Leftward continuous scroll */}
+            {/* Row 1: Leftward gentle glide */}
             <ContinuousMarqueeRow
               items={row1}
               direction="normal"
-              speed="75s"
+              speed="120s"
               startIndex={0}
             />
 
-            {/* Row 2: Rightward continuous scroll */}
+            {/* Row 2: Rightward gentle glide */}
             <ContinuousMarqueeRow
               items={row2}
               direction="reverse"
-              speed="65s"
+              speed="140s"
               startIndex={row1.length}
-            />
-
-            {/* Row 3: Leftward continuous scroll */}
-            <ContinuousMarqueeRow
-              items={row3}
-              direction="normal"
-              speed="80s"
-              startIndex={row1.length + row2.length}
-            />
-
-            {/* Row 4: Rightward continuous scroll */}
-            <ContinuousMarqueeRow
-              items={row4}
-              direction="reverse"
-              speed="70s"
-              startIndex={row1.length + row2.length + row3.length}
             />
           </motion.div>
         )}

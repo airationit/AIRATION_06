@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState, useCallback, useRef } from "react";
 import Image from "next/image";
@@ -718,7 +718,7 @@ export function SwipePlayground() {
                     animate={{ opacity: 1, scale: 1 }}
                     className="absolute inset-0 rounded-[22px] sm:rounded-[24px] bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-2xl p-5 sm:p-6 flex flex-col items-center justify-center text-center"
                   >
-                    <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-600 text-white mb-2 shadow-md shadow-blue-500/25">
+                    <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700 mb-2 shadow-xs">
                       <PartyPopper size={22} />
                     </div>
 
@@ -738,7 +738,7 @@ export function SwipePlayground() {
                         href={siteConfig.links.playStore}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="group flex items-center justify-center gap-2 rounded-full bg-[#0077c8] hover:bg-[#0066ad] dark:bg-brand-600 dark:hover:bg-brand-500 text-white py-2 px-4 text-xs font-bold shadow-md shadow-[#0077c8]/25 transition-all hover:scale-[1.02] active:scale-[0.98]"
+                        className="group flex items-center justify-center gap-2 rounded-full bg-black hover:bg-slate-900 dark:bg-white dark:hover:bg-slate-100 dark:text-black text-white py-2 px-4 text-xs font-bold shadow-xs transition-all hover:scale-[1.02] active:scale-[0.98]"
                       >
                         <svg className="h-3.5 w-3.5 shrink-0" viewBox="0 0 512 512" fill="none" aria-hidden="true">
                           <path

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React from "react";
 import { motion, useReducedMotion } from "framer-motion";
@@ -10,7 +10,6 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { siteConfig } from "@/config/site";
-import { cn } from "@/lib/utils";
 import { CandidatePhoneMockup } from "./candidate-phone-mockup";
 
 const POINTS = [
@@ -45,17 +44,13 @@ export function AppDownload() {
       className="relative w-full overflow-hidden py-14 sm:py-18 lg:py-24 flex items-center justify-center min-h-0"
       aria-labelledby="candidate-experience-heading"
     >
-      {/* Dynamic Ambient Mesh Glow Background */}
+      {/* Clean Ambient Background */}
       <div
         className="pointer-events-none absolute inset-0 -z-10 overflow-hidden"
         aria-hidden="true"
       >
-        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-border/80 to-transparent" />
-        <div className="absolute left-1/2 top-1/2 h-[34rem] w-[50rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-to-br from-brand-500/15 via-indigo-500/10 to-sky-500/5 blur-[140px]" />
-        <div className="absolute right-10 top-1/4 h-[22rem] w-[22rem] rounded-full bg-blue-600/10 blur-[100px]" />
-
-        {/* Subtle geometric grid backdrop */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)]" />
+        <div className="absolute inset-x-0 top-0 h-px bg-slate-200/80 dark:bg-slate-800/80" />
+        <div className="absolute left-1/2 top-1/2 h-[30rem] w-[46rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-brand-500/5 blur-[120px]" />
       </div>
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full">
@@ -88,7 +83,7 @@ export function AppDownload() {
             <div className="relative mt-8 w-full max-w-xl">
               {/* Connector line */}
               <div
-                className="absolute left-[20px] sm:left-[22px] top-3 bottom-3 w-px bg-gradient-to-b from-blue-500/40 via-indigo-500/25 to-transparent"
+                className="absolute left-[20px] sm:left-[22px] top-3 bottom-3 w-px bg-slate-200 dark:bg-slate-800"
                 aria-hidden="true"
               />
 
@@ -108,8 +103,8 @@ export function AppDownload() {
                       }}
                       className="group relative flex items-start gap-4 text-left"
                     >
-                      <div className="relative z-10 flex h-10 w-10 sm:h-11 sm:w-11 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-600 to-brand-600 text-white shadow-md shadow-brand-500/20 transition-transform duration-300 group-hover:scale-105">
-                        <Icon className="h-5 w-5" />
+                      <div className="relative z-10 flex h-10 w-10 sm:h-11 sm:w-11 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-slate-800 border border-slate-200/80 shadow-xs dark:bg-slate-800 dark:text-slate-200 dark:border-slate-700 transition-colors duration-200 group-hover:bg-slate-200/70 dark:group-hover:bg-slate-700">
+                        <Icon className="h-5 w-5 text-slate-700 dark:text-slate-300" />
                       </div>
                       <div className="pt-0.5">
                         <h3 className="text-base font-bold text-foreground sm:text-lg leading-snug">
@@ -125,29 +120,6 @@ export function AppDownload() {
               </div>
             </div>
 
-            {/* CTA Button */}
-            <motion.div
-              initial={reducedMotion ? false : { opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-48px" }}
-              transition={{
-                delay: reducedMotion ? 0 : 0.35,
-                duration: 0.5,
-                ease: [0.16, 1, 0.3, 1],
-              }}
-              className="mt-8 sm:mt-10 flex items-center justify-center lg:justify-start"
-            >
-              <a
-                href={siteConfig.links.playStore}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Start swiping — Download Hirance on Google Play"
-                className="group inline-flex items-center justify-center gap-2.5 rounded-full bg-[#0077c8] hover:bg-[#0066ad] dark:bg-brand-600 dark:hover:bg-brand-500 px-6 sm:px-7 py-3 sm:py-3.5 text-sm sm:text-base font-semibold text-white shadow-lg shadow-[#0077c8]/25 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-brand-500/40"
-              >
-                <span>Start swiping</span>
-                <ArrowRight className="h-4 w-4 sm:h-4.5 sm:w-4.5 transition-transform duration-200 group-hover:translate-x-1" />
-              </a>
-            </motion.div>
           </motion.div>
 
           {/* Right Column: Interactive Phone Showcase with Swipeable Job Cards */}
@@ -162,15 +134,14 @@ export function AppDownload() {
             }}
             className="relative flex items-center justify-center lg:col-span-5"
           >
-            {/* Multi-layered Neon Ambient Aura behind phone */}
+            {/* Subtle Neutral Backdrop behind phone */}
             <div
-              className="pointer-events-none absolute h-[340px] w-[340px] sm:h-[450px] sm:w-[450px] rounded-full bg-gradient-to-tr from-brand-500/30 via-blue-500/20 to-indigo-500/20 blur-[100px]"
+              className="pointer-events-none absolute h-[300px] w-[300px] sm:h-[380px] sm:w-[380px] rounded-full bg-slate-200/50 dark:bg-slate-800/20 blur-[90px]"
               aria-hidden="true"
             />
 
             {/* Container with Interactive Phone Mockup */}
             <div className="relative w-full flex justify-center items-center">
-              {/* Interactive Phone Mockup with Left & Right Job Swiping */}
               <CandidatePhoneMockup />
             </div>
           </motion.div>
@@ -182,4 +153,3 @@ export function AppDownload() {
 
 export const CandidateExperience = AppDownload;
 export default AppDownload;
-
