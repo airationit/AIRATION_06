@@ -1,3 +1,4 @@
+import { siteConfig } from "@/config/site";
 import type { Metadata } from "next";
 import { BlogListContent } from "@/components/blog/blog-list-content";
 import {
@@ -25,7 +26,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     type: "website",
-    locale: "en_US",
+    locale: "en_IN",
     url: "https://hirance.com/blog",
     title: "Blog & Hiring Insights | Hirance",
     description:
@@ -33,7 +34,7 @@ export const metadata: Metadata = {
     siteName: "Hirance",
     images: [
       {
-        url: "/og.png",
+        url: siteConfig.ogImage,
         width: 1200,
         height: 630,
         alt: "Hirance Blog & Hiring Insights",
@@ -45,6 +46,7 @@ export const metadata: Metadata = {
     title: "Blog & Hiring Insights | Hirance",
     description:
       "Latest hiring trends, candidate Smart Score guides, and recruitment strategies built for speed.",
+    images: [{ url: siteConfig.ogImage, alt: "Hirance — Swipe. Match. Get Hired." }],
   },
 };
 
@@ -93,7 +95,7 @@ export default async function BlogIndexPage({ searchParams }: BlogPageProps) {
       "@type": "Organization",
       name: "Hirance",
       url: "https://hirance.com",
-      logo: "https://hirance.com/og.png",
+      logo: siteConfig.logo,
       slogan: "Swipe. Match. Get Hired.",
     },
     blogPost: blogsList.map((post) => ({

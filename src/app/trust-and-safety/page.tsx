@@ -1,3 +1,4 @@
+import { siteConfig } from "@/config/site";
 import type { Metadata } from "next"
 import { TrustSafetyContent } from "@/components/legal/trust-safety-content"
 
@@ -23,19 +24,20 @@ export const metadata: Metadata = {
   },
   openGraph: {
     type: "website",
-    locale: "en_US",
+    locale: "en_IN",
     url: "https://hirance.com/trust-and-safety",
     title: "Trust & Safety | Hirance — A Platform You Can Trust",
     description:
       "Hirance is built on trust. Learn how we verify employers, protect candidate data, and maintain a safe hiring environment for all users.",
     siteName: "Hirance",
-    images: [{ url: "/og.png", width: 1200, height: 630, alt: "Hirance Trust & Safety" }],
+    images: [{ url: siteConfig.ogImage, width: 1200, height: 630, alt: "Hirance Trust & Safety" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Trust & Safety | Hirance",
     description:
       "How Hirance keeps job seekers and employers safe through verified employers, zero-fee policy, and data protection.",
+    images: [{ url: siteConfig.ogImage, alt: "Hirance — Swipe. Match. Get Hired." }],
   },
 }
 

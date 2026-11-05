@@ -904,17 +904,6 @@ export function CandidatePhoneMockup({ initialJobs }: CandidatePhoneMockupProps 
               <span className="text-[8.5px] font-medium">Profile</span>
             </button>
           </div>
-
-          {/* Android System Nav Bar */}
-          <div className="flex items-center justify-around px-8 py-0.5 text-slate-400 dark:text-slate-600 select-none bg-white dark:bg-slate-900 border-t border-slate-50 dark:border-slate-800">
-            <div className="flex flex-col gap-0.5">
-              <div className="w-2.5 h-0.5 bg-current rounded-full" />
-              <div className="w-2.5 h-0.5 bg-current rounded-full" />
-              <div className="w-2.5 h-0.5 bg-current rounded-full" />
-            </div>
-            <div className="w-2 h-2 rounded-2xs border border-current" />
-            <div className="text-[9px] leading-none">⟨</div>
-          </div>
         </div>
       </div>
 

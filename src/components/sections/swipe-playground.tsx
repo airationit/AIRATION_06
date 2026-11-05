@@ -33,6 +33,8 @@ import {
 import { cn } from "@/lib/utils";
 import { JobListItem } from "@/types/jobs";
 
+const SWIPES_PER_ROUND = 5;
+
 export interface PlaygroundJob {
   id: string;
   department: string;
@@ -646,51 +648,55 @@ export function SwipePlayground({ initialJobs }: SwipePlaygroundProps = {}) {
   const [applied, setApplied] = useState<PlaygroundJob[]>([]);
   const [skipped, setSkipped] = useState(0);
   const [showAppliedToast, setShowAppliedToast] = useState(false);
+  const swipeCountRef = useRef(0);
+  const toastTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => () => {
+    if (toastTimeoutRef.current) clearTimeout(toastTimeoutRef.current);
+  }, []);
 
   const handleDecide = useCallback(
     (dir: "left" | "right", job: PlaygroundJob) => {
-      if (dir === "right") {
-        setApplied((prev) => [...prev, job]);
-        setShowAppliedToast(true);
-        setTimeout(() => setShowAppliedToast(false), 2200);
-      } else {
-        setSkipped((prev) => prev + 1);
-      }
+      const roundIndex = swipeCountRef.current % SWIPES_PER_ROUND;
+      if (job.id !== jobs[roundIndex % jobs.length]?.id) return;
 
-      setIndex((prev) => prev + 1);
+      const startsNewRound = swipeCountRef.current > 0 && roundIndex === 0;
+      swipeCountRef.current += 1;
+      if (startsNewRound) {
+        if (toastTimeoutRef.current) clearTimeout(toastTimeoutRef.current);
+        setApplied(dir === "right" ? [job] : []);
+        setSkipped(dir === "left" ? 1 : 0);
+        setShowAppliedToast(false);
+      }
+      if (dir === "right") {
+        if (!startsNewRound) setApplied((previous) => [...previous, job]);
+        setShowAppliedToast(true);
+        if (toastTimeoutRef.current) clearTimeout(toastTimeoutRef.current);
+        toastTimeoutRef.current = setTimeout(() => setShowAppliedToast(false), 2200);
+      } else if (!startsNewRound) {
+        setSkipped((previous) => previous + 1);
+      }
+      setIndex(swipeCountRef.current);
     },
-    []
+    [jobs]
   );
 
-  const currentJob = jobs[index % jobs.length];
-  const nextJob = jobs[(index + 1) % jobs.length];
-  const reviewedCount = index === 0 ? 0 : ((index - 1) % 5) + 1;
+  const reviewedCount = index === 0 ? 0 : ((index - 1) % SWIPES_PER_ROUND) + 1;
+  const cardIndex = index % SWIPES_PER_ROUND;
+  const currentJob = jobs[cardIndex % jobs.length];
+  const nextJob = jobs[((cardIndex + 1) % SWIPES_PER_ROUND) % jobs.length];
 
   return (
     <section
       id="playground"
-      className="relative w-full overflow-hidden py-10 sm:py-14 lg:py-18 bg-[#f9f9f9] dark:bg-slate-950"
+      className="section-blue-glow relative w-full overflow-hidden py-10 sm:py-14 lg:py-18 bg-white dark:bg-slate-950"
       aria-labelledby="playground-heading"
     >
-      {/* Background Radial Blue Glow in center part */}
+      {/* Subtle section divider; the shared CSS supplies the center glow. */}
       <div
         className="pointer-events-none absolute inset-0 -z-10 overflow-hidden"
         aria-hidden="true"
       >
-        <div
-          className="absolute inset-0 dark:hidden"
-          style={{
-            background:
-              "radial-gradient(ellipse 75% 65% at 50% 50%, rgba(191, 219, 254, 0.65) 0%, rgba(219, 234, 254, 0.3) 50%, transparent 75%)",
-          }}
-        />
-        <div
-          className="absolute inset-0 hidden dark:block"
-          style={{
-            background:
-              "radial-gradient(ellipse 75% 65% at 50% 50%, rgba(37, 99, 235, 0.2) 0%, rgba(30, 58, 138, 0.08) 50%, transparent 75%)",
-          }}
-        />
         <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-border/80 to-transparent" />
       </div>
 
@@ -720,7 +726,7 @@ export function SwipePlayground({ initialJobs }: SwipePlaygroundProps = {}) {
 
             {/* Live Tally Cards */}
             <div className="mt-7 grid grid-cols-3 gap-3 w-full max-w-md">
-              <div className="rounded-2xl border border-border/80 bg-card p-3.5 sm:p-4 text-center shadow-xs">
+              <div className="rounded-2xl border border-[#D1FAE5] bg-[#F6FFF9] dark:bg-emerald-950/20 dark:border-emerald-900/40 p-3.5 sm:p-4 text-center shadow-xs">
                 <p className="text-2xl sm:text-3xl font-semibold text-emerald-600 dark:text-emerald-400">
                   {applied.length}
                 </p>
@@ -729,7 +735,7 @@ export function SwipePlayground({ initialJobs }: SwipePlaygroundProps = {}) {
                 </p>
               </div>
 
-              <div className="rounded-2xl border border-border/80 bg-card p-3.5 sm:p-4 text-center shadow-xs">
+              <div className="rounded-2xl border border-[#FFE4E6] bg-[#FFF7F7] dark:bg-rose-950/20 dark:border-rose-900/40 p-3.5 sm:p-4 text-center shadow-xs">
                 <p className="text-2xl sm:text-3xl font-semibold text-rose-500 dark:text-rose-400">
                   {skipped}
                 </p>
@@ -738,9 +744,9 @@ export function SwipePlayground({ initialJobs }: SwipePlaygroundProps = {}) {
                 </p>
               </div>
 
-              <div className="rounded-2xl border border-border/80 bg-card p-3.5 sm:p-4 text-center shadow-xs">
+              <div className="rounded-2xl border border-[#E2E8F0] bg-[#FBFBFB] dark:bg-card dark:border-border p-3.5 sm:p-4 text-center shadow-xs">
                 <p className="text-2xl sm:text-3xl font-semibold text-foreground">
-                  {reviewedCount}/5
+                  {reviewedCount}/{SWIPES_PER_ROUND}
                 </p>
                 <p className="mt-0.5 text-xs text-muted-foreground font-medium">
                   Reviewed
@@ -890,7 +896,7 @@ export function SwipePlayground({ initialJobs }: SwipePlaygroundProps = {}) {
                   {/* Active Top Draggable Card */}
                   <AnimatePresence mode="popLayout">
                     <DragCard
-                      key={`${currentJob.id}-${index}`}
+                      key={currentJob.id + "-" + index}
                       job={currentJob}
                       onDecide={handleDecide}
                       isTop={true}
@@ -939,17 +945,6 @@ export function SwipePlayground({ initialJobs }: SwipePlaygroundProps = {}) {
                     <User className="h-4 w-4 stroke-[2]" />
                     <span className="text-[8.5px] font-medium">Profile</span>
                   </button>
-                </div>
-
-                {/* Android System Nav Bar */}
-                <div className="flex items-center justify-around px-8 py-0.5 text-slate-400 dark:text-slate-600 select-none bg-white dark:bg-slate-900 border-t border-slate-50 dark:border-slate-800">
-                  <div className="flex flex-col gap-0.5">
-                    <div className="w-2.5 h-0.5 bg-current rounded-full" />
-                    <div className="w-2.5 h-0.5 bg-current rounded-full" />
-                    <div className="w-2.5 h-0.5 bg-current rounded-full" />
-                  </div>
-                  <div className="w-2 h-2 rounded-2xs border border-current" />
-                  <div className="text-[9px] leading-none">⟨</div>
                 </div>
               </div>
             </div>

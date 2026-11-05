@@ -1,3 +1,4 @@
+import { siteConfig } from "@/config/site";
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { FeedbackContent } from "@/components/feedback/feedback-content";
@@ -20,7 +21,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     type: "website",
-    locale: "en_US",
+    locale: "en_IN",
     url: "https://hirance.com/feedback",
     title: "Candidate & Employer Reviews | Hirance",
     description:
@@ -28,7 +29,7 @@ export const metadata: Metadata = {
     siteName: "Hirance",
     images: [
       {
-        url: "/og.png",
+        url: siteConfig.ogImage,
         width: 1200,
         height: 630,
         alt: "Hirance User Feedback & Reviews",
@@ -40,6 +41,7 @@ export const metadata: Metadata = {
     title: "Candidate & Employer Reviews | Hirance",
     description:
       "Swipe. Match. Get Hired. Verified feedback from job seekers and employers.",
+    images: [{ url: siteConfig.ogImage, alt: "Hirance — Swipe. Match. Get Hired." }],
   },
 };
 
@@ -55,7 +57,7 @@ export default function FeedbackPage() {
       "@type": "Organization",
       name: "Hirance",
       url: "https://hirance.com",
-      logo: "https://hirance.com/og.png",
+      logo: siteConfig.logo,
       slogan: "Swipe. Match. Get Hired.",
     },
     aggregateRating: {

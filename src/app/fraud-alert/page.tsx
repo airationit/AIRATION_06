@@ -1,3 +1,4 @@
+import { siteConfig } from "@/config/site";
 import type { Metadata } from "next"
 import { FraudAlertContent } from "@/components/legal/fraud-alert-content"
 
@@ -24,19 +25,20 @@ export const metadata: Metadata = {
   },
   openGraph: {
     type: "website",
-    locale: "en_US",
+    locale: "en_IN",
     url: "https://hirance.com/fraud-alert",
     title: "Fraud Alert — Protect Yourself from Fake Job Scams | Hirance",
     description:
       "Hirance never charges candidates. Learn how to spot fake job offers and impersonators, and report fraud instantly.",
     siteName: "Hirance",
-    images: [{ url: "/og.png", width: 1200, height: 630, alt: "Hirance Fraud Alert" }],
+    images: [{ url: siteConfig.ogImage, width: 1200, height: 630, alt: "Hirance Fraud Alert" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Fraud Alert | Hirance",
     description:
       "Protect yourself from job scammers impersonating Hirance. Identify red flags, verify official channels, and report fraud.",
+    images: [{ url: siteConfig.ogImage, alt: "Hirance — Swipe. Match. Get Hired." }],
   },
 }
 

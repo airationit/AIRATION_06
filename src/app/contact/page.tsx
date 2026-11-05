@@ -1,3 +1,4 @@
+import { siteConfig } from "@/config/site";
 import type { Metadata } from "next";
 import { ContactContent } from "@/components/contact/contact-content";
 
@@ -26,7 +27,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     type: "website",
-    locale: "en_US",
+    locale: "en_IN",
     url: "https://hirance.com/contact",
     title: "Contact Us | Hirance - Next-Gen Swipe-Based Hiring Platform",
     description:
@@ -34,7 +35,7 @@ export const metadata: Metadata = {
     siteName: "Hirance",
     images: [
       {
-        url: "/og.png",
+        url: siteConfig.ogImage,
         width: 1200,
         height: 630,
         alt: "Contact Us - Hirance",
@@ -46,6 +47,7 @@ export const metadata: Metadata = {
     title: "Contact Us | Hirance - Next-Gen Swipe-Based Hiring Platform",
     description:
       "Swipe. Match. Get Hired. Contact Hirance support for instant assistance.",
+    images: [{ url: siteConfig.ogImage, alt: "Hirance — Swipe. Match. Get Hired." }],
   },
 };
 
@@ -62,7 +64,7 @@ export default function ContactPage() {
         "@type": "Organization",
         name: "Hirance",
         url: "https://hirance.com",
-        logo: "https://hirance.com/og.png",
+        logo: siteConfig.logo,
         slogan: "Swipe. Match. Get Hired.",
       },
       mainEntity: {

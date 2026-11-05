@@ -281,9 +281,9 @@ const AppIconCompanyCard = memo(function AppIconCompanyCard({
         suppressHydrationWarning
         className={cn(
           "relative flex items-center justify-center overflow-hidden select-none rounded-full bg-white dark:bg-slate-900",
-          "w-[52px] h-[52px] sm:w-[60px] sm:h-[60px]",
-          "shadow-[0_3px_12px_rgba(0,0,0,0.05),0_1px_2px_rgba(0,0,0,0.03)] dark:shadow-[0_4px_16px_rgba(0,0,0,0.35)]",
-          "transition-all duration-300 ease-out hover:scale-108 hover:shadow-[0_8px_20px_rgba(37,99,235,0.12)] active:scale-95"
+          "h-11 w-11 sm:h-12 sm:w-12 md:h-14 md:w-14 lg:h-15 lg:w-15",
+          "shadow-[0_4px_16px_rgba(0,0,0,0.06),0_1px_3px_rgba(0,0,0,0.03)] dark:shadow-[0_4px_16px_rgba(0,0,0,0.35)]",
+          "transition-all duration-300 ease-out hover:scale-108 hover:shadow-[0_8px_24px_rgba(37,99,235,0.12)] active:scale-95"
         )}
       >
         {/* Centered Content: Brand Icon, Official Logo, or Circular Brand Monogram */}
@@ -294,7 +294,7 @@ const AppIconCompanyCard = memo(function AppIconCompanyCard({
           {brandIcon ? (
             brandIcon
           ) : hasLogo ? (
-            <div className="relative flex h-full w-full items-center justify-center overflow-hidden rounded-full p-2">
+            <div className="relative flex h-full w-full items-center justify-center overflow-hidden rounded-full p-1.5 sm:p-2">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={logoUrl}
@@ -306,7 +306,7 @@ const AppIconCompanyCard = memo(function AppIconCompanyCard({
                 suppressHydrationWarning
                 className={cn(
                   "object-contain select-none transition-transform duration-200",
-                  "max-h-7 max-w-7 sm:max-h-8 sm:max-w-8"
+                  "max-h-7 max-w-7 sm:max-h-8 sm:max-w-8 md:max-h-9 md:max-w-9"
                 )}
                 onError={() => setFailed(true)}
               />
@@ -320,7 +320,7 @@ const AppIconCompanyCard = memo(function AppIconCompanyCard({
                 fallbackGradient
               )}
             >
-              <span className="text-[11px] sm:text-xs font-bold tracking-tight text-white drop-shadow-xs">
+              <span className="text-[11px] sm:text-xs md:text-[13px] font-bold tracking-tight text-white drop-shadow-xs">
                 {initials(name)}
               </span>
             </div>
@@ -488,10 +488,10 @@ export function TrustedBy({ initialCompanies }: TrustedByProps) {
           </p>
           <div className="mt-3.5 flex items-center justify-center">
             <Link
-              href="/companies"
+              href="/jobs"
               className="group inline-flex items-center gap-1.5 text-xs sm:text-[13.5px] font-semibold text-[#2563eb] hover:text-[#1d4ed8] dark:text-blue-400 dark:hover:text-blue-300 transition-colors"
             >
-              <span>Explore Top Companies</span>
+              <span>Explore All Jobs</span>
               <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" />
             </Link>
           </div>
@@ -503,7 +503,7 @@ export function TrustedBy({ initialCompanies }: TrustedByProps) {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-48px" }}
           transition={{ duration: 0.6, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
-          className="space-y-2.5 sm:space-y-3 md:space-y-3.5 marquee-mask py-1.5"
+          className="space-y-2 sm:space-y-2.5 md:space-y-3 marquee-mask py-2"
         >
           {/* Row 1: Leftward continuous scroll */}
           <ContinuousMarqueeRow

@@ -1,3 +1,4 @@
+import { siteConfig } from "@/config/site";
 import type { Metadata } from "next"
 import { TermsContent } from "@/components/terms/terms-content"
 
@@ -26,7 +27,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     type: "website",
-    locale: "en_US",
+    locale: "en_IN",
     url: "https://hirance.com/terms",
     title: "Terms & Conditions | Hirance Platform & IP Guidelines",
     description:
@@ -34,7 +35,7 @@ export const metadata: Metadata = {
     siteName: "Hirance",
     images: [
       {
-        url: "/og.png",
+        url: siteConfig.ogImage,
         width: 1200,
         height: 630,
         alt: "Hirance Terms and Conditions",
@@ -46,6 +47,7 @@ export const metadata: Metadata = {
     title: "Terms & Conditions | Hirance",
     description:
       "Official Terms and Conditions for Hirance platform users, employers, and job seekers.",
+    images: [{ url: siteConfig.ogImage, alt: "Hirance — Swipe. Match. Get Hired." }],
   },
 }
 

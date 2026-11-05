@@ -501,17 +501,29 @@ export async function getJobs(params: {
  */
 export async function getJobById(slugOrId: string): Promise<Job | null> {
   const cleanId = extractJobId(slugOrId);
-  if (!cleanId) return null;
-
-  try {
-    const detail = await apiFetchJobDetail(cleanId, { revalidate: 120 });
-    if (detail) {
-      return normalizeJobItem(detail);
-    }
-  } catch (error) {
-    console.error(`getJobById error for ${cleanId}:`, error);
+  console.log('[getJobById] Input:', slugOrId);
+  console.log('[getJobById] Extracted ID:', cleanId);
+  
+  if (!cleanId) {
+    console.error('[getJobById] No valid ID extracted from:', slugOrId);
+    return null;
   }
 
+  try {
+    console.log('[getJobById] Fetching job detail for ID:', cleanId);
+    const detail = await apiFetchJobDetail(cleanId, { revalidate: 120 });
+    console.log('[getJobById] API Response:', detail ? 'Job found' : 'No job data');
+    
+    if (detail) {
+      const normalized = normalizeJobItem(detail);
+      console.log('[getJobById] Normalized job:', normalized?.title || 'Unknown');
+      return normalized;
+    }
+  } catch (error) {
+    console.error(`[getJobById] Error for ${cleanId}:`, error);
+  }
+
+  console.warn('[getJobById] Returning null for:', cleanId);
   return null;
 }
 

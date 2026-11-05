@@ -1,3 +1,4 @@
+import { siteConfig } from "@/config/site";
 import type { Metadata } from "next"
 import { GrievancesContent } from "@/components/legal/grievances-content"
 
@@ -22,19 +23,20 @@ export const metadata: Metadata = {
   },
   openGraph: {
     type: "website",
-    locale: "en_US",
+    locale: "en_IN",
     url: "https://hirance.com/grievances",
     title: "Grievances & Complaint Redressal | Hirance",
     description:
       "Formal grievance redressal mechanism for Hirance users. IT Act 2000 and DPDP Act 2023 compliant. Responses within 15 days.",
     siteName: "Hirance",
-    images: [{ url: "/og.png", width: 1200, height: 630, alt: "Hirance Grievance Redressal" }],
+    images: [{ url: siteConfig.ogImage, width: 1200, height: 630, alt: "Hirance Grievance Redressal" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Grievances & Complaint Redressal | Hirance",
     description:
       "File a formal grievance with Hirance. Our Grievance Officer will respond within timelines mandated by the IT Act, 2000.",
+    images: [{ url: siteConfig.ogImage, alt: "Hirance — Swipe. Match. Get Hired." }],
   },
 }
 
