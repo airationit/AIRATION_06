@@ -669,7 +669,7 @@ export function SwipePlayground({ initialJobs }: SwipePlaygroundProps = {}) {
   return (
     <section
       id="playground"
-      className="relative w-full overflow-hidden py-10 sm:py-14 lg:py-18 bg-white dark:bg-slate-950"
+      className="relative w-full overflow-hidden py-10 sm:py-14 lg:py-18 bg-[#f9f9f9] dark:bg-slate-950"
       aria-labelledby="playground-heading"
     >
       {/* Background Radial Blue Glow in center part */}

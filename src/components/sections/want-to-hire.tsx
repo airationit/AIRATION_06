@@ -536,7 +536,7 @@ export function WantToHire() {
 
             <h2
               id="want-to-hire-heading"
-              className="text-balance text-2xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-3xl md:text-4xl lg:text-5xl leading-tight"
+              className="text-balance text-2xl font-semibold tracking-tight text-slate-900 dark:text-white sm:text-3xl md:text-4xl lg:text-5xl leading-tight"
             >
               Post a Job. Let{" "}
               <span className="italic font-medium">
@@ -603,7 +603,7 @@ export function WantToHire() {
                 duration: 0.5,
                 ease: [0.16, 1, 0.3, 1],
               }}
-              className="relative mt-6 sm:mt-8 w-full overflow-hidden rounded-2xl sm:rounded-3xl border border-blue-100/90 dark:border-blue-900/40 bg-gradient-to-br from-blue-50/80 via-indigo-50/30 to-background dark:from-blue-950/30 dark:via-indigo-950/20 dark:to-card p-6 sm:p-7 lg:p-8 text-left shadow-lg shadow-blue-500/5 dark:shadow-none backdrop-blur-sm"
+              className="relative mt-6 sm:mt-8 w-full overflow-hidden rounded-[28px] sm:rounded-[32px] border border-[#dbeafe]/70 dark:border-blue-900/30 bg-gradient-to-br from-[#eff6ff]/90 via-[#f7faff]/80 to-[#eaf2fd]/80 dark:from-slate-900/90 dark:via-blue-950/20 dark:to-slate-900/90 p-6 sm:p-7 lg:p-8 text-left shadow-[0_8px_30px_rgba(0,119,200,0.06)] dark:shadow-none backdrop-blur-sm"
             >
               {/* Subtle ambient gradient shimmer glow in background */}
               <div
@@ -616,22 +616,22 @@ export function WantToHire() {
               />
 
               <div className="relative z-10">
-                <h3 className="text-xl sm:text-2xl font-extrabold tracking-tight text-foreground leading-tight">
+                <h3 className="text-xl sm:text-2xl lg:text-[26px] font-bold tracking-tight text-slate-900 dark:text-white leading-tight">
                   Post Any Job in 1 Minute.
                 </h3>
-                <p className="mt-1.5 text-sm sm:text-base text-muted-foreground leading-relaxed">
+                <p className="mt-1.5 text-sm sm:text-base text-slate-600 dark:text-slate-400 font-normal leading-relaxed">
                   For every job you post, someone can swipe in seconds.
                 </p>
 
                 {/* Actions Row */}
-                <div className="mt-5 sm:mt-6 flex flex-wrap items-center gap-4 sm:gap-6">
+                <div className="mt-5 sm:mt-6 flex flex-wrap items-center gap-5 sm:gap-7">
                   {/* Primary CTA */}
                   <a
                     href={siteConfig.links.employer}
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label="Post a Job on Hirance employer portal"
-                    className="group inline-flex items-center justify-center gap-2 rounded-full bg-[#0077c8] hover:bg-[#0066ad] dark:bg-brand-600 dark:hover:bg-brand-500 px-6 sm:px-7 py-3 text-sm sm:text-base font-semibold text-white shadow-md shadow-[#0077c8]/25 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-brand-500/40"
+                    className="group inline-flex items-center justify-center gap-2 rounded-full bg-blue-600 hover:bg-blue-700 px-6 sm:px-7 py-3 text-sm sm:text-base font-semibold text-white shadow-md shadow-blue-600/25 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40"
                   >
                     <span>Post a Job</span>
                     <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
@@ -642,7 +642,7 @@ export function WantToHire() {
                     type="button"
                     onClick={() => setIsDemoModalOpen(true)}
                     aria-label="See Hirance employer job posting interactive demo"
-                    className="inline-flex items-center gap-2 text-sm sm:text-base font-semibold text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40 rounded-md cursor-pointer"
+                    className="inline-flex items-center gap-2 text-sm sm:text-base font-semibold text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40 rounded-md cursor-pointer"
                   >
                     <svg
                       className="h-5 w-5 shrink-0 text-blue-600 dark:text-blue-400"
@@ -665,9 +665,9 @@ export function WantToHire() {
                     type="button"
                     onClick={() => setIsPricingModalOpen(true)}
                     aria-label="View employer hiring pricing plans"
-                    className="inline-flex items-center gap-1.5 text-sm sm:text-base font-semibold text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40 rounded-md cursor-pointer"
+                    className="inline-flex items-center gap-1.5 text-sm sm:text-base font-semibold text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40 rounded-md cursor-pointer"
                   >
-                    <Tag className="h-4 w-4 sm:h-4.5 sm:w-4.5 shrink-0 text-blue-600 dark:text-blue-400" />
+                    <Tag className="h-4.5 w-4.5 shrink-0 text-blue-600 dark:text-blue-400" strokeWidth={2} />
                     <span>View Pricing</span>
                   </button>
                 </div>

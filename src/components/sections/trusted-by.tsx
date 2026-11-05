@@ -49,7 +49,7 @@ function BrandIcon({ name }: { name: string }) {
   // 1. Google (Multi-color G)
   if (lower === "google") {
     return (
-      <svg className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8" viewBox="0 0 24 24">
+      <svg className="w-5 h-5 sm:w-6 sm:h-6" viewBox="0 0 24 24">
         <path
           fill="#4285F4"
           d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
@@ -73,7 +73,7 @@ function BrandIcon({ name }: { name: string }) {
   // 2. Microsoft (4 colored squares)
   if (lower === "microsoft") {
     return (
-      <svg className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7" viewBox="0 0 24 24">
+      <svg className="w-4.5 h-4.5 sm:w-5 sm:h-5" viewBox="0 0 24 24">
         <rect x="1.5" y="1.5" width="9.5" height="9.5" fill="#F25022" />
         <rect x="13" y="1.5" width="9.5" height="9.5" fill="#7FBA00" />
         <rect x="1.5" y="13" width="9.5" height="9.5" fill="#00A4EF" />
@@ -85,7 +85,7 @@ function BrandIcon({ name }: { name: string }) {
   // 3. IBM
   if (lower === "ibm") {
     return (
-      <span className="font-mono font-extrabold text-[12px] sm:text-sm md:text-base text-[#006699] tracking-widest border-y-2 border-[#006699] py-0.5 leading-none select-none">
+      <span className="font-mono font-extrabold text-[11px] sm:text-xs text-[#006699] tracking-wider border-y border-[#006699] py-0.5 leading-none select-none">
         IBM
       </span>
     );
@@ -95,7 +95,7 @@ function BrandIcon({ name }: { name: string }) {
   if (lower.includes("phonepe") || lower.includes("phone pe")) {
     return (
       <div className="w-full h-full rounded-full bg-[#5F259F] flex items-center justify-center text-white shadow-xs">
-        <span className="font-bold text-sm sm:text-base md:text-lg select-none leading-none -mt-0.5">
+        <span className="font-bold text-xs sm:text-sm select-none leading-none -mt-0.5">
           पे
         </span>
       </div>
@@ -106,7 +106,7 @@ function BrandIcon({ name }: { name: string }) {
   if (lower.includes("zomato")) {
     return (
       <div className="w-full h-full rounded-full bg-[#E23744] flex items-center justify-center text-white shadow-xs px-1">
-        <span className="font-bold italic text-[9px] sm:text-[10px] md:text-[11.5px] tracking-tight select-none">
+        <span className="font-bold italic text-[8.5px] sm:text-[9.5px] tracking-tight select-none">
           zomato
         </span>
       </div>
@@ -117,7 +117,7 @@ function BrandIcon({ name }: { name: string }) {
   if (lower.includes("oyo")) {
     return (
       <div className="w-full h-full rounded-full bg-[#EE2E24] flex items-center justify-center text-white shadow-xs">
-        <span className="font-black text-xs sm:text-sm md:text-base tracking-tighter select-none">
+        <span className="font-black text-[11px] sm:text-xs tracking-tighter select-none">
           OYO
         </span>
       </div>
@@ -128,7 +128,7 @@ function BrandIcon({ name }: { name: string }) {
   if (lower.includes("zepto")) {
     return (
       <div className="w-full h-full rounded-full bg-[#FFDE00] flex items-center justify-center text-[#1E293B] shadow-xs">
-        <span className="font-black text-xs sm:text-sm md:text-base select-none">7</span>
+        <span className="font-black text-xs sm:text-sm select-none">7</span>
       </div>
     );
   }
@@ -137,7 +137,7 @@ function BrandIcon({ name }: { name: string }) {
   if (lower.includes("linkedin")) {
     return (
       <div className="w-full h-full rounded-full bg-[#0A66C2] flex items-center justify-center text-white shadow-xs">
-        <span className="font-bold text-xs sm:text-sm md:text-base select-none">in</span>
+        <span className="font-bold text-xs sm:text-sm select-none">in</span>
       </div>
     );
   }
@@ -146,8 +146,8 @@ function BrandIcon({ name }: { name: string }) {
   if (lower.includes("deloitte")) {
     return (
       <div className="flex items-center justify-center font-bold text-slate-900 dark:text-white select-none">
-        <span className="text-base sm:text-lg md:text-xl font-black">D</span>
-        <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-[#86BC25] ml-0.5 mt-2" />
+        <span className="text-sm sm:text-base font-black">D</span>
+        <span className="w-1.5 h-1.5 rounded-full bg-[#86BC25] ml-0.5 mt-1.5" />
       </div>
     );
   }
@@ -155,7 +155,7 @@ function BrandIcon({ name }: { name: string }) {
   // 10. Paytm
   if (lower.includes("paytm")) {
     return (
-      <div className="flex items-center justify-center select-none font-bold text-xs sm:text-sm md:text-base">
+      <div className="flex items-center justify-center select-none font-bold text-[11px] sm:text-xs">
         <span className="text-[#002970]">pay</span>
         <span className="text-[#00BAF2]">tm</span>
       </div>
@@ -165,7 +165,7 @@ function BrandIcon({ name }: { name: string }) {
   // 11. Infosys
   if (lower.includes("infosys")) {
     return (
-      <span className="font-bold text-xs sm:text-[13px] md:text-sm text-[#007CC3] tracking-tight select-none">
+      <span className="font-bold text-[10.5px] sm:text-xs text-[#007CC3] tracking-tight select-none">
         Infosys
       </span>
     );
@@ -174,7 +174,7 @@ function BrandIcon({ name }: { name: string }) {
   // 12. TCS
   if (lower.includes("tcs") || lower.includes("tata consultancy")) {
     return (
-      <span className="font-black text-xs sm:text-sm md:text-base text-[#D90429] tracking-tight select-none">
+      <span className="font-black text-[11px] sm:text-xs text-[#D90429] tracking-tight select-none">
         tcs
       </span>
     );
@@ -183,7 +183,7 @@ function BrandIcon({ name }: { name: string }) {
   // 13. Adobe
   if (lower.includes("adobe")) {
     return (
-      <svg className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7" viewBox="0 0 24 24">
+      <svg className="w-4.5 h-4.5 sm:w-5 sm:h-5" viewBox="0 0 24 24">
         <path fill="#FA0F00" d="M14.58 2.05H24v19.9H14.58zm-5.16 0H0v19.9h9.42zM12 9.07l3.69 8.88h-2.58l-1.11-2.73h-3.3l1.88-4.52z" />
       </svg>
     );
@@ -192,8 +192,8 @@ function BrandIcon({ name }: { name: string }) {
   // 14. Intel
   if (lower.includes("intel")) {
     return (
-      <div className="w-[86%] h-[86%] rounded-full border-2 border-[#0071C5] flex items-center justify-center text-[#0071C5]">
-        <span className="font-bold text-[9.5px] sm:text-[11px] select-none lowercase">intel</span>
+      <div className="w-[86%] h-[86%] rounded-full border border-[#0071C5] flex items-center justify-center text-[#0071C5]">
+        <span className="font-bold text-[8.5px] sm:text-[9.5px] select-none lowercase">intel</span>
       </div>
     );
   }
@@ -202,7 +202,7 @@ function BrandIcon({ name }: { name: string }) {
   if (lower.includes("swiggy")) {
     return (
       <div className="w-[86%] h-[86%] rounded-full bg-[#FC8019] flex items-center justify-center text-white shadow-xs">
-        <svg className="w-4.5 h-4.5 sm:w-5.5 sm:h-5.5 md:w-6 md:h-6" viewBox="0 0 24 24" fill="currentColor">
+        <svg className="w-4 h-4 sm:w-4.5 sm:h-4.5" viewBox="0 0 24 24" fill="currentColor">
           <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
         </svg>
       </div>
@@ -212,7 +212,7 @@ function BrandIcon({ name }: { name: string }) {
   // 16. Wipro / swirl logo
   if (lower.includes("wipro")) {
     return (
-      <svg className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8" viewBox="0 0 24 24">
+      <svg className="w-5 h-5 sm:w-5.5 sm:h-5.5" viewBox="0 0 24 24">
         <circle cx="12" cy="6" r="2.8" fill="#D92D20" />
         <circle cx="17.2" cy="9" r="2.4" fill="#EAAA08" />
         <circle cx="17.2" cy="15" r="2.4" fill="#12B76A" />
@@ -281,9 +281,9 @@ const AppIconCompanyCard = memo(function AppIconCompanyCard({
         suppressHydrationWarning
         className={cn(
           "relative flex items-center justify-center overflow-hidden select-none rounded-full bg-white dark:bg-slate-900",
-          "w-14 h-14 sm:w-16 sm:h-16 md:w-[72px] md:h-[72px] lg:w-[76px] lg:h-[76px]",
-          "shadow-[0_4px_16px_rgba(0,0,0,0.06),0_1px_3px_rgba(0,0,0,0.03)] dark:shadow-[0_4px_16px_rgba(0,0,0,0.35)]",
-          "transition-all duration-300 ease-out hover:scale-108 hover:shadow-[0_8px_24px_rgba(37,99,235,0.12)] active:scale-95"
+          "w-[52px] h-[52px] sm:w-[60px] sm:h-[60px]",
+          "shadow-[0_3px_12px_rgba(0,0,0,0.05),0_1px_2px_rgba(0,0,0,0.03)] dark:shadow-[0_4px_16px_rgba(0,0,0,0.35)]",
+          "transition-all duration-300 ease-out hover:scale-108 hover:shadow-[0_8px_20px_rgba(37,99,235,0.12)] active:scale-95"
         )}
       >
         {/* Centered Content: Brand Icon, Official Logo, or Circular Brand Monogram */}
@@ -294,19 +294,19 @@ const AppIconCompanyCard = memo(function AppIconCompanyCard({
           {brandIcon ? (
             brandIcon
           ) : hasLogo ? (
-            <div className="relative flex h-full w-full items-center justify-center overflow-hidden rounded-full p-2 sm:p-2.5">
+            <div className="relative flex h-full w-full items-center justify-center overflow-hidden rounded-full p-2">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={logoUrl}
                 alt={name}
-                width={48}
-                height={48}
+                width={36}
+                height={36}
                 loading="lazy"
                 decoding="async"
                 suppressHydrationWarning
                 className={cn(
                   "object-contain select-none transition-transform duration-200",
-                  "max-h-8 max-w-8 sm:max-h-9 sm:max-w-9 md:max-h-10 md:max-w-10 lg:max-h-11 lg:max-w-11"
+                  "max-h-7 max-w-7 sm:max-h-8 sm:max-w-8"
                 )}
                 onError={() => setFailed(true)}
               />
@@ -320,7 +320,7 @@ const AppIconCompanyCard = memo(function AppIconCompanyCard({
                 fallbackGradient
               )}
             >
-              <span className="text-xs sm:text-[13.5px] md:text-sm font-bold tracking-tight text-white drop-shadow-xs">
+              <span className="text-[11px] sm:text-xs font-bold tracking-tight text-white drop-shadow-xs">
                 {initials(name)}
               </span>
             </div>
@@ -358,11 +358,11 @@ function ContinuousMarqueeRow({
   return (
     <div
       suppressHydrationWarning
-      className="relative flex overflow-hidden py-1 sm:py-1.5 md:py-2 select-none [contain:layout_paint]"
+      className="relative flex overflow-hidden py-1 sm:py-1.5 select-none [contain:layout_paint]"
     >
       <div
         suppressHydrationWarning
-        className="flex shrink-0 gap-3.5 sm:gap-4 md:gap-5 animate-marquee will-change-transform items-center"
+        className="flex shrink-0 gap-3 sm:gap-3.5 md:gap-4 animate-marquee will-change-transform items-center"
         style={
           {
             "--marquee-duration": speed,
@@ -503,7 +503,7 @@ export function TrustedBy({ initialCompanies }: TrustedByProps) {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-48px" }}
           transition={{ duration: 0.6, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
-          className="space-y-3 sm:space-y-3.5 md:space-y-4 marquee-mask py-2"
+          className="space-y-2.5 sm:space-y-3 md:space-y-3.5 marquee-mask py-1.5"
         >
           {/* Row 1: Leftward continuous scroll */}
           <ContinuousMarqueeRow

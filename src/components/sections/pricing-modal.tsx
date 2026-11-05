@@ -3,17 +3,13 @@
 import { useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Rocket,
-  TrendingUp,
-  Crown,
+  Sprout,
+  BarChart3,
+  Network,
   Check,
-  ArrowRight,
-  CalendarDays,
-  Zap,
-  ShieldCheck,
-  Users,
+  ArrowUpRight,
+  Gift,
   X,
-  Sparkles,
   type LucideIcon,
 } from "lucide-react";
 import { siteConfig } from "@/config/site";
@@ -25,121 +21,99 @@ export interface PricingPlan {
   icon: LucideIcon;
   tagline: string;
   price: string;
-  original: string;
-  off?: string;
-  duration: string;
-  perJob: string;
-  validity: string;
-  heading: string;
+  unit: string;
+  tokens: string;
+  bonus: string;
   features: string[];
-  popular: boolean;
-  per?: string;
-  stats?: { v: string; l: string }[];
+  popular?: boolean;
+  ctaText: string;
+  ctaType?: "secondary" | "primary";
+  showArrow?: boolean;
 }
 
 export const PRICING_PLANS: PricingPlan[] = [
   {
-    id: "starter",
-    name: "Starter",
-    icon: Rocket,
-    tagline: "Ideal for small teams hiring occasionally.",
-    price: "₹1,199",
-    original: "₹1,410",
-    off: "15% off",
-    duration: "1 month",
-    perJob: "₹600 / job post",
-    validity: "30-day validity",
-    heading: "Included with Starter",
+    id: "lite",
+    name: "Lite Pack",
+    icon: Sprout,
+    tagline: "Great for occasional hiring.",
+    price: "₹1,999",
+    unit: "/ pack (Ex. GST)",
+    tokens: "2,100",
+    bonus: "inc. 100 Bonus",
     features: [
-      "2 Active job posts (15 days live each)",
-      "Real-time candidate matching & filters",
-      "Direct candidate WhatsApp & phone contact",
-      "In-app interview scheduling",
+      "Unlock up to 26 profiles",
+      "Tokens valid for 1 year",
+      "Unlimited free job posts",
+      "Receive unlimited candidate applications",
+      "One click job description (JD)",
     ],
     popular: false,
-    per: "Total for 1 Month",
-    stats: [
-      { v: "2", l: "Active Job Posts" },
-      { v: "₹600", l: "Cost / Job Post" },
-      { v: "30 Days", l: "Plan Validity" },
-    ],
+    ctaText: "Buy Lite Pack",
+    ctaType: "secondary",
   },
   {
-    id: "growth",
-    name: "Growth",
-    icon: TrendingUp,
-    tagline: "Most popular for teams hiring every month.",
-    price: "₹2,799",
-    original: "₹3,293",
-    off: "15% off",
-    duration: "3 months",
-    perJob: "₹560 / job post",
-    validity: "90-day validity",
-    heading: "Everything in Starter, plus",
+    id: "pro",
+    name: "Pro Pack",
+    icon: BarChart3,
+    tagline: "Perfect for growing teams.",
+    price: "₹4,999",
+    unit: "/ pack (Ex. GST)",
+    tokens: "6,400",
+    bonus: "inc. 1400 Bonus",
     features: [
-      "5 Active job posts (15 days live each)",
-      "Unlimited applicants per job",
-      "AI job description generator & smart filters",
-      "Bulk candidate shortlisting & outreach",
+      "Unlock up to 80 profiles",
+      "Tokens valid for 1 year",
+      "Unlimited free job posts",
+      "Receive unlimited candidate applications",
+      "One click job description (JD)",
     ],
     popular: true,
-    per: "Total for 3 Months",
-    stats: [
-      { v: "5", l: "Active Job Posts" },
-      { v: "₹560", l: "Cost / Job Post" },
-      { v: "90 Days", l: "Plan Validity" },
-    ],
+    ctaText: "Buy Pro Pack",
+    ctaType: "primary",
+    showArrow: true,
   },
   {
-    id: "scale",
-    name: "Scale",
-    icon: Crown,
-    tagline: "Best value for high-volume hiring and agencies.",
-    price: "₹7,499",
-    original: "₹8,822",
-    off: "15% off",
-    duration: "6 months",
-    perJob: "₹500 / job post",
-    validity: "180-day validity",
-    heading: "Everything in Growth, plus",
+    id: "max",
+    name: "Max Pack",
+    icon: Network,
+    tagline: "Best value for bulk hiring.",
+    price: "₹8,999",
+    unit: "/ pack (Ex. GST)",
+    tokens: "16,000",
+    bonus: "inc. 2000 Bonus",
     features: [
-      "15 Active job posts (Lowest cost at ₹500 / post)",
-      "Priority candidate match placement",
-      "Bulk pipeline management & scheduling",
-      "Dedicated account support manager",
+      "Unlock up to 200 profiles",
+      "Tokens valid for 1 year",
+      "Unlimited free job posts",
+      "Receive unlimited candidate applications",
+      "One click job description (JD)",
     ],
     popular: false,
-    per: "Total for 6 Months",
-    stats: [
-      { v: "15", l: "Active Job Posts" },
-      { v: "₹500", l: "Cost / Job Post" },
-      { v: "180 Days", l: "Plan Validity" },
-    ],
+    ctaText: "Buy Max Pack",
+    ctaType: "secondary",
   },
 ];
 
-export const BOTTOM_HIGHLIGHTS = [
-  {
-    icon: Zap,
-    title: "Post in 1 Min",
-    text: "Go live in 60 seconds",
-  },
-  {
-    icon: CalendarDays,
-    title: "15-Day Visibility",
-    text: "Stays active for 15 days",
-  },
-  {
-    icon: Users,
-    title: "Candidate Access",
-    text: "Full candidate contact access",
-  },
-  {
-    icon: ShieldCheck,
-    title: "Zero Commission",
-    text: "Hire without agency fees",
-  },
-];
+/* 2 Stacked Coins SVG for Tokens Box matching image */
+function TokenCoinsIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+      aria-hidden="true"
+    >
+      <ellipse cx="12" cy="7" rx="7.5" ry="3.2" />
+      <path d="M4.5 7v4.5c0 1.77 3.36 3.2 7.5 3.2s7.5-1.43 7.5-3.2V7" />
+      <path d="M4.5 11.5V16c0 1.77 3.36 3.2 7.5 3.2s7.5-1.43 7.5-3.2v-4.5" />
+    </svg>
+  );
+}
 
 interface PlanCardProps {
   plan: PricingPlan;
@@ -147,8 +121,16 @@ interface PlanCardProps {
   index: number;
 }
 
-function PlanCard({ plan, onStartHiring, index }: PlanCardProps) {
+export function PlanCard({ plan, onStartHiring, index }: PlanCardProps) {
   const { icon: Icon, popular } = plan;
+  const isPrimaryButton = plan.ctaType === "primary";
+
+  const buttonClasses = cn(
+    "group w-full flex items-center justify-center gap-1.5 font-semibold py-2.5 rounded-xl text-xs sm:text-[13px] transition-all duration-200 cursor-pointer shadow-xs active:scale-[0.98]",
+    isPrimaryButton
+      ? "bg-[#155dfc] hover:bg-blue-600 text-white shadow-sm shadow-blue-500/25"
+      : "border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800/80 shadow-2xs"
+  );
 
   return (
     <motion.div
@@ -157,85 +139,75 @@ function PlanCard({ plan, onStartHiring, index }: PlanCardProps) {
       transition={{ delay: index * 0.04, duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
       data-testid={`pricing-card-${plan.id}`}
       className={cn(
-        "relative rounded-2xl flex flex-col p-3.5 sm:p-4 lg:p-4.5 transition-all duration-200",
+        "relative rounded-2xl sm:rounded-3xl flex flex-col justify-between p-4 sm:p-5 lg:p-6 transition-all duration-200 bg-white dark:bg-card",
         popular
-          ? "border-2 border-blue-600 dark:border-blue-500 bg-card shadow-lg shadow-blue-500/10"
-          : "border border-border/80 bg-card/60 hover:bg-card hover:border-border transition-colors shadow-2xs"
+          ? "border-2 border-blue-600 dark:border-blue-500 shadow-lg shadow-blue-500/10"
+          : "border border-slate-200/90 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 shadow-2xs"
       )}
     >
-      {/* Most Popular Tag */}
+      {/* Most Popular Top Pill Badge */}
       {popular && (
-        <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 px-2.5 py-0.5 text-[10px] font-bold text-white shadow-xs tracking-wide uppercase">
+        <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-[#0a192f] border border-blue-900/60 px-3.5 py-0.5 text-[10px] font-bold text-white shadow-sm tracking-wider uppercase whitespace-nowrap z-10">
           Most Popular
         </div>
       )}
 
-      {/* Plan Header */}
-      <div className="flex items-start justify-between gap-2">
-        <div className="min-w-0">
-          <h3 className="text-base sm:text-[17px] font-bold text-foreground tracking-tight">
-            {plan.name}
-          </h3>
-          <p className="text-[11px] sm:text-xs text-muted-foreground mt-0.5 leading-snug">
-            {plan.tagline}
-          </p>
+      {/* Card Header & Content */}
+      <div className="relative z-1">
+        {/* Top Header Row */}
+        <div className="flex items-start justify-between gap-2">
+          <div className="min-w-0">
+            <h3 className="text-base sm:text-lg font-bold text-foreground tracking-tight">
+              {plan.name}
+            </h3>
+            <p className="text-[11px] sm:text-xs text-muted-foreground mt-0.5 leading-snug">
+              {plan.tagline}
+            </p>
+          </div>
+          <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 bg-blue-50/80 text-blue-600 dark:bg-blue-950/60 dark:text-blue-400 shadow-2xs">
+            <Icon size={16} />
+          </div>
         </div>
-        <div
-          className={cn(
-            "w-8 h-8 rounded-lg flex items-center justify-center shrink-0 shadow-2xs",
-            popular
-              ? "bg-blue-600 text-white"
-              : "bg-blue-50 text-blue-600 dark:bg-blue-950/60 dark:text-blue-400"
-          )}
-        >
-          <Icon size={16} />
-        </div>
-      </div>
 
-      {/* Pricing Block */}
-      <div className="mt-3 pb-3 border-b border-border/60">
-        <div className="flex items-baseline gap-1.5">
-          <span className="text-2xl sm:text-[26px] font-extrabold tracking-tight text-foreground">
+        {/* Pricing Block */}
+        <div className="mt-4 flex items-baseline gap-1">
+          <span className="text-2xl sm:text-[28px] font-extrabold tracking-tight text-foreground">
             {plan.price}
           </span>
-          <span className="text-[11px] sm:text-xs text-muted-foreground font-medium">
-            / {plan.duration}
+          <span className="text-[11px] sm:text-xs text-muted-foreground font-normal">
+            {plan.unit}
           </span>
-          {plan.original && (
-            <span className="text-[11px] text-muted-foreground/60 line-through">
-              {plan.original}
-            </span>
-          )}
         </div>
 
-        <div className="mt-1 flex flex-wrap items-center gap-x-1.5 gap-y-0.5 text-[11px]">
-          <span className="font-semibold text-blue-600 dark:text-blue-400">
-            {plan.perJob}
-          </span>
-          <span className="text-muted-foreground/60">·</span>
-          <span className="text-muted-foreground">{plan.validity}</span>
-          {plan.off && (
-            <>
-              <span className="text-muted-foreground/60">·</span>
-              <span className="text-emerald-600 dark:text-emerald-400 font-semibold">
-                {plan.off}
+        {/* Token Box with Flush Bonus Strip */}
+        <div className="mt-3.5 rounded-xl bg-[#f0f7ff] dark:bg-sky-950/30 border border-blue-100/80 dark:border-blue-900/40 overflow-hidden">
+          <div className="py-2.5 px-3 flex items-center justify-center gap-3">
+            <div className="w-8 h-8 flex items-center justify-center text-blue-600 dark:text-blue-400 shrink-0">
+              <TokenCoinsIcon className="w-6 h-6" />
+            </div>
+            <div className="flex flex-col text-left">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground leading-none">
+                Tokens
               </span>
-            </>
-          )}
-        </div>
-      </div>
+              <span className="text-xl sm:text-2xl font-extrabold text-foreground leading-tight mt-0.5">
+                {plan.tokens}
+              </span>
+            </div>
+          </div>
 
-      {/* Plan Features */}
-      <div className="mt-3 flex-1 flex flex-col justify-between">
-        <div>
-          <p className="text-[10px] sm:text-[10.5px] font-bold uppercase tracking-wider text-muted-foreground">
-            {plan.heading}
-          </p>
-          <ul className="mt-2 space-y-1.5 sm:space-y-2">
+          <div className="bg-[#fef3c7] dark:bg-amber-950/50 border-t border-amber-200/60 dark:border-amber-900/40 py-1.5 px-2.5 text-center flex items-center justify-center gap-1.5 text-[11px] font-semibold text-amber-900 dark:text-amber-200">
+            <Gift size={12} className="shrink-0 text-amber-700 dark:text-amber-300" />
+            <span>{plan.bonus}</span>
+          </div>
+        </div>
+
+        {/* Plan Features Checklist with Blue Checkmarks */}
+        <div className="mt-5">
+          <ul className="space-y-2.5">
             {plan.features.map((feature) => (
               <li
                 key={feature}
-                className="flex items-start gap-1.5 sm:gap-2 text-[11px] sm:text-xs text-muted-foreground leading-snug"
+                className="flex items-start gap-2 text-[11px] sm:text-xs leading-snug"
               >
                 <Check
                   size={14}
@@ -247,42 +219,36 @@ function PlanCard({ plan, onStartHiring, index }: PlanCardProps) {
             ))}
           </ul>
         </div>
+      </div>
 
-        {/* CTA Button */}
-        <div className="mt-3.5 sm:mt-4">
-          {onStartHiring ? (
-            <button
-              type="button"
-              onClick={onStartHiring}
-              data-testid={`pricing-start-${plan.id}`}
-              className={cn(
-                "group w-full flex items-center justify-center gap-1.5 font-semibold py-2 rounded-xl text-xs sm:text-[13px] transition-all duration-200 cursor-pointer shadow-xs active:scale-[0.98]",
-                popular
-                  ? "bg-[#0077c8] hover:bg-[#0066ad] dark:bg-brand-600 dark:hover:bg-brand-500 text-white shadow-sm shadow-[#0077c8]/25"
-                  : "border border-border hover:border-blue-600 bg-background text-foreground hover:text-blue-600 dark:hover:text-blue-400 hover:bg-slate-50 dark:hover:bg-slate-800"
-              )}
-            >
-              <span>Start Hiring</span>
-              <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-1" />
-            </button>
-          ) : (
-            <a
-              href={siteConfig.links.employer}
-              target="_blank"
-              rel="noopener noreferrer"
-              data-testid={`pricing-start-${plan.id}`}
-              className={cn(
-                "group w-full flex items-center justify-center gap-1.5 font-semibold py-2 rounded-xl text-xs sm:text-[13px] transition-all duration-200 shadow-xs active:scale-[0.98]",
-                popular
-                  ? "bg-[#0077c8] hover:bg-[#0066ad] dark:bg-brand-600 dark:hover:bg-brand-500 text-white shadow-sm shadow-[#0077c8]/25"
-                  : "border border-border hover:border-blue-600 bg-background text-foreground hover:text-blue-600 dark:hover:text-blue-400 hover:bg-slate-50 dark:hover:bg-slate-800"
-              )}
-            >
-              <span>Start Hiring</span>
-              <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-1" />
-            </a>
-          )}
-        </div>
+      {/* CTA Button */}
+      <div className="mt-5 sm:mt-6 pt-2">
+        {onStartHiring ? (
+          <button
+            type="button"
+            onClick={onStartHiring}
+            data-testid={`pricing-start-${plan.id}`}
+            className={buttonClasses}
+          >
+            <span>{plan.ctaText}</span>
+            {plan.showArrow && (
+              <ArrowUpRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+            )}
+          </button>
+        ) : (
+          <a
+            href={siteConfig.links.employer}
+            target="_blank"
+            rel="noopener noreferrer"
+            data-testid={`pricing-start-${plan.id}`}
+            className={buttonClasses}
+          >
+            <span>{plan.ctaText}</span>
+            {plan.showArrow && (
+              <ArrowUpRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+            )}
+          </a>
+        )}
       </div>
     </motion.div>
   );
@@ -317,7 +283,7 @@ export function PricingModal({ open, onClose, onStartHiring }: PricingModalProps
           aria-labelledby="pricing-modal-title"
           className="fixed inset-0 z-[100] overflow-y-auto overscroll-contain"
         >
-          {/* Backdrop: Sits behind modal content, above navbar (z-[100]) */}
+          {/* Backdrop */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -328,15 +294,15 @@ export function PricingModal({ open, onClose, onStartHiring }: PricingModalProps
             aria-hidden="true"
           />
 
-          {/* Centering Wrapper: Uses min-h-full with padding so it centers when it fits and scrolls smoothly when viewport is small */}
-          <div className="relative min-h-full flex items-center justify-center p-3 sm:p-4 md:p-6">
+          {/* Centering Wrapper */}
+          <div className="relative min-h-full flex items-center justify-center p-3 sm:p-4 md:p-6 lg:p-8">
             <motion.div
               initial={{ opacity: 0, scale: 0.97, y: 8 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.97, y: 8 }}
               transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
               onClick={(e) => e.stopPropagation()}
-              className="relative z-10 w-full max-w-5xl rounded-2xl sm:rounded-3xl bg-background border border-border/80 shadow-2xl p-4 sm:p-5 md:p-6 text-foreground overflow-hidden my-auto"
+              className="relative z-10 w-full max-w-5xl rounded-2xl sm:rounded-3xl bg-background border border-border/80 shadow-2xl p-4 sm:p-6 md:p-8 text-foreground overflow-hidden my-auto"
             >
               {/* Close Button */}
               <button
@@ -344,40 +310,27 @@ export function PricingModal({ open, onClose, onStartHiring }: PricingModalProps
                 onClick={onClose}
                 data-testid="pricing-modal-close"
                 aria-label="Close pricing plans"
-                className="absolute top-3 right-3 sm:top-4 sm:right-4 z-20 flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white border border-slate-200 dark:border-slate-700 transition-colors cursor-pointer shadow-xs"
+                className="absolute top-3 right-3 sm:top-4 sm:right-4 z-20 flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:white border border-slate-200 dark:border-slate-700 transition-colors cursor-pointer shadow-xs"
               >
                 <X size={16} />
               </button>
 
-              {/* Header (Clean, compact, no chips over title) */}
-              <div className="text-center max-w-2xl mx-auto mb-3 sm:mb-4 px-6 sm:px-0">
+              {/* Clean Header - No chips over title */}
+              <div className="text-center max-w-2xl mx-auto mb-5 sm:mb-7 px-6 sm:px-0">
                 <h2
                   id="pricing-modal-title"
-                  className="text-xl sm:text-2xl lg:text-[26px] font-extrabold tracking-tight text-foreground leading-tight text-balance"
+                  className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-foreground leading-tight"
                 >
-                  Simple, Transparent{" "}
-                  <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-brand-600 dark:from-brand-400 dark:via-indigo-300 dark:to-sky-300 bg-clip-text text-transparent">
-                    Pricing
-                  </span>
+                  Post jobs <span className="italic">free.</span> Pay for{" "}
+                  <span className="italic">matches.</span>
                 </h2>
-                <p className="mt-1 text-xs sm:text-[13px] text-muted-foreground text-pretty leading-relaxed max-w-lg mx-auto">
-                  Post roles in 60 seconds, match with verified candidates, and hire without agency commissions.
+                <p className="mt-1.5 text-xs sm:text-sm text-muted-foreground text-pretty max-w-lg mx-auto">
+                  Use tokens to access candidate contact details and management features.
                 </p>
-
-                {/* Free Posts Banner */}
-                <div className="mt-2 flex justify-center">
-                  <div
-                    data-testid="free-posts-banner"
-                    className="inline-flex items-center gap-1.5 rounded-full border border-blue-200/80 dark:border-blue-900/60 bg-blue-50/80 dark:bg-blue-950/40 px-3 py-0.5 text-[11px] sm:text-xs text-blue-700 dark:text-blue-300 font-medium"
-                  >
-                    <Sparkles size={12} className="text-blue-600 dark:text-blue-400 shrink-0" />
-                    <span>Your first 2 job posts are free — start hiring at zero cost</span>
-                  </div>
-                </div>
               </div>
 
-              {/* Responsive Pricing Plans Grid: Mobile (1 col) -> Tablet / Laptop / Desktop (3 cols) */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-3 lg:gap-4 items-stretch">
+              {/* 3 Cards Grid - Exactly matching image */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-5 items-stretch">
                 {PRICING_PLANS.map((plan, index) => (
                   <PlanCard
                     key={plan.id}
@@ -388,35 +341,9 @@ export function PricingModal({ open, onClose, onStartHiring }: PricingModalProps
                 ))}
               </div>
 
-              {/* Value Highlights Strip (Clean single row, compact & responsive) */}
-              <div className="mt-3.5 sm:mt-4 pt-3 sm:pt-3.5 border-t border-border/70 flex flex-wrap items-center justify-center gap-x-4 sm:gap-x-6 gap-y-1.5 text-[11px] sm:text-xs text-muted-foreground">
-                <div className="flex items-center gap-1.5">
-                  <Zap className="h-3.5 w-3.5 text-blue-600 dark:text-blue-400 shrink-0" />
-                  <span>Go live in 60 seconds</span>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <CalendarDays className="h-3.5 w-3.5 text-blue-600 dark:text-blue-400 shrink-0" />
-                  <span>15 days live visibility</span>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <Users className="h-3.5 w-3.5 text-blue-600 dark:text-blue-400 shrink-0" />
-                  <span>Direct candidate contact</span>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <ShieldCheck className="h-3.5 w-3.5 text-blue-600 dark:text-blue-400 shrink-0" />
-                  <span>Zero commission on hires</span>
-                </div>
-              </div>
-
-              {/* Tax & Contact Note */}
-              <p className="mt-2 text-center text-[10.5px] text-muted-foreground/80 leading-normal">
-                Prices exclude 18% GST (calculated at checkout). Need custom enterprise plans?{" "}
-                <a
-                  href="mailto:support@hirance.com"
-                  className="text-foreground font-medium hover:text-blue-600 dark:hover:text-blue-400 underline underline-offset-2 transition-colors"
-                >
-                  Contact our hiring team
-                </a>
+              {/* Bottom Tax Disclaimer Note */}
+              <p className="mt-5 sm:mt-6 text-center text-[10.5px] sm:text-xs text-muted-foreground/80 leading-normal">
+                Prices are exclusive of 18% GST · GST calculated at checkout. All plans include the same core hiring platform & features.
               </p>
             </motion.div>
           </div>
