@@ -68,6 +68,7 @@ const COLS: FooterColumn[] = [
     title: "Employers",
     links: [
       { label: "Post a Job", href: siteConfig.links.employer },
+      { label: "Pricing", href: "/pricing" },
       { label: "Employer Dashboard", href: siteConfig.links.employer },
       { label: "Employer Feedback", href: "/feedback?role=employer" },
       { label: "Fraud Alert", href: "/fraud-alert" },

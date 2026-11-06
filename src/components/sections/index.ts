@@ -10,5 +10,5 @@ export { BrandStatement } from "./brand-statement";
 export { JobPostDemo } from "./job-post-demo";
 export { CandidatePhoneMockup } from "./candidate-phone-mockup";
 export { SwipePlayground } from "./swipe-playground";
-export { PricingModal } from "./pricing-modal";
+export { PricingModal, TokenPricingContent } from "./pricing-modal";
 export { HeroVideoCard } from "./hero-video-card";
