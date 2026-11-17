@@ -1,4 +1,4 @@
-import { siteConfig } from "@/config/site";
+﻿import { siteConfig } from "@/config/site";
 import type { Metadata } from "next";
 import { BlogListContent } from "@/components/blog/blog-list-content";
 import {
@@ -46,7 +46,7 @@ export const metadata: Metadata = {
     title: "Blog & Hiring Insights | Hirance",
     description:
       "Latest hiring trends, candidate Smart Score guides, and recruitment strategies built for speed.",
-    images: [{ url: siteConfig.ogImage, alt: "Hirance — Swipe. Match. Get Hired." }],
+    images: [{ url: siteConfig.ogImage, alt: "Hirance - Swipe. Match. Get Hired." }],
   },
 };
 

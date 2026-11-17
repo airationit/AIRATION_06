@@ -1,4 +1,4 @@
-import { siteConfig } from "@/config/site";
+﻿import { siteConfig } from "@/config/site";
 import type { Metadata } from "next"
 import { FraudAlertContent } from "@/components/legal/fraud-alert-content"
 
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
     title: "Fraud Alert | Hirance",
     description:
       "Protect yourself from job scammers impersonating Hirance. Identify red flags, verify official channels, and report fraud.",
-    images: [{ url: siteConfig.ogImage, alt: "Hirance — Swipe. Match. Get Hired." }],
+    images: [{ url: siteConfig.ogImage, alt: "Hirance - Swipe. Match. Get Hired." }],
   },
 }
 

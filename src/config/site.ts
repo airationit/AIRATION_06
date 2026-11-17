@@ -6,7 +6,7 @@ export const siteConfig = {
   url: "https://hirance.com",
   ogImage: "https://hirance.com/images/hirance-social.png",
   logo: "https://hirance.com/images/icon.png",
-  socialTitle: "Hirance — Next-Gen Swipe-Based Hiring Platform",
+  socialTitle: "Hirance - Next-Gen Swipe-Based Hiring Platform",
   socialDescription: "Discover job opportunities and connect with employers on Hirance.",
   links: {
     // Google Play store listing

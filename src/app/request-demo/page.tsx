@@ -1,4 +1,4 @@
-import { siteConfig } from "@/config/site";
+﻿import { siteConfig } from "@/config/site";
 import type { Metadata } from "next";
 import { RequestDemoContent } from "@/components/demo/request-demo-content";
 
@@ -40,7 +40,7 @@ export const metadata: Metadata = {
     title: "Request a Demo | Hirance",
     description:
       "Experience fast, AI-matched hiring in action. Book a live demo with the Hirance team.",
-    images: [{ url: siteConfig.ogImage, alt: "Hirance — Swipe. Match. Get Hired." }],
+    images: [{ url: siteConfig.ogImage, alt: "Hirance - Swipe. Match. Get Hired." }],
   },
 };
 

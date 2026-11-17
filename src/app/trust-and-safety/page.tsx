@@ -1,4 +1,4 @@
-import { siteConfig } from "@/config/site";
+﻿import { siteConfig } from "@/config/site";
 import type { Metadata } from "next"
 import { TrustSafetyContent } from "@/components/legal/trust-safety-content"
 
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_IN",
     url: "https://hirance.com/trust-and-safety",
-    title: "Trust & Safety | Hirance — A Platform You Can Trust",
+    title: "Trust & Safety | Hirance - A Platform You Can Trust",
     description:
       "Hirance is built on trust. Learn how we verify employers, protect candidate data, and maintain a safe hiring environment for all users.",
     siteName: "Hirance",
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
     title: "Trust & Safety | Hirance",
     description:
       "How Hirance keeps job seekers and employers safe through verified employers, zero-fee policy, and data protection.",
-    images: [{ url: siteConfig.ogImage, alt: "Hirance — Swipe. Match. Get Hired." }],
+    images: [{ url: siteConfig.ogImage, alt: "Hirance - Swipe. Match. Get Hired." }],
   },
 }
 

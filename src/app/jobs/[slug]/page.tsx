@@ -162,7 +162,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       card: "summary_large_image",
       title: seo.metaTitle,
       description: seo.metaDescription,
-      images: [{ url: siteConfig.ogImage, alt: "Hirance — Swipe. Match. Get Hired." }],
+      images: [{ url: siteConfig.ogImage, alt: "Hirance - Swipe. Match. Get Hired." }],
     },
   };
 }

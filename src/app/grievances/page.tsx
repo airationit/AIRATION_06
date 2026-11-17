@@ -1,4 +1,4 @@
-import { siteConfig } from "@/config/site";
+﻿import { siteConfig } from "@/config/site";
 import type { Metadata } from "next"
 import { GrievancesContent } from "@/components/legal/grievances-content"
 
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
     title: "Grievances & Complaint Redressal | Hirance",
     description:
       "File a formal grievance with Hirance. Our Grievance Officer will respond within timelines mandated by the IT Act, 2000.",
-    images: [{ url: siteConfig.ogImage, alt: "Hirance — Swipe. Match. Get Hired." }],
+    images: [{ url: siteConfig.ogImage, alt: "Hirance - Swipe. Match. Get Hired." }],
   },
 }
 

@@ -1,4 +1,4 @@
-import { siteConfig } from "@/config/site";
+﻿import { siteConfig } from "@/config/site";
 import type { Metadata } from "next";
 import { AboutContent } from "@/components/about/about-content";
 
@@ -46,7 +46,7 @@ export const metadata: Metadata = {
     title: "About Us | Hirance - Next-Gen Swipe-Based Hiring Platform",
     description:
       "Swipe. Match. Get Hired. Fastest way to Post & Apply for jobs with real-time Smart Scores.",
-    images: [{ url: siteConfig.ogImage, alt: "Hirance — Swipe. Match. Get Hired." }],
+    images: [{ url: siteConfig.ogImage, alt: "Hirance - Swipe. Match. Get Hired." }],
   },
 };
 

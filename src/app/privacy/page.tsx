@@ -1,4 +1,4 @@
-import { siteConfig } from "@/config/site";
+﻿import { siteConfig } from "@/config/site";
 import type { Metadata } from "next"
 import { PrivacyPolicyContent } from "@/components/privacy/privacy-content"
 
@@ -48,7 +48,7 @@ export const metadata: Metadata = {
     title: "Privacy Policy | Hirance - Candidate Data Protection",
     description:
       "Hirance candidate privacy policy under India's Digital Personal Data Protection Act 2023.",
-    images: [{ url: siteConfig.ogImage, alt: "Hirance — Swipe. Match. Get Hired." }],
+    images: [{ url: siteConfig.ogImage, alt: "Hirance - Swipe. Match. Get Hired." }],
   },
 }
 

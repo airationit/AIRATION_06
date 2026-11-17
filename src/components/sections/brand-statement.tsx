@@ -104,7 +104,7 @@ export function BrandStatement() {
           transition={{ duration: 0.5, delay: 0.1 }}
           className="text-sm sm:text-base lg:text-lg text-slate-300 max-w-lg mx-auto leading-relaxed px-2"
         >
-          Hirance — The Smarter Way to Hire &amp; Get Hired.
+          Hirance - The Smarter Way to Hire &amp; Get Hired.
         </motion.p>
 
         {/* value highlights: 2x2 grid on mobile for compact, scannable layout; 4 columns on desktop */}

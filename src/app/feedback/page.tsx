@@ -1,4 +1,4 @@
-import { siteConfig } from "@/config/site";
+﻿import { siteConfig } from "@/config/site";
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { FeedbackContent } from "@/components/feedback/feedback-content";
@@ -41,7 +41,7 @@ export const metadata: Metadata = {
     title: "Candidate & Employer Reviews | Hirance",
     description:
       "Swipe. Match. Get Hired. Verified feedback from job seekers and employers.",
-    images: [{ url: siteConfig.ogImage, alt: "Hirance — Swipe. Match. Get Hired." }],
+    images: [{ url: siteConfig.ogImage, alt: "Hirance - Swipe. Match. Get Hired." }],
   },
 };
 

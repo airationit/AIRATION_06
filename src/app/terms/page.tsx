@@ -1,4 +1,4 @@
-import { siteConfig } from "@/config/site";
+﻿import { siteConfig } from "@/config/site";
 import type { Metadata } from "next"
 import { TermsContent } from "@/components/terms/terms-content"
 
@@ -47,7 +47,7 @@ export const metadata: Metadata = {
     title: "Terms & Conditions | Hirance",
     description:
       "Official Terms and Conditions for Hirance platform users, employers, and job seekers.",
-    images: [{ url: siteConfig.ogImage, alt: "Hirance — Swipe. Match. Get Hired." }],
+    images: [{ url: siteConfig.ogImage, alt: "Hirance - Swipe. Match. Get Hired." }],
   },
 }
 

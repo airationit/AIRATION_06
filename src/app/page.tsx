@@ -15,15 +15,15 @@ import {
 import { fetchCompanies, fetchJobs } from "@/lib/api";
 
 export const metadata: Metadata = {
-  title: "Hirance — Next-Gen Swipe-Based Hiring Platform | Swipe. Match. Get Hired.",
+  title: "Hirance - Next-Gen Swipe-Based Hiring Platform | Swipe. Match. Get Hired.",
   description:
-    "Fastest way to Post & Apply for jobs—No forms, No scrolling, No waiting. AI-calculated match scores for candidates and 60-second job postings for employers.",
+    "Fastest way to Post & Apply for jobs. No forms, No scrolling, No waiting. AI-calculated match scores for candidates and 60-second job postings for employers.",
   openGraph: {
     type: "website",
     locale: "en_IN",
     url: siteConfig.url,
     siteName: siteConfig.name,
-    images: [{ url: siteConfig.ogImage, width: 1200, height: 630, alt: "Hirance — Swipe. Match. Get Hired." }],
+    images: [{ url: siteConfig.ogImage, width: 1200, height: 630, alt: "Hirance - Swipe. Match. Get Hired." }],
     title: siteConfig.socialTitle,
     description: siteConfig.socialDescription,
   },
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: siteConfig.socialTitle,
     description: siteConfig.socialDescription,
-    images: [{ url: siteConfig.ogImage, alt: "Hirance — Swipe. Match. Get Hired." }],
+    images: [{ url: siteConfig.ogImage, alt: "Hirance - Swipe. Match. Get Hired." }],
   },
   alternates: { canonical: siteConfig.url },
 };
