@@ -14,7 +14,6 @@ import {
   CalendarCheck,
   Timer,
   MapPin,
-  X,
   Tag,
 } from "lucide-react";
 import { siteConfig } from "@/config/site";
@@ -563,19 +562,12 @@ export function WantToHire() {
                       Hirance Job Post Interactive Demo
                     </span>
 
-                    {/* Floating Close Button */}
-                    <button
-                      type="button"
-                      onClick={() => setIsDemoModalOpen(false)}
-                      aria-label="Close demo modal"
-                      className="absolute top-2 right-2 sm:top-2.5 sm:right-3.5 z-50 flex h-7.5 w-7.5 sm:h-8 sm:w-8 items-center justify-center rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-slate-900 border border-slate-200/90 transition-colors cursor-pointer shadow-xs"
-                    >
-                      <X className="h-4 w-4" />
-                    </button>
-
-                    {/* Embedded Job Post Demo Interactive Stage */}
+                    {/* Embedded Job Post Demo Interactive Stage with native header close button */}
                     <div className="flex-1 w-full h-full min-h-0 overflow-hidden">
-                      <JobPostDemo className="h-full w-full rounded-2xl sm:rounded-3xl border-0 shadow-none ring-0" />
+                      <JobPostDemo
+                        className="h-full w-full rounded-2xl sm:rounded-3xl border-0 shadow-none ring-0"
+                        onClose={() => setIsDemoModalOpen(false)}
+                      />
                     </div>
                   </motion.div>
                 </div>

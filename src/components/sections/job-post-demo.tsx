@@ -1744,9 +1744,10 @@ const SCREENS = [
 
 interface JobPostDemoProps {
   className?: string
+  onClose?: () => void
 }
 
-export function JobPostDemo({ className }: JobPostDemoProps) {
+export function JobPostDemo({ className, onClose }: JobPostDemoProps) {
   const [i, setI] = useState(0)
   const [playing, setPlaying] = useState(true)
   const reducedMotion = useReducedMotion() ?? false
@@ -1777,7 +1778,7 @@ export function JobPostDemo({ className }: JobPostDemoProps) {
       }`}
       data-testid="job-post-demo"
     >
-      <div className="flex shrink-0 items-center justify-between border-b border-slate-200/80 bg-slate-50/90 px-3 py-1.5 sm:px-4 sm:py-2 2xl:px-5 2xl:py-2.5 pr-11 sm:pr-14">
+      <div className="flex shrink-0 items-center justify-between border-b border-slate-200/80 bg-slate-50/90 px-3 py-1.5 sm:px-4 sm:py-2 2xl:px-5 2xl:py-2.5">
         {/* Left: Employer Workspace Identity */}
         <div className="flex items-center gap-2">
           <div className="flex items-center gap-1.5 rounded-md border border-slate-200 bg-white px-2 py-0.5 text-[11px] sm:text-xs 2xl:text-sm font-semibold text-slate-800 shadow-2xs">
@@ -1790,8 +1791,8 @@ export function JobPostDemo({ className }: JobPostDemoProps) {
           </div>
         </div>
 
-        {/* Right: Step Indicator */}
-        <div className="flex items-center gap-1.5 sm:gap-2">
+        {/* Right: Step Indicator & Close Action */}
+        <div className="flex items-center gap-1.5 sm:gap-2.5">
           <div className="flex items-center gap-1.5 rounded-md border border-brand-100 bg-brand-50/80 px-2 py-0.5 text-[10px] sm:text-[11px] 2xl:text-xs font-bold text-brand-700 shadow-2xs">
             <span className="h-1.5 w-1.5 rounded-full bg-brand-600" />
             <span>Step {i + 1} of {STEPS.length}</span>
@@ -1799,6 +1800,16 @@ export function JobPostDemo({ className }: JobPostDemoProps) {
           <span className="hidden text-[11px] sm:text-xs 2xl:text-sm font-semibold text-slate-700 md:inline">
             {STEPS[i].name}
           </span>
+          {onClose && (
+            <button
+              type="button"
+              onClick={onClose}
+              aria-label="Close demo"
+              className="ml-1 sm:ml-2 flex h-6 w-6 sm:h-7 sm:w-7 items-center justify-center rounded-full bg-slate-200/70 hover:bg-slate-300 text-slate-600 hover:text-slate-900 border border-slate-300/60 transition-colors cursor-pointer shadow-2xs"
+            >
+              <X size={13} />
+            </button>
+          )}
         </div>
       </div>
 
