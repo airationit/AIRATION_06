@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -261,12 +261,14 @@ export interface PricingModalProps {
   onStartHiring?: () => void;
 }
 
-export function PricingModal({ open, onClose, onStartHiring }: PricingModalProps) {
-  const [mounted, setMounted] = useState(false);
+const emptySubscribe = () => () => {};
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+export function PricingModal({ open, onClose, onStartHiring }: PricingModalProps) {
+  const isClient = useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false
+  );
 
   useEffect(() => {
     if (!open) return;
@@ -281,7 +283,7 @@ export function PricingModal({ open, onClose, onStartHiring }: PricingModalProps
     };
   }, [open, onClose]);
 
-  if (!mounted) return null;
+  if (!isClient) return null;
 
   return createPortal(
     <AnimatePresence>

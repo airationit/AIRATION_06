@@ -1777,7 +1777,7 @@ export function JobPostDemo({ className }: JobPostDemoProps) {
       }`}
       data-testid="job-post-demo"
     >
-      <div className="flex shrink-0 items-center justify-between border-b border-slate-200/80 bg-slate-50/90 px-3 py-1.5 sm:px-4 sm:py-2 2xl:px-5 2xl:py-2.5">
+      <div className="flex shrink-0 items-center justify-between border-b border-slate-200/80 bg-slate-50/90 px-3 py-1.5 sm:px-4 sm:py-2 2xl:px-5 2xl:py-2.5 pr-11 sm:pr-14">
         {/* Left: Employer Workspace Identity */}
         <div className="flex items-center gap-2">
           <div className="flex items-center gap-1.5 rounded-md border border-slate-200 bg-white px-2 py-0.5 text-[11px] sm:text-xs 2xl:text-sm font-semibold text-slate-800 shadow-2xs">

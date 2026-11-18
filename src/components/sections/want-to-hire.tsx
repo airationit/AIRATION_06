@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useSyncExternalStore } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import {
   Building2,
@@ -321,7 +322,14 @@ function RecruiterDashboardMockup({ active, onStepClick }: {
 
 /* ---------- Main Employer Experience Component ---------- */
 
+const emptySubscribe = () => () => {};
+
 export function WantToHire() {
+  const isClient = useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false
+  );
   const [active, setActive] = useState(0);
   const [isDemoModalOpen, setIsDemoModalOpen] = useState(false);
   const [isPricingModalOpen, setIsPricingModalOpen] = useState(false);
@@ -519,56 +527,63 @@ export function WantToHire() {
       
       </div>
 
-      {/* Interactive Job Post Demo Modal */}
-      <AnimatePresence>
-        {isDemoModalOpen && (
-          <div
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="job-post-demo-modal-title"
-            className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 md:p-6"
-          >
-            {/* Backdrop */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              onClick={() => setIsDemoModalOpen(false)}
-              className="fixed inset-0 bg-slate-950/75 backdrop-blur-md"
-              aria-hidden="true"
-            />
-
-            {/* Modal Dialog Container */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.94, y: 16 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.94, y: 16 }}
-              transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
-              className="relative z-10 flex flex-col w-full max-w-5xl xl:max-w-6xl h-[88vh] max-h-[740px] rounded-2xl sm:rounded-3xl bg-white shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-800"
-            >
-              <span id="job-post-demo-modal-title" className="sr-only">
-                Hirance Job Post Interactive Demo
-              </span>
-
-              {/* Floating Close Button */}
-              <button
-                type="button"
-                onClick={() => setIsDemoModalOpen(false)}
-                aria-label="Close demo modal"
-                className="absolute top-2.5 right-2.5 sm:top-3 sm:right-3.5 z-40 flex h-8 w-8 items-center justify-center rounded-full bg-slate-900/10 text-slate-700 hover:bg-slate-900/20 hover:text-slate-900 transition-all dark:bg-white/10 dark:text-slate-200 dark:hover:bg-white/20 cursor-pointer shadow-xs"
+      {/* Interactive Job Post Demo Modal Portaled to Body to prevent any banner overlap */}
+      {isClient &&
+        createPortal(
+          <AnimatePresence>
+            {isDemoModalOpen && (
+              <div
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="job-post-demo-modal-title"
+                className="fixed inset-0 z-[99999] overflow-y-auto overscroll-contain"
               >
-                <X className="h-4 w-4" />
-              </button>
+                {/* Backdrop */}
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                  onClick={() => setIsDemoModalOpen(false)}
+                  className="fixed inset-0 bg-slate-950/75 backdrop-blur-md"
+                  aria-hidden="true"
+                />
 
-              {/* Embedded Job Post Demo Interactive Stage */}
-              <div className="flex-1 w-full h-full min-h-0 overflow-hidden">
-                <JobPostDemo className="h-full w-full rounded-2xl sm:rounded-3xl border-0 shadow-none ring-0" />
+                {/* Modal Dialog Container */}
+                <div className="relative min-h-full flex items-center justify-center p-3 sm:p-5 md:p-6">
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.95, y: 12 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.95, y: 12 }}
+                    transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                    onClick={(e) => e.stopPropagation()}
+                    className="relative z-10 flex flex-col w-full max-w-5xl xl:max-w-6xl h-[85vh] max-h-[720px] rounded-2xl sm:rounded-3xl bg-white shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-800"
+                  >
+                    <span id="job-post-demo-modal-title" className="sr-only">
+                      Hirance Job Post Interactive Demo
+                    </span>
+
+                    {/* Floating Close Button */}
+                    <button
+                      type="button"
+                      onClick={() => setIsDemoModalOpen(false)}
+                      aria-label="Close demo modal"
+                      className="absolute top-2 right-2 sm:top-2.5 sm:right-3.5 z-50 flex h-7.5 w-7.5 sm:h-8 sm:w-8 items-center justify-center rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-slate-900 border border-slate-200/90 transition-colors cursor-pointer shadow-xs"
+                    >
+                      <X className="h-4 w-4" />
+                    </button>
+
+                    {/* Embedded Job Post Demo Interactive Stage */}
+                    <div className="flex-1 w-full h-full min-h-0 overflow-hidden">
+                      <JobPostDemo className="h-full w-full rounded-2xl sm:rounded-3xl border-0 shadow-none ring-0" />
+                    </div>
+                  </motion.div>
+                </div>
               </div>
-            </motion.div>
-          </div>
+            )}
+          </AnimatePresence>,
+          document.body
         )}
-      </AnimatePresence>
 
       {/* Employer Pricing Plans Modal */}
       <PricingModal
