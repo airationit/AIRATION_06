@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useMemo } from "react";
 import Link from "next/link";
@@ -142,17 +142,17 @@ export function JobSeoLinks({ currentRoleSlug, currentCitySlug }: JobSeoLinksPro
   return (
     <section
       aria-labelledby="career-directory-heading"
-      className="w-full bg-slate-100/90 dark:bg-slate-900/80 border-t border-border/60 py-8 sm:py-10"
+      className="w-full bg-white dark:bg-background border-t border-border/60 py-5 sm:py-6"
     >
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 flex flex-col gap-10">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 flex flex-col gap-3 sm:gap-4">
 
         {/* SECTION 1: JOBS BY LOCATION (Find Jobs) */}
-        <div id="directory-cities" className="pb-8 border-b border-border/40 scroll-mt-32">
-          <h3 className="text-base sm:text-lg font-bold text-foreground mb-6">
+        <div id="directory-cities" className="pb-2 sm:pb-2.5 border-b border-border/40 scroll-mt-32">
+          <h3 className="text-base sm:text-lg font-bold text-foreground mb-2 sm:mb-2.5">
             Find Jobs
           </h3>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-y-3.5 gap-x-4 sm:gap-x-6">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-y-2 sm:gap-y-2.5 gap-x-4 sm:gap-x-6">
             {visibleCities.map((city) => {
               const isActive = currentCitySlug === city.slug;
               return (
@@ -160,9 +160,9 @@ export function JobSeoLinks({ currentRoleSlug, currentCitySlug }: JobSeoLinksPro
                   key={city.slug}
                   href={`/jobs/jobs-in-${city.slug}`}
                   className={cn(
-                    "text-sm font-medium transition-all duration-150 truncate hover:underline hover:underline-offset-4",
+                    "text-sm font-normal transition-all duration-150 truncate hover:underline hover:underline-offset-4",
                     isActive
-                      ? "text-brand-600 dark:text-brand-400 font-semibold"
+                      ? "text-brand-400 dark:text-brand-400 font-semibold"
                       : "text-muted-foreground hover:text-foreground"
                   )}
                 >
@@ -173,7 +173,7 @@ export function JobSeoLinks({ currentRoleSlug, currentCitySlug }: JobSeoLinksPro
           </div>
 
           {allCities.length > 10 && (
-            <div className="mt-8 flex justify-center">
+            <div className="mt-1.5 sm:mt-2 flex justify-center">
               <button
                 type="button"
                 onClick={() => setShowAllCities(!showAllCities)}
@@ -191,12 +191,12 @@ export function JobSeoLinks({ currentRoleSlug, currentCitySlug }: JobSeoLinksPro
         </div>
 
         {/* SECTION 2: POPULAR JOB ROLES (Popular Jobs) */}
-        <div className="pb-8 border-b border-border/40">
-          <h3 className="text-base sm:text-lg font-bold text-foreground mb-6">
+        <div className="pb-2 sm:pb-2.5 border-b border-border/40">
+          <h3 className="text-base sm:text-lg font-bold text-foreground mb-2 sm:mb-2.5">
             Popular Jobs
           </h3>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-y-3.5 gap-x-4 sm:gap-x-6">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-y-2 sm:gap-y-2.5 gap-x-4 sm:gap-x-6">
             {visiblePopularRoles.map((role) => {
               const isActive = currentRoleSlug === role.slug;
               return (
@@ -204,9 +204,9 @@ export function JobSeoLinks({ currentRoleSlug, currentCitySlug }: JobSeoLinksPro
                   key={role.slug}
                   href={`/jobs/${role.slug}`}
                   className={cn(
-                    "text-sm font-medium transition-all duration-150 truncate hover:underline hover:underline-offset-4",
+                    "text-sm font-normal transition-all duration-150 truncate hover:underline hover:underline-offset-4",
                     isActive
-                      ? "text-brand-600 dark:text-brand-400 font-semibold"
+                      ? "text-brand-400 dark:text-brand-400 font-semibold"
                       : "text-muted-foreground hover:text-foreground"
                   )}
                 >
@@ -217,7 +217,7 @@ export function JobSeoLinks({ currentRoleSlug, currentCitySlug }: JobSeoLinksPro
           </div>
 
           {popularRolesAndTracks.length > 10 && (
-            <div className="mt-8 flex justify-center">
+            <div className="mt-1.5 sm:mt-2 flex justify-center">
               <button
                 type="button"
                 onClick={() => setShowAllPopular(!showAllPopular)}
@@ -235,17 +235,17 @@ export function JobSeoLinks({ currentRoleSlug, currentCitySlug }: JobSeoLinksPro
         </div>
 
         {/* SECTION 3: JOBS BY DEPARTMENT */}
-        <div id="directory-departments" className="pb-8 border-b border-border/40 scroll-mt-32">
-          <h3 className="text-base sm:text-lg font-bold text-foreground mb-6">
+        <div id="directory-departments" className="pb-2 sm:pb-2.5 border-b border-border/40 scroll-mt-32">
+          <h3 className="text-base sm:text-lg font-bold text-foreground mb-2 sm:mb-2.5">
             Jobs by Department
           </h3>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-y-3.5 gap-x-4 sm:gap-x-6">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-y-2 sm:gap-y-2.5 gap-x-4 sm:gap-x-6">
             {departments.map((dept) => (
               <Link
                 key={dept.slug}
                 href={`/jobs/${dept.slug}`}
-                className="text-sm font-medium text-muted-foreground hover:text-foreground hover:underline hover:underline-offset-4 transition-all duration-150 truncate"
+                className="text-sm font-normal text-muted-foreground hover:text-foreground hover:underline hover:underline-offset-4 transition-all duration-150 truncate"
               >
                 {dept.label}
               </Link>
@@ -254,17 +254,17 @@ export function JobSeoLinks({ currentRoleSlug, currentCitySlug }: JobSeoLinksPro
         </div>
 
         {/* SECTION 4: TRENDING CAREER HUBS */}
-        <div className="pb-4">
-          <h3 className="text-base sm:text-lg font-bold text-foreground mb-6">
+        <div className="pb-2">
+          <h3 className="text-base sm:text-lg font-bold text-foreground mb-2 sm:mb-2.5">
             Trending Career Hubs
           </h3>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-y-3.5 gap-x-4 sm:gap-x-6">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-y-2 sm:gap-y-2.5 gap-x-4 sm:gap-x-6">
             {visibleTrendingHubs.map((hub) => (
               <Link
                 key={hub.slug}
                 href={`/jobs/${hub.slug}`}
-                className="text-sm font-medium text-muted-foreground hover:text-foreground hover:underline hover:underline-offset-4 transition-all duration-150 truncate"
+                className="text-sm font-normal text-muted-foreground hover:text-foreground hover:underline hover:underline-offset-4 transition-all duration-150 truncate"
               >
                 {hub.label}
               </Link>
@@ -272,7 +272,7 @@ export function JobSeoLinks({ currentRoleSlug, currentCitySlug }: JobSeoLinksPro
           </div>
 
           {trendingHubs.length > 10 && (
-            <div className="mt-8 flex justify-center">
+            <div className="mt-1.5 sm:mt-2 flex justify-center">
               <button
                 type="button"
                 onClick={() => setShowAllHubs(!showAllHubs)}

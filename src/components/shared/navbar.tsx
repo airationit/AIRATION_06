@@ -1,4 +1,4 @@
-"use client"
+﻿"use client"
 
 import { useEffect, useRef, useState } from "react"
 import { usePathname, useSelectedLayoutSegment } from "next/navigation"
@@ -85,7 +85,7 @@ export function Navbar({ className }: NavbarProps) {
           "w-full transition-all duration-300 ease-out",
           "relative z-50 py-4 sm:py-5",
           isHome
-            ? "border-b border-transparent bg-transparent shadow-none dark:bg-transparent"
+            ? "border-b border-border/50 bg-transparent shadow-none dark:bg-transparent dark:border-slate-800"
             : "border-b border-border/50 bg-white shadow-2xs dark:border-slate-800 dark:bg-slate-950",
           "px-6 sm:px-10 lg:px-16 xl:px-24",
           className
@@ -193,7 +193,7 @@ export function Navbar({ className }: NavbarProps) {
 
                 if (hasSubNav) {
                   return (
-                    <div 
+                    <div
                       key={item.href}
                       className="relative group"
                       onMouseEnter={() => setHoveredIndex(index)}
@@ -210,9 +210,9 @@ export function Navbar({ className }: NavbarProps) {
                                   </h4>
                                   <div className="flex flex-col gap-1">
                                     {sec.items.map((subItem: any) => (
-                                      <Link 
-                                        key={subItem.href} 
-                                        href={subItem.href} 
+                                      <Link
+                                        key={subItem.href}
+                                        href={subItem.href}
                                         className="text-xs font-medium text-slate-600 hover:text-brand-600 hover:translate-x-0.5 transition-all flex items-center justify-between"
                                       >
                                         <span>{subItem.label}</span>
@@ -230,8 +230,8 @@ export function Navbar({ className }: NavbarProps) {
                             <div className="flex flex-col gap-1.5">
                               {item.subNav.right.map((subItem: any) => (
                                 <div key={subItem.href} className="relative group/rightItem">
-                                  <Link 
-                                    href={subItem.href} 
+                                  <Link
+                                    href={subItem.href}
                                     className="flex items-center justify-between text-xs font-medium text-slate-600 hover:text-brand-600 hover:translate-x-0.5 transition-all"
                                   >
                                     <span>{subItem.label}</span>
@@ -316,12 +316,11 @@ export function Navbar({ className }: NavbarProps) {
             href={candidate.href}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex h-10 items-center gap-1.5 rounded-full px-3.5 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-brand-500/40"
-            aria-label="Hirance Candidate App on Google Play"
+            className="inline-flex h-10 items-center justify-center rounded-xl bg-slate-900 px-5 text-sm font-semibold text-white transition-colors hover:bg-slate-700 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-slate-500/40"
+            aria-label="Download the Hirance App on Google Play"
             tabIndex={0}
           >
             {candidate.cta}
-            <ArrowUpRight className="h-3.5 w-3.5 opacity-60" aria-hidden="true" />
           </a>
         )}
         {employer &&
@@ -330,20 +329,22 @@ export function Navbar({ className }: NavbarProps) {
               href={employer.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex h-10 items-center justify-center rounded-full bg-brand-600 px-5 text-sm font-semibold text-white transition-colors hover:bg-brand-700 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-brand-500/40"
-              aria-label="Employer dashboard on the Hirance web platform"
+              className="inline-flex h-10 items-center gap-1.5 px-3.5 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-brand-500/40"
+              aria-label="For Employers – open the Hirance employer platform"
               tabIndex={0}
             >
               {employer.cta}
+              <ArrowUpRight className="h-3.5 w-3.5 opacity-60" aria-hidden="true" />
             </a>
           ) : (
             <Link
               href={employer.href}
-              className="inline-flex h-10 items-center justify-center rounded-full bg-brand-600 px-5 text-sm font-semibold text-white transition-colors hover:bg-brand-700 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-brand-500/40"
-              aria-label="Employer dashboard on the Hirance web platform"
+              className="inline-flex h-10 items-center gap-1.5 px-3.5 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-brand-500/40"
+              aria-label="For Employers – open the Hirance employer platform"
               tabIndex={0}
             >
               {employer.cta}
+              <ArrowUpRight className="h-3.5 w-3.5 opacity-60" aria-hidden="true" />
             </Link>
           ))}
       </div>

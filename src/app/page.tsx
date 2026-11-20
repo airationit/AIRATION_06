@@ -1,10 +1,9 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 import { siteConfig } from "@/config/site";
 import {
   Hero,
   TrustedBy,
   AppDownload,
-  WantToHire,
   BrandStatement,
   SwipePlayground,
 } from "@/components/sections";
@@ -12,6 +11,7 @@ import {
   Footer,
   FloatingAppBanner,
 } from "@/components/shared";
+import { JobSeoLinks } from "@/components/jobs/job-seo-links";
 import { fetchCompanies, fetchJobs } from "@/lib/api";
 
 export const metadata: Metadata = {
@@ -47,7 +47,7 @@ export default async function Home() {
     : undefined;
 
   return (
-    <main className="relative flex min-h-dvh flex-col overflow-x-clip">
+    <main className="relative flex min-h-dvh flex-col overflow-x-clip bg-white dark:bg-background">
       {/* Hero section */}
       <Hero initialJobs={liveJobs} />
 
@@ -55,7 +55,8 @@ export default async function Home() {
       <TrustedBy initialCompanies={companiesRes?.data} />
       <AppDownload initialJobs={liveJobs} />
       <SwipePlayground initialJobs={liveJobs ? liveJobs.slice(0, 5) : undefined} />
-      <WantToHire />
+
+      <JobSeoLinks />
       <BrandStatement />
       <Footer />
 

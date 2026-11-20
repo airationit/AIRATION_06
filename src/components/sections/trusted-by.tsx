@@ -1,9 +1,10 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect, useMemo, memo } from "react";
 import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
 import { getCompanyColorTheme, initials } from "@/config/companies";
+import companiesData from "@/config/companies.json";
 import { fetchCompanies } from "@/lib/api";
 import type { CompanyItem } from "@/types";
 import { cn } from "@/lib/utils";
@@ -20,19 +21,14 @@ function deduplicateCompanies(list: CompanyItem[]): CompanyItem[] {
   for (const item of list) {
     if (!item || !item.company_name) continue;
     const name = item.company_name.trim();
-    if (!name) continue;
+    const logo = item.company_logo?.trim();
+    // Exclude companies without a logo (null wala dont show)
+    if (!name || !logo) continue;
 
     // Normalize: alphanumeric only, lowercase
     const key = name.toLowerCase().replace(/[^a-z0-9]/g, "");
-    const existing = map.get(key);
-
-    if (!existing) {
+    if (!map.has(key)) {
       map.set(key, item);
-    } else {
-      // Prioritize entry with valid company_logo
-      if (!existing.company_logo?.trim() && item.company_logo?.trim()) {
-        map.set(key, item);
-      }
     }
   }
 
@@ -49,7 +45,7 @@ function BrandIcon({ name }: { name: string }) {
   // 1. Google (Multi-color G)
   if (lower === "google") {
     return (
-      <svg className="w-5 h-5 sm:w-6 sm:h-6" viewBox="0 0 24 24">
+      <svg className="w-8 h-8 sm:w-10 sm:h-10 md:w-11 md:h-11" viewBox="0 0 24 24">
         <path
           fill="#4285F4"
           d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
@@ -73,7 +69,7 @@ function BrandIcon({ name }: { name: string }) {
   // 2. Microsoft (4 colored squares)
   if (lower === "microsoft") {
     return (
-      <svg className="w-4.5 h-4.5 sm:w-5 sm:h-5" viewBox="0 0 24 24">
+      <svg className="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10" viewBox="0 0 24 24">
         <rect x="1.5" y="1.5" width="9.5" height="9.5" fill="#F25022" />
         <rect x="13" y="1.5" width="9.5" height="9.5" fill="#7FBA00" />
         <rect x="1.5" y="13" width="9.5" height="9.5" fill="#00A4EF" />
@@ -85,69 +81,65 @@ function BrandIcon({ name }: { name: string }) {
   // 3. IBM
   if (lower === "ibm") {
     return (
-      <span className="font-mono font-extrabold text-[11px] sm:text-xs text-[#006699] tracking-wider border-y border-[#006699] py-0.5 leading-none select-none">
+      <span className="font-mono font-black text-2xl sm:text-3xl md:text-4xl text-[#006699] tracking-widest border-y-2 border-[#006699] py-0.5 leading-none select-none">
         IBM
       </span>
     );
   }
 
-  // 4. PhonePe (Purple circle with Hindi 'पे')
+  // 4. PhonePe
   if (lower.includes("phonepe") || lower.includes("phone pe")) {
     return (
-      <div className="w-full h-full rounded-full bg-[#5F259F] flex items-center justify-center text-white shadow-xs">
-        <span className="font-bold text-xs sm:text-sm select-none leading-none -mt-0.5">
+      <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[#5F259F] flex items-center justify-center text-white shadow-xs">
+        <span className="font-bold text-lg sm:text-xl select-none leading-none -mt-0.5">
           पे
         </span>
       </div>
     );
   }
 
-  // 5. Zomato (Red circle with white zomato text)
+  // 5. Zomato
   if (lower.includes("zomato")) {
     return (
-      <div className="w-full h-full rounded-full bg-[#E23744] flex items-center justify-center text-white shadow-xs px-1">
-        <span className="font-bold italic text-[8.5px] sm:text-[9.5px] tracking-tight select-none">
-          zomato
-        </span>
-      </div>
+      <span className="font-black italic text-xl sm:text-2xl md:text-3xl text-[#E23744] tracking-tight select-none">
+        zomato
+      </span>
     );
   }
 
-  // 6. OYO (Red circle with white OYO)
+  // 6. OYO
   if (lower.includes("oyo")) {
     return (
-      <div className="w-full h-full rounded-full bg-[#EE2E24] flex items-center justify-center text-white shadow-xs">
-        <span className="font-black text-[11px] sm:text-xs tracking-tighter select-none">
-          OYO
-        </span>
-      </div>
+      <span className="font-black text-2xl sm:text-3xl md:text-4xl text-[#EE2E24] tracking-tighter select-none">
+        OYO
+      </span>
     );
   }
 
-  // 7. Zepto (Yellow rounded square with '7')
+  // 7. Zepto
   if (lower.includes("zepto")) {
     return (
-      <div className="w-full h-full rounded-full bg-[#FFDE00] flex items-center justify-center text-[#1E293B] shadow-xs">
-        <span className="font-black text-xs sm:text-sm select-none">7</span>
-      </div>
+      <span className="font-black text-2xl sm:text-3xl md:text-4xl text-[#FFDE00] tracking-tight select-none">
+        zepto
+      </span>
     );
   }
 
-  // 8. LinkedIn (Blue rounded square with 'in')
+  // 8. LinkedIn
   if (lower.includes("linkedin")) {
     return (
-      <div className="w-full h-full rounded-full bg-[#0A66C2] flex items-center justify-center text-white shadow-xs">
-        <span className="font-bold text-xs sm:text-sm select-none">in</span>
+      <div className="w-9 h-9 sm:w-11 sm:h-11 rounded bg-[#0A66C2] flex items-center justify-center text-white shadow-xs">
+        <span className="font-bold text-lg sm:text-xl select-none">in</span>
       </div>
     );
   }
 
-  // 9. Deloitte (D with green dot)
+  // 9. Deloitte (Full wordmark with green dot)
   if (lower.includes("deloitte")) {
     return (
       <div className="flex items-center justify-center font-bold text-slate-900 dark:text-white select-none">
-        <span className="text-sm sm:text-base font-black">D</span>
-        <span className="w-1.5 h-1.5 rounded-full bg-[#86BC25] ml-0.5 mt-1.5" />
+        <span className="text-xl sm:text-2xl md:text-3xl font-black tracking-tight">Deloitte</span>
+        <span className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-[#86BC25] ml-0.5 mt-2 sm:mt-2.5" />
       </div>
     );
   }
@@ -155,7 +147,7 @@ function BrandIcon({ name }: { name: string }) {
   // 10. Paytm
   if (lower.includes("paytm")) {
     return (
-      <div className="flex items-center justify-center select-none font-bold text-[11px] sm:text-xs">
+      <div className="flex items-center justify-center select-none font-bold text-xl sm:text-2xl md:text-3xl">
         <span className="text-[#002970]">pay</span>
         <span className="text-[#00BAF2]">tm</span>
       </div>
@@ -165,16 +157,16 @@ function BrandIcon({ name }: { name: string }) {
   // 11. Infosys
   if (lower.includes("infosys")) {
     return (
-      <span className="font-bold text-[10.5px] sm:text-xs text-[#007CC3] tracking-tight select-none">
+      <span className="font-bold text-xl sm:text-2xl md:text-3xl text-[#007CC3] tracking-tight select-none">
         Infosys
       </span>
     );
   }
 
-  // 12. TCS
+  // 12. TCS (Tata Consultancy Services)
   if (lower.includes("tcs") || lower.includes("tata consultancy")) {
     return (
-      <span className="font-black text-[11px] sm:text-xs text-[#D90429] tracking-tight select-none">
+      <span className="font-black text-2xl sm:text-3xl md:text-4xl text-[#D90429] tracking-tight select-none">
         tcs
       </span>
     );
@@ -183,7 +175,7 @@ function BrandIcon({ name }: { name: string }) {
   // 13. Adobe
   if (lower.includes("adobe")) {
     return (
-      <svg className="w-4.5 h-4.5 sm:w-5 sm:h-5" viewBox="0 0 24 24">
+      <svg className="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10" viewBox="0 0 24 24">
         <path fill="#FA0F00" d="M14.58 2.05H24v19.9H14.58zm-5.16 0H0v19.9h9.42zM12 9.07l3.69 8.88h-2.58l-1.11-2.73h-3.3l1.88-4.52z" />
       </svg>
     );
@@ -192,27 +184,25 @@ function BrandIcon({ name }: { name: string }) {
   // 14. Intel
   if (lower.includes("intel")) {
     return (
-      <div className="w-[86%] h-[86%] rounded-full border border-[#0071C5] flex items-center justify-center text-[#0071C5]">
-        <span className="font-bold text-[8.5px] sm:text-[9.5px] select-none lowercase">intel</span>
-      </div>
+      <span className="font-bold text-xl sm:text-2xl md:text-3xl text-[#0071C5] select-none lowercase">
+        intel
+      </span>
     );
   }
 
   // 15. Swiggy
   if (lower.includes("swiggy")) {
     return (
-      <div className="w-[86%] h-[86%] rounded-full bg-[#FC8019] flex items-center justify-center text-white shadow-xs">
-        <svg className="w-4 h-4 sm:w-4.5 sm:h-4.5" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
-        </svg>
-      </div>
+      <svg className="w-8 h-8 sm:w-10 sm:h-10 md:w-11 md:h-11 text-[#FC8019]" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+      </svg>
     );
   }
 
-  // 16. Wipro / swirl logo
+  // 16. Wipro
   if (lower.includes("wipro")) {
     return (
-      <svg className="w-5 h-5 sm:w-5.5 sm:h-5.5" viewBox="0 0 24 24">
+      <svg className="w-9 h-9 sm:w-11 sm:h-11 md:w-12 md:h-12" viewBox="0 0 24 24">
         <circle cx="12" cy="6" r="2.8" fill="#D92D20" />
         <circle cx="17.2" cy="9" r="2.4" fill="#EAAA08" />
         <circle cx="17.2" cy="15" r="2.4" fill="#12B76A" />
@@ -226,24 +216,28 @@ function BrandIcon({ name }: { name: string }) {
   return null;
 }
 
-const GRADIENT_PALETTES = [
-  "from-violet-600 to-indigo-600",
-  "from-blue-600 to-cyan-600",
-  "from-emerald-500 to-teal-600",
-  "from-rose-500 to-red-600",
-  "from-amber-500 to-orange-600",
-  "from-fuchsia-600 to-pink-600",
-  "from-indigo-600 to-purple-700",
-  "from-teal-500 to-cyan-600",
-  "from-sky-500 to-blue-600",
-  "from-pink-500 to-rose-600",
-];
+// Names that return Google''s default placeholder globe icon when domain/favicon is missing
+const GLOBE_FALLBACK_NAMES = new Set([
+  "acore it hub",
+  "ai tech gen technologies",
+  "sigmait software designers pvt ltd.",
+  "tripathi digital",
+]);
+
+const staticCompanies: CompanyItem[] = (companiesData as any[])
+  .filter((c) => !GLOBE_FALLBACK_NAMES.has((c.name || "").toLowerCase().trim()))
+  .map((c, i) => ({
+    id: `static-${i}`,
+    company_name: c.name,
+    // Use fallback_opts=404 so Google never returns the default globe icon
+    company_logo: (c.logo_url || "").replace("fallback_opts=TYPE,SIZE,URL", "fallback_opts=404"),
+  }));
 
 /**
- * Circular white badge card for a company matching the Figma reference design.
- * Features a soft drop shadow, crisp border, and centered logo/brand badge.
+ * Clean corporate logo item matching the style in reference Image 2.
+ * Renders company logo / brand mark in grayscale with smooth hover.
  */
-const AppIconCompanyCard = memo(function AppIconCompanyCard({
+const CompanyLogoItem = memo(function CompanyLogoItem({
   company,
   index,
 }: {
@@ -253,91 +247,50 @@ const AppIconCompanyCard = memo(function AppIconCompanyCard({
   const [failed, setFailed] = useState(false);
   const name = company.company_name?.trim() || "Company";
   const logoUrl = company.company_logo?.trim() || "";
+  const brandIcon = useMemo(() => BrandIcon({ name }), [name]);
   const hasLogo = Boolean(logoUrl) && !failed;
 
-  // Check if this company has a recognizable brand icon
-  const brandIcon = useMemo(() => BrandIcon({ name }), [name]);
-
-  // Deterministic refined gradient for company monograms
-  const fallbackGradient = useMemo(() => {
-    let hash = 0;
-    for (let i = 0; i < name.length; i++) {
-      hash = name.charCodeAt(i) + ((hash << 5) - hash);
-    }
-    const idx = (Math.abs(hash) + index) % GRADIENT_PALETTES.length;
-    return GRADIENT_PALETTES[idx];
-  }, [name, index]);
+  // STRICT: Do not render if neither logo nor brand icon exists
+  if (!hasLogo && !brandIcon) return null;
 
   return (
-    <Link
-      href={company.id ? `/company/${company.id}` : `/jobs?search=${encodeURIComponent(name)}`}
-      title={name}
-      aria-label={`View ${name} company profile`}
+    <div
       suppressHydrationWarning
-      className="relative flex shrink-0 items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 rounded-full"
+      className="relative flex shrink-0 items-center justify-center px-1.5 sm:px-2.5 py-1 select-none pointer-events-none"
     >
-      {/* Circular White Badge Container with Soft Shadow matching Figma */}
-      <div
-        suppressHydrationWarning
-        className={cn(
-          "relative flex items-center justify-center overflow-hidden select-none rounded-full bg-white dark:bg-slate-900",
-          "h-11 w-11 sm:h-12 sm:w-12 md:h-14 md:w-14 lg:h-15 lg:w-15",
-          "shadow-[0_4px_16px_rgba(0,0,0,0.06),0_1px_3px_rgba(0,0,0,0.03)] dark:shadow-[0_4px_16px_rgba(0,0,0,0.35)]",
-          "transition-all duration-300 ease-out hover:scale-108 hover:shadow-[0_8px_24px_rgba(37,99,235,0.12)] active:scale-95"
+      <div className="flex items-center justify-center h-12 sm:h-14 md:h-16 min-w-0 grayscale contrast-125 opacity-80">
+        {brandIcon ? (
+          <div className="flex items-center justify-center">
+            {brandIcon}
+          </div>
+        ) : (
+          <img
+            src={logoUrl}
+            alt={name}
+            loading="lazy"
+            decoding="async"
+            className="h-10 sm:h-12 md:h-14 w-auto max-w-[150px] sm:max-w-[190px] md:max-w-[220px] object-contain pointer-events-none"
+            onError={() => setFailed(true)}
+            onLoad={(e) => {
+              const img = e.currentTarget;
+              // If image is a tiny 16x16 default icon or globe placeholder, hide it
+              if (img.naturalWidth <= 16 && img.naturalHeight <= 16) {
+                setFailed(true);
+              }
+            }}
+          />
         )}
-      >
-        {/* Centered Content: Brand Icon, Official Logo, or Circular Brand Monogram */}
-        <div
-          suppressHydrationWarning
-          className="relative z-10 flex h-full w-full items-center justify-center overflow-hidden rounded-full"
-        >
-          {brandIcon ? (
-            brandIcon
-          ) : hasLogo ? (
-            <div className="relative flex h-full w-full items-center justify-center overflow-hidden rounded-full p-1.5 sm:p-2">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={logoUrl}
-                alt={name}
-                width={36}
-                height={36}
-                loading="lazy"
-                decoding="async"
-                suppressHydrationWarning
-                className={cn(
-                  "object-contain select-none transition-transform duration-200",
-                  "max-h-7 max-w-7 sm:max-h-8 sm:max-w-8 md:max-h-9 md:max-w-9"
-                )}
-                onError={() => setFailed(true)}
-              />
-            </div>
-          ) : (
-            <div
-              aria-hidden="true"
-              suppressHydrationWarning
-              className={cn(
-                "flex items-center justify-center rounded-full font-bold select-none shadow-xs bg-gradient-to-br w-full h-full",
-                fallbackGradient
-              )}
-            >
-              <span className="text-[11px] sm:text-xs md:text-[13px] font-bold tracking-tight text-white drop-shadow-xs">
-                {initials(name)}
-              </span>
-            </div>
-          )}
-        </div>
       </div>
-    </Link>
+    </div>
   );
 });
-
 /**
- * Continuous infinite marquee row that never stops on hover.
+ * Continuous infinite marquee row with pause on hover.
  */
 function ContinuousMarqueeRow({
   items,
   direction = "normal",
-  speed = "70s",
+  speed = "50s",
   startIndex = 0,
 }: {
   items: CompanyItem[];
@@ -358,11 +311,11 @@ function ContinuousMarqueeRow({
   return (
     <div
       suppressHydrationWarning
-      className="relative flex overflow-hidden py-1 sm:py-1.5 select-none [contain:layout_paint]"
+      className="relative flex overflow-hidden py-1 sm:py-2 select-none [contain:layout_paint]"
     >
       <div
         suppressHydrationWarning
-        className="flex shrink-0 gap-3 sm:gap-3.5 md:gap-4 animate-marquee will-change-transform items-center"
+        className="flex shrink-0 gap-3 sm:gap-4 md:gap-5 animate-marquee will-change-transform items-center"
         style={
           {
             "--marquee-duration": speed,
@@ -371,7 +324,7 @@ function ContinuousMarqueeRow({
         }
       >
         {duplicatedItems.map((company, idx) => (
-          <AppIconCompanyCard
+          <CompanyLogoItem
             key={`${company.id || company.company_name}-${startIndex}-${idx}`}
             company={company}
             index={startIndex + idx}
@@ -381,135 +334,80 @@ function ContinuousMarqueeRow({
     </div>
   );
 }
-
 interface TrustedByProps {
   initialCompanies?: CompanyItem[];
 }
 
 export function TrustedBy({ initialCompanies }: TrustedByProps) {
-  const reducedMotion = useReducedMotion();
-  const [companyList, setCompanyList] = useState<CompanyItem[]>(() =>
-    deduplicateCompanies(initialCompanies || [])
-  );
+  const [companyList, setCompanyList] = useState<CompanyItem[]>(() => {
+    const initial = initialCompanies && initialCompanies.length > 0 ? initialCompanies : [];
+    return deduplicateCompanies([...initial, ...staticCompanies]);
+  });
 
-  // Always fetch and sync real-time API companies
+  // Fetch and sync real-time API companies
   useEffect(() => {
     if (initialCompanies && initialCompanies.length > 0) {
-      setCompanyList(deduplicateCompanies(initialCompanies));
+      setCompanyList(deduplicateCompanies([...initialCompanies, ...staticCompanies]));
     }
 
     let isMounted = true;
     fetchCompanies({ search: "", page_size: 100 })
       .then((res) => {
         if (isMounted && res.data && res.data.length > 0) {
-          setCompanyList(deduplicateCompanies(res.data));
+          setCompanyList(deduplicateCompanies([...res.data, ...staticCompanies]));
         }
       })
-      .catch(() => {});
+      .catch(() => { });
 
     return () => {
       isMounted = false;
     };
   }, [initialCompanies]);
 
-  // Distribute real-time API companies evenly across 3 balanced continuous rows
-  const { row1, row2, row3 } = useMemo(() => {
-    if (!companyList || companyList.length === 0) {
-      return { row1: [], row2: [], row3: [] };
+  // Distribute into 2 balanced rows matching Image 2 - strictly companies with logos
+  const { row1, row2 } = useMemo(() => {
+    const withLogos = (companyList || []).filter((c) => { if (!c || !c.company_logo) return false; const url = c.company_logo.trim(); return url && url !== "null" && url !== "undefined" && !GLOBE_FALLBACK_NAMES.has((c.company_name || "").toLowerCase().trim()); });
+    if (withLogos.length === 0) {
+      return { row1: [], row2: [] };
     }
-
-    // Separate companies with logos vs without logos to ensure each row has an appealing mix
-    const withLogos = companyList.filter((c) => Boolean(c.company_logo?.trim()));
-    const withoutLogos = companyList.filter((c) => !c.company_logo?.trim());
 
     const r1: CompanyItem[] = [];
     const r2: CompanyItem[] = [];
-    const r3: CompanyItem[] = [];
 
-    // Distribute companies with logos across the 3 rows
     withLogos.forEach((c, idx) => {
-      const bucket = idx % 3;
-      if (bucket === 0) r1.push(c);
-      else if (bucket === 1) r2.push(c);
-      else r3.push(c);
+      if (idx % 2 === 0) r1.push(c);
+      else r2.push(c);
     });
 
-    // Distribute all other real companies across the 3 rows
-    withoutLogos.forEach((c, idx) => {
-      const bucket = idx % 3;
-      if (bucket === 0) r1.push(c);
-      else if (bucket === 1) r2.push(c);
-      else r3.push(c);
-    });
-
-    return {
-      row1: r1,
-      row2: r2,
-      row3: r3,
-    };
+    return { row1: r1, row2: r2 };
   }, [companyList]);
 
   return (
     <section
       id="partners"
-      className="relative w-full overflow-hidden py-12 sm:py-16 md:py-20 flex flex-col items-center justify-center min-h-0"
+      className="relative w-full overflow-hidden py-8 sm:py-10 md:py-12 flex flex-col items-center justify-center bg-transparent"
       aria-labelledby="trusted-by-heading"
     >
-      {/* Background Radial Blue Glow matching reference image */}
-      <div
-        className="pointer-events-none absolute inset-0 -z-10 overflow-hidden"
-        aria-hidden="true"
-      >
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_65%_at_50%_48%,rgba(191,219,254,0.48),rgba(219,234,254,0.22)_45%,transparent_75%)] dark:bg-[radial-gradient(ellipse_80%_65%_at_50%_48%,rgba(37,99,235,0.18),rgba(15,23,42,0)_75%)]" />
-        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-border/80 to-transparent" />
-      </div>
-
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full">
-        {/* Clean, SEO-optimized Header matching Figma */}
-        <motion.div
-          initial={reducedMotion ? false : { opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-48px" }}
-          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-          className="relative mx-auto max-w-3xl text-center mb-8 sm:mb-10"
-        >
-
-          <h2
+        {/* Header matching Image 2: Horizontal lines on left & right with centered text */}
+        <div className="relative mx-auto flex w-full max-w-5xl items-center justify-center px-4 mb-7 sm:mb-9">
+          <div className="flex-1 border-t border-slate-200 dark:border-slate-800" />
+          <h1
             id="trusted-by-heading"
-            className="text-balance text-2xl font-semibold tracking-tight text-slate-900 dark:text-white sm:text-3xl md:text-4xl lg:text-[40px] leading-tight"
+            className="px-6 text-lg sm:text-xl md:text-[22px] font-medium text-slate-700 dark:text-slate-300 tracking-tight text-center whitespace-nowrap"
           >
-            Companies Are Hiring on{" "}
-            <span className="italic font-medium">
-              Hirance
-            </span>
-          </h2>
-          <p className="mt-2.5 text-xs sm:text-sm text-slate-500 dark:text-slate-400 max-w-2xl mx-auto font-normal leading-relaxed">
-            Built for modern hiring teams looking for better matches, faster applications and simpler hiring.
-          </p>
-          <div className="mt-3.5 flex items-center justify-center">
-            <Link
-              href="/jobs"
-              className="group inline-flex items-center gap-1.5 text-xs sm:text-[13.5px] font-semibold text-[#2563eb] hover:text-[#1d4ed8] dark:text-blue-400 dark:hover:text-blue-300 transition-colors"
-            >
-              <span>Explore All Jobs</span>
-              <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" />
-            </Link>
-          </div>
-        </motion.div>
+            Trusted companies ready to hire
+          </h1>
+          <div className="flex-1 border-t border-slate-200 dark:border-slate-800" />
+        </div>
 
-        {/* 3-Row Continuous Circular Badges Stream matching Figma */}
-        <motion.div
-          initial={reducedMotion ? false : { opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-48px" }}
-          transition={{ duration: 0.6, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
-          className="space-y-2 sm:space-y-2.5 md:space-y-3 marquee-mask py-2"
-        >
+        {/* 2-Row Continuous Logos Stream matching Image 2 */}
+        <div className="space-y-6 sm:space-y-8 marquee-mask py-3">
           {/* Row 1: Leftward continuous scroll */}
           <ContinuousMarqueeRow
             items={row1}
             direction="normal"
-            speed="60s"
+            speed="110s"
             startIndex={0}
           />
 
@@ -517,18 +415,10 @@ export function TrustedBy({ initialCompanies }: TrustedByProps) {
           <ContinuousMarqueeRow
             items={row2}
             direction="reverse"
-            speed="50s"
+            speed="125s"
             startIndex={row1.length}
           />
-
-          {/* Row 3: Leftward continuous scroll */}
-          <ContinuousMarqueeRow
-            items={row3}
-            direction="normal"
-            speed="65s"
-            startIndex={row1.length + row2.length}
-          />
-        </motion.div>
+        </div>
       </div>
     </section>
   );

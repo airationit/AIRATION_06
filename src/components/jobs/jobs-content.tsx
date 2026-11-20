@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useMemo, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
@@ -502,7 +502,7 @@ export function JobsContent({
   ]);
 
   return (
-    <main className="relative flex min-h-dvh flex-col overflow-x-clip bg-[#F9F9F9] dark:bg-background pt-6 sm:pt-8 transition-colors">
+    <main className="relative flex min-h-dvh flex-col overflow-x-clip bg-white dark:bg-background pt-6 sm:pt-8 transition-colors">
       {/* Unified interactive dot canvas matching homescreen page */}
       <div className="pointer-events-none absolute inset-0 -z-10">
         <InteractiveDots />

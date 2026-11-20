@@ -1,19 +1,30 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import {
   motion,
   useReducedMotion,
   useScroll,
   useTransform,
 } from "framer-motion";
-import { ArrowRight } from "lucide-react";
-import Link from "next/link";
-import { siteConfig } from "@/config/site";
+import { Search, MapPin } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { HeroVideoCard } from "./hero-video-card";
 import { cn } from "@/lib/utils";
 
 import { JobListItem } from "@/types/jobs";
+
+const POPULAR_SEARCHES = [
+  "Software engineer",
+  "Product manager",
+  "Data analyst",
+  "Designer",
+  "Marketing",
+  "Customer success",
+  "Product designer",
+  "Sales",
+  "Remote Jobs",
+];
 
 interface HeroProps {
   initialJobs?: JobListItem[];
@@ -23,8 +34,11 @@ export function Hero({ initialJobs }: HeroProps = {}) {
   const sectionRef = useRef<HTMLElement>(null);
   const copyRef = useRef<HTMLDivElement>(null);
   const reducedMotion = useReducedMotion();
+  const router = useRouter();
 
-  // Smooth scroll animations for Copy Text section
+  const [keyword, setKeyword] = useState("");
+  const [location, setLocation] = useState("");
+
   const { scrollYProgress: copyScrollProgress } = useScroll({
     target: copyRef,
     offset: ["start start", "end start"],
@@ -34,19 +48,23 @@ export function Hero({ initialJobs }: HeroProps = {}) {
   const copyOpacity = useTransform(copyScrollProgress, [0, 0.75], [1, 0.3]);
   const copyY = useTransform(copyScrollProgress, [0, 0.8], [0, -30]);
 
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    const params = new URLSearchParams();
+    if (keyword.trim()) params.set("keyword", keyword.trim());
+    if (location.trim()) params.set("city", location.trim());
+    router.push(`/jobs${params.toString() ? `?${params.toString()}` : ""}`);
+  };
+
+  const handlePopularSearch = (term: string) => {
+    router.push(`/jobs?keyword=${encodeURIComponent(term)}`);
+  };
+
   return (
     <section
       ref={sectionRef}
-      className="relative overflow-x-clip pt-[var(--hero-top)] [--hero-top:6rem] [--header-height:3.75rem] [--video-height:500px] sm:[--hero-top:7rem] sm:[--header-height:4.5rem] sm:[--video-height:530px] md:[--hero-top:8rem] md:[--video-height:560px] lg:[--header-height:4.75rem] lg:[--video-height:620px] xl:[--video-height:660px] 2xl:[--video-height:700px]"
+      className="relative overflow-x-clip pt-[var(--hero-top)] [--hero-top:3rem] [--header-height:3.75rem] [--video-height:500px] sm:[--hero-top:3.5rem] sm:[--header-height:4.5rem] sm:[--video-height:530px] md:[--hero-top:4.5rem] md:[--video-height:560px] lg:[--header-height:4.75rem] lg:[--video-height:620px] xl:[--video-height:660px] 2xl:[--video-height:700px]"
     >
-      {/* Extend one continuous background behind the transparent homepage navbar. */}
-      <div
-        className="pointer-events-none absolute inset-x-0 -top-[4.5rem] bottom-0 -z-10 overflow-hidden sm:-top-20"
-        aria-hidden="true"
-      >
-        <div className="absolute -inset-2 bg-[url('/images/figma-hero-bg.png')] bg-cover bg-center opacity-90 blur-[4px] dark:opacity-10" />
-      </div>
-
       {/* Background bottom edge fade */}
       <div
         className="pointer-events-none absolute inset-0 -z-10"
@@ -56,7 +74,6 @@ export function Hero({ initialJobs }: HeroProps = {}) {
       </div>
 
       {/* HERO COPY TEXT SECTION */}
-      {/* Reserve the first viewport for the copy and a 10% preview of the video. */}
       <div className="relative z-0 flex min-h-[calc(100svh_-_var(--header-height)_-_var(--hero-top)_-_var(--video-height)*0.2)] items-center justify-center px-4 sm:px-6 lg:px-8 pb-8 sm:pb-10 md:pb-12">
         <motion.div
           ref={copyRef}
@@ -64,117 +81,108 @@ export function Hero({ initialJobs }: HeroProps = {}) {
             reducedMotion
               ? {}
               : {
-                  scale: copyScale,
-                  opacity: copyOpacity,
-                  y: copyY,
-                }
+                scale: copyScale,
+                opacity: copyOpacity,
+                y: copyY,
+              }
           }
-          className="mx-auto flex w-full max-w-5xl flex-col items-center justify-center text-center will-change-transform pb-8"
+          className="mx-auto flex w-full max-w-7xl flex-col items-center justify-center text-center will-change-transform pb-8"
         >
-          {/* Eyebrow Typography matching Screenshot 2 */}
-          <motion.p
-            initial={
-              reducedMotion
-                ? false
-                : { opacity: 0, y: 16, filter: "blur(6px)" }
-            }
+          {/* Headline */}
+          <motion.h1
+            initial={reducedMotion ? false : { opacity: 0, y: 20, filter: "blur(6px)" }}
             animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-            transition={{
-              duration: 0.6,
-              delay: reducedMotion ? 0 : 0.05,
-              ease: [0.16, 1, 0.3, 1],
-            }}
-            className="mb-3 text-xs sm:text-[12.5px] font-semibold tracking-wider uppercase text-slate-500 dark:text-slate-400"
+            transition={{ duration: 0.65, delay: reducedMotion ? 0 : 0.05, ease: [0.16, 1, 0.3, 1] }}
+            className="max-w-4xl text-balance text-4xl sm:text-5xl lg:text-[3.6rem] font-semibold leading-[1.1] tracking-tight"
           >
-            NEXT-GEN SWIPE-BASED HIRING PLATFORM
+            <span className="text-slate-900 dark:text-white">Job Hunting in </span>
+            <span className="text-slate-900 dark:text-white font-normal">Seconds</span>
+          </motion.h1>
+
+          {/* Subheading */}
+          <motion.p
+            initial={reducedMotion ? false : { opacity: 0, y: 18, filter: "blur(8px)" }}
+            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+            transition={{ duration: 0.7, delay: reducedMotion ? 0 : 0.2, ease: [0.16, 1, 0.3, 1] }}
+            className="mx-auto mt-3 sm:mt-4 max-w-xl text-base sm:text-lg text-slate-900 dark:text-slate-400 leading-relaxed font-normal"
+          >
+            Swipe, match, and connect with employers instantly
           </motion.p>
 
-          {/* Headline Words: Swipe. Match. Get Hired. */}
-          <h1 className="max-w-4xl text-balance text-3xl sm:text-5xl lg:text-[3.85rem] font-semibold leading-[1.1] tracking-tight">
-            <span className="mr-[0.22em] inline-block text-slate-900 dark:text-white">
-              Swipe.
-            </span>
-            <span className="mr-[0.22em] inline-block text-slate-900 dark:text-white">
-              Match.
-            </span>
-            <span className="inline-block text-blue-600 font-semibold">
-              Get Hired.
-            </span>
-          </h1>
-
-          {/* Subheading matching Screenshot 2 */}
-          <motion.p
-            initial={
-              reducedMotion ? false : { opacity: 0, y: 18, filter: "blur(8px)" }
-            }
-            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-            transition={{
-              duration: 0.7,
-              delay: reducedMotion ? 0 : 0.38,
-              ease: [0.16, 1, 0.3, 1],
-            }}
-            className="mx-auto mt-3 sm:mt-4 max-w-2xl text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed font-normal"
-          >
-            Fastest way to Post &amp; Apply for jobs— No forms, No scrolling, No waiting.
-          </motion.p>
-
-          {/* Action Buttons Row matching Screenshot 2 */}
+          {/* Search Bar */}
           <motion.div
-            initial={reducedMotion ? false : { opacity: 0, y: 20, scale: 0.96 }}
+            initial={reducedMotion ? false : { opacity: 0, y: 20, scale: 0.97 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{
-              duration: 0.65,
-              delay: reducedMotion ? 0 : 0.48,
-              ease: [0.16, 1, 0.3, 1],
-            }}
-            className="mt-6 sm:mt-7 flex flex-col items-center gap-3 sm:flex-row sm:gap-3.5 select-none"
+            transition={{ duration: 0.65, delay: reducedMotion ? 0 : 0.35, ease: [0.16, 1, 0.3, 1] }}
+            className="mt-8 sm:mt-10 w-full max-w-4xl lg:max-w-5xl px-4 sm:px-0"
           >
-            {/* Start hiring today Button (Solid Blue Pill) */}
-            <Link
-              href={siteConfig.links.employer}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group inline-flex h-11 min-w-[11rem] items-center justify-center gap-2 rounded-full bg-[#1d68f0] hover:bg-[#1557d0] dark:bg-brand-600 dark:hover:bg-brand-500 px-6 text-sm font-semibold text-white shadow-sm shadow-[#1d68f0]/25 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-brand-500/40"
-              aria-label="Start hiring today on Hirance"
-              tabIndex={0}
+            <form
+              onSubmit={handleSearch}
+              className="flex flex-col sm:flex-row items-stretch gap-0 rounded-2xl sm:rounded-full border border-border/60 bg-white dark:bg-slate-900 shadow-lg shadow-black/5 p-2"
             >
-              <span>Start hiring today</span>
-              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-            </Link>
+              {/* Job title input */}
+              <div className="flex flex-1 items-center gap-2.5 px-4 py-3 sm:py-2">
+                <Search className="h-4 w-4 shrink-0 text-slate-400" aria-hidden="true" />
+                <input
+                  type="text"
+                  value={keyword}
+                  onChange={(e) => setKeyword(e.target.value)}
+                  placeholder="Job title, keywords or company"
+                  className="w-full bg-transparent text-sm text-slate-800 dark:text-slate-200 placeholder:text-slate-400 outline-none"
+                />
+              </div>
 
-            {/* Apply for Jobs Button (Solid Black Pill with Google Play Icon) */}
-            <a
-              href={siteConfig.links.playStore}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group inline-flex h-11 min-w-[11rem] items-center justify-center gap-2.5 rounded-full bg-slate-950 hover:bg-black px-6 text-sm font-semibold text-white shadow-sm shadow-black/25 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-brand-500/40"
-              aria-label="Apply for Jobs on Google Play"
-            >
-              <svg className="h-4 w-4 shrink-0" viewBox="0 0 512 512" fill="none" aria-hidden="true">
-                <path
-                  d="M47 24.6c-5.2 5.6-8.3 14.2-8.3 25.4v412c0 11.2 3.1 19.8 8.3 25.4l1.4 1.3 230.9-230.9v-5.4L48.4 23.4 47 24.6z"
-                  fill="#00D3FF"
+              {/* Horizontal divider on mobile / vertical on desktop */}
+              <div className="block sm:hidden h-px bg-border/60 mx-4" aria-hidden="true" />
+              <div className="hidden sm:block w-px bg-border/60 my-2" aria-hidden="true" />
+
+              {/* Location input */}
+              <div className="flex flex-1 items-center gap-2.5 px-4 py-3 sm:py-2">
+                <MapPin className="h-4 w-4 shrink-0 text-slate-400" aria-hidden="true" />
+                <input
+                  type="text"
+                  value={location}
+                  onChange={(e) => setLocation(e.target.value)}
+                  placeholder={`City, state or "Remote"`}
+                  className="w-full bg-transparent text-sm text-slate-800 dark:text-slate-200 placeholder:text-slate-400 outline-none"
                 />
-                <path
-                  d="M356.4 343.9l-77-77v-5.4l77-77 1.7 1 91.2 51.8c26 14.8 26 39 0 53.8l-91.2 51.8-1.7 1z"
-                  fill="#00F076"
-                />
-                <path
-                  d="M358.1 342.9l-78.7-78.7L47 497.3c8.6 9.1 22.7 10.2 38.7 1.1l272.4-155.5z"
-                  fill="#FFD900"
-                />
-                <path
-                  d="M358.1 185.5L85.7 30C69.7 20.9 55.6 22 47 31.1l232.4 232.4 78.7-78z"
-                  fill="#FF385C"
-                />
-              </svg>
-              <span>Apply for Jobs</span>
-            </a>
+              </div>
+
+              {/* Search Button */}
+              <button
+                type="submit"
+                className="mt-2 sm:mt-0 shrink-0 rounded-xl sm:rounded-full bg-yellow-400 hover:bg-yellow-300 active:bg-yellow-500 px-7 py-3 sm:py-2.5 text-sm font-bold text-slate-900 transition-colors focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-yellow-400/50 w-full sm:w-auto"
+              >
+                Search
+              </button>
+            </form>
+          </motion.div>
+
+          {/* Popular Searches */}
+          <motion.div
+            initial={reducedMotion ? false : { opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: reducedMotion ? 0 : 0.5, ease: [0.16, 1, 0.3, 1] }}
+            className="mt-6 flex flex-col items-center gap-3 px-4 sm:px-0"
+          >
+            <p className="text-xs text-slate-400 font-medium tracking-wide">Popular searches</p>
+            <div className="flex flex-wrap justify-center gap-2 max-w-xs sm:max-w-xl mx-auto">
+              {POPULAR_SEARCHES.map((term) => (
+                <button
+                  key={term}
+                  type="button"
+                  onClick={() => handlePopularSearch(term)}
+                  className="rounded-full border border-border/70 bg-white dark:bg-slate-900 px-4 py-1.5 text-xs font-medium text-slate-600 dark:text-slate-300 transition-colors hover:border-slate-400 hover:text-slate-900 dark:hover:text-white"
+                >
+                  {term}
+                </button>
+              ))}
+            </div>
           </motion.div>
         </motion.div>
       </div>
 
-      {/* HERO SHOWCASE BANNER ("Apply in Seconds. Match Instantly.") */}
+      {/* HERO SHOWCASE BANNER */}
       <div className="relative mx-auto w-full max-w-[1540px] xl:max-w-[1680px] 2xl:max-w-[1800px] px-2 sm:px-4 lg:px-6 pb-12 sm:pb-16">
         <HeroVideoCard initialJobs={initialJobs} className="w-full min-h-[var(--video-height)] lg:h-[var(--video-height)]" />
       </div>
