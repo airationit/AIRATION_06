@@ -1,8 +1,9 @@
-﻿import type { Metadata } from "next";
+import type { Metadata } from "next";
 import { siteConfig } from "@/config/site";
 import {
   Hero,
   TrustedBy,
+  JobSwipeShowcase,
   AppDownload,
   BrandStatement,
   SwipePlayground,
@@ -53,6 +54,11 @@ export default async function Home() {
 
       {/* Main content sections scrolling normally */}
       <TrustedBy initialCompanies={companiesRes?.data} />
+      
+      {/* 3-Card Swipe Showcase Section */}
+      <JobSwipeShowcase />
+
+      {/* Candidate App Download Experience */}
       <AppDownload initialJobs={liveJobs} />
       <SwipePlayground initialJobs={liveJobs ? liveJobs.slice(0, 5) : undefined} />
 

@@ -183,7 +183,7 @@ export function Hero({ initialJobs }: HeroProps = {}) {
       </div>
 
       {/* HERO SHOWCASE BANNER */}
-      <div className="relative mx-auto w-full max-w-[1540px] xl:max-w-[1680px] 2xl:max-w-[1800px] px-2 sm:px-4 lg:px-6 pb-12 sm:pb-16">
+      <div className="relative mx-auto w-full max-w-9xl px-6 sm:px-10 lg:px-16 xl:px-20 pb-12 sm:pb-16">
         <HeroVideoCard initialJobs={initialJobs} className="w-full min-h-[var(--video-height)] lg:h-[var(--video-height)]" />
       </div>
     </section>

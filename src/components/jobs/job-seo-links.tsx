@@ -1,11 +1,10 @@
-﻿"use client";
+"use client";
 
 import { useState, useMemo } from "react";
 import Link from "next/link";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { useMasterdataStore } from "@/store/masterdata-store";
 import {
-  POPULAR_JOB_ROLES,
   POPULAR_CITIES,
 } from "@/config/jobs-taxonomy";
 import { cn } from "@/lib/utils";
@@ -21,7 +20,7 @@ export function JobSeoLinks({ currentRoleSlug, currentCitySlug }: JobSeoLinksPro
   // Expand / collapse states for each section
   const [showAllCities, setShowAllCities] = useState(false);
   const [showAllPopular, setShowAllPopular] = useState(false);
-  const [showAllHubs, setShowAllHubs] = useState(false);
+  const [showAllDepartments, setShowAllDepartments] = useState(false);
 
   // 1. All Cities List (Tier 1 & Tier 2)
   const allCities = useMemo(() => {
@@ -96,6 +95,17 @@ export function JobSeoLinks({ currentRoleSlug, currentCitySlug }: JobSeoLinksPro
       { label: "Human Resources & Talent Acquisition", slug: "hr-manager" },
       { label: "Accounting, Banking & Finance", slug: "accountant" },
       { label: "Customer Support & Telecalling", slug: "customer-support-associate" },
+      { label: "Product & Project Management", slug: "product-management" },
+      { label: "IT & Information Security", slug: "it-information-security" },
+      { label: "Quality Assurance & Testing", slug: "quality-assurance" },
+      { label: "Logistics & Supply Chain", slug: "logistics-supply-chain" },
+      { label: "Healthcare & Pharmaceuticals", slug: "healthcare-doctor-hospital" },
+      { label: "Hospitality & Tourism", slug: "restaurant-hospitality-tourism" },
+      { label: "Retail & eCommerce", slug: "retail-ecommerce" },
+      { label: "Content, Media & Journalism", slug: "content-editorial-journalism" },
+      { label: "Education & Teaching", slug: "education" },
+      { label: "Legal & Regulatory Affairs", slug: "legal-regulatory" },
+      { label: "Construction & Site Engineering", slug: "construction-site-engineering" },
     ];
     const seen = new Set<string>();
     return items.filter((item) => {
@@ -105,39 +115,7 @@ export function JobSeoLinks({ currentRoleSlug, currentCitySlug }: JobSeoLinksPro
     });
   }, []);
 
-  // 4. High-Demand Role & Location Combinations
-  const trendingHubs = useMemo(() => {
-    const items = [
-      { label: "React Developers in Bangalore", slug: "react-developer-in-bangalore" },
-      { label: "Fresher Jobs in Lucknow", slug: "freshers-jobs-in-lucknow" },
-      { label: "Remote Frontend Engineers", slug: "remote-frontend-developer" },
-      { label: "UI/UX Designers in Mumbai", slug: "ui-ux-designer-in-mumbai" },
-      { label: "Python & AI Jobs in Hyderabad", slug: "python-developer-in-hyderabad" },
-      { label: "Full Stack Developers in Pune", slug: "full-stack-developer-in-pune" },
-      { label: "Inside Sales / Telecallers in Delhi NCR", slug: "telecaller-in-delhi-ncr" },
-      { label: "Fresher Jobs in Bangalore", slug: "freshers-jobs-in-bangalore" },
-      { label: "Sales Executives in Lucknow", slug: "sales-executive-in-lucknow" },
-      { label: "Remote Product Designers", slug: "remote-product-designer" },
-      { label: "DevOps & Cloud Engineers in Chennai", slug: "devops-engineer-in-chennai" },
-      { label: "Data Analysts in Gurgaon", slug: "data-analyst-in-gurgaon" },
-      { label: "Digital Marketing in Noida", slug: "digital-marketing-specialist-in-noida" },
-      { label: "Fresher Jobs in Pune", slug: "freshers-jobs-in-pune" },
-      { label: "Back Office Executives in Mumbai", slug: "back-office-executive-in-mumbai" },
-      { label: "Accountants in Kolkata", slug: "accountant-in-kolkata" },
-      { label: "Customer Support in Ahmedabad", slug: "customer-support-associate-in-ahmedabad" },
-      { label: "Sales Executives in Jaipur", slug: "sales-executive-in-jaipur" },
-      { label: "HR Executives in Chandigarh", slug: "hr-manager-in-chandigarh" },
-      { label: "Software Engineers in Kochi", slug: "full-stack-developer-in-kochi" },
-    ];
-    const seen = new Set<string>();
-    return items.filter((item) => {
-      if (seen.has(item.slug)) return false;
-      seen.add(item.slug);
-      return true;
-    });
-  }, []);
-
-  const visibleTrendingHubs = showAllHubs ? trendingHubs : trendingHubs.slice(0, 10);
+  const visibleDepartments = showAllDepartments ? departments : departments.slice(0, 10);
 
   return (
     <section
@@ -148,7 +126,7 @@ export function JobSeoLinks({ currentRoleSlug, currentCitySlug }: JobSeoLinksPro
 
         {/* SECTION 1: JOBS BY LOCATION (Find Jobs) */}
         <div id="directory-cities" className="pb-2 sm:pb-2.5 border-b border-border/40 scroll-mt-32">
-          <h3 className="text-base sm:text-lg font-bold text-foreground mb-2 sm:mb-2.5">
+          <h3 className="text-base sm:text-lg font-semibold text-foreground mb-2 sm:mb-2.5">
             Find Jobs
           </h3>
 
@@ -170,14 +148,12 @@ export function JobSeoLinks({ currentRoleSlug, currentCitySlug }: JobSeoLinksPro
                 </Link>
               );
             })}
-          </div>
 
-          {allCities.length > 10 && (
-            <div className="mt-1.5 sm:mt-2 flex justify-center">
+            {allCities.length > 10 && (
               <button
                 type="button"
                 onClick={() => setShowAllCities(!showAllCities)}
-                className="inline-flex items-center gap-1.5 text-sm font-semibold text-muted-foreground hover:text-foreground transition-all cursor-pointer"
+                className="inline-flex items-center gap-1.5 text-sm font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition-all cursor-pointer w-fit"
               >
                 <span>{showAllCities ? "View less" : "View more"}</span>
                 {showAllCities ? (
@@ -186,13 +162,13 @@ export function JobSeoLinks({ currentRoleSlug, currentCitySlug }: JobSeoLinksPro
                   <ChevronDown className="h-4 w-4" />
                 )}
               </button>
-            </div>
-          )}
+            )}
+          </div>
         </div>
 
         {/* SECTION 2: POPULAR JOB ROLES (Popular Jobs) */}
         <div className="pb-2 sm:pb-2.5 border-b border-border/40">
-          <h3 className="text-base sm:text-lg font-bold text-foreground mb-2 sm:mb-2.5">
+          <h3 className="text-base sm:text-lg font-semibold text-foreground mb-2 sm:mb-2.5">
             Popular Jobs
           </h3>
 
@@ -214,14 +190,12 @@ export function JobSeoLinks({ currentRoleSlug, currentCitySlug }: JobSeoLinksPro
                 </Link>
               );
             })}
-          </div>
 
-          {popularRolesAndTracks.length > 10 && (
-            <div className="mt-1.5 sm:mt-2 flex justify-center">
+            {popularRolesAndTracks.length > 10 && (
               <button
                 type="button"
                 onClick={() => setShowAllPopular(!showAllPopular)}
-                className="inline-flex items-center gap-1.5 text-sm font-semibold text-muted-foreground hover:text-foreground transition-all cursor-pointer"
+                className="inline-flex items-center gap-1.5 text-sm font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition-all cursor-pointer w-fit"
               >
                 <span>{showAllPopular ? "View less" : "View more"}</span>
                 {showAllPopular ? (
@@ -230,18 +204,18 @@ export function JobSeoLinks({ currentRoleSlug, currentCitySlug }: JobSeoLinksPro
                   <ChevronDown className="h-4 w-4" />
                 )}
               </button>
-            </div>
-          )}
+            )}
+          </div>
         </div>
 
         {/* SECTION 3: JOBS BY DEPARTMENT */}
         <div id="directory-departments" className="pb-2 sm:pb-2.5 border-b border-border/40 scroll-mt-32">
-          <h3 className="text-base sm:text-lg font-bold text-foreground mb-2 sm:mb-2.5">
+          <h3 className="text-base sm:text-lg font-semibold text-foreground mb-2 sm:mb-2.5">
             Jobs by Department
           </h3>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-y-2 sm:gap-y-2.5 gap-x-4 sm:gap-x-6">
-            {departments.map((dept) => (
+            {visibleDepartments.map((dept) => (
               <Link
                 key={dept.slug}
                 href={`/jobs/${dept.slug}`}
@@ -250,47 +224,25 @@ export function JobSeoLinks({ currentRoleSlug, currentCitySlug }: JobSeoLinksPro
                 {dept.label}
               </Link>
             ))}
-          </div>
-        </div>
 
-        {/* SECTION 4: TRENDING CAREER HUBS */}
-        <div className="pb-2">
-          <h3 className="text-base sm:text-lg font-bold text-foreground mb-2 sm:mb-2.5">
-            Trending Career Hubs
-          </h3>
-
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-y-2 sm:gap-y-2.5 gap-x-4 sm:gap-x-6">
-            {visibleTrendingHubs.map((hub) => (
-              <Link
-                key={hub.slug}
-                href={`/jobs/${hub.slug}`}
-                className="text-sm font-normal text-muted-foreground hover:text-foreground hover:underline hover:underline-offset-4 transition-all duration-150 truncate"
-              >
-                {hub.label}
-              </Link>
-            ))}
-          </div>
-
-          {trendingHubs.length > 10 && (
-            <div className="mt-1.5 sm:mt-2 flex justify-center">
+            {departments.length > 10 && (
               <button
                 type="button"
-                onClick={() => setShowAllHubs(!showAllHubs)}
-                className="inline-flex items-center gap-1.5 text-sm font-semibold text-muted-foreground hover:text-foreground transition-all cursor-pointer"
+                onClick={() => setShowAllDepartments(!showAllDepartments)}
+                className="inline-flex items-center gap-1.5 text-sm font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition-all cursor-pointer w-fit"
               >
-                <span>{showAllHubs ? "View less" : "View more"}</span>
-                {showAllHubs ? (
+                <span>{showAllDepartments ? "View less" : "View more"}</span>
+                {showAllDepartments ? (
                   <ChevronUp className="h-4 w-4" />
                 ) : (
                   <ChevronDown className="h-4 w-4" />
                 )}
               </button>
-            </div>
-          )}
+            )}
+          </div>
         </div>
 
       </div>
     </section>
   );
 }
-

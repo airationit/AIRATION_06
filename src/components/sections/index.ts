@@ -1,6 +1,7 @@
 // Barrel export for landing page sections
 export { Hero } from "./hero";
 export { TrustedBy } from "./trusted-by";
+export { JobSwipeShowcase } from "./job-swipe-showcase";
 export { AppDownload, CandidateExperience } from "./app-download";
 export { CandidateCTA } from "./candidate-cta";
 export { WantToHire, EmployerExperience } from "./want-to-hire";
