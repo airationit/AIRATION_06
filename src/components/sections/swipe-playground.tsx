@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import Image from "next/image";
 import {
   motion,
   AnimatePresence,
@@ -14,117 +13,197 @@ import {
 import {
   Check,
   X,
-  Sparkles,
   MapPin,
   Briefcase,
   Clock,
-  Award,
-  ShoppingBag,
-  LayoutGrid,
-  BarChart2,
-  Signal,
-  Wifi,
-  SlidersHorizontal,
-  Bell,
-  Layers,
-  MessageSquare,
-  User,
+  Bookmark,
+  Building2,
+  Monitor,
+  CheckCircle2,
+  AlertCircle,
+  ArrowDown,
+  Box,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { JobListItem } from "@/types/jobs";
 
-const SWIPES_PER_ROUND = 5;
+const CATEGORIES = [
+  "Sales",
+  "IT",
+  "Marketing",
+  "HR",
+  "Finance",
+  "Design",
+  "Video",
+  "Data",
+  "Support",
+  "Content",
+];
+
+const SWIPES_PER_ROUND = 10;
 
 export interface PlaygroundJob {
   id: string;
+  category?: string;
   department: string;
   postedTime?: string;
   title: string;
   company: string;
   companyLocation?: string;
-  verified: boolean;
+  verified?: boolean;
   matchScore: number;
-  matchGrade?: "HIGH MATCH" | "LOW MATCH" | "MODERATE MATCH";
-  aiNote: React.ReactNode;
-  location: string;
-  salary: string;
-  experience: string;
-  type: string;
-  tags: string[];
-  breakdown: {
-    skills: string;
-    skillsOk: boolean;
-    exp: string;
-    expOk: boolean;
+  matchGrade?: "HIGH MATCH" | "LOW MATCH" | "MODERATE MATCH" | string;
+  matchColor?: string;
+  aiNote?: React.ReactNode;
+  location?: string;
+  salary?: string;
+  experience?: string;
+  type?: string;
+  tags?: string[];
+  breakdown?: {
+    skills?: string;
+    skillsOk?: boolean;
+    exp?: string;
+    expOk?: boolean;
     role?: string;
     roleOk?: boolean;
     location?: string;
     locationOk?: boolean;
-    salary: string;
-    salaryOk: boolean;
+    salary?: string;
+    salaryOk?: boolean;
     other?: string;
     otherOk?: boolean;
   };
-  logoType?: "riveyra" | "custom";
+  matchBanner?: {
+    type: "good" | "great" | "low";
+    highlight: string;
+    text: string;
+  };
+  chips?: {
+    workMode: "Hybrid" | "Remote" | "On-site" | string;
+    salary: string;
+    experience: string;
+    jobType: string;
+  };
+  skills?: string[];
+  extraSkillsCount?: number;
+  scoreBreakdown?: {
+    skills: string;
+    exp: string;
+    role: string;
+    salary: string;
+    other: string;
+    total: number;
+  };
+  logoType?: "nimbus" | "cube" | "riveyra" | "zenti" | "custom";
   logoColor?: string;
   logoLetter?: string;
 }
 
-/** Riveyra Logo matching exact shared mockup */
-function RiveyraLogo({ className }: { className?: string }) {
+/** Calculate percentage for score fraction string like "26/40" */
+function getScorePercentage(fractionStr: string): number {
+  const parts = fractionStr.split("/");
+  if (parts.length === 2) {
+    const num = parseFloat(parts[0]);
+    const den = parseFloat(parts[1]);
+    if (!isNaN(num) && !isNaN(den) && den > 0) {
+      return Math.min(Math.max((num / den) * 100, 0), 100);
+    }
+  }
+  return 0;
+}
+
+/** Company Logo renderer matching Image 1 styling */
+function CompanyLogo({
+  logoType,
+  company,
+  color,
+  letter,
+}: {
+  logoType?: string;
+  company: string;
+  color?: string;
+  letter?: string;
+}) {
+  if (logoType === "nimbus") {
+    return (
+      <div className="h-9 w-9 sm:h-10 sm:w-10 shrink-0 rounded-full bg-gradient-to-tr from-amber-500 to-orange-500 flex items-center justify-center text-white shadow-xs">
+        <div className="flex items-center justify-center w-5.5 h-3 rounded-full border-2 border-white">
+          <div className="w-1.5 h-1.5 rounded-full bg-white ml-auto mr-0.5" />
+        </div>
+      </div>
+    );
+  }
+  if (logoType === "cube") {
+    return (
+      <div className="h-9 w-9 sm:h-10 sm:w-10 shrink-0 rounded-2xl bg-blue-600 flex items-center justify-center text-white shadow-xs">
+        <Box className="h-4.5 w-4.5 stroke-[2.2]" />
+      </div>
+    );
+  }
+  if (logoType === "riveyra") {
+    return (
+      <div className="h-9 w-9 sm:h-10 sm:w-10 shrink-0 rounded-2xl bg-slate-950 flex items-center justify-center p-1.5 border border-slate-800 shadow-xs">
+        <svg viewBox="0 0 40 40" className="h-full w-full" fill="none">
+          <path
+            d="M14 10 C14 10, 26 10, 26 18 C26 23, 20 24, 14 24"
+            stroke="url(#r-pink-grad-pg)"
+            strokeWidth="3.5"
+            strokeLinecap="round"
+          />
+          <path
+            d="M14 10 V30"
+            stroke="url(#r-pink-grad-pg)"
+            strokeWidth="3.5"
+            strokeLinecap="round"
+          />
+          <path
+            d="M20 24 L27 30"
+            stroke="url(#r-pink-grad-pg)"
+            strokeWidth="3.5"
+            strokeLinecap="round"
+          />
+          <defs>
+            <linearGradient id="r-pink-grad-pg" x1="10" y1="10" x2="30" y2="30" gradientUnits="userSpaceOnUse">
+              <stop stopColor="#F43F5E" />
+              <stop offset="1" stopColor="#EC4899" />
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+    );
+  }
   return (
     <div
       className={cn(
-        "h-9 w-9 shrink-0 rounded-xl bg-slate-950 flex items-center justify-center p-1 border border-slate-800 shadow-xs",
-        className
+        "h-9 w-9 sm:h-10 sm:w-10 shrink-0 rounded-2xl bg-gradient-to-tr flex items-center justify-center text-white font-bold text-xs sm:text-sm shadow-xs",
+        color || "from-blue-600 to-indigo-600"
       )}
     >
-      <svg viewBox="0 0 40 40" className="h-full w-full" fill="none">
-        <path
-          d="M14 10 C14 10, 26 10, 26 18 C26 23, 20 24, 14 24"
-          stroke="url(#r-pink-grad-pg)"
-          strokeWidth="3.5"
-          strokeLinecap="round"
-        />
-        <path
-          d="M14 10 V30"
-          stroke="url(#r-pink-grad-pg)"
-          strokeWidth="3.5"
-          strokeLinecap="round"
-        />
-        <path
-          d="M20 24 L27 30"
-          stroke="url(#r-pink-grad-pg)"
-          strokeWidth="3.5"
-          strokeLinecap="round"
-        />
-        <defs>
-          <linearGradient id="r-pink-grad-pg" x1="10" y1="10" x2="30" y2="30" gradientUnits="userSpaceOnUse">
-            <stop stopColor="#F43F5E" />
-            <stop offset="1" stopColor="#EC4899" />
-          </linearGradient>
-        </defs>
-      </svg>
+      {letter || company.charAt(0)}
     </div>
   );
 }
 
-/** Circular Match Gauge with ✦ golden sparkle matching exact shared mockup */
-function CircularMatchGauge({ score }: { score: number }) {
-  const radius = 17;
-  const strokeWidth = 3;
-  const circumference = 2 * Math.PI * radius; // ~106.8
+/** Circular Match Gauge with clean MATCH label matching Image 1 */
+function CircularMatchGauge({
+  score,
+  color = "#2563EB",
+}: {
+  score: number;
+  color?: string;
+}) {
+  const radius = 16;
+  const strokeWidth = 3.2;
+  const circumference = 2 * Math.PI * radius; // ~100.5
   const offset = circumference - (circumference * score) / 100;
 
   return (
-    <div className="relative flex items-center justify-center h-11 w-11 shrink-0">
-      <span className="absolute -top-1 -right-0.5 text-amber-500 font-bold text-xs select-none">
-        ✦
-      </span>
-      <svg className="h-11 w-11 -rotate-90" viewBox="0 0 44 44">
+    <div className="relative flex items-center justify-center h-10 w-10 shrink-0">
+      <svg className="h-10 w-10 -rotate-90" viewBox="0 0 40 40">
         <circle
-          cx="22"
-          cy="22"
+          cx="20"
+          cy="20"
           r={radius}
           fill="none"
           stroke="#E2E8F0"
@@ -132,11 +211,11 @@ function CircularMatchGauge({ score }: { score: number }) {
           className="dark:stroke-slate-800"
         />
         <circle
-          cx="22"
-          cy="22"
+          cx="20"
+          cy="20"
           r={radius}
           fill="none"
-          stroke="#10B981"
+          stroke={color}
           strokeWidth={strokeWidth}
           strokeDasharray={circumference}
           strokeDashoffset={offset}
@@ -144,188 +223,371 @@ function CircularMatchGauge({ score }: { score: number }) {
         />
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center text-center select-none">
-        <span className="text-[11px] font-bold text-slate-900 dark:text-white leading-none">
+        <span className="text-[10.5px] font-black text-slate-900 dark:text-white leading-none">
           {score}%
         </span>
-        <span className="text-[7.5px] font-medium text-slate-500 dark:text-slate-400 leading-none mt-0.5">
-          Match
+        <span className="text-[6px] font-bold text-slate-400 uppercase tracking-tighter mt-0.5 leading-none">
+          MATCH
         </span>
       </div>
     </div>
   );
 }
 
-/** Rupee Icon matching exact shared mockup */
-function RupeeCircleIcon() {
-  return (
-    <div className="h-4 w-4 rounded-full border border-emerald-500 flex items-center justify-center text-emerald-600 font-bold text-[8.5px] leading-none shrink-0">
-      ₹
-    </div>
-  );
-}
-
 const PLAYGROUND_JOBS: PlaygroundJob[] = [
+  // 1. Exact Image 1 Card: NimbusWorks Pvt Ltd - Sales Manager
+  {
+    id: "job-nimbusworks",
+    category: "Sales",
+    department: "Sales & Business Development",
+    postedTime: "Posted 1d ago",
+    title: "Sales Manager",
+    company: "NimbusWorks Pvt Ltd",
+    companyLocation: "Hyderabad, Telangana",
+    logoType: "nimbus",
+    matchScore: 65,
+    matchColor: "#2563EB",
+    matchBanner: {
+      type: "good",
+      highlight: "Good match",
+      text: "for your skills and experience",
+    },
+    chips: {
+      workMode: "Hybrid",
+      salary: "₹ 8 – 12 LPA",
+      experience: "3 – 5 years",
+      jobType: "Full-time",
+    },
+    skills: ["B2B Sales", "CRM", "Negotiation"],
+    extraSkillsCount: 3,
+    scoreBreakdown: {
+      skills: "26/40",
+      exp: "9/13",
+      role: "11/15",
+      salary: "8/10",
+      other: "11/20",
+      total: 65,
+    },
+  },
+  // 2. Exact Image 2 Job: Database Administrator (DBA) at Riveyra Infotech
   {
     id: "job-dba-riveyra",
+    category: "IT",
     department: "IT / Software Roles",
     postedTime: "Posted 1w ago",
     title: "Database Administrator (DBA)",
     company: "Riveyra Infotech Pvt...",
     companyLocation: "Kanpur",
-    verified: true,
-    matchScore: 41,
-    matchGrade: "MODERATE MATCH",
-    aiNote: (
-      <>
-        Perfect for{" "}
-        <strong className="font-bold text-indigo-950 dark:text-indigo-200">
-          Database Administrator (DBA) professionals
-        </strong>{" "}
-        with{" "}
-        <strong className="font-bold text-indigo-950 dark:text-indigo-200">
-          2–5 Years
-        </strong>{" "}
-        ex...
-      </>
-    ),
-    location: "Onsite",
-    salary: "20k – 30k/Mo",
-    experience: "2–5 Years",
-    type: "Full Time",
-    tags: ["Backup/Rec...", "SQL Server/M...", "Problem Solv..."],
-    breakdown: {
-      skills: "0/35",
-      skillsOk: false,
-      exp: "12/20",
-      expOk: true,
-      role: "10.5/15",
-      roleOk: true,
-      salary: "10/10",
-      salaryOk: true,
-      other: "4/20",
-      otherOk: false,
-    },
     logoType: "riveyra",
-  },
-  {
-    id: "pg-dept-1",
-    department: "Engineering & Software Development",
-    title: "Senior Full Stack Engineer (Next.js)",
-    company: "Nexus Cloud Systems",
-    companyLocation: "Bengaluru",
-    verified: true,
-    matchScore: 98,
-    matchGrade: "HIGH MATCH",
-    aiNote: (
-      <>
-        Strong match for{" "}
-        <strong className="font-bold text-indigo-950 dark:text-indigo-200">
-          React, TypeScript, Next.js architecture
-        </strong>{" "}
-        and Node microservices.
-      </>
-    ),
-    location: "Bengaluru (Hybrid)",
-    salary: "₹ 16 - 24 LPA",
-    experience: "3-5 Years",
-    type: "Full Time",
-    tags: ["Next.js", "TypeScript", "Node.js"],
-    breakdown: {
-      skills: "40/40",
-      skillsOk: true,
-      exp: "13/13",
-      expOk: true,
-      role: "14/15",
-      roleOk: true,
-      salary: "5/5",
-      salaryOk: true,
-      other: "8/10",
-      otherOk: true,
+    matchScore: 41,
+    matchColor: "#2563EB",
+    matchBanner: {
+      type: "low",
+      highlight: "Moderate match",
+      text: "for Database Administrator (DBA) roles",
     },
-    logoType: "custom",
-    logoColor: "from-indigo-500 to-purple-600",
-    logoLetter: "N",
-  },
-  {
-    id: "pg-dept-2",
-    department: "Data Science, Analytics & AI",
-    title: "AI / ML Research Engineer",
-    company: "Cerebra AI Labs",
-    verified: true,
-    matchScore: 62,
-    matchGrade: "LOW MATCH",
-    aiNote: "Role demands PyTorch, LLM fine-tuning & CUDA optimizations. Stack gap with application-tier background.",
-    location: "Gurugram (Hybrid)",
-    salary: "₹ 24 - 35 LPA",
-    experience: "4-7 Years",
-    type: "Full Time",
-    tags: ["PyTorch", "LLM Ops", "CUDA"],
-    breakdown: {
-      skills: "22/40",
-      skillsOk: false,
-      exp: "9/13",
-      expOk: false,
-      location: "7/7",
-      locationOk: true,
-      salary: "5/5",
-      salaryOk: true,
+    chips: {
+      workMode: "On-site",
+      salary: "₹ 20k – 30k/Mo",
+      experience: "2 – 5 Years",
+      jobType: "Full Time",
     },
-    logoColor: "from-purple-600 to-pink-600",
-    logoLetter: "C",
+    skills: ["Backup/Rec...", "SQL Server/M...", "Problem Solv..."],
+    extraSkillsCount: 2,
+    scoreBreakdown: {
+      skills: "0/35",
+      exp: "12/20",
+      role: "10.5/15",
+      salary: "10/10",
+      other: "4/20",
+      total: 41,
+    },
   },
+  // 3. ByteForge Labs - Full Stack Developer (IT)
   {
-    id: "pg-dept-3",
-    department: "Design, UI/UX & Creative",
-    title: "Lead Product Designer (UI/UX)",
-    company: "PixelCraft Studios",
-    verified: true,
-    matchScore: 94,
-    matchGrade: "HIGH MATCH",
-    aiNote: "High synergy for design systems, Figma component architectures, and responsive micro-interactions.",
-    location: "Mumbai (Hybrid)",
-    salary: "₹ 14 - 20 LPA",
-    experience: "3-5 Years",
-    type: "Full Time",
-    tags: ["Figma", "Design Systems", "UX Research"],
-    breakdown: {
-      skills: "38/40",
-      skillsOk: true,
+    id: "job-byteforge",
+    category: "IT",
+    department: "IT & Software",
+    postedTime: "Posted 2h ago",
+    title: "Full Stack Developer",
+    company: "ByteForge Labs",
+    companyLocation: "Noida, Uttar Pradesh",
+    logoType: "cube",
+    matchScore: 92,
+    matchColor: "#16A34A",
+    matchBanner: {
+      type: "great",
+      highlight: "Great match",
+      text: "for your skills and experience",
+    },
+    chips: {
+      workMode: "Hybrid",
+      salary: "₹ 12 – 18 LPA",
+      experience: "3 – 5 years",
+      jobType: "Full-time",
+    },
+    skills: ["React", "Node.js", "AWS"],
+    extraSkillsCount: 2,
+    scoreBreakdown: {
+      skills: "37/40",
       exp: "12/13",
-      expOk: true,
-      location: "7/7",
-      locationOk: true,
-      salary: "5/5",
-      salaryOk: true,
+      role: "14/15",
+      salary: "9/10",
+      other: "20/20",
+      total: 92,
     },
-    logoColor: "from-rose-500 to-amber-500",
-    logoLetter: "P",
   },
+  // 4. Marketing - Amplifi Media Tech
   {
-    id: "pg-dept-4",
-    department: "Marketing, SEO & Content Growth",
-    title: "Performance & Growth Marketing Lead",
+    id: "job-mkt-amplifi",
+    category: "Marketing",
+    department: "Marketing & Growth",
+    postedTime: "Posted 3d ago",
+    title: "Growth & Performance Marketer",
     company: "Amplifi Media Tech",
-    verified: true,
-    matchScore: 58,
-    matchGrade: "LOW MATCH",
-    aiNote: "Demands 5+ yrs paid ad spend management, CAC/LTV scaling & programmatic SEO funnels.",
-    location: "Delhi NCR (On-site)",
-    salary: "₹ 12 - 18 LPA",
-    experience: "4-6 Years",
-    type: "Full Time",
-    tags: ["SEO", "Performance Ads", "Analytics"],
-    breakdown: {
-      skills: "20/40",
-      skillsOk: false,
-      exp: "8/13",
-      expOk: false,
-      location: "6/7",
-      locationOk: true,
-      salary: "5/5",
-      salaryOk: true,
-    },
+    companyLocation: "Delhi NCR",
+    logoType: "custom",
     logoColor: "from-orange-500 to-red-600",
     logoLetter: "A",
+    matchScore: 78,
+    matchColor: "#2563EB",
+    matchBanner: {
+      type: "good",
+      highlight: "Good match",
+      text: "for paid performance & acquisition funnels",
+    },
+    chips: {
+      workMode: "Hybrid",
+      salary: "₹ 12 – 18 LPA",
+      experience: "4 – 6 Years",
+      jobType: "Full-time",
+    },
+    skills: ["Performance Ads", "SEO", "Analytics"],
+    extraSkillsCount: 4,
+    scoreBreakdown: {
+      skills: "32/40",
+      exp: "11/13",
+      role: "13/15",
+      salary: "10/10",
+      other: "12/20",
+      total: 78,
+    },
+  },
+  // 5. HR - TalentPulse HR
+  {
+    id: "job-hr-talentpulse",
+    category: "HR",
+    department: "Human Resources & Talent",
+    postedTime: "Posted 4d ago",
+    title: "Senior Talent Acquisition Specialist",
+    company: "TalentPulse HR",
+    companyLocation: "Bengaluru",
+    logoType: "custom",
+    logoColor: "from-blue-600 to-cyan-600",
+    logoLetter: "T",
+    matchScore: 86,
+    matchColor: "#16A34A",
+    matchBanner: {
+      type: "great",
+      highlight: "Great match",
+      text: "for tech sourcing and recruiter pipelines",
+    },
+    chips: {
+      workMode: "Hybrid",
+      salary: "₹ 10 – 16 LPA",
+      experience: "3 – 6 Years",
+      jobType: "Full-time",
+    },
+    skills: ["Tech Hiring", "LinkedIn Recruiter", "ATS"],
+    extraSkillsCount: 3,
+    scoreBreakdown: {
+      skills: "34/40",
+      exp: "12/13",
+      role: "13/15",
+      salary: "10/10",
+      other: "17/20",
+      total: 86,
+    },
+  },
+  // 6. Finance - FinEdge Capital
+  {
+    id: "job-fin-finedge",
+    category: "Finance",
+    department: "Financial Planning & Analysis",
+    postedTime: "Posted 5d ago",
+    title: "Senior Financial Analyst",
+    company: "FinEdge Capital",
+    companyLocation: "Gurugram",
+    logoType: "custom",
+    logoColor: "from-amber-600 to-yellow-500",
+    logoLetter: "F",
+    matchScore: 88,
+    matchColor: "#16A34A",
+    matchBanner: {
+      type: "great",
+      highlight: "Great match",
+      text: "for financial modeling and forecasting",
+    },
+    chips: {
+      workMode: "Hybrid",
+      salary: "₹ 14 – 20 LPA",
+      experience: "3 – 5 Years",
+      jobType: "Full-time",
+    },
+    skills: ["Financial Modeling", "Excel VBA", "Forecasting"],
+    extraSkillsCount: 3,
+    scoreBreakdown: {
+      skills: "36/40",
+      exp: "12/13",
+      role: "14/15",
+      salary: "10/10",
+      other: "16/20",
+      total: 88,
+    },
+  },
+  // 7. Design - PixelCraft Studios
+  {
+    id: "job-design-pixelcraft",
+    category: "Design",
+    department: "Design, UI/UX & Creative",
+    postedTime: "Posted 1d ago",
+    title: "Lead Product Designer (UI/UX)",
+    company: "PixelCraft Studios",
+    companyLocation: "Mumbai",
+    logoType: "custom",
+    logoColor: "from-rose-500 to-pink-600",
+    logoLetter: "P",
+    matchScore: 94,
+    matchColor: "#16A34A",
+    matchBanner: {
+      type: "great",
+      highlight: "Great match",
+      text: "for design systems and component architecture",
+    },
+    chips: {
+      workMode: "Hybrid",
+      salary: "₹ 14 – 20 LPA",
+      experience: "3 – 5 Years",
+      jobType: "Full-time",
+    },
+    skills: ["Figma", "Design Systems", "UX Research"],
+    extraSkillsCount: 4,
+    scoreBreakdown: {
+      skills: "38/40",
+      exp: "12/13",
+      role: "14/15",
+      salary: "10/10",
+      other: "20/20",
+      total: 94,
+    },
+  },
+  // 8. Video - CineWave Media
+  {
+    id: "job-video-cinewave",
+    category: "Video",
+    department: "Creative Media & Video",
+    postedTime: "Posted 3d ago",
+    title: "Motion Graphics & Video Producer",
+    company: "CineWave Media",
+    companyLocation: "Hyderabad",
+    logoType: "custom",
+    logoColor: "from-violet-600 to-purple-800",
+    logoLetter: "C",
+    matchScore: 85,
+    matchColor: "#16A34A",
+    matchBanner: {
+      type: "great",
+      highlight: "Great match",
+      text: "for 3D motion rendering and After Effects",
+    },
+    chips: {
+      workMode: "Hybrid",
+      salary: "₹ 8 – 14 LPA",
+      experience: "2 – 5 Years",
+      jobType: "Full-time",
+    },
+    skills: ["After Effects", "Premiere Pro", "3D Motion"],
+    extraSkillsCount: 2,
+    scoreBreakdown: {
+      skills: "35/40",
+      exp: "11/13",
+      role: "13/15",
+      salary: "10/10",
+      other: "16/20",
+      total: 85,
+    },
+  },
+  // 9. Data - Cerebra AI Labs
+  {
+    id: "job-data-cerebra",
+    category: "Data",
+    department: "Data Science, Analytics & AI",
+    postedTime: "Posted 2d ago",
+    title: "AI / ML Research Engineer",
+    company: "Cerebra AI Labs",
+    companyLocation: "Gurugram",
+    logoType: "custom",
+    logoColor: "from-purple-600 to-pink-600",
+    logoLetter: "C",
+    matchScore: 62,
+    matchColor: "#2563EB",
+    matchBanner: {
+      type: "good",
+      highlight: "Good match",
+      text: "for PyTorch & neural network architectures",
+    },
+    chips: {
+      workMode: "Hybrid",
+      salary: "₹ 24 – 35 LPA",
+      experience: "4 – 7 Years",
+      jobType: "Full-time",
+    },
+    skills: ["PyTorch", "LLM Ops", "CUDA"],
+    extraSkillsCount: 3,
+    scoreBreakdown: {
+      skills: "22/40",
+      exp: "9/13",
+      role: "10/15",
+      salary: "10/10",
+      other: "11/20",
+      total: 62,
+    },
+  },
+  // 10. Support - CloudCare Global
+  {
+    id: "job-sup-cloudcare",
+    category: "Support",
+    department: "Customer Operations",
+    postedTime: "Posted 1w ago",
+    title: "Customer Success Operations Lead",
+    company: "CloudCare Global",
+    companyLocation: "Pune",
+    logoType: "custom",
+    logoColor: "from-sky-500 to-blue-600",
+    logoLetter: "S",
+    matchScore: 90,
+    matchColor: "#16A34A",
+    matchBanner: {
+      type: "great",
+      highlight: "Great match",
+      text: "for CSAT scaling and SLA orchestration",
+    },
+    chips: {
+      workMode: "Remote",
+      salary: "₹ 9 – 14 LPA",
+      experience: "3 – 5 Years",
+      jobType: "Full-time",
+    },
+    skills: ["Zendesk", "CSAT Scaling", "SLA Mgmt"],
+    extraSkillsCount: 2,
+    scoreBreakdown: {
+      skills: "37/40",
+      exp: "12/13",
+      role: "14/15",
+      salary: "10/10",
+      other: "17/20",
+      total: 90,
+    },
   },
 ];
 
@@ -351,15 +613,46 @@ function DragCard({ job, onDecide, isTop }: DragCardProps) {
     ["rgba(239, 68, 68, 0)", "rgba(239, 68, 68, 0.12)"]
   );
 
-  const isHighMatch = job.matchScore >= 80;
+  const [isSaved, setIsSaved] = useState(false);
   const isAnimatingOut = useRef(false);
+
+  // Safe fallback resolvers
+  const matchBanner = job.matchBanner || {
+    type: (job.matchScore >= 80 ? "great" : job.matchScore >= 60 ? "good" : "low") as "good" | "great" | "low",
+    highlight: job.matchScore >= 80 ? "Great match" : job.matchScore >= 60 ? "Good match" : "Moderate match",
+    text: "for your skills and experience",
+  };
+
+  const chips = job.chips || {
+    workMode: job.location?.includes("Remote")
+      ? "Remote"
+      : job.location?.includes("Hybrid")
+        ? "Hybrid"
+        : "On-site",
+    salary: job.salary || "Competitive",
+    experience: job.experience || "2 – 5 years",
+    jobType: job.type || "Full-time",
+  };
+
+  const skillsList = job.skills || job.tags || ["Technical Skills", "Problem Solving"];
+  const extraCount = job.extraSkillsCount ?? (skillsList.length > 3 ? skillsList.length - 3 : 2);
+  const displaySkills = skillsList.slice(0, 3);
+
+  const scoreBreakdown = job.scoreBreakdown || {
+    skills: job.breakdown?.skills || `${Math.round((job.matchScore / 100) * 40)}/40`,
+    exp: job.breakdown?.exp || "9/13",
+    role: job.breakdown?.role || "11/15",
+    salary: job.breakdown?.salary || "8/10",
+    other: job.breakdown?.other || "11/20",
+    total: job.matchScore,
+  };
 
   const performSwipe = useCallback(
     (direction: "left" | "right") => {
       if (isAnimatingOut.current) return;
       isAnimatingOut.current = true;
 
-      const targetX = direction === "right" ? 420 : -420;
+      const targetX = direction === "right" ? 440 : -440;
       animate(x, targetX, {
         duration: 0.38,
         ease: [0.16, 1, 0.3, 1],
@@ -411,16 +704,17 @@ function DragCard({ job, onDecide, isTop }: DragCardProps) {
       dragElastic={0.85}
       onDragEnd={handleDragEnd}
       whileDrag={{ cursor: "grabbing" }}
-      className="touch-none select-none"
+      className="touch-none select-none h-full w-full"
     >
-      <div className="relative h-full w-full rounded-[22px] border border-slate-200/90 bg-white p-3 xs:p-3.5 shadow-md shadow-slate-900/5 dark:border-slate-800 dark:bg-slate-900 flex flex-col justify-between overflow-hidden">
-        {/* Dynamic Stamp Overlays during drag or button actions */}
+      {/* Compact Image 1 Card Surface Layout */}
+      <div className="relative h-full w-full rounded-[22px] sm:rounded-[24px] border border-slate-200/90 bg-white p-3.5 xs:p-4 sm:p-4.5 shadow-xl shadow-slate-900/6 dark:border-slate-800 dark:bg-slate-900 flex flex-col justify-between overflow-hidden">
+        {/* Dynamic Stamp Overlays during drag */}
         {isTop && (
           <>
             {/* APPLY Stamp */}
             <motion.div
               style={{ opacity: applyStampOpacity }}
-              className="pointer-events-none absolute left-3 top-3 z-40 rounded-lg border-2 border-emerald-500 bg-emerald-500/15 px-2.5 py-0.5 text-[10.5px] font-black uppercase tracking-wider text-emerald-600 shadow-md backdrop-blur-sm -rotate-12 dark:bg-emerald-500/25 dark:text-emerald-400"
+              className="pointer-events-none absolute left-3 top-3 z-40 rounded-xl border-2 border-emerald-500 bg-white/95 dark:bg-slate-900/95 px-2.5 py-0.5 text-[11px] font-black uppercase tracking-wider text-emerald-600 shadow-lg -rotate-12 dark:text-emerald-400"
             >
               ✓ APPLY
             </motion.div>
@@ -428,7 +722,7 @@ function DragCard({ job, onDecide, isTop }: DragCardProps) {
             {/* SKIP Stamp */}
             <motion.div
               style={{ opacity: skipStampOpacity }}
-              className="pointer-events-none absolute right-3 top-3 z-40 rounded-lg border-2 border-rose-500 bg-rose-500/15 px-2.5 py-0.5 text-[10.5px] font-black uppercase tracking-wider text-rose-600 shadow-md backdrop-blur-sm rotate-12 dark:bg-rose-500/25 dark:text-rose-400"
+              className="pointer-events-none absolute right-3 top-3 z-40 rounded-xl border-2 border-rose-500 bg-white/95 dark:bg-slate-900/95 px-2.5 py-0.5 text-[11px] font-black uppercase tracking-wider text-rose-600 shadow-lg rotate-12 dark:text-rose-400"
             >
               ✕ SKIP
             </motion.div>
@@ -447,147 +741,156 @@ function DragCard({ job, onDecide, isTop }: DragCardProps) {
 
         {/* Content Container */}
         <div>
-          {/* Top Row: Company Info & Circular Match Gauge */}
-          <div className="flex items-start justify-between gap-2">
-            <div className="flex items-center gap-2 min-w-0">
-              {job.logoType === "riveyra" ? (
-                <RiveyraLogo />
-              ) : (
-                <div
-                  className={cn(
-                    "h-9 w-9 shrink-0 rounded-xl bg-gradient-to-tr flex items-center justify-center text-white font-bold text-xs shadow-xs",
-                    job.logoColor || "from-blue-600 to-indigo-600"
-                  )}
-                >
-                  {job.logoLetter || job.company.charAt(0)}
-                </div>
-              )}
+          {/* Header Row: Logo, Company & Circular Match Score (Matching Image 1) */}
+          <div className="flex items-start justify-between gap-2 xs:gap-2.5">
+            <div className="flex items-center gap-2 xs:gap-2.5 min-w-0">
+              <CompanyLogo
+                logoType={job.logoType}
+                company={job.company}
+                color={job.logoColor}
+                letter={job.logoLetter}
+              />
               <div className="min-w-0">
-                <p className="truncate text-[13px] font-bold text-slate-900 dark:text-slate-100 leading-tight">
+                <h4 className="text-[13px] xs:text-[14px] font-bold text-slate-900 dark:text-slate-100 truncate leading-snug">
                   {job.company}
+                </h4>
+                <p className="flex items-center gap-1 text-[10.5px] xs:text-[11px] text-slate-500 dark:text-slate-400 truncate mt-0.5 font-normal">
+                  <MapPin className="h-3 w-3 shrink-0 text-slate-600 dark:text-slate-400 stroke-[2.2]" />
+                  <span className="truncate">{job.companyLocation || job.location}</span>
                 </p>
-                <div className="flex items-center gap-1 mt-0.5">
-                  <MapPin className="h-3 w-3 text-blue-500 shrink-0" strokeWidth={2} />
-                  <span className="text-[11px] font-normal text-slate-500 dark:text-slate-400 truncate">
-                    {job.companyLocation || job.location}
-                  </span>
-                </div>
               </div>
             </div>
 
-            {/* Circular Match Gauge matching exact mockup */}
-            <CircularMatchGauge score={job.matchScore} />
+            {/* Circular Match Gauge matching Image 1 */}
+            <CircularMatchGauge score={job.matchScore} color={job.matchColor} />
           </div>
 
-          {/* Job Title & Subtitle */}
-          <div className="mt-2">
-            <h4 className="text-[15px] sm:text-base font-bold tracking-tight text-slate-900 dark:text-white leading-tight truncate">
+          {/* Job Title & Subtitle (Matching Image 1) */}
+          <div className="mt-2 xs:mt-2.5">
+            <h3 className="text-[14px] xs:text-[15px] sm:text-base font-bold text-slate-900 dark:text-white tracking-tight leading-tight truncate">
               {job.title}
-            </h4>
-            <p className="text-[10.5px] text-slate-500 dark:text-slate-400 mt-0.5 truncate">
-              {job.department} {job.postedTime ? `• ${job.postedTime}` : ""}
+            </h3>
+            <p className="text-[10px] xs:text-[10.5px] sm:text-[11px] text-slate-400 dark:text-slate-500 mt-0.5 truncate">
+              {job.department} {job.postedTime ? `· ${job.postedTime}` : ""}
             </p>
           </div>
 
-          {/* AI Match Insight Box */}
-          <div className="mt-2 rounded-xl border border-purple-100 bg-[#F9F8FF] p-2 dark:border-purple-950 dark:bg-purple-950/20">
-            <div className="flex items-start gap-1.5">
-              <Sparkles className="h-3.5 w-3.5 text-purple-600 dark:text-purple-400 shrink-0 mt-0.5" />
-              <div className="text-[10px] leading-snug text-slate-700 dark:text-slate-300 font-medium line-clamp-2">
-                {job.aiNote}
-              </div>
+          {/* Match Insight Banner (Matching Image 1) */}
+          <div
+            className={cn(
+              "mt-2 xs:mt-2.5 rounded-md px-2 xs:px-2.5 py-1.5 sm:py-2 flex items-center gap-1.5 text-[10.5px] sm:text-[11px] leading-snug border",
+              matchBanner.type === "good" &&
+              "bg-[#EEF3FF] text-[#1E40AF] border-[#DCE7FE] dark:bg-blue-950/30 dark:border-blue-900/40 dark:text-blue-300",
+              matchBanner.type === "great" &&
+              "bg-[#ECFDF3] text-[#067647] border-[#067647]/15 dark:bg-emerald-950/30 dark:border-emerald-900/40 dark:text-emerald-400",
+              matchBanner.type === "low" &&
+              "bg-[#FEF3F2] text-[#B5251A] border-[#B5251A]/15 dark:bg-rose-950/30 dark:border-rose-900/40 dark:text-rose-400"
+            )}
+          >
+            {matchBanner.type === "low" ? (
+              <AlertCircle className="h-3.5 w-3.5 shrink-0 stroke-[2.2]" />
+            ) : (
+              <CheckCircle2 className="h-3.5 w-3.5 shrink-0 stroke-[2.2]" />
+            )}
+            <span className="truncate text-[10px] xs:text-[10.5px] sm:text-[11px]">
+              <strong className="font-semibold">{matchBanner.highlight}</strong>{" "}
+              <span className="font-normal opacity-90">{matchBanner.text}</span>
+            </span>
+          </div>
+
+          {/* 2x2 Meta Chips Grid (Matching Image 1) */}
+          <div className="mt-2 xs:mt-2.5 grid grid-cols-2 gap-1 xs:gap-1.5 text-xs">
+            {/* Work Mode */}
+            <div className="flex items-center gap-1.5 rounded-md border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 px-2 xs:px-2.5 py-1.5 text-slate-800 dark:text-slate-200 font-medium truncate shadow-2xs">
+              {chips.workMode === "Remote" ? (
+                <Monitor className="h-3.5 w-3.5 shrink-0 text-slate-700 dark:text-slate-300 stroke-[2]" />
+              ) : (
+                <Building2 className="h-3.5 w-3.5 shrink-0 text-slate-700 dark:text-slate-300 stroke-[2]" />
+              )}
+              <span className="truncate text-[10.5px] xs:text-[11px] font-semibold">{chips.workMode}</span>
+            </div>
+
+            {/* Salary */}
+            <div className="flex items-center gap-1.5 rounded-md border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 px-2 xs:px-2.5 py-1.5 text-slate-800 dark:text-slate-200 font-medium truncate shadow-2xs">
+              <span className="truncate text-[10.5px] xs:text-[11px] font-semibold">{chips.salary}</span>
+            </div>
+
+            {/* Experience */}
+            <div className="flex items-center gap-1.5 rounded-md border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 px-2 xs:px-2.5 py-1.5 text-slate-800 dark:text-slate-200 font-medium truncate shadow-2xs">
+              <Briefcase className="h-3.5 w-3.5 shrink-0 text-slate-700 dark:text-slate-300 stroke-[2]" />
+              <span className="truncate text-[10.5px] xs:text-[11px] font-semibold">{chips.experience}</span>
+            </div>
+
+            {/* Job Type */}
+            <div className="flex items-center gap-1.5 rounded-md border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 px-2 xs:px-2.5 py-1.5 text-slate-800 dark:text-slate-200 font-medium truncate shadow-2xs">
+              <Clock className="h-3.5 w-3.5 shrink-0 text-slate-700 dark:text-slate-300 stroke-[2]" />
+              <span className="truncate text-[10.5px] xs:text-[11px] font-semibold">{chips.jobType}</span>
             </div>
           </div>
 
-          {/* Meta Grid (2x2) */}
-          <div className="mt-2 grid grid-cols-2 gap-1.5">
-            <div className="flex items-center gap-2 rounded-xl border border-slate-100 bg-white p-1.5 shadow-[0_1px_2px_rgba(0,0,0,0.02)] dark:border-slate-800 dark:bg-slate-900 min-w-0">
-              <MapPin className="h-3.5 w-3.5 text-blue-500 stroke-[2] shrink-0" />
-              <span className="truncate text-[10.5px] font-bold text-slate-800 dark:text-slate-200">
-                {job.location}
-              </span>
-            </div>
-            <div className="flex items-center gap-2 rounded-xl border border-slate-100 bg-white p-1.5 shadow-[0_1px_2px_rgba(0,0,0,0.02)] dark:border-slate-800 dark:bg-slate-900 min-w-0">
-              <RupeeCircleIcon />
-              <span className="truncate text-[10.5px] font-bold text-slate-800 dark:text-slate-200">
-                {job.salary}
-              </span>
-            </div>
-            <div className="flex items-center gap-2 rounded-xl border border-slate-100 bg-white p-1.5 shadow-[0_1px_2px_rgba(0,0,0,0.02)] dark:border-slate-800 dark:bg-slate-900 min-w-0">
-              <Briefcase className="h-3.5 w-3.5 text-purple-500 stroke-[2] shrink-0" />
-              <span className="truncate text-[10.5px] font-bold text-slate-800 dark:text-slate-200">
-                {job.experience}
-              </span>
-            </div>
-            <div className="flex items-center gap-2 rounded-xl border border-slate-100 bg-white p-1.5 shadow-[0_1px_2px_rgba(0,0,0,0.02)] dark:border-slate-800 dark:bg-slate-900 min-w-0">
-              <Clock className="h-3.5 w-3.5 text-amber-500 stroke-[2] shrink-0" />
-              <span className="truncate text-[10.5px] font-bold text-slate-800 dark:text-slate-200">
-                {job.type}
-              </span>
-            </div>
-          </div>
-
-          {/* Skill Tags */}
-          <div className="mt-2 flex items-center gap-1.5 overflow-hidden">
-            {job.tags.slice(0, 3).map((tag, tagIdx) => (
+          {/* Skills Tag Row (Matching Image 1) */}
+          <div className="mt-2 xs:mt-2.5 flex flex-wrap items-center gap-1 xs:gap-1.5">
+            {displaySkills.map((skill) => (
               <span
-                key={`${tag}-${tagIdx}`}
-                className="max-w-[85px] xs:max-w-[95px] truncate rounded-lg bg-[#F0F5FA] border border-blue-100/50 px-2 py-0.5 text-[9px] font-medium text-slate-700 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-300"
+                key={skill}
+                className="rounded-lg bg-slate-100/70 dark:bg-slate-800 border border-slate-200/50 dark:border-slate-700/60 px-1.5 xs:px-2 py-0.5 text-[9.5px] xs:text-[10.5px] text-slate-700 dark:text-slate-300 font-medium"
               >
-                {tag}
+                {skill}
               </span>
             ))}
+            {extraCount > 0 && (
+              <span className="text-[9.5px] xs:text-[10.5px] text-slate-400 font-medium px-1">
+                +{extraCount} more
+              </span>
+            )}
           </div>
         </div>
 
-        {/* Why Match Section */}
-        <div className="mt-2 rounded-xl bg-[#F4FBF7] border border-emerald-200/60 p-2 dark:bg-emerald-950/20 dark:border-emerald-900/40">
-          <div className="flex items-center justify-between mb-1">
-            <p className="text-[11px] font-bold text-emerald-800 dark:text-emerald-400">
-              Why {job.matchScore}% Match?
-            </p>
+        {/* "Why X% match" Breakdown Section with Progress Bars (Matching Image 1) */}
+        <div className="mt-2 xs:mt-2.5 pt-2 xs:pt-2.5 border-t border-slate-100 dark:border-slate-800">
+          <div className="flex items-center justify-between text-xs mb-1.5">
+            <span className="font-bold text-slate-800 dark:text-slate-200 text-[11px] xs:text-[11.5px] sm:text-xs">
+              Why {job.matchScore}% match
+            </span>
+            <span className="text-slate-400 text-[10px] xs:text-[10.5px] sm:text-[11px] font-medium">
+              {scoreBreakdown.total} / 100 pts
+            </span>
           </div>
+
           <div className="grid grid-cols-5 gap-1 text-center">
-            <div className="flex flex-col items-center justify-center min-w-0">
-              <BarChart2 className="h-3 w-3 text-sky-500 stroke-[2] mb-0.5" />
-              <span className="text-[8px] text-slate-500 dark:text-slate-400 font-medium">Skills</span>
-              <span className={cn("text-[9.5px] font-bold", job.breakdown.skillsOk ? "text-emerald-600" : "text-rose-600")}>
-                {job.breakdown.skills}
-              </span>
-            </div>
-            <div className="flex flex-col items-center justify-center min-w-0">
-              <Briefcase className="h-3 w-3 text-purple-600 stroke-[2] mb-0.5" />
-              <span className="text-[8px] text-slate-500 dark:text-slate-400 font-medium">Exp.</span>
-              <span className={cn("text-[9.5px] font-bold", job.breakdown.expOk ? "text-emerald-600" : "text-rose-600")}>
-                {job.breakdown.exp}
-              </span>
-            </div>
-            <div className="flex flex-col items-center justify-center min-w-0">
-              <Award className="h-3 w-3 text-amber-500 stroke-[2] mb-0.5" />
-              <span className="text-[8px] text-slate-500 dark:text-slate-400 font-medium">Role</span>
-              <span className={cn("text-[9.5px] font-bold", job.breakdown.roleOk !== false ? "text-emerald-600" : "text-rose-600")}>
-                {job.breakdown.role || "10.5/15"}
-              </span>
-            </div>
-            <div className="flex flex-col items-center justify-center min-w-0">
-              <ShoppingBag className="h-3 w-3 text-emerald-600 stroke-[2] mb-0.5" />
-              <span className="text-[8px] text-slate-500 dark:text-slate-400 font-medium">Salary</span>
-              <span className={cn("text-[9.5px] font-bold", job.breakdown.salaryOk ? "text-emerald-600" : "text-rose-600")}>
-                {job.breakdown.salary}
-              </span>
-            </div>
-            <div className="flex flex-col items-center justify-center min-w-0">
-              <LayoutGrid className="h-3 w-3 text-slate-500 stroke-[2] mb-0.5" />
-              <span className="text-[8px] text-slate-500 dark:text-slate-400 font-medium">Other</span>
-              <span className={cn("text-[9.5px] font-bold", job.breakdown.otherOk ? "text-emerald-600" : "text-rose-600")}>
-                {job.breakdown.other || "4/20"}
-              </span>
-            </div>
+            {[
+              { label: "Skills", val: scoreBreakdown.skills },
+              { label: "Exp.", val: scoreBreakdown.exp },
+              { label: "Role", val: scoreBreakdown.role },
+              { label: "Salary", val: scoreBreakdown.salary },
+              { label: "Other", val: scoreBreakdown.other },
+            ].map((metric) => {
+              const percent = getScorePercentage(metric.val);
+              return (
+                <div key={metric.label} className="flex flex-col items-center">
+                  <span className="text-[8.5px] xs:text-[9.5px] sm:text-[10px] text-slate-400 font-medium">
+                    {metric.label}
+                  </span>
+                  <span className="text-[10px] xs:text-[11px] sm:text-xs font-bold text-slate-800 dark:text-slate-200">
+                    {metric.val}
+                  </span>
+                  {/* Background track + filled percentage blue bar matching Image 1 */}
+                  <div className="mt-1 h-1 w-full rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden">
+                    <div
+                      className="h-full rounded-full transition-all duration-300 bg-[#2563EB]"
+                      style={{
+                        width: `${percent}%`,
+                      }}
+                    />
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
 
-        {/* Action Buttons on Card */}
-        <div className="mt-2.5 flex items-center justify-between gap-2 pt-0.5">
+        {/* Action Buttons: Skip, Bookmark, Apply (Matching Image 1) */}
+        <div className="mt-2.5 xs:mt-3 flex items-center gap-1.5 pt-0.5">
           {/* Skip Button */}
           <button
             type="button"
@@ -596,24 +899,32 @@ function DragCard({ job, onDecide, isTop }: DragCardProps) {
               performSwipe("left");
             }}
             aria-label="Skip Job"
-            className="flex-1 flex items-center justify-center gap-1 rounded-full bg-[#FEF2F2] border border-rose-200/80 py-2 text-xs font-bold text-[#991B1B] hover:bg-rose-100 transition-all active:scale-95 cursor-pointer shadow-2xs"
+            className="flex-1 flex items-center justify-center gap-1 rounded-xl bg-[#FFF1F2] hover:bg-[#FFE4E6] dark:bg-rose-950/40 dark:hover:bg-rose-900/50 py-2 sm:py-2.5 text-xs font-bold text-[#E11D48] dark:text-rose-300 transition-all cursor-pointer active:scale-95 shadow-2xs"
           >
             <X className="h-3.5 w-3.5 stroke-[2.5]" />
             <span>Skip</span>
           </button>
 
-          {/* Center Floating Hirance "H" Button */}
+          {/* Bookmark Button */}
           <button
             type="button"
-            onClick={(e) => e.stopPropagation()}
-            aria-label="Hirance Action"
-            className="h-9 w-9 shrink-0 flex items-center justify-center rounded-full border border-slate-100 bg-white shadow-md hover:scale-105 active:scale-95 transition-all dark:bg-slate-800 dark:border-slate-700 cursor-pointer"
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsSaved((prev) => !prev);
+            }}
+            aria-label="Bookmark Job"
+            className={cn(
+              "flex h-9 w-9 sm:h-10 sm:w-10 shrink-0 items-center justify-center rounded-xl border transition-all cursor-pointer shadow-2xs",
+              isSaved
+                ? "border-blue-500 bg-blue-50 text-blue-600 dark:bg-blue-950/40"
+                : "border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white"
+            )}
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/images/icon.png"
-              alt="Hirance"
-              className="h-5 w-5 object-contain"
+            <Bookmark
+              className={cn(
+                "h-4 w-4 stroke-[2]",
+                isSaved && "fill-current text-blue-600"
+              )}
             />
           </button>
 
@@ -625,9 +936,9 @@ function DragCard({ job, onDecide, isTop }: DragCardProps) {
               performSwipe("right");
             }}
             aria-label="Apply to Job"
-            className="flex-1 flex items-center justify-center gap-1 rounded-full bg-[#15803D] hover:bg-[#166534] py-2 text-xs font-bold text-white shadow-md shadow-emerald-800/20 transition-all active:scale-95 cursor-pointer"
+            className="flex-1 flex items-center justify-center gap-1 rounded-xl bg-[#15803D] hover:bg-[#166534] active:scale-95 text-white py-2 sm:py-2.5 text-xs font-bold shadow-md shadow-emerald-800/20 transition-all cursor-pointer"
           >
-            <Check className="h-4 w-4 stroke-[3]" />
+            <Check className="h-3.5 w-3.5 stroke-[3]" />
             <span>Apply</span>
           </button>
         </div>
@@ -643,6 +954,7 @@ interface SwipePlaygroundProps {
 export function SwipePlayground({ initialJobs }: SwipePlaygroundProps = {}) {
   const reducedMotion = useReducedMotion();
   const [jobs, setJobs] = useState<PlaygroundJob[]>(PLAYGROUND_JOBS);
+  const [activeCategory, setActiveCategory] = useState<string>("Sales");
 
   const [index, setIndex] = useState(0);
   const [applied, setApplied] = useState<PlaygroundJob[]>([]);
@@ -681,6 +993,16 @@ export function SwipePlayground({ initialJobs }: SwipePlaygroundProps = {}) {
     [jobs]
   );
 
+  // Switch category and jump to relevant job
+  const handleSelectCategory = (category: string) => {
+    setActiveCategory(category);
+    const targetIdx = jobs.findIndex((j) => j.category === category);
+    if (targetIdx !== -1) {
+      swipeCountRef.current = targetIdx;
+      setIndex(targetIdx);
+    }
+  };
+
   const reviewedCount = index === 0 ? 0 : ((index - 1) % SWIPES_PER_ROUND) + 1;
   const cardIndex = index % SWIPES_PER_ROUND;
   const currentJob = jobs[cardIndex % jobs.length];
@@ -689,266 +1011,186 @@ export function SwipePlayground({ initialJobs }: SwipePlaygroundProps = {}) {
   return (
     <section
       id="playground"
-      className="section-blue-glow relative w-full overflow-hidden py-10 sm:py-14 lg:py-18 bg-white dark:bg-slate-950"
+      className="relative w-full overflow-hidden py-10 sm:py-16 lg:py-20 bg-[#F8FAFC] dark:bg-slate-950"
       aria-labelledby="playground-heading"
     >
-      {/* Subtle section divider; the shared CSS supplies the center glow. */}
-      <div
-        className="pointer-events-none absolute inset-0 -z-10 overflow-hidden"
-        aria-hidden="true"
-      >
-        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-border/80 to-transparent" />
-      </div>
+      <div className="mx-auto max-w-7xl px-3 xs:px-4 sm:px-6 lg:px-8 w-full">
+        {/* Top Floating Badge Pill (Matching Image 1) */}
+        <div className="mb-5 sm:mb-8 flex justify-center">
+          <div className="inline-flex items-center gap-2 rounded-full border border-slate-200/90 bg-white px-4 sm:px-6 py-1.5 sm:py-2.5 text-xs sm:text-sm font-medium text-slate-800 shadow-sm dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200">
+            <span>Don&apos;t just look.</span>
+            <span className="font-bold text-blue-600 dark:text-blue-400">Try it yourself.</span>
+            <span className="flex h-5 w-5 sm:h-5.5 sm:w-5.5 items-center justify-center rounded-full bg-blue-600 text-white shadow-xs">
+              <ArrowDown className="h-3 w-3 stroke-[2.5]" />
+            </span>
+          </div>
+        </div>
 
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full">
-        <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12 lg:gap-14">
-          {/* Left Column: Headline, Live Tally & Applied Stream */}
-          <motion.div
-            initial={reducedMotion ? false : { opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-48px" }}
-            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-            className="flex flex-col items-center text-center lg:col-span-7 lg:items-start lg:text-left"
-          >
-            <h2
-              id="playground-heading"
-              className="text-balance text-2xl font-semibold tracking-tight text-slate-900 dark:text-white sm:text-3xl md:text-4xl lg:text-5xl leading-tight"
+        {/* Main White Rounded Container Card (Matching Image 1) */}
+        <div className="relative rounded-[22px] sm:rounded-[36px] lg:rounded-[40px] border border-slate-200/80 bg-white p-3.5 xs:p-5 sm:p-8 lg:p-12 shadow-xl shadow-slate-900/5 dark:border-slate-800 dark:bg-slate-900">
+          <div className="grid grid-cols-1 items-center gap-8 sm:gap-10 lg:grid-cols-12 lg:gap-10 xl:gap-12">
+            {/* Left Column: Heading, Category Pills, 3 Stat Cards, Google Play CTA */}
+            <motion.div
+              initial={reducedMotion ? false : { opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-48px" }}
+              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+              className="flex flex-col items-start text-left lg:col-span-7 w-full max-w-xl mx-auto lg:mx-0"
             >
-              Your Turn,{" "}
-              <span className="italic font-medium">
-                Swipe a Few Jobs.
-              </span>
-            </h2>
-
-            <p className="mt-3.5 max-w-xl text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg">
-              Drag the card right to apply, left to skip — or use the action buttons below. This is exactly how fast hiring feels on Hirance.
-            </p>
-
-            {/* Live Tally Cards */}
-            <div className="mt-7 grid grid-cols-3 gap-3 w-full max-w-md">
-              <div className="rounded-2xl border border-[#D1FAE5] bg-[#F6FFF9] dark:bg-emerald-950/20 dark:border-emerald-900/40 p-3.5 sm:p-4 text-center shadow-xs">
-                <p className="text-2xl sm:text-3xl font-semibold text-emerald-600 dark:text-emerald-400">
-                  {applied.length}
-                </p>
-                <p className="mt-0.5 text-xs text-muted-foreground font-medium flex items-center justify-center gap-1">
-                  <Check size={13} className="text-emerald-500" strokeWidth={2.5} /> Applied
-                </p>
-              </div>
-
-              <div className="rounded-2xl border border-[#FFE4E6] bg-[#FFF7F7] dark:bg-rose-950/20 dark:border-rose-900/40 p-3.5 sm:p-4 text-center shadow-xs">
-                <p className="text-2xl sm:text-3xl font-semibold text-rose-500 dark:text-rose-400">
-                  {skipped}
-                </p>
-                <p className="mt-0.5 text-xs text-muted-foreground font-medium flex items-center justify-center gap-1">
-                  <X size={13} className="text-rose-500" strokeWidth={2.5} /> Skipped
-                </p>
-              </div>
-
-              <div className="rounded-2xl border border-[#E2E8F0] bg-[#FBFBFB] dark:bg-card dark:border-border p-3.5 sm:p-4 text-center shadow-xs">
-                <p className="text-2xl sm:text-3xl font-semibold text-foreground">
-                  {reviewedCount}/{SWIPES_PER_ROUND}
-                </p>
-                <p className="mt-0.5 text-xs text-muted-foreground font-medium">
-                  Reviewed
-                </p>
-              </div>
-            </div>
-
-            {/* Live Applied Stream List */}
-            {applied.length > 0 && (
-              <div className="mt-5 space-y-2 w-full max-w-md">
-                <p className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground text-left">
-                  Applied Roles ({applied.length})
-                </p>
-                <AnimatePresence>
-                  {applied.slice(-2).map((j) => (
-                    <motion.div
-                      key={j.id}
-                      initial={{ opacity: 0, x: -16 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0 }}
-                      className="flex items-center justify-between rounded-xl bg-emerald-50/80 dark:bg-emerald-950/40 border border-emerald-500/20 px-3.5 py-2 text-left"
-                    >
-                      <div className="min-w-0 flex-1">
-                        <p className="text-xs font-bold text-foreground truncate">
-                          {j.title}
-                        </p>
-                        <p className="text-[10px] text-muted-foreground truncate">
-                          {j.company} · {j.location}
-                        </p>
-                      </div>
-                      <span className="shrink-0 ml-2 text-xs font-extrabold text-emerald-600 dark:text-emerald-400">
-                        {j.matchScore}%
-                      </span>
-                    </motion.div>
-                  ))}
-                </AnimatePresence>
-              </div>
-            )}
-          </motion.div>
-
-          {/* Right Column: Interactive Swipe Deck */}
-          <motion.div
-            initial={reducedMotion ? false : { opacity: 0, scale: 0.96 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true, margin: "-48px" }}
-            transition={{ duration: 0.6, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
-            className="flex flex-col items-center justify-center lg:col-span-5"
-          >
-            {/* Smartphone Chassis matching Mockup */}
-            <div
-              className="relative w-[285px] xs:w-[305px] sm:w-[325px] rounded-[38px] border-[7px] border-slate-900 bg-slate-900 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.45)] ring-1 ring-black/80 dark:border-slate-800 dark:ring-white/10 overflow-hidden"
-              style={{
-                transformStyle: "flat",
-                transform: "translateZ(0)",
-                backfaceVisibility: "hidden",
-                WebkitBackfaceVisibility: "hidden",
-              }}
-            >
-              {/* Center Punch Hole Camera */}
-              <div className="absolute top-2.5 left-1/2 -translate-x-1/2 z-50 flex items-center justify-center pointer-events-none">
-                <div className="h-2.5 w-2.5 rounded-full bg-black ring-1 ring-slate-800" />
-              </div>
-
-              {/* Screen Area */}
-              <div
-                className="relative flex h-[515px] xs:h-[535px] sm:h-[555px] w-full flex-col justify-between bg-slate-50 dark:bg-slate-950 overflow-hidden pt-3.5 select-none"
-                style={{
-                  isolation: "isolate",
-                  transformStyle: "flat",
-                  transform: "translate3d(0, 0, 0)",
-                  backfaceVisibility: "hidden",
-                  WebkitBackfaceVisibility: "hidden",
-                }}
+              {/* Heading (Matching Image 1) */}
+              <h2
+                id="playground-heading"
+                className="text-2xl xs:text-3xl sm:text-4xl lg:text-[44px] font-black tracking-tight text-slate-900 dark:text-white leading-[1.15]"
               >
-                {/* Status Bar (11:06 matching Mockup) */}
-                <div className="px-4 flex items-center justify-between text-[10px] font-bold text-slate-800 dark:text-slate-200 select-none">
-                  <span>11:06</span>
-                  <div className="flex items-center gap-1.5 text-slate-700 dark:text-slate-300">
-                    <Signal className="h-3 w-3" />
-                    <Wifi className="h-3 w-3" />
-                    <div className="flex items-center gap-0.5 rounded-2xs border border-emerald-500 bg-emerald-500/10 px-1 py-0.2 text-[8px] font-mono leading-none text-emerald-600 dark:text-emerald-400">
-                      <span>90</span>
-                      <span className="text-[7px]">⚡</span>
-                    </div>
-                  </div>
+                One <span className="text-[#16A34A] dark:text-[#22C55E]">Swipe.</span>
+                <br />
+                Every Kind of Job.
+              </h2>
+
+              {/* Category Filter Pills (Matching Image 1) */}
+              <div className="mt-4 sm:mt-8 flex flex-wrap gap-1.5 sm:gap-2.5 max-w-xl">
+                {CATEGORIES.map((cat) => {
+                  const isActive = activeCategory === cat;
+                  return (
+                    <button
+                      key={cat}
+                      type="button"
+                      onClick={() => handleSelectCategory(cat)}
+                      className={cn(
+                        "inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 sm:px-3.5 sm:py-1.5 text-[11px] xs:text-xs sm:text-[13px] font-medium transition-all active:scale-95 cursor-pointer",
+                        isActive
+                          ? "bg-[#2563EB] text-white shadow-sm"
+                          : "bg-slate-50/90 text-slate-600 border border-slate-200/90 hover:bg-slate-100 hover:text-slate-900 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-700"
+                      )}
+                    >
+                      <span
+                        className={cn(
+                          "h-1.5 w-1.5 rounded-full",
+                          isActive ? "bg-white" : "bg-slate-400 dark:bg-slate-500"
+                        )}
+                      />
+                      <span>{cat}</span>
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* 3 Stat Cards (Matching Image 1) */}
+              <div className="mt-5 sm:mt-8 grid grid-cols-3 gap-1.5 xs:gap-2.5 sm:gap-4 w-full max-w-lg">
+                {/* Applied */}
+                <div className="rounded-xl sm:rounded-2xl border border-slate-200/80 bg-white p-2.5 xs:p-3 sm:p-5 dark:border-slate-800 dark:bg-slate-800/60 shadow-2xs text-center sm:text-left">
+                  <p className="text-xl xs:text-2xl sm:text-3xl lg:text-4xl font-black text-[#16A34A] dark:text-[#22C55E] leading-none">
+                    {applied.length}
+                  </p>
+                  <p className="mt-1 sm:mt-1.5 text-[10px] xs:text-xs sm:text-sm font-medium text-slate-500 dark:text-slate-400 truncate">
+                    Applied
+                  </p>
                 </div>
 
-                {/* App Header with 10 notifications badge */}
-                <div className="px-3 xs:px-3.5 py-1 flex items-center justify-between select-none">
-                  <button
-                    type="button"
-                    className="flex h-7 w-7 items-center justify-center rounded-lg text-slate-800 dark:text-slate-200 hover:bg-slate-200/50"
-                    aria-label="Filter Preferences"
-                  >
-                    <SlidersHorizontal className="h-4 w-4 stroke-[2]" />
-                  </button>
+                {/* Skipped */}
+                <div className="rounded-xl sm:rounded-2xl border border-slate-200/80 bg-white p-2.5 xs:p-3 sm:p-5 dark:border-slate-800 dark:bg-slate-800/60 shadow-2xs text-center sm:text-left">
+                  <p className="text-xl xs:text-2xl sm:text-3xl lg:text-4xl font-black text-[#DC2626] dark:text-[#EF4444] leading-none">
+                    {skipped}
+                  </p>
+                  <p className="mt-1 sm:mt-1.5 text-[10px] xs:text-xs sm:text-sm font-medium text-slate-500 dark:text-slate-400 truncate">
+                    Skipped
+                  </p>
+                </div>
 
-                  <span className="text-xs xs:text-sm font-black text-slate-900 dark:text-white tracking-tight">
-                    Get Hired Today
-                  </span>
+                {/* Reviewed */}
+                <div className="rounded-xl sm:rounded-2xl border border-slate-200/80 bg-white p-2.5 xs:p-3 sm:p-5 dark:border-slate-800 dark:bg-slate-800/60 shadow-2xs text-center sm:text-left">
+                  <p className="text-xl xs:text-2xl sm:text-3xl lg:text-4xl font-black text-slate-900 dark:text-white leading-none">
+                    {reviewedCount}/{SWIPES_PER_ROUND}
+                  </p>
+                  <p className="mt-1 sm:mt-1.5 text-[10px] xs:text-xs sm:text-sm font-medium text-slate-500 dark:text-slate-400 truncate">
+                    Reviewed
+                  </p>
+                </div>
+              </div>
 
-                  <div className="relative">
-                    <button
-                      type="button"
-                      className="flex h-7 w-7 items-center justify-center rounded-lg text-slate-800 dark:text-slate-200 hover:bg-slate-200/50"
-                      aria-label="Notifications"
-                    >
-                      <Bell className="h-4 w-4 stroke-[2]" />
-                    </button>
-                    <span className="absolute -top-1 -right-1 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-blue-600 text-[7.5px] font-black text-white shadow-xs">
-                      10
+              {/* Google Play Button (Matching Image 1) */}
+              <div className="mt-5 sm:mt-10 w-full xs:w-auto">
+                <a
+                  href="#download-app"
+                  className="inline-flex items-center justify-center gap-2.5 sm:gap-3.5 rounded-2xl bg-[#15803D] hover:bg-[#166534] px-4 sm:px-6 py-2.5 sm:py-3.5 text-white shadow-lg shadow-emerald-900/20 transition-all hover:scale-[1.02] active:scale-95 group cursor-pointer w-full xs:w-auto"
+                >
+                  <svg viewBox="0 0 24 24" className="h-5 w-5 sm:h-6 sm:w-6 shrink-0 fill-white" aria-hidden="true">
+                    <path d="M3.609 1.814L13.792 12 3.61 22.186c-.198-.246-.31-.572-.31-.944V2.758c0-.372.112-.698.31-.944zM15.207 13.414l2.45-2.45-12.78-7.38 10.33 9.83zm0-2.828L4.877 20.416l12.78-7.38-2.45-2.45zm1.414 1.414l3.19 1.84c.89.51.89 1.35 0 1.87l-3.19 1.84-2.12-2.12 2.12-2.12z" />
+                  </svg>
+                  <div className="flex flex-col text-left leading-tight">
+                    <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-emerald-100">
+                      GET IT ON GOOGLE PLAY
+                    </span>
+                    <span className="text-xs sm:text-base font-extrabold text-white tracking-tight">
+                      Apply for real jobs
                     </span>
                   </div>
-                </div>
-
-                {/* Dynamic Application Toast */}
-                <AnimatePresence>
-                  {showAppliedToast && (
-                    <motion.div
-                      initial={{ opacity: 0, y: -6, scale: 0.95 }}
-                      animate={{ opacity: 1, y: 0, scale: 1 }}
-                      exit={{ opacity: 0, y: -6, scale: 0.95 }}
-                      className="mx-2 xs:mx-2.5 mb-1 flex items-center justify-between rounded-lg bg-[#00a86b] px-3 py-1.5 text-white shadow-xs select-none"
-                    >
-                      <div className="flex items-center gap-1.5 text-[9.5px] xs:text-[10px] font-semibold">
-                        <Check className="h-3.5 w-3.5 stroke-[3]" />
-                        <span>Application Sent! Recruiter notified.</span>
-                      </div>
-                      <span className="text-amber-300 text-xs font-bold select-none leading-none">✦</span>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-
-                {/* Interactive Card Stack Area */}
-                <div
-                  className="relative mx-2 xs:mx-2.5 flex-1 min-h-0 my-0.5 select-none"
-                  style={{
-                    isolation: "isolate",
-                    transformStyle: "flat",
-                  }}
-                >
-                  {/* Background Stack Layer (Visual Depth) */}
-                  {nextJob && (
-                    <div className="absolute inset-0 translate-y-1.5 scale-[0.97] rounded-[22px] border border-slate-200/60 bg-white/70 dark:border-slate-800 dark:bg-slate-900/70 opacity-60 shadow-md" />
-                  )}
-
-                  {/* Active Top Draggable Card */}
-                  <AnimatePresence mode="popLayout">
-                    <DragCard
-                      key={currentJob.id + "-" + index}
-                      job={currentJob}
-                      onDecide={handleDecide}
-                      isTop={true}
-                    />
-                  </AnimatePresence>
-                </div>
-
-                {/* Bottom App Navigation Bar */}
-                <div className="px-3 xs:px-4 py-1.5 bg-white border-t border-slate-100 dark:bg-slate-900 dark:border-slate-800 flex items-center justify-around select-none">
-                  {/* Swipe (Active) */}
-                  <button
-                    type="button"
-                    className="flex flex-col items-center gap-0.5 text-blue-600"
-                  >
-                    <div className="rounded-2xl bg-blue-100/70 px-3.5 py-0.5 flex items-center justify-center">
-                      <Layers className="h-3.5 w-3.5 stroke-[2.5]" />
-                    </div>
-                    <span className="text-[8.5px] font-extrabold">Swipe</span>
-                  </button>
-
-                  {/* My Jobs */}
-                  <button
-                    type="button"
-                    className="flex flex-col items-center gap-0.5 text-slate-400 hover:text-slate-600 dark:text-slate-500"
-                  >
-                    <Briefcase className="h-4 w-4 stroke-[2]" />
-                    <span className="text-[8.5px] font-medium">My Jobs</span>
-                  </button>
-
-                  {/* Messages */}
-                  <div className="relative">
-                    <button
-                      type="button"
-                      className="flex flex-col items-center gap-0.5 text-slate-400 hover:text-slate-600 dark:text-slate-500"
-                    >
-                      <MessageSquare className="h-4 w-4 stroke-[2]" />
-                      <span className="text-[8.5px] font-medium">Messages</span>
-                    </button>
-                  </div>
-
-                  {/* Profile */}
-                  <button
-                    type="button"
-                    className="flex flex-col items-center gap-0.5 text-slate-400 hover:text-slate-600 dark:text-slate-500"
-                  >
-                    <User className="h-4 w-4 stroke-[2]" />
-                    <span className="text-[8.5px] font-medium">Profile</span>
-                  </button>
-                </div>
+                </a>
               </div>
-            </div>
-          </motion.div>
+            </motion.div>
+
+            {/* Right Column: Standalone Interactive Card Deck with Image 1 Card Layout (Compact Width) */}
+            <motion.div
+              initial={reducedMotion ? false : { opacity: 0, scale: 0.96 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true, margin: "-48px" }}
+              transition={{ duration: 0.6, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+              className="flex flex-col items-center justify-center lg:col-span-5 w-full"
+            >
+              {/* Dynamic Application Toast */}
+              <AnimatePresence>
+                {showAppliedToast && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                    className="mb-3 flex items-center justify-between rounded-xl bg-[#00a86b] px-3.5 py-1.5 text-white shadow-md select-none w-full max-w-[285px] xs:max-w-[310px] sm:max-w-[325px]"
+                  >
+                    <div className="flex items-center gap-1.5 text-[11px] font-semibold">
+                      <Check className="h-3.5 w-3.5 stroke-[3]" />
+                      <span>Application Sent! Recruiter notified.</span>
+                    </div>
+                    <span className="text-amber-300 text-xs font-bold select-none leading-none">✦</span>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              {/* Interactive Card Deck Container (Responsive Max-Width & Proper Height) */}
+              <div className="relative w-full max-w-[285px] xs:max-w-[310px] sm:max-w-[325px] h-[475px] xs:h-[480px] sm:h-[485px] select-none mx-auto">
+                {/* Physical Stacked Deck Visual Effect (Matching Image 1 bottom stacked layers) */}
+                <div
+                  className="absolute -bottom-2 inset-x-2.5 h-10 rounded-[24px] border border-slate-200/70 bg-white/95 shadow-sm dark:border-slate-800 dark:bg-slate-900/90 pointer-events-none"
+                  aria-hidden="true"
+                />
+                <div
+                  className="absolute -bottom-4 inset-x-5 h-10 rounded-[24px] border border-slate-200/50 bg-white/80 shadow-xs dark:border-slate-800 dark:bg-slate-900/75 pointer-events-none"
+                  aria-hidden="true"
+                />
+                <div
+                  className="absolute -bottom-6 inset-x-7.5 h-10 rounded-[24px] border border-slate-200/30 bg-white/60 shadow-2xs dark:border-slate-800 dark:bg-slate-900/60 pointer-events-none"
+                  aria-hidden="true"
+                />
+
+                {/* Behind card preview for depth */}
+                {nextJob && (
+                  <div
+                    className="absolute inset-0 rounded-[24px] border border-slate-200/80 bg-white dark:border-slate-800 dark:bg-slate-900 opacity-90 shadow-md translate-y-1 scale-[0.99] pointer-events-none"
+                    aria-hidden="true"
+                  />
+                )}
+
+                {/* Active Top Draggable Card */}
+                <AnimatePresence mode="popLayout">
+                  <DragCard
+                    key={currentJob.id + "-" + index}
+                    job={currentJob}
+                    onDecide={handleDecide}
+                    isTop={true}
+                  />
+                </AnimatePresence>
+              </div>
+            </motion.div>
+          </div>
         </div>
       </div>
     </section>

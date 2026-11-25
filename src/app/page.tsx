@@ -4,7 +4,6 @@ import {
   Hero,
   TrustedBy,
   JobSwipeShowcase,
-  AppDownload,
   BrandStatement,
   SwipePlayground,
 } from "@/components/sections";
@@ -58,8 +57,6 @@ export default async function Home() {
       {/* 3-Card Swipe Showcase Section */}
       <JobSwipeShowcase />
 
-      {/* Candidate App Download Experience */}
-      <AppDownload initialJobs={liveJobs} />
       <SwipePlayground initialJobs={liveJobs ? liveJobs.slice(0, 5) : undefined} />
 
       <JobSeoLinks />
