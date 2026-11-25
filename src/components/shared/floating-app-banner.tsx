@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils";
 interface FloatingAppBannerProps {
   className?: string;
   delayMs?: number;
+  autoCloseDelayMs?: number; // 5000ms = 5 seconds
   reappearDelayMs?: number;
 }
 
@@ -47,10 +48,12 @@ const STORAGE_KEY = "hirance_app_banner_dismissed_at";
 export function FloatingAppBanner({
   className,
   delayMs = 1200,
+  autoCloseDelayMs = 5000, // Show only for 5 seconds
   reappearDelayMs = 45000, // 45 seconds after dismiss
 }: FloatingAppBannerProps) {
   const [isVisible, setIsVisible] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
   const timerRef = React.useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
@@ -91,6 +94,19 @@ export function FloatingAppBanner({
     };
   }, [delayMs, reappearDelayMs]);
 
+  // Auto-dismiss popup after 5 seconds of visibility (pauses while user hovers to scan QR)
+  useEffect(() => {
+    if (!isVisible || isHovered) return;
+
+    const autoHideTimer = setTimeout(() => {
+      setIsVisible(false);
+    }, autoCloseDelayMs);
+
+    return () => {
+      clearTimeout(autoHideTimer);
+    };
+  }, [isVisible, isHovered, autoCloseDelayMs]);
+
   const handleDismiss = () => {
     setIsVisible(false);
 
@@ -129,6 +145,8 @@ export function FloatingAppBanner({
             stiffness: 380,
             damping: 28,
           }}
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
           aria-label="Download Hirance Mobile App"
           role="complementary"
           className={cn(

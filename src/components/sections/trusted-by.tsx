@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, useEffect, useMemo, memo } from "react";
 import Link from "next/link";
@@ -22,7 +22,7 @@ function deduplicateCompanies(list: CompanyItem[]): CompanyItem[] {
     if (!item || !item.company_name) continue;
     const name = item.company_name.trim();
     const logo = item.company_logo?.trim();
-    // Exclude companies without a logo (null wala dont show)
+    // Exclude companies without a logo
     if (!name || !logo) continue;
 
     // Normalize: alphanumeric only, lowercase
@@ -213,24 +213,129 @@ function BrandIcon({ name }: { name: string }) {
     );
   }
 
+  // 17. Amazon
+  if (lower === "amazon") {
+    return (
+      <div className="flex flex-col items-center justify-center select-none">
+        <span className="font-bold text-xl sm:text-2xl md:text-3xl text-slate-900 dark:text-white tracking-tight lowercase">
+          amazon
+        </span>
+        <svg className="w-16 h-3 text-[#FF9900] -mt-1" viewBox="0 0 100 20" fill="currentColor">
+          <path d="M5 6c25 10 65 10 90 0-5 5-20 10-45 10S10 11 5 6z" />
+        </svg>
+      </div>
+    );
+  }
+
+  // 18. Flipkart
+  if (lower === "flipkart") {
+    return (
+      <div className="flex items-center gap-1 select-none">
+        <span className="font-black italic text-xl sm:text-2xl md:text-3xl text-[#2874F0] tracking-tight">
+          Flipkart
+        </span>
+      </div>
+    );
+  }
+
+  // 19. Uber
+  if (lower === "uber") {
+    return (
+      <span className="font-bold text-xl sm:text-2xl md:text-3xl text-slate-900 dark:text-white tracking-widest select-none uppercase">
+        Uber
+      </span>
+    );
+  }
+
+  // 20. Netflix
+  if (lower === "netflix") {
+    return (
+      <span className="font-black text-xl sm:text-2xl md:text-3xl text-[#E50914] tracking-wider select-none uppercase">
+        Netflix
+      </span>
+    );
+  }
+
+  // 21. Razorpay
+  if (lower === "razorpay") {
+    return (
+      <div className="flex items-center gap-1.5 select-none">
+        <svg className="w-6 h-6 text-[#0C2340] dark:text-[#3395FF]" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M14 2L4 14h7v8l10-12h-7z" />
+        </svg>
+        <span className="font-black text-xl sm:text-2xl text-[#0C2340] dark:text-[#3395FF] tracking-tight">
+          Razorpay
+        </span>
+      </div>
+    );
+  }
+
   return null;
 }
 
-// Names that return Google''s default placeholder globe icon when domain/favicon is missing
-const GLOBE_FALLBACK_NAMES = new Set([
-  "acore it hub",
-  "ai tech gen technologies",
-  "sigmait software designers pvt ltd.",
-  "tripathi digital",
+// Premier brand icons with high-fidelity vector graphics
+const PREMIER_BRAND_NAMES = [
+  "Google",
+  "Microsoft",
+  "IBM",
+  "Amazon",
+  "Deloitte",
+  "TCS",
+  "Infosys",
+  "Wipro",
+  "Adobe",
+  "Intel",
+  "LinkedIn",
+  "Swiggy",
+  "Zomato",
+  "PhonePe",
+  "Paytm",
+  "Zepto",
+  "Flipkart",
+  "OYO",
+  "Uber",
+  "Netflix",
+  "Razorpay",
+];
+
+const PREMIER_BRAND_COMPANIES: CompanyItem[] = PREMIER_BRAND_NAMES.map((name, i) => ({
+  id: `premier-brand-${i}`,
+  company_name: name,
+  company_logo: "brand-icon",
+}));
+
+// Companies from static data that have verified, working high-res logos (no 16x16 globe fallbacks)
+const VERIFIED_STATIC_NAMES = new Set([
+  "bigbasket",
+  "codinwalk software",
+  "cognizant",
+  "dhl",
+  "digital search technologies pvt. ltd.",
+  "edelta corporation",
+  "elyriasoft",
+  "ey",
+  "goomi technology",
+  "imch patna",
+  "innovaneers technologies",
+  "iph technologies",
+  "jobgenix",
+  "mckinsey & company",
+  "mingrow",
+  "pitch pine media pvt. ltd.",
+  "robospecies technologies",
+  "square yards",
+  "stand in crowd technologies",
+  "teleperformance",
+  "vexil infotech pvt ltd",
+  "webspirt technology pvt. ltd.",
 ]);
 
-const staticCompanies: CompanyItem[] = (companiesData as any[])
-  .filter((c) => !GLOBE_FALLBACK_NAMES.has((c.name || "").toLowerCase().trim()))
+const verifiedStaticCompanies: CompanyItem[] = (companiesData as any[])
+  .filter((c) => VERIFIED_STATIC_NAMES.has((c.name || "").toLowerCase().trim()))
   .map((c, i) => ({
-    id: `static-${i}`,
+    id: `static-verified-${i}`,
     company_name: c.name,
-    // Use fallback_opts=404 so Google never returns the default globe icon
-    company_logo: (c.logo_url || "").replace("fallback_opts=TYPE,SIZE,URL", "fallback_opts=404"),
+    company_logo: c.logo_url,
   }));
 
 /**
@@ -248,7 +353,7 @@ const CompanyLogoItem = memo(function CompanyLogoItem({
   const name = company.company_name?.trim() || "Company";
   const logoUrl = company.company_logo?.trim() || "";
   const brandIcon = useMemo(() => BrandIcon({ name }), [name]);
-  const hasLogo = Boolean(logoUrl) && !failed;
+  const hasLogo = Boolean(logoUrl) && logoUrl !== "brand-icon" && !failed;
 
   // STRICT: Do not render if neither logo nor brand icon exists
   if (!hasLogo && !brandIcon) return null;
@@ -256,9 +361,9 @@ const CompanyLogoItem = memo(function CompanyLogoItem({
   return (
     <div
       suppressHydrationWarning
-      className="relative flex shrink-0 items-center justify-center px-1.5 sm:px-2.5 py-1 select-none pointer-events-none"
+      className="relative flex shrink-0 items-center justify-center px-3 sm:px-5 py-1 select-none pointer-events-none"
     >
-      <div className="flex items-center justify-center h-12 sm:h-14 md:h-16 min-w-0 grayscale contrast-125 opacity-80">
+      <div className="flex items-center justify-center h-12 sm:h-14 md:h-16 min-w-0 grayscale contrast-125 opacity-80 hover:opacity-100 hover:grayscale-0 transition-all duration-300">
         {brandIcon ? (
           <div className="flex items-center justify-center">
             {brandIcon}
@@ -269,12 +374,12 @@ const CompanyLogoItem = memo(function CompanyLogoItem({
             alt={name}
             loading="lazy"
             decoding="async"
-            className="h-10 sm:h-12 md:h-14 w-auto max-w-[150px] sm:max-w-[190px] md:max-w-[220px] object-contain pointer-events-none"
+            className="h-9 sm:h-11 md:h-13 w-auto max-w-[140px] sm:max-w-[180px] md:max-w-[200px] object-contain pointer-events-none"
             onError={() => setFailed(true)}
             onLoad={(e) => {
               const img = e.currentTarget;
-              // If image is a tiny 16x16 default icon or globe placeholder, hide it
-              if (img.naturalWidth <= 16 && img.naturalHeight <= 16) {
+              // If image is a tiny 16x16 or 32x32 generic globe or broken placeholder, discard it
+              if (img.naturalWidth <= 32 && img.naturalHeight <= 32) {
                 setFailed(true);
               }
             }}
@@ -284,6 +389,7 @@ const CompanyLogoItem = memo(function CompanyLogoItem({
     </div>
   );
 });
+
 /**
  * Continuous infinite marquee row with pause on hover.
  */
@@ -334,27 +440,33 @@ function ContinuousMarqueeRow({
     </div>
   );
 }
+
 interface TrustedByProps {
   initialCompanies?: CompanyItem[];
 }
 
 export function TrustedBy({ initialCompanies }: TrustedByProps) {
   const [companyList, setCompanyList] = useState<CompanyItem[]>(() => {
-    const initial = initialCompanies && initialCompanies.length > 0 ? initialCompanies : [];
-    return deduplicateCompanies([...initial, ...staticCompanies]);
+    const validInitial = (initialCompanies || []).filter((c) => {
+      if (!c || !c.company_logo) return false;
+      const name = (c.company_name || "").toLowerCase().trim();
+      return name.length > 2 && !name.match(/^[0-9]+$/) && !name.includes("test") && !name.includes("thank you");
+    });
+    return deduplicateCompanies([...PREMIER_BRAND_COMPANIES, ...validInitial, ...verifiedStaticCompanies]);
   });
 
   // Fetch and sync real-time API companies
   useEffect(() => {
-    if (initialCompanies && initialCompanies.length > 0) {
-      setCompanyList(deduplicateCompanies([...initialCompanies, ...staticCompanies]));
-    }
-
     let isMounted = true;
     fetchCompanies({ search: "", page_size: 100 })
       .then((res) => {
         if (isMounted && res.data && res.data.length > 0) {
-          setCompanyList(deduplicateCompanies([...res.data, ...staticCompanies]));
+          const validApi = res.data.filter((c) => {
+            if (!c || !c.company_logo) return false;
+            const name = (c.company_name || "").toLowerCase().trim();
+            return name.length > 2 && !name.match(/^[0-9]+$/) && !name.includes("test") && !name.includes("thank you");
+          });
+          setCompanyList(deduplicateCompanies([...PREMIER_BRAND_COMPANIES, ...validApi, ...verifiedStaticCompanies]));
         }
       })
       .catch(() => { });
@@ -366,7 +478,16 @@ export function TrustedBy({ initialCompanies }: TrustedByProps) {
 
   // Distribute into 2 balanced rows matching Image 2 - strictly companies with logos
   const { row1, row2 } = useMemo(() => {
-    const withLogos = (companyList || []).filter((c) => { if (!c || !c.company_logo) return false; const url = c.company_logo.trim(); return url && url !== "null" && url !== "undefined" && !GLOBE_FALLBACK_NAMES.has((c.company_name || "").toLowerCase().trim()); });
+    const withLogos = (companyList || []).filter((c) => {
+      if (!c) return false;
+      const name = (c.company_name || "").trim();
+      if (!name) return false;
+      // Brand icons don't need a remote URL
+      if (BrandIcon({ name })) return true;
+      const url = c.company_logo?.trim();
+      return url && url !== "null" && url !== "undefined" && url !== "brand-icon";
+    });
+
     if (withLogos.length === 0) {
       return { row1: [], row2: [] };
     }

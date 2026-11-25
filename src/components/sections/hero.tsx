@@ -151,7 +151,7 @@ export function Hero({ initialJobs }: HeroProps = {}) {
               {/* Search Button */}
               <button
                 type="submit"
-                className="mt-2 sm:mt-0 shrink-0 rounded-xl sm:rounded-full bg-yellow-400 hover:bg-yellow-300 active:bg-yellow-500 px-7 py-3 sm:py-2.5 text-sm font-bold text-slate-900 transition-colors focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-yellow-400/50 w-full sm:w-auto"
+                className="mt-2 sm:mt-0 shrink-0 rounded-xl sm:rounded-full bg-[#15803D] hover:bg-[#166534] active:bg-green-500 px-7 py-3 sm:py-2.5 text-sm font-bold text-white transition-colors focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-yellow-400/50 w-full sm:w-auto"
               >
                 Search
               </button>

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useMemo } from "react";
 import Link from "next/link";
@@ -120,43 +120,35 @@ export function JobSeoLinks({ currentRoleSlug, currentCitySlug }: JobSeoLinksPro
   return (
     <section
       aria-labelledby="career-directory-heading"
-      className="w-full bg-white dark:bg-background border-t border-border/60 py-5 sm:py-6"
+      className="w-full border-t border-border/60 py-5 sm:py-10"
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 flex flex-col gap-3 sm:gap-4">
 
-        {/* SECTION 1: JOBS BY LOCATION (Find Jobs) */}
-        <div id="directory-cities" className="pb-2 sm:pb-2.5 border-b border-border/40 scroll-mt-32">
+        {/* SECTION 1: JOBS BY CATEGORIES */}
+        <div id="directory-categories" className="pb-2 sm:pb-2.5 border-b border-border/40 scroll-mt-32">
           <h3 className="text-base sm:text-lg font-semibold text-foreground mb-2 sm:mb-2.5">
-            Find Jobs
+            Jobs by Categories
           </h3>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-y-2 sm:gap-y-2.5 gap-x-4 sm:gap-x-6">
-            {visibleCities.map((city) => {
-              const isActive = currentCitySlug === city.slug;
-              return (
-                <Link
-                  key={city.slug}
-                  href={`/jobs/jobs-in-${city.slug}`}
-                  className={cn(
-                    "text-sm font-normal transition-all duration-150 truncate hover:underline hover:underline-offset-4",
-                    isActive
-                      ? "text-brand-400 dark:text-brand-400 font-semibold"
-                      : "text-muted-foreground hover:text-foreground"
-                  )}
-                >
-                  Jobs in {city.name}
-                </Link>
-              );
-            })}
+            {visibleDepartments.map((dept) => (
+              <Link
+                key={dept.slug}
+                href={`/jobs/${dept.slug}`}
+                className="text-sm font-normal text-muted-foreground hover:text-foreground hover:underline hover:underline-offset-4 transition-all duration-150 truncate"
+              >
+                {dept.label}
+              </Link>
+            ))}
 
-            {allCities.length > 10 && (
+            {departments.length > 10 && (
               <button
                 type="button"
-                onClick={() => setShowAllCities(!showAllCities)}
+                onClick={() => setShowAllDepartments(!showAllDepartments)}
                 className="inline-flex items-center gap-1.5 text-sm font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition-all cursor-pointer w-fit"
               >
-                <span>{showAllCities ? "View less" : "View more"}</span>
-                {showAllCities ? (
+                <span>{showAllDepartments ? "View less" : "View more"}</span>
+                {showAllDepartments ? (
                   <ChevronUp className="h-4 w-4" />
                 ) : (
                   <ChevronDown className="h-4 w-4" />
@@ -166,10 +158,10 @@ export function JobSeoLinks({ currentRoleSlug, currentCitySlug }: JobSeoLinksPro
           </div>
         </div>
 
-        {/* SECTION 2: POPULAR JOB ROLES (Popular Jobs) */}
-        <div className="pb-2 sm:pb-2.5 border-b border-border/40">
+        {/* SECTION 2: JOBS BY ROLES */}
+        <div id="directory-roles" className="pb-2 sm:pb-2.5 border-b border-border/40">
           <h3 className="text-base sm:text-lg font-semibold text-foreground mb-2 sm:mb-2.5">
-            Popular Jobs
+            Jobs by Roles
           </h3>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-y-2 sm:gap-y-2.5 gap-x-4 sm:gap-x-6">
@@ -208,31 +200,39 @@ export function JobSeoLinks({ currentRoleSlug, currentCitySlug }: JobSeoLinksPro
           </div>
         </div>
 
-        {/* SECTION 3: JOBS BY DEPARTMENT */}
-        <div id="directory-departments" className="pb-2 sm:pb-2.5 border-b border-border/40 scroll-mt-32">
+        {/* SECTION 3: JOBS BY CITIES */}
+        <div id="directory-cities" className="pb-2 sm:pb-2.5 border-b border-border/40 scroll-mt-32">
           <h3 className="text-base sm:text-lg font-semibold text-foreground mb-2 sm:mb-2.5">
-            Jobs by Department
+            Jobs by Cities
           </h3>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-y-2 sm:gap-y-2.5 gap-x-4 sm:gap-x-6">
-            {visibleDepartments.map((dept) => (
-              <Link
-                key={dept.slug}
-                href={`/jobs/${dept.slug}`}
-                className="text-sm font-normal text-muted-foreground hover:text-foreground hover:underline hover:underline-offset-4 transition-all duration-150 truncate"
-              >
-                {dept.label}
-              </Link>
-            ))}
+            {visibleCities.map((city) => {
+              const isActive = currentCitySlug === city.slug;
+              return (
+                <Link
+                  key={city.slug}
+                  href={`/jobs/jobs-in-${city.slug}`}
+                  className={cn(
+                    "text-sm font-normal transition-all duration-150 truncate hover:underline hover:underline-offset-4",
+                    isActive
+                      ? "text-brand-400 dark:text-brand-400 font-semibold"
+                      : "text-muted-foreground hover:text-foreground"
+                  )}
+                >
+                  Jobs in {city.name}
+                </Link>
+              );
+            })}
 
-            {departments.length > 10 && (
+            {allCities.length > 10 && (
               <button
                 type="button"
-                onClick={() => setShowAllDepartments(!showAllDepartments)}
+                onClick={() => setShowAllCities(!showAllCities)}
                 className="inline-flex items-center gap-1.5 text-sm font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition-all cursor-pointer w-fit"
               >
-                <span>{showAllDepartments ? "View less" : "View more"}</span>
-                {showAllDepartments ? (
+                <span>{showAllCities ? "View less" : "View more"}</span>
+                {showAllCities ? (
                   <ChevronUp className="h-4 w-4" />
                 ) : (
                   <ChevronDown className="h-4 w-4" />

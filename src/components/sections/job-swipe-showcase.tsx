@@ -217,29 +217,30 @@ function CompanyLogo({ type }: { type: "cube" | "nimbus" | "zenti" | "Zenti" | s
 }
 
 function CircularGauge({ score, color }: { score: number; color: string }) {
-  const radius = 17;
+  const radius = 22;
+  const strokeWidth = 4;
   const circumference = 2 * Math.PI * radius;
   const strokeDashoffset = circumference - (score / 100) * circumference;
 
   return (
-    <div className="relative h-10 w-10 sm:h-11 sm:w-11 shrink-0 flex items-center justify-center">
-      <svg className="h-10 w-10 sm:h-11 sm:w-11 -rotate-90 transform" viewBox="0 0 44 44">
+    <div className="relative h-14 w-14 shrink-0 flex items-center justify-center">
+      <svg className="h-14 w-14 -rotate-90 transform" viewBox="0 0 56 56">
         {/* Track */}
         <circle
-          cx="22"
-          cy="22"
+          cx="28"
+          cy="28"
           r={radius}
           className="stroke-slate-100 dark:stroke-slate-800"
-          strokeWidth="3.5"
+          strokeWidth={strokeWidth}
           fill="transparent"
         />
         {/* Progress Value */}
         <circle
-          cx="22"
-          cy="22"
+          cx="28"
+          cy="28"
           r={radius}
           stroke={color}
-          strokeWidth="3.5"
+          strokeWidth={strokeWidth}
           strokeDasharray={circumference}
           strokeDashoffset={strokeDashoffset}
           strokeLinecap="round"
@@ -247,10 +248,10 @@ function CircularGauge({ score, color }: { score: number; color: string }) {
         />
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-        <span className="text-[10px] font-black leading-none text-slate-800 dark:text-slate-100">
+        <span className="text-[13px] font-black leading-none text-slate-800 dark:text-slate-100">
           {score}%
         </span>
-        <span className="text-[6.5px] font-bold text-slate-400 uppercase tracking-tighter mt-0.5">
+        <span className="text-[7.5px] font-bold text-slate-400 uppercase tracking-wider mt-0.5 leading-none">
           MATCH
         </span>
       </div>
@@ -346,13 +347,13 @@ function SingleCard({
         {/* Match Insight Alert Banner */}
         <div
           className={cn(
-            "mt-2.5 rounded-md px-2.5 py-1.5 sm:py-2 flex items-center gap-1.5 text-xs leading-snug",
+            "mt-3.5 sm:mt-4 rounded-lg px-3 py-2 sm:py-2.5 flex items-center gap-2 text-xs leading-snug",
             card.matchBanner.type === "low" &&
-              "bg-[#fef3f2] text-[#b5251a] border border-[#b5251a]/15 dark:bg-rose-950/30 dark:border-rose-900/40 dark:text-rose-400",
+            "bg-[#fef3f2] text-[#b5251a] border border-[#b5251a]/15 dark:bg-rose-950/30 dark:border-rose-900/40 dark:text-rose-400",
             card.matchBanner.type === "good" &&
-              "bg-[#eef3ff] text-[#1e40af] border border-[#1e40af]/15 dark:bg-blue-950/30 dark:border-blue-900/40 dark:text-blue-400",
+            "bg-[#eef3ff] text-[#1e40af] border border-[#1e40af]/15 dark:bg-blue-950/30 dark:border-blue-900/40 dark:text-blue-400",
             card.matchBanner.type === "great" &&
-              "bg-[#ecfdf3] text-[#067647] border border-[#067647]/15 dark:bg-emerald-950/30 dark:border-emerald-900/40 dark:text-emerald-400"
+            "bg-[#ecfdf3] text-[#067647] border border-[#067647]/15 dark:bg-emerald-950/30 dark:border-emerald-900/40 dark:text-emerald-400"
           )}
         >
           {card.matchBanner.type === "low" ? (
@@ -372,10 +373,10 @@ function SingleCard({
           </span>
         </div>
 
-        {/* 2x2 Meta Chips Grid (rounded-md) */}
-        <div className="mt-2.5 grid grid-cols-2 gap-1.5 text-xs">
+        {/* 2x2 Meta Chips Grid (rounded-lg) */}
+        <div className="mt-3.5 sm:mt-4 grid grid-cols-2 gap-2 text-xs">
           {/* Work Mode */}
-          <div className="flex items-center gap-1.5 rounded-md border border-slate-100 dark:border-slate-800 px-2.5 py-1.5 text-slate-800 dark:text-slate-200 font-medium truncate">
+          <div className="flex items-center gap-1.5 rounded-lg border border-slate-100 dark:border-slate-800 px-3 py-2 text-slate-800 dark:text-slate-200 font-medium truncate">
             {card.chips.workMode === "Remote" ? (
               <Monitor className="h-3.5 w-3.5 shrink-0 text-slate-700 dark:text-slate-300 stroke-[2.2]" />
             ) : (
@@ -385,50 +386,51 @@ function SingleCard({
           </div>
 
           {/* Salary */}
-          <div className="flex items-center gap-1 rounded-md border border-slate-100 dark:border-slate-800 px-2.5 py-1.5 text-slate-800 dark:text-slate-200 font-medium truncate">
+          <div className="flex items-center gap-1 rounded-lg border border-slate-100 dark:border-slate-800 px-3 py-2 text-slate-800 dark:text-slate-200 font-medium truncate">
             <span className="text-[11px] font-semibold truncate">{card.chips.salary}</span>
           </div>
 
           {/* Experience */}
-          <div className="flex items-center gap-1.5 rounded-md border border-slate-100 dark:border-slate-800 px-2.5 py-1.5 text-slate-800 dark:text-slate-200 font-medium truncate">
+          <div className="flex items-center gap-1.5 rounded-lg border border-slate-100 dark:border-slate-800 px-3 py-2 text-slate-800 dark:text-slate-200 font-medium truncate">
             <Briefcase className="h-3.5 w-3.5 shrink-0 text-slate-700 dark:text-slate-300 stroke-[2.2]" />
             <span className="truncate text-[11px] font-semibold">{card.chips.experience}</span>
           </div>
 
           {/* Job Type */}
-          <div className="flex items-center gap-1.5 rounded-md border border-slate-100 dark:border-slate-800 px-2.5 py-1.5 text-slate-800 dark:text-slate-200 font-medium truncate">
+          <div className="flex items-center gap-1.5 rounded-lg border border-slate-100 dark:border-slate-800 px-3 py-2 text-slate-800 dark:text-slate-200 font-medium truncate">
             <Clock className="h-3.5 w-3.5 shrink-0 text-slate-700 dark:text-slate-300 stroke-[2.2]" />
             <span className="truncate text-[11px] font-semibold">{card.chips.jobType}</span>
           </div>
         </div>
 
-        {/* Skills Tag Row */}
-        <div className="mt-2.5 flex flex-wrap items-center gap-1.5">
+        {/* Skills Tag Row (Strictly 1 Row with Text Truncation) */}
+        <div className="mt-3.5 sm:mt-4 flex flex-nowrap items-center gap-1.5 sm:gap-2 w-full overflow-hidden">
           {card.skills.map((skill) => (
             <span
               key={skill}
-              className="rounded-lg bg-slate-100/70 dark:bg-slate-800 border border-slate-200/50 dark:border-slate-700/60 px-2 py-0.5 text-[10.5px] text-slate-600 dark:text-slate-300 font-medium"
+              title={skill}
+              className="inline-flex items-center min-w-0 shrink max-w-[90px] sm:max-w-[110px] rounded-lg bg-slate-100/70 dark:bg-slate-800 border border-slate-200/50 dark:border-slate-700/60 px-2 sm:px-2.5 py-1 text-[10.5px] sm:text-[11px] text-slate-600 dark:text-slate-300 font-medium"
             >
-              {skill}
+              <span className="truncate">{skill}</span>
             </span>
           ))}
-          <span className="text-[10px] text-slate-400 font-medium px-1">
+          <span className="shrink-0 text-[10px] sm:text-[10.5px] text-slate-400 font-medium whitespace-nowrap px-0.5">
             +{card.extraSkillsCount} more
           </span>
         </div>
 
         {/* "Why X% match" Breakdown Section */}
-        <div className="mt-3.5 pt-2.5 border-t border-slate-100 dark:border-slate-800">
-          <div className="flex items-center justify-between text-xs mb-1.5">
-            <span className="font-bold text-slate-800 dark:text-slate-200 text-[11.5px]">
+        <div className="mt-4 pt-3.5 sm:pt-4 border-t border-slate-100 dark:border-slate-800">
+          <div className="flex items-center justify-between text-xs mb-2">
+            <span className="font-bold text-slate-800 dark:text-slate-200 text-[11.5px] sm:text-xs">
               Why {card.matchScore}% match
             </span>
-            <span className="text-slate-400 text-[10.5px] font-medium">
+            <span className="text-slate-400 text-[10.5px] sm:text-[11px] font-medium">
               {card.scoreBreakdown.total} / 100 pts
             </span>
           </div>
 
-          <div className="grid grid-cols-5 gap-1 text-center">
+          <div className="grid grid-cols-5 gap-1.5 text-left">
             {[
               { label: "Skills", val: card.scoreBreakdown.skills },
               { label: "Exp.", val: card.scoreBreakdown.exp },
@@ -438,9 +440,9 @@ function SingleCard({
             ].map((metric) => {
               const percent = getScorePercentage(metric.val);
               return (
-                <div key={metric.label} className="flex flex-col items-center">
-                  <span className="text-[9.5px] text-slate-400 font-medium">{metric.label}</span>
-                  <span className="text-[11px] font-bold text-slate-800 dark:text-slate-200">
+                <div key={metric.label} className="flex flex-col items-start text-left">
+                  <span className="text-[9.5px] sm:text-[10px] text-slate-400 font-medium text-left">{metric.label}</span>
+                  <span className="text-[11px] sm:text-xs font-bold text-slate-800 dark:text-slate-200 mt-0.5 text-left">
                     {metric.val}
                   </span>
                   <div className="mt-1 h-1 w-full rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden">
@@ -459,7 +461,7 @@ function SingleCard({
         </div>
 
         {/* Card Actions: Skip, Bookmark, Apply */}
-        <div className="mt-3.5 flex items-center gap-1.5 pt-0.5">
+        <div className="mt-4 flex items-center gap-2 pt-1">
           <button
             type="button"
             aria-label="Skip Job"
@@ -534,7 +536,7 @@ export function JobSwipeShowcase() {
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
           className="text-center w-full max-w-5xl mx-auto mb-8 sm:mb-12 lg:mb-16 overflow-hidden"
         >
-          <h2 className="text-[13.5px] xs:text-[16px] sm:text-2xl md:text-3xl lg:text-4xl xl:text-[2.75rem] font-bold text-slate-900 dark:text-white tracking-tight leading-none whitespace-nowrap text-center">
+          <h2 className="text-[13.5px] xs:text-[14px] sm:text-2xl md:text-3xl lg:text-4xl xl:text-[3rem] font-semibold text-slate-900 dark:text-white tracking-tight leading-none whitespace-nowrap text-center">
             Your Job Application Is Just One{" "}
             <span className="font-serif italic font-normal text-[#15803d] dark:text-emerald-400">
               Swipe
@@ -631,8 +633,8 @@ export function JobSwipeShowcase() {
                       ? c.badge?.variant === "skip"
                         ? "bg-rose-500 text-white shadow-sm"
                         : c.badge?.variant === "applied"
-                        ? "bg-emerald-600 text-white shadow-sm"
-                        : "bg-blue-600 text-white shadow-sm"
+                          ? "bg-emerald-600 text-white shadow-sm"
+                          : "bg-blue-600 text-white shadow-sm"
                       : "bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300 hover:bg-slate-200"
                   )}
                 >

@@ -110,7 +110,7 @@ export function Navbar({ className }: NavbarProps) {
                 loading="eager"
                 fetchPriority="high"
                 priority
-                className="h-7 sm:h-8 w-auto object-contain transition-transform duration-300 group-hover:scale-[1.03]"
+                className="h-7 sm:h-6 w-auto object-contain transition-transform duration-300 group-hover:scale-[1.03]"
               />
               <Image
                 src="/images/wordmark-navy.png"
