@@ -226,7 +226,7 @@ export function normalizeJobItem(raw: JobListItem | JobDetail): Job {
   const matchScore = typeof raw.compatibility_score === "number" ? raw.compatibility_score : 0;
 
   // Generate SEO-friendly slug
-  const seoSlug = generateJobSlug(raw.title, raw.company_name || "", cityName || locationStr, raw.id);
+  const seoSlug = raw.slug || generateJobSlug(raw.title, raw.company_name || "", cityName || locationStr, raw.id);
 
   return {
     id: raw.id,

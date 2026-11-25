@@ -213,7 +213,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const sitemapData = await fetchJobSitemapList();
     if (sitemapData && sitemapData.jobs && sitemapData.jobs.length > 0) {
       liveJobRoutes = sitemapData.jobs.map((job) => {
-        const jobSlug = generateJobSlug(job.title, "", job.city || "india", job.id);
+        const jobSlug = (job as any).slug || generateJobSlug(job.title, "", job.city || "india", job.id);
         return {
           url: `${baseUrl}/jobs/view/${jobSlug}`,
           lastModified: job.updatedAt ? new Date(job.updatedAt) : now,

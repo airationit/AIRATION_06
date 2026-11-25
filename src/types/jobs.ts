@@ -24,6 +24,7 @@ export interface JobCompanyRef {
  */
 export interface JobListItem {
   id: string;
+  slug?: string;
   title: string;
   company_id?: string | null;
   company_name: string;
@@ -69,6 +70,7 @@ export interface JobListItem {
  */
 export interface JobDetail {
   id: string;
+  slug?: string;
   title: string;
   company_id?: string;
   company?: JobCompanyRef;
