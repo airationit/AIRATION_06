@@ -1,5 +1,19 @@
 import localFont from "next/font/local";
-import { Geist_Mono } from "next/font/google";
+import { Geist_Mono, Lora, Montserrat } from "next/font/google";
+
+export const fontMontserrat = Montserrat({
+  variable: "--font-montserrat",
+  subsets: ["latin"],
+  display: "swap",
+  weight: ["400", "500", "600", "700", "800"],
+});
+
+export const fontLora = Lora({
+  variable: "--font-lora",
+  subsets: ["latin"],
+  display: "swap",
+  weight: ["400", "500", "600", "700"],
+});
 
 export const fontSans = localFont({
   src: [

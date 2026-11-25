@@ -524,7 +524,7 @@ export function JobSwipeShowcase() {
   return (
     <section
       id="swipe-job-application"
-      className="relative w-full overflow-hidden py-10 sm:py-14 lg:py-12"
+      className="relative w-full overflow-x-clip py-10 sm:py-14 lg:py-12"
       aria-label="Job Application Swipe Showcase"
     >
       <div className="mx-auto max-w-7xl px-3.5 sm:px-6 lg:px-8 w-full">
@@ -534,11 +534,11 @@ export function JobSwipeShowcase() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-40px" }}
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          className="text-center w-full max-w-5xl mx-auto mb-8 sm:mb-12 lg:mb-16 overflow-hidden"
+          className="text-center w-full max-w-6xl mx-auto mb-8 sm:mb-12 lg:mb-16"
         >
-          <h2 className="text-[13.5px] xs:text-[14px] sm:text-2xl md:text-3xl lg:text-4xl xl:text-[3rem] font-semibold text-slate-900 dark:text-white tracking-tight leading-none whitespace-nowrap text-center">
+          <h2 className="text-[13.5px] xs:text-[14px] sm:text-2xl md:text-3xl lg:text-4xl xl:text-[3rem] font-semibold text-slate-900 dark:text-white tracking-tight leading-tight text-center">
             Your Job Application Is Just One{" "}
-            <span className="font-serif italic font-normal text-[#15803d] dark:text-emerald-400">
+            <span className="font-lora italic font-normal text-[#15803d] dark:text-emerald-400">
               Swipe
             </span>{" "}
             Away

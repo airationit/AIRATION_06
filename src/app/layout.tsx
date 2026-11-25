@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { fontSans, fontMono } from "@/lib/fonts";
+import { fontSans, fontMono, fontMontserrat, fontLora } from "@/lib/fonts";
 import { Providers } from "@/providers";
 import { Navbar, GradientBackground } from "@/components/shared";
 import { siteConfig } from "@/config/site";
@@ -70,7 +70,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${fontSans.variable} ${fontMono.variable}`}
+      className={`${fontSans.variable} ${fontMono.variable} ${fontMontserrat.variable} ${fontLora.variable}`}
       suppressHydrationWarning
     >
       <head>
