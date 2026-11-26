@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import Script from "next/script";
 import { fontSans, fontMono } from "@/lib/fonts";
 import { Providers } from "@/providers";
 import { Navbar, GradientBackground } from "@/components/shared";
@@ -74,8 +75,9 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <head>
-        <script
+        <Script
           id="hirance-launch-check"
+          strategy="beforeInteractive"
           dangerouslySetInnerHTML={{
             __html: `(function(){try{var d=localStorage.getItem("hirance_web_date");if(d){var t=Date.parse(d.trim().replace(" ","T"));if(t&&Date.now()>=t){document.documentElement.classList.add("hirance-launched");}}}catch(e){}})();`,
           }}

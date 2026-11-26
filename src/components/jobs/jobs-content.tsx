@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, useMemo, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
@@ -77,6 +77,12 @@ export function JobsContent({
     skills,
   } = useMasterdataStore();
 
+  // Stable refs so executeSearch doesn't recreate when masterdata loads
+  const skillsRef = useRef(skills);
+  const salaryRangesRef = useRef(salaryRanges);
+  useEffect(() => { skillsRef.current = skills; }, [skills]);
+  useEffect(() => { salaryRangesRef.current = salaryRanges; }, [salaryRanges]);
+
   useEffect(() => {
     loadMasterdata();
   }, [loadMasterdata]);
@@ -90,7 +96,6 @@ export function JobsContent({
   );
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const pageSize = 12;
-  const isInitialMount = useRef(true);
   const streamTopRef = useRef<HTMLDivElement>(null);
 
   // Comprehensive filter state strictly matching jobs_browse.md query parameters
@@ -256,14 +261,14 @@ export function JobsContent({
       try {
         const skillsQuery =
           activeFilters.selectedSkillIds.length > 0
-            ? skills
+            ? skillsRef.current
               .filter((s) => activeFilters.selectedSkillIds.includes(s.id))
               .map((s) => s.name)
               .join(",")
             : undefined;
 
         const salObj = activeFilters.salaryRangeId
-          ? salaryRanges.find((s) => s.id === activeFilters.salaryRangeId)
+          ? salaryRangesRef.current.find((s) => s.id === activeFilters.salaryRangeId)
           : undefined;
 
         let resolvedMinSalary =
@@ -314,15 +319,30 @@ export function JobsContent({
         setIsLoading(false);
       }
     },
-    [skills, salaryRanges, pageSize]
+    [pageSize]
+  );
+
+  // Snapshot of initial server-rendered state — skip API if nothing has changed
+  // (Strict Mode safe: comparing values, not a flag that mutates on first run)
+  const initialStateKey = useRef(
+    JSON.stringify({ page: 1, search: initialSearch || "", roleSlug, citySlug: citySlug || "all", experienceSlug: experienceSlug || "", workModeSlug: workModeSlug || "", jobTypeSlug: jobTypeSlug || "", workShiftSlug: workShiftSlug || "" })
   );
 
   // Trigger server-side fetch on page or filter changes (debounced for search text)
   useEffect(() => {
-    if (isInitialMount.current) {
-      isInitialMount.current = false;
-      return;
-    }
+    const currentKey = JSON.stringify({
+      page: currentPage,
+      search: filters.search,
+      roleSlug: filters.roleSlug,
+      citySlug: filters.citySlug,
+      experienceSlug: filters.experienceId,
+      workModeSlug: filters.workModeId,
+      jobTypeSlug: filters.jobTypeId,
+      workShiftSlug: filters.workShiftId,
+    });
+
+    // Skip if state matches the initial server-rendered snapshot
+    if (currentKey === initialStateKey.current) return;
 
     const timer = setTimeout(
       () => {
@@ -963,7 +983,7 @@ export function JobsContent({
         {/* Main 2-Column Layout: Left Filters + Middle Jobs List */}
         <div className="grid grid-cols-12 gap-8 items-start">
           {/* LEFT SIDEBAR: FILTERS */}
-          <div className="col-span-12 lg:col-span-4 xl:col-span-3 lg:sticky lg:top-20 self-start">
+          <div className="col-span-12 lg:col-span-4 xl:col-span-3 lg:self-stretch">
             <JobFiltersSidebar
               filters={filters}
               onChange={(newFilters) => {

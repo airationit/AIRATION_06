@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import {
   Search,
   RotateCcw,
@@ -76,8 +76,79 @@ export function JobFiltersSidebar({
     jobType: true,
     workShift: true,
     salary: true,
-    location: false,
+    location: true,
   });
+
+  const asideRef = useRef<HTMLElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  // Isolate scrolling: scrolling over the filter sidebar only scrolls this section up & down, never the page/right section
+  useEffect(() => {
+    const asideEl = asideRef.current;
+    if (!asideEl) return;
+
+    let isHovered = false;
+
+    const onMouseEnter = () => {
+      isHovered = true;
+    };
+    const onMouseLeave = () => {
+      isHovered = false;
+    };
+
+    const onGlobalWheel = (e: WheelEvent) => {
+      const container = scrollContainerRef.current;
+      if (!container) return;
+
+      const target = e.target as HTMLElement | null;
+      const isOverAside = isHovered || (target ? asideEl.contains(target) : false);
+
+      if (isOverAside) {
+        // Stop the window/page and right-side job cards from scrolling completely
+        e.preventDefault();
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+
+        // Check if cursor is over an inner list with its own scroll (e.g. roles search or cities list)
+        const nestedScrollable = target?.closest?.(
+          ".max-h-56, .max-h-52"
+        ) as HTMLElement | null;
+
+        // Normalize delta for physical Windows mouse wheels (deltaMode 1 = lines) vs trackpads (deltaMode 0 = pixels)
+        let delta = e.deltaY;
+        if (e.deltaMode === 1) {
+          delta *= 36;
+        } else if (e.deltaMode === 2) {
+          delta *= container.clientHeight;
+        }
+
+        if (delta === 0) return;
+
+        let targetEl: HTMLElement = container;
+        if (nestedScrollable && nestedScrollable.scrollHeight > nestedScrollable.clientHeight) {
+          const canScrollNested =
+            delta > 0
+              ? nestedScrollable.scrollTop + nestedScrollable.clientHeight < nestedScrollable.scrollHeight - 1
+              : nestedScrollable.scrollTop > 0;
+          if (canScrollNested) {
+            targetEl = nestedScrollable;
+          }
+        }
+
+        targetEl.scrollBy({ top: delta, behavior: "auto" });
+      }
+    };
+
+    asideEl.addEventListener("mouseenter", onMouseEnter);
+    asideEl.addEventListener("mouseleave", onMouseLeave);
+    window.addEventListener("wheel", onGlobalWheel, { passive: false, capture: true });
+
+    return () => {
+      asideEl.removeEventListener("mouseenter", onMouseEnter);
+      asideEl.removeEventListener("mouseleave", onMouseLeave);
+      window.removeEventListener("wheel", onGlobalWheel, { capture: true });
+    };
+  }, []);
 
   const toggleSection = (section: keyof typeof expandedSections) => {
     const nextState = !expandedSections[section];
@@ -209,11 +280,19 @@ export function JobFiltersSidebar({
         if (!a.featured && b.featured) return 1;
         return a.name.localeCompare(b.name);
       });
-      return sorted.map((c) => ({
-        id: c.id,
-        name: c.name,
-        slug: c.name.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
-      }));
+      const seen = new Set<string>();
+      return sorted
+        .filter((c) => {
+          const key = c.name.toLowerCase().trim();
+          if (seen.has(key)) return false;
+          seen.add(key);
+          return true;
+        })
+        .map((c) => ({
+          id: c.id,
+          name: c.name,
+          slug: c.name.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
+        }));
     }
     return POPULAR_CITIES.map((c) => ({
       id: c.slug,
@@ -303,7 +382,7 @@ export function JobFiltersSidebar({
               />
             </div>
 
-            <div className="space-y-1 pr-1 max-h-56 overflow-y-auto [scrollbar-width:thin] [scrollbar-color:rgba(156,163,175,0.4)_transparent]">
+            <div className="space-y-1 pr-1 max-h-56 overflow-y-auto overscroll-contain [scrollbar-width:thin] [scrollbar-color:rgba(156,163,175,0.4)_transparent]">
               {filteredRoles.map((role) => {
                 const isSelected =
                   filters.roleId === role.id ||
@@ -738,7 +817,7 @@ export function JobFiltersSidebar({
               />
             </div>
 
-            <div className="space-y-1.5 pr-1 max-h-52 overflow-y-auto [scrollbar-width:thin] [scrollbar-color:rgba(156,163,175,0.4)_transparent]">
+            <div className="space-y-1.5 pr-1 max-h-52 overflow-y-auto overscroll-contain [scrollbar-width:thin] [scrollbar-color:rgba(156,163,175,0.4)_transparent]">
               {filteredCities.map((city) => {
                 const isChecked = filters.citySlug === city.slug || filters.cityId === city.id;
                 return (
@@ -801,9 +880,15 @@ export function JobFiltersSidebar({
   return (
     <>
       {/* Desktop Sticky Sidebar */}
-      <aside className="sticky top-20 hidden lg:flex flex-col rounded-2xl border border-border/80 bg-card shadow-[0_4px_24px_rgba(0,0,0,0.03)] dark:shadow-[0_4px_24px_rgba(0,0,0,0.2)] max-h-[calc(100vh-6rem)] overflow-hidden">
+      <aside
+        ref={asideRef}
+        className="sticky top-6 hidden lg:flex flex-col w-full rounded-2xl border border-border/80 bg-card shadow-[0_4px_24px_rgba(0,0,0,0.03)] dark:shadow-[0_4px_24px_rgba(0,0,0,0.2)] max-h-[calc(100vh-3rem)] overflow-hidden overscroll-contain"
+      >
         {desktopHeader}
-        <div className="flex-1 overflow-y-auto px-5 py-4 space-y-4 overscroll-contain pb-8 [scrollbar-width:thin] [scrollbar-color:rgba(156,163,175,0.4)_transparent]">
+        <div
+          ref={scrollContainerRef}
+          className="flex-1 overflow-y-auto px-5 py-4 space-y-4 overscroll-contain pb-6 [scrollbar-width:thin] [scrollbar-color:rgba(156,163,175,0.4)_transparent] will-change-scroll"
+        >
           {filterSections}
         </div>
       </aside>

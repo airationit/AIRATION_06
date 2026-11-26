@@ -61,38 +61,21 @@ export function JobCard({ job, index = 0 }: JobCardProps) {
         <div className="flex items-start justify-between gap-3">
           <div className="flex items-start gap-3 min-w-0 flex-1">
             {/* Company Logo */}
-            {companySlug ? (
-              <div
-                // href={`/company/${companySlug}`}
-                className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-border/80 bg-muted/40 font-mono text-xs font-bold text-brand-600 dark:text-brand-400 shadow-2xs hover:opacity-85 transition-opacity"
-              >
-                {job.companyLogo && !imgError ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={job.companyLogo} 
-                    alt={job.company}
-                    onError={() => setImgError(true)}
-                    className="h-full w-full object-contain p-1"
-                  />
-                ) : (
-                  <span>{initials}</span>
-                )}
-              </div>
-            ) : (
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-border/80 bg-muted/40 font-mono text-xs font-bold text-brand-600 dark:text-brand-400 shadow-2xs">
-                {job.companyLogo && !imgError ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={job.companyLogo}
-                    alt={job.company}
-                    onError={() => setImgError(true)}
-                    className="h-full w-full object-contain p-1"
-                  />
-                ) : (
-                  <span>{initials}</span>
-                )}
-              </div>
-            )}
+            <div
+              className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-border/80 bg-muted/40 font-mono text-xs font-bold text-brand-600 dark:text-brand-400 shadow-2xs hover:opacity-85 transition-opacity"
+            >
+              {job.companyLogo && !imgError ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={job.companyLogo}
+                  alt={job.company}
+                  onError={() => setImgError(true)}
+                  className="h-full w-full object-contain p-1"
+                />
+              ) : (
+                <span>{initials}</span>
+              )}
+            </div>
 
             {/* Full Title (No truncate) & Company Name */}
             <div className="min-w-0 flex-1">
