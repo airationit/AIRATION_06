@@ -524,7 +524,7 @@ export function JobSwipeShowcase() {
   return (
     <section
       id="swipe-job-application"
-      className="relative w-full overflow-hidden py-10 sm:py-14 lg:py-12"
+      className="relative w-full overflow-hidden pt-10 pb-4 sm:py-14 lg:py-12"
       aria-label="Job Application Swipe Showcase"
     >
       <div className="mx-auto max-w-7xl px-3.5 sm:px-6 lg:px-8 w-full">
@@ -688,7 +688,7 @@ export function JobSwipeShowcase() {
           </div>
 
           {/* Mobile Dot Indicators */}
-          <div className="flex items-center justify-center gap-2 mt-5">
+          <div className="flex items-center justify-center gap-2 mt-3.5 sm:mt-5">
             {CARDS_DATA.map((_, i) => (
               <button
                 key={i}

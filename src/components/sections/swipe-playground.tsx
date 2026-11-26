@@ -23,6 +23,7 @@ import {
   AlertCircle,
   ArrowDown,
   Box,
+  RotateCcw,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { siteConfig } from "@/config/site";
@@ -709,7 +710,7 @@ function DragCard({ job, onDecide, isTop }: DragCardProps) {
       className="touch-none select-none h-full w-full"
     >
       {/* Compact Image 1 Card Surface Layout */}
-      <div className="relative h-full w-full rounded-[22px] sm:rounded-[24px] border border-slate-200/90 bg-white p-3.5 xs:p-4 sm:p-4.5 shadow-xl shadow-slate-900/6 dark:border-slate-800 dark:bg-slate-900 flex flex-col justify-between overflow-hidden">
+      <div className="relative h-full w-full rounded-[22px] sm:rounded-[24px] border border-slate-200/90 bg-white p-3.5 xs:p-4 sm:p-4.5 shadow-[0_10px_30px_-6px_rgba(15,23,42,0.08),0_4px_10px_-2px_rgba(15,23,42,0.04)] dark:border-slate-800 dark:bg-slate-900 flex flex-col justify-between overflow-hidden">
         {/* Dynamic Stamp Overlays during drag */}
         {isTop && (
           <>
@@ -1052,12 +1053,12 @@ export function SwipePlayground({ initialJobs }: SwipePlaygroundProps = {}) {
   return (
     <section
       id="playground"
-      className="relative w-full overflow-hidden py-10 sm:py-16 lg:py-10 "
+      className="relative w-full overflow-hidden pt-3 pb-10 sm:py-16 lg:py-10"
       aria-labelledby="playground-heading"
     >
       <div className="mx-auto max-w-7xl px-3 xs:px-4 sm:px-6 lg:px-8 w-full">
         {/* Top Floating Badge Pill (Matching Image 1) */}
-        <div className="mb-5 sm:mb-8 flex justify-center">
+        <div className="mb-3.5 sm:mb-8 flex justify-center">
           <div className="inline-flex items-center gap-2 rounded-full border border-slate-200/90 bg-white px-4 sm:px-6 py-1.5 sm:py-2.5 text-xs sm:text-xl font-medium text-slate-800 shadow-sm dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200">
             <span>Don&apos;t just look.</span>
             <span className="font-bold text-blue-600 dark:text-blue-400">Try it yourself.</span>
@@ -1068,7 +1069,7 @@ export function SwipePlayground({ initialJobs }: SwipePlaygroundProps = {}) {
         </div>
 
         {/* Main White Rounded Container Card (Matching Image 1) */}
-        <div className="relative rounded-[22px] sm:rounded-[36px] lg:rounded-[40px] border border-slate-500/20 bg-[#fbfbfb] p-3.5 xs:p-5 sm:p-8 lg:p-12  dark:bg-slate-900">
+        <div className="relative rounded-[22px] sm:rounded-[36px] lg:rounded-[40px] border border-slate-500/20 bg-[#fbfbfb] p-3.5 xs:p-5 sm:p-8 lg:p-12 pb-7 xs:pb-8 sm:pb-8 lg:pb-12 dark:bg-slate-900">
           <div className="grid grid-cols-1 items-center gap-8 sm:gap-10 lg:grid-cols-12 lg:gap-10 xl:gap-12">
             {/* Left Column: Heading, Category Pills, 3 Stat Cards, Google Play CTA */}
             <motion.div
@@ -1081,7 +1082,7 @@ export function SwipePlayground({ initialJobs }: SwipePlaygroundProps = {}) {
               {/* Heading (Matching Image 1) */}
               <h2
                 id="playground-heading"
-                className="text-2xl xs:text-3xl sm:text-4xl lg:text-[44px] font-semibold tracking-tight text-slate-900 dark:text-white leading-[1.15]"
+                className="text-xl sm:text-4xl lg:text-[44px] font-semibold tracking-tight text-slate-900 dark:text-white leading-[1.15]"
               >
                 One <span className="text-[#16A34A] dark:text-[#22C55E]">Swipe.</span>
                 <br />
@@ -1161,24 +1162,24 @@ export function SwipePlayground({ initialJobs }: SwipePlaygroundProps = {}) {
                 </div>
               </div>
 
-              {/* Google Play Button + Undo Last Swipe Button Container (Single Row with Wide Gap / Justify Between) */}
-              <div className="mt-5 sm:mt-7 flex flex-row items-center justify-between gap-4 sm:gap-6 w-full max-w-lg">
+              {/* Google Play Button + Undo Last Swipe Button Container (Responsive single/wrapped row without horizontal overflow) */}
+              <div className="mt-5 sm:mt-7 flex flex-wrap xs:flex-nowrap items-center justify-between gap-3 sm:gap-6 w-full max-w-lg">
                 {/* 1. Google Play Store Badge */}
                 <a
                   href={siteConfig.links.playStore}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center gap-2.5 sm:gap-3.5 rounded-2xl bg-[#15803D] hover:bg-[#166534] px-4 sm:px-6 py-2.5 sm:py-3 text-white shadow-md shadow-emerald-900/15 transition-all hover:scale-[1.01] active:scale-98 group cursor-pointer shrink-0"
+                  className="inline-flex items-center justify-center gap-2 sm:gap-3 rounded-xl sm:rounded-2xl bg-[#15803D] hover:bg-[#166534] px-3.5 sm:px-6 py-2.5 sm:py-3 text-white shadow-md shadow-emerald-900/15 transition-all hover:scale-[1.01] active:scale-98 group cursor-pointer shrink-0 min-w-0"
                 >
                   <svg
-                    className="h-5 w-5 sm:h-5.5 sm:w-5.5 fill-white shrink-0"
+                    className="h-4.5 w-4.5 sm:h-5.5 sm:w-5.5 fill-white shrink-0"
                     viewBox="0 0 24 24"
                     aria-hidden="true"
                   >
                     <path d="M3.18 23.76a2.23 2.23 0 0 1-1.18-.34V.58A2.23 2.23 0 0 1 3.18.24L13.7 12 3.18 23.76zM14.9 13.2l2.5 2.5-9.8 5.56 7.3-8.06zm2.5-4.9L14.9 10.8 7.6 2.74l9.8 5.56zM19.06 9.8l2.87 1.63a1.4 1.4 0 0 1 0 2.44l-2.87 1.63-2.7-2.7 2.7-3z" />
                   </svg>
-                  <div className="flex flex-col text-left leading-tight">
-                    <span className="text-[9px] sm:text-[10px] font-medium uppercase tracking-wider text-emerald-100">
+                  <div className="flex flex-col text-left leading-tight min-w-0">
+                    <span className="text-[8.5px] sm:text-[10px] font-medium uppercase tracking-wider text-emerald-100 truncate">
                       GET IT ON GOOGLE PLAY
                     </span>
                     <span className="text-xs sm:text-base font-medium text-white tracking-tight whitespace-nowrap">
@@ -1197,9 +1198,10 @@ export function SwipePlayground({ initialJobs }: SwipePlaygroundProps = {}) {
                       transition={{ duration: 0.2 }}
                       type="button"
                       onClick={handleUndo}
-                      className="inline-flex items-center justify-center rounded-2xl border border-slate-200/90 bg-white hover:bg-slate-50 text-slate-800 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800 px-3.5 sm:px-5 py-2.5 sm:py-3 text-xs sm:text-sm font-medium transition-all shadow-2xs select-none shrink-0 whitespace-nowrap cursor-pointer active:scale-95"
+                      className="inline-flex items-center justify-center gap-1.5 rounded-xl sm:rounded-2xl border border-slate-200/90 bg-white hover:bg-slate-50 text-slate-800 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800 px-3 sm:px-5 py-2.5 sm:py-3 text-xs sm:text-sm font-medium transition-all shadow-2xs select-none shrink-0 whitespace-nowrap cursor-pointer active:scale-95"
                     >
-                      Undo last swipe
+                      <RotateCcw className="h-3.5 w-3.5 text-slate-500 dark:text-slate-400 shrink-0" />
+                      <span>Undo last swipe</span>
                     </motion.button>
                   )}
                 </AnimatePresence>
@@ -1212,23 +1214,23 @@ export function SwipePlayground({ initialJobs }: SwipePlaygroundProps = {}) {
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true, margin: "-48px" }}
               transition={{ duration: 0.6, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
-              className="flex flex-col items-center justify-center lg:col-span-5 w-full"
+              className="flex flex-col items-center justify-center lg:col-span-5 w-full pb-4 sm:pb-0"
             >
               {/* Interactive Card Deck Container (Professional Spaced Height & Width) */}
-              <div className="relative w-full max-w-[290px] xs:max-w-[315px] sm:max-w-[335px] h-[465px] xs:h-[475px] sm:h-[450px] select-none mx-auto">
+              <div className="relative w-full max-w-[290px] xs:max-w-[315px] sm:max-w-[335px] h-[465px] xs:h-[475px] sm:h-[450px] select-none mx-auto mb-5 sm:mb-2">
                 {/* Physical Stacked Deck Visual Effect (only when cards remain) */}
                 {!isCompleted && nextJob && (
                   <>
                     <div
-                      className="absolute -bottom-2 inset-x-2.5 h-10 rounded-[24px] border border-slate-200/70 bg-white/95 shadow-sm dark:border-slate-800 dark:bg-slate-900/90 pointer-events-none"
+                      className="absolute -bottom-2 inset-x-2.5 h-10 rounded-[24px] border border-slate-200/70 bg-white/95 shadow-[0_6px_16px_-3px_rgba(0,0,0,0.06)] dark:border-slate-800 dark:bg-slate-900/90 pointer-events-none"
                       aria-hidden="true"
                     />
                     <div
-                      className="absolute -bottom-4 inset-x-5 h-10 rounded-[24px] border border-slate-200/50 bg-white/80 shadow-xs dark:border-slate-800 dark:bg-slate-900/75 pointer-events-none"
+                      className="absolute -bottom-4 inset-x-5 h-10 rounded-[24px] border border-slate-200/50 bg-white/80 shadow-[0_10px_22px_-4px_rgba(0,0,0,0.08)] dark:border-slate-800 dark:bg-slate-900/75 pointer-events-none"
                       aria-hidden="true"
                     />
                     <div
-                      className="absolute -bottom-6 inset-x-7.5 h-10 rounded-[24px] border border-slate-200/30 bg-white/60 shadow-2xs dark:border-slate-800 dark:bg-slate-900/60 pointer-events-none"
+                      className="absolute -bottom-6 inset-x-7.5 h-10 rounded-[24px] border border-slate-200/30 bg-white/60 shadow-[0_14px_28px_-6px_rgba(0,0,0,0.1)] dark:border-slate-800 dark:bg-slate-900/60 pointer-events-none"
                       aria-hidden="true"
                     />
 

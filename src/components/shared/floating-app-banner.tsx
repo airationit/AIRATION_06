@@ -45,6 +45,14 @@ function GooglePlayIcon({ className = "h-4 w-4" }: { className?: string }) {
 
 const STORAGE_KEY = "hirance_app_banner_dismissed_at";
 
+function isDesktopPointer(): boolean {
+  if (typeof window === "undefined") return false;
+  return (
+    window.innerWidth >= 768 &&
+    window.matchMedia("(hover: hover) and (pointer: fine)").matches
+  );
+}
+
 export function FloatingAppBanner({
   className,
   delayMs = 1200,
@@ -94,18 +102,29 @@ export function FloatingAppBanner({
     };
   }, [delayMs, reappearDelayMs]);
 
-  // Auto-dismiss popup after 5 seconds of visibility (pauses while user hovers to scan QR)
+  // Auto-dismiss popup after 5 seconds of visibility (5000ms)
+  // On desktop with a fine mouse pointer, hovering pauses the timer so the user can scan the QR code.
+  // In mobile responsive / touch view, it always auto-closes after 5 seconds just like on normal screen.
   useEffect(() => {
-    if (!isVisible || isHovered) return;
+    if (!isVisible) return;
+    if (isHovered && isDesktopPointer()) return;
 
     const autoHideTimer = setTimeout(() => {
       setIsVisible(false);
+
+      // Re-schedule re-appearance after reappearDelayMs (default 45s)
+      if (reappearDelayMs > 0) {
+        if (timerRef.current) clearTimeout(timerRef.current);
+        timerRef.current = setTimeout(() => {
+          setIsVisible(true);
+        }, reappearDelayMs);
+      }
     }, autoCloseDelayMs);
 
     return () => {
       clearTimeout(autoHideTimer);
     };
-  }, [isVisible, isHovered, autoCloseDelayMs]);
+  }, [isVisible, isHovered, autoCloseDelayMs, reappearDelayMs]);
 
   const handleDismiss = () => {
     setIsVisible(false);
@@ -145,8 +164,18 @@ export function FloatingAppBanner({
             stiffness: 380,
             damping: 28,
           }}
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
+          onMouseEnter={() => {
+            if (isDesktopPointer()) {
+              setIsHovered(true);
+            }
+          }}
+          onMouseLeave={() => {
+            setIsHovered(false);
+          }}
+          onTouchStart={() => {
+            // Touch interactions on mobile should never trap hover or pause auto-dismiss
+            setIsHovered(false);
+          }}
           aria-label="Download Hirance Mobile App"
           role="complementary"
           className={cn(

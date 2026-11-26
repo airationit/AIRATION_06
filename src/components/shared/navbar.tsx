@@ -50,8 +50,15 @@ export function Navbar({ className }: NavbarProps) {
 
   useEffect(() => {
     document.body.style.overflow = menuOpen ? "hidden" : ""
+    const lenis = (window as unknown as { lenis?: { stop: () => void; start: () => void } }).lenis
+    if (menuOpen) {
+      lenis?.stop()
+    } else {
+      lenis?.start()
+    }
     return () => {
       document.body.style.overflow = ""
+      lenis?.start()
     }
   }, [menuOpen])
 
@@ -388,7 +395,8 @@ export function Navbar({ className }: NavbarProps) {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -12, scale: 0.98 }}
               transition={{ duration: 0.25, ease: "easeOut" }}
-              className="fixed inset-x-4 top-16 z-[65] max-h-[calc(100dvh-5rem)] overflow-y-auto rounded-2xl border border-border/50 bg-white dark:bg-slate-900 p-4 shadow-[0_20px_50px_-20px_rgba(15,23,42,0.3)] sm:inset-x-10 sm:top-20 lg:hidden"
+              data-lenis-prevent
+              className="fixed inset-x-4 top-16 z-[65] max-h-[calc(100vh-5rem)] max-h-[calc(100dvh-5rem)] overflow-y-auto no-scrollbar overscroll-contain touch-pan-y rounded-2xl border border-border/50 bg-white dark:bg-slate-900 p-4 shadow-[0_20px_50px_-20px_rgba(15,23,42,0.3)] sm:inset-x-10 sm:top-20 lg:hidden [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
             >
               <p className="px-3 pb-2 text-[11px] font-semibold tracking-[0.14em] text-muted-foreground uppercase">
                 Choose your path
@@ -448,7 +456,7 @@ export function Navbar({ className }: NavbarProps) {
                 })}
               </div>
 
-              <div className="mt-3 flex flex-col gap-1 border-t border-border/60 pt-3">
+              <div className="mt-2 sm:mt-3 flex flex-col gap-0.5 sm:gap-1 border-t border-border/60 pt-1.5 sm:pt-3">
                 {siteConfig.nav.map((item) => {
                   if ("subNav" in item && item.subNav) {
                     return (
@@ -456,7 +464,7 @@ export function Navbar({ className }: NavbarProps) {
                         <button
                           type="button"
                           onClick={() => setMobileJobsOpen((v) => !v)}
-                          className="flex items-center justify-between rounded-xl px-4 py-3 text-base font-medium text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+                          className="flex items-center justify-between rounded-xl px-3.5 sm:px-4 py-2 sm:py-3 text-base font-medium text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
                         >
                           <span>{item.label}</span>
                           <ChevronDown
@@ -467,11 +475,14 @@ export function Navbar({ className }: NavbarProps) {
                           />
                         </button>
                         {mobileJobsOpen && (
-                          <div className="pl-3 pb-2 flex flex-col gap-2 border-l-2 border-brand-500/20 ml-4 mt-1">
+                          <div
+                            data-lenis-prevent
+                            className="pl-3 pb-2 flex flex-col gap-2 border-l-2 border-brand-500/20 ml-4 mt-1 max-h-[260px] xs:max-h-[290px] sm:max-h-[340px] overflow-y-auto no-scrollbar touch-pan-y overscroll-contain pr-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+                          >
                             {item.subNav.leftSections ? (
                               item.subNav.leftSections.map((sec: any, secIdx: number) => (
                                 <div key={secIdx} className="flex flex-col gap-1 pt-1">
-                                  <span className="text-xs font-bold text-slate-900 dark:text-slate-100 px-3">
+                                  <span className="text-sm font-bold text-slate-900 dark:text-slate-100 px-3">
                                     {sec.title}
                                   </span>
                                   {sec.items.map((sub: any) => (
@@ -479,7 +490,7 @@ export function Navbar({ className }: NavbarProps) {
                                       key={sub.href}
                                       href={sub.href}
                                       onClick={handleMenuClose}
-                                      className="rounded-lg px-3 py-1.5 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors"
+                                      className="rounded-lg px-3 py-1.5 text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors"
                                     >
                                       {sub.label}
                                     </Link>
@@ -487,7 +498,7 @@ export function Navbar({ className }: NavbarProps) {
                                 </div>
                               ))
                             ) : null}
-                            <span className="text-xs font-bold text-slate-900 dark:text-slate-100 pt-2 px-3">
+                            <span className="text-sm font-bold text-slate-900 dark:text-slate-100 pt-2 px-3">
                               Browse Directories
                             </span>
                             {item.subNav.right.map((sub: any) => (
@@ -495,7 +506,7 @@ export function Navbar({ className }: NavbarProps) {
                                 key={sub.href}
                                 href={sub.href}
                                 onClick={handleMenuClose}
-                                className="rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors flex items-center justify-between"
+                                className="rounded-lg px-3 py-1.5 text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors flex items-center justify-between"
                               >
                                 <span>{sub.label}</span>
                                 <ChevronRight className="h-3.5 w-3.5 opacity-50" />
@@ -512,7 +523,7 @@ export function Navbar({ className }: NavbarProps) {
                       key={item.href}
                       href={item.href}
                       onClick={handleMenuClose}
-                      className="rounded-xl px-4 py-3 text-base font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-brand-500/40"
+                      className="rounded-xl px-3.5 sm:px-4 py-2 sm:py-3 text-base font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-brand-500/40"
                       tabIndex={0}
                     >
                       {item.label}
@@ -521,7 +532,7 @@ export function Navbar({ className }: NavbarProps) {
                 })}
               </div>
 
-              <div className="mt-3 border-t border-border/60 pt-4">
+              <div className="mt-1.5 sm:mt-3 border-t border-border/60 pt-2 sm:pt-4">
                 <GooglePlayButton className="w-full justify-center" />
               </div>
             </motion.div>

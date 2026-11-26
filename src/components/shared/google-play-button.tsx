@@ -42,7 +42,7 @@ export function GooglePlayButton({
       aria-label={`${sublabel ? `${sublabel}: ` : ""}${label} - Hirance`}
       {...(motionProps as Record<string, unknown>)}
       className={cn(
-        "group inline-flex h-12 items-center justify-center gap-3 rounded-full bg-blue-600 hover:bg-blue-700 px-5 sm:px-6 text-left text-white shadow-md shadow-blue-600/25 transition-all duration-300 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-blue-500/30 hover:scale-[1.02] active:scale-[0.98]",
+        "group inline-flex h-12 items-center justify-center gap-3 rounded-full bg-black hover:bg-slate-900 px-5 sm:px-6 text-left text-white shadow-md shadow-black/20 border border-white/10 transition-all duration-300 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-slate-400/30 hover:scale-[1.02] active:scale-[0.98]",
         animate && "glow-hover",
         className
       )}

@@ -74,7 +74,7 @@ export function Hero({ initialJobs }: HeroProps = {}) {
       </div>
 
       {/* HERO COPY TEXT SECTION */}
-      <div className="relative z-0 flex min-h-[calc(100svh_-_var(--header-height)_-_var(--hero-top)_-_var(--video-height)*0.2)] items-center justify-center px-4 sm:px-6 lg:px-8 pb-8 sm:pb-10 md:pb-12">
+      <div className="relative z-0 flex min-h-0 sm:min-h-[calc(100svh_-_var(--header-height)_-_var(--hero-top)_-_var(--video-height)*0.2)] items-center justify-center px-4 sm:px-6 lg:px-8 pb-3 sm:pb-10 md:pb-12">
         <motion.div
           ref={copyRef}
           style={
@@ -86,7 +86,7 @@ export function Hero({ initialJobs }: HeroProps = {}) {
                 y: copyY,
               }
           }
-          className="mx-auto flex w-full max-w-7xl flex-col items-center justify-center text-center will-change-transform pb-8"
+          className="mx-auto flex w-full max-w-7xl flex-col items-center justify-center text-center will-change-transform pb-2 sm:pb-8"
         >
           {/* Headline */}
           <motion.h1
@@ -163,16 +163,16 @@ export function Hero({ initialJobs }: HeroProps = {}) {
             initial={reducedMotion ? false : { opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: reducedMotion ? 0 : 0.5, ease: [0.16, 1, 0.3, 1] }}
-            className="mt-6 flex flex-col items-center gap-3 px-4 sm:px-0"
+            className="mt-4 sm:mt-6 flex flex-col items-center gap-2 sm:gap-3 px-2 sm:px-0"
           >
-            <p className="text-xs text-slate-400 font-medium tracking-wide">Popular searches</p>
-            <div className="flex flex-wrap justify-center gap-2 max-w-xs sm:max-w-xl mx-auto">
+            <p className="text-[11px] sm:text-xs text-slate-400 font-medium tracking-wide">Popular searches</p>
+            <div className="flex flex-wrap justify-center items-center gap-1.5 sm:gap-2 w-full max-w-[340px] xs:max-w-[420px] sm:max-w-xl mx-auto">
               {POPULAR_SEARCHES.map((term) => (
                 <button
                   key={term}
                   type="button"
                   onClick={() => handlePopularSearch(term)}
-                  className="rounded-full border border-border/70 bg-white dark:bg-slate-900 px-4 py-1.5 text-xs font-medium text-slate-600 dark:text-slate-300 transition-colors hover:border-slate-400 hover:text-slate-900 dark:hover:text-white"
+                  className="rounded-full border border-border/70 bg-white dark:bg-slate-900 px-2.5 xs:px-3 sm:px-4 py-1 sm:py-1.5 text-[11px] xs:text-[11.5px] sm:text-xs font-medium text-slate-600 dark:text-slate-300 transition-colors hover:border-slate-400 hover:text-slate-900 dark:hover:text-white active:scale-95 shrink-0 shadow-xs"
                 >
                   {term}
                 </button>
@@ -183,7 +183,7 @@ export function Hero({ initialJobs }: HeroProps = {}) {
       </div>
 
       {/* HERO SHOWCASE BANNER */}
-      <div className="relative mx-auto w-full max-w-9xl px-6 sm:px-10 lg:px-16 xl:px-20 pb-12 sm:pb-16">
+      <div className="relative mx-auto w-full max-w-9xl px-4 sm:px-10 lg:px-16 xl:px-20 pb-10 sm:pb-16">
         <HeroVideoCard initialJobs={initialJobs} className="w-full min-h-[var(--video-height)] lg:h-[var(--video-height)]" />
       </div>
     </section>

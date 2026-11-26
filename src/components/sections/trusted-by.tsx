@@ -4,7 +4,6 @@ import { useState, useEffect, useMemo, memo } from "react";
 import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
 import { getCompanyColorTheme, initials } from "@/config/companies";
-import companiesData from "@/config/companies.json";
 import { fetchCompanies } from "@/lib/api";
 import type { CompanyItem } from "@/types";
 import { cn } from "@/lib/utils";
@@ -270,6 +269,28 @@ function BrandIcon({ name }: { name: string }) {
     );
   }
 
+  // 22. Webspirt / Websprit Technology
+  if (lower.includes("webspirt") || lower.includes("websprit")) {
+    return (
+      <div className="flex items-center gap-2 select-none">
+        <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-gradient-to-tr from-cyan-600 to-blue-600 flex items-center justify-center text-white shadow-xs shrink-0">
+          <svg className="w-4.5 h-4.5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="16 18 22 12 16 6" />
+            <polyline points="8 6 2 12 8 18" />
+          </svg>
+        </div>
+        <div className="flex flex-col text-left leading-none">
+          <span className="font-bold text-sm sm:text-base text-slate-900 dark:text-white tracking-tight">
+            Websprit
+          </span>
+          <span className="text-[8.5px] uppercase tracking-wider text-slate-500 font-semibold mt-0.5">
+            Technology
+          </span>
+        </div>
+      </div>
+    );
+  }
+
   return null;
 }
 
@@ -304,40 +325,6 @@ const PREMIER_BRAND_COMPANIES: CompanyItem[] = PREMIER_BRAND_NAMES.map((name, i)
   company_logo: "brand-icon",
 }));
 
-// Companies from static data that have verified, working high-res logos (no 16x16 globe fallbacks)
-const VERIFIED_STATIC_NAMES = new Set([
-  "bigbasket",
-  "codinwalk software",
-  "cognizant",
-  "dhl",
-  "digital search technologies pvt. ltd.",
-  "edelta corporation",
-  "elyriasoft",
-  "ey",
-  "goomi technology",
-  "imch patna",
-  "innovaneers technologies",
-  "iph technologies",
-  "jobgenix",
-  "mckinsey & company",
-  "mingrow",
-  "pitch pine media pvt. ltd.",
-  "robospecies technologies",
-  "square yards",
-  "stand in crowd technologies",
-  "teleperformance",
-  "vexil infotech pvt ltd",
-  "webspirt technology pvt. ltd.",
-]);
-
-const verifiedStaticCompanies: CompanyItem[] = (companiesData as any[])
-  .filter((c) => VERIFIED_STATIC_NAMES.has((c.name || "").toLowerCase().trim()))
-  .map((c, i) => ({
-    id: `static-verified-${i}`,
-    company_name: c.name,
-    company_logo: c.logo_url,
-  }));
-
 /**
  * Clean corporate logo item matching the style in reference Image 2.
  * Renders company logo / brand mark in grayscale with smooth hover.
@@ -352,11 +339,10 @@ const CompanyLogoItem = memo(function CompanyLogoItem({
   const [failed, setFailed] = useState(false);
   const name = company.company_name?.trim() || "Company";
   const logoUrl = company.company_logo?.trim() || "";
-  const brandIcon = useMemo(() => BrandIcon({ name }), [name]);
   const hasLogo = Boolean(logoUrl) && logoUrl !== "brand-icon" && !failed;
 
-  // STRICT: Do not render if neither logo nor brand icon exists
-  if (!hasLogo && !brandIcon) return null;
+  // STRICT: Do not render if logo is missing or failed
+  if (!hasLogo) return null;
 
   return (
     <div
@@ -364,27 +350,20 @@ const CompanyLogoItem = memo(function CompanyLogoItem({
       className="relative flex shrink-0 items-center justify-center px-3 sm:px-5 py-1 select-none pointer-events-none"
     >
       <div className="flex items-center justify-center h-12 sm:h-14 md:h-16 min-w-0 grayscale contrast-125 opacity-80 hover:opacity-100 hover:grayscale-0 transition-all duration-300">
-        {brandIcon ? (
-          <div className="flex items-center justify-center">
-            {brandIcon}
-          </div>
-        ) : (
-          <img
-            src={logoUrl}
-            alt={name}
-            loading="lazy"
-            decoding="async"
-            className="h-9 sm:h-11 md:h-13 w-auto max-w-[140px] sm:max-w-[180px] md:max-w-[200px] object-contain pointer-events-none"
-            onError={() => setFailed(true)}
-            onLoad={(e) => {
-              const img = e.currentTarget;
-              // If image is a tiny 16x16 or 32x32 generic globe or broken placeholder, discard it
-              if (img.naturalWidth <= 32 && img.naturalHeight <= 32) {
-                setFailed(true);
-              }
-            }}
-          />
-        )}
+        <img
+          src={logoUrl}
+          alt={name}
+          loading="lazy"
+          decoding="async"
+          className="h-9 sm:h-11 md:h-13 w-auto max-w-[140px] sm:max-w-[180px] md:max-w-[200px] object-contain pointer-events-none"
+          onError={() => setFailed(true)}
+          onLoad={(e) => {
+            const img = e.currentTarget;
+            if (img.naturalWidth <= 32 && img.naturalHeight <= 32) {
+              setFailed(true);
+            }
+          }}
+        />
       </div>
     </div>
   );
@@ -452,7 +431,7 @@ export function TrustedBy({ initialCompanies }: TrustedByProps) {
       const name = (c.company_name || "").toLowerCase().trim();
       return name.length > 2 && !name.match(/^[0-9]+$/) && !name.includes("test") && !name.includes("thank you");
     });
-    return deduplicateCompanies([...PREMIER_BRAND_COMPANIES, ...validInitial, ...verifiedStaticCompanies]);
+    return deduplicateCompanies(validInitial);
   });
 
   // Fetch and sync real-time API companies
@@ -466,7 +445,7 @@ export function TrustedBy({ initialCompanies }: TrustedByProps) {
             const name = (c.company_name || "").toLowerCase().trim();
             return name.length > 2 && !name.match(/^[0-9]+$/) && !name.includes("test") && !name.includes("thank you");
           });
-          setCompanyList(deduplicateCompanies([...PREMIER_BRAND_COMPANIES, ...validApi, ...verifiedStaticCompanies]));
+          setCompanyList(deduplicateCompanies(validApi));
         }
       })
       .catch(() => { });
@@ -476,14 +455,12 @@ export function TrustedBy({ initialCompanies }: TrustedByProps) {
     };
   }, [initialCompanies]);
 
-  // Distribute into 2 balanced rows matching Image 2 - strictly companies with logos
+  // Distribute into 2 balanced rows - strictly companies with logos from API
   const { row1, row2 } = useMemo(() => {
     const withLogos = (companyList || []).filter((c) => {
       if (!c) return false;
       const name = (c.company_name || "").trim();
       if (!name) return false;
-      // Brand icons don't need a remote URL
-      if (BrandIcon({ name })) return true;
       const url = c.company_logo?.trim();
       return url && url !== "null" && url !== "undefined" && url !== "brand-icon";
     });
@@ -503,6 +480,10 @@ export function TrustedBy({ initialCompanies }: TrustedByProps) {
     return { row1: r1, row2: r2 };
   }, [companyList]);
 
+  if (row1.length === 0 && row2.length === 0) {
+    return null;
+  }
+
   return (
     <section
       id="partners"
@@ -510,15 +491,38 @@ export function TrustedBy({ initialCompanies }: TrustedByProps) {
       aria-labelledby="trusted-by-heading"
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full">
-        {/* Header matching Image 2: Horizontal lines on left & right with centered text */}
-        <div className="relative mx-auto flex w-full max-w-5xl items-center justify-center px-4 mb-7 sm:mb-9">
+        {/* Mobile Header: Badge Pill (Image 2 with light black bg and black text) */}
+        <div className="flex sm:hidden justify-center items-center mb-5">
+          <div className="inline-flex items-center gap-2 rounded-full bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 px-4 py-1.5 shadow-xs">
+            <svg className="h-4.5 w-4.5 shrink-0" viewBox="0 0 24 24" aria-hidden="true">
+              <path
+                d="M12 2L4 5v6.09c0 5.05 3.41 9.76 8 10.91 4.59-1.15 8-5.86 8-10.91V5l-8-3z"
+                className="fill-slate-900 dark:fill-white"
+              />
+              <path
+                d="M9.5 12.5l2 2 4.5-4.5"
+                fill="none"
+                className="stroke-white dark:stroke-slate-900"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+            <h2 className="text-sm font-semibold text-slate-900 dark:text-white tracking-tight">
+              Trusted by Top Companies
+            </h2>
+          </div>
+        </div>
+
+        {/* Desktop Header: Horizontal lines on left & right with centered text (Image 1) */}
+        <div className="relative mx-auto hidden sm:flex w-full max-w-5xl items-center justify-center px-4 mb-7 sm:mb-9">
           <div className="flex-1 border-t border-slate-200 dark:border-slate-800" />
-          <h1
+          <h2
             id="trusted-by-heading"
             className="px-6 text-lg sm:text-xl md:text-[22px] font-medium text-slate-700 dark:text-slate-300 tracking-tight text-center whitespace-nowrap"
           >
             Trusted companies ready to hire
-          </h1>
+          </h2>
           <div className="flex-1 border-t border-slate-200 dark:border-slate-800" />
         </div>
 
