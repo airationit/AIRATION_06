@@ -54,7 +54,7 @@ export function JobCard({ job, index = 0 }: JobCardProps) {
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.2, delay: Math.min(index * 0.02, 0.1) }}
-      className="group relative flex flex-col justify-between rounded-xl border border-border/80 bg-card p-4 transition-all duration-200 hover:border-brand-500/40 hover:shadow-md hover:shadow-brand-500/5 dark:hover:border-brand-400/30"
+      className="font-google-sans group relative flex flex-col justify-between rounded-xl border border-border/80 bg-card p-4 transition-all duration-200 hover:border-brand-500/40 hover:shadow-md hover:shadow-brand-500/5 dark:hover:border-brand-400/30"
     >
       <div className="space-y-2.5">
         {/* Top Header: Logo + Full Title & Company + Salary */}

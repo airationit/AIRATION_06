@@ -97,10 +97,10 @@ export function Hero({ initialJobs }: HeroProps = {}) {
             initial={reducedMotion ? false : { opacity: 0, y: 20, filter: "blur(6px)" }}
             animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
             transition={{ duration: 0.65, delay: reducedMotion ? 0 : 0.05, ease: [0.16, 1, 0.3, 1] }}
-            className="max-w-4xl text-balance text-4xl sm:text-5xl lg:text-[3.6rem] font-semibold leading-[1.1] tracking-tight"
+            className="max-w-4xl text-balance text-[2.75rem] sm:text-[3.3rem] lg:text-[3.96rem] font-semibold leading-[1.1] tracking-tight"
           >
             <span className="text-slate-900 dark:text-white">Job Hunting in </span>
-            <span className="text-slate-900 dark:text-white font-normal">Seconds</span>
+            <span className="font-lora text-slate-900 dark:text-white font-normal">Seconds</span>
           </motion.h1>
 
           {/* Subheading */}
@@ -169,8 +169,8 @@ export function Hero({ initialJobs }: HeroProps = {}) {
             transition={{ duration: 0.6, delay: reducedMotion ? 0 : 0.5, ease: [0.16, 1, 0.3, 1] }}
             className="mt-4 sm:mt-6 flex flex-col items-center gap-2 sm:gap-3 px-2 sm:px-0"
           >
-            <p className="text-[11px] sm:text-xs text-slate-400 font-medium tracking-wide">Popular searches</p>
-            <div className="flex flex-wrap justify-center items-center gap-1.5 sm:gap-2 w-full max-w-[340px] xs:max-w-[420px] sm:max-w-xl mx-auto">
+            <p className="text-[0.825rem] text-slate-400 font-medium tracking-wide">Popular searches</p>
+            <div className="flex flex-wrap justify-center gap-2 max-w-xs sm:max-w-xl mx-auto">
               {POPULAR_SEARCHES.map((term) => (
                 <button
                   key={term}

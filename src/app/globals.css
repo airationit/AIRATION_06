@@ -43,7 +43,7 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-google-sans-flex);
+  --font-sans: var(--font-montserrat);
   --font-mono: var(--font-geist-mono);
   --font-heading: var(--font-google-sans-flex);
   --font-display: var(--font-google-sans-flex);
@@ -115,6 +115,14 @@
   --color-warning-50: #FFFBEB;
   --color-warning-500: #F59E0B;
   --color-warning-600: #D97706;
+}
+
+.font-google-sans {
+  font-family: var(--font-google-sans-flex), sans-serif;
+}
+
+.font-lora {
+  font-family: var(--font-lora), Georgia, serif;
 }
 
 :root {
