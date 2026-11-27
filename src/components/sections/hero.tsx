@@ -50,10 +50,14 @@ export function Hero({ initialJobs }: HeroProps = {}) {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
+    const trimmedKeyword = keyword.trim();
+    const trimmedLocation = location.trim();
+    if (!trimmedKeyword && !trimmedLocation) return;
+
     const params = new URLSearchParams();
-    if (keyword.trim()) params.set("keyword", keyword.trim());
-    if (location.trim()) params.set("city", location.trim());
-    router.push(`/jobs${params.toString() ? `?${params.toString()}` : ""}`);
+    if (trimmedKeyword) params.set("keyword", trimmedKeyword);
+    if (trimmedLocation) params.set("city", trimmedLocation);
+    router.push(`/jobs?${params.toString()}`);
   };
 
   const handlePopularSearch = (term: string) => {
@@ -63,7 +67,7 @@ export function Hero({ initialJobs }: HeroProps = {}) {
   return (
     <section
       ref={sectionRef}
-      className="relative overflow-x-clip pt-[var(--hero-top)] [--hero-top:3rem] [--header-height:3.75rem] [--video-height:500px] sm:[--hero-top:3.5rem] sm:[--header-height:4.5rem] sm:[--video-height:530px] md:[--hero-top:4.5rem] md:[--video-height:560px] lg:[--header-height:4.75rem] lg:[--video-height:620px] xl:[--video-height:660px] 2xl:[--video-height:700px]"
+      className="relative overflow-x-clip pt-[var(--hero-top)] [--hero-top:3rem] [--header-height:3.75rem] [--video-height:500px] sm:[--hero-top:2.75rem] sm:[--header-height:4.5rem] sm:[--video-height:530px] md:[--hero-top:3.25rem] md:[--video-height:560px] lg:[--hero-top:4.5rem] lg:[--header-height:4.75rem] lg:[--video-height:620px] xl:[--video-height:660px] 2xl:[--video-height:700px]"
     >
       {/* Background bottom edge fade */}
       <div
@@ -74,7 +78,7 @@ export function Hero({ initialJobs }: HeroProps = {}) {
       </div>
 
       {/* HERO COPY TEXT SECTION */}
-      <div className="relative z-0 flex min-h-0 sm:min-h-[calc(100svh_-_var(--header-height)_-_var(--hero-top)_-_var(--video-height)*0.2)] items-center justify-center px-4 sm:px-6 lg:px-8 pb-3 sm:pb-10 md:pb-12">
+      <div className="relative z-0 flex min-h-0 lg:min-h-[calc(100svh_-_var(--header-height)_-_var(--hero-top)_-_var(--video-height)*0.2)] items-center justify-center px-4 sm:px-6 lg:px-8 pb-3 sm:pb-8 lg:pb-12">
         <motion.div
           ref={copyRef}
           style={
@@ -86,7 +90,7 @@ export function Hero({ initialJobs }: HeroProps = {}) {
                 y: copyY,
               }
           }
-          className="mx-auto flex w-full max-w-7xl flex-col items-center justify-center text-center will-change-transform pb-2 sm:pb-8"
+          className="mx-auto flex w-full max-w-7xl flex-col items-center justify-center text-center will-change-transform pb-2 sm:pb-4 lg:pb-8"
         >
           {/* Headline */}
           <motion.h1
@@ -151,7 +155,7 @@ export function Hero({ initialJobs }: HeroProps = {}) {
               {/* Search Button */}
               <button
                 type="submit"
-                className="mt-2 sm:mt-0 shrink-0 rounded-xl sm:rounded-full bg-[#15803D] hover:bg-[#166534] active:bg-green-500 px-7 py-3 sm:py-2.5 text-sm font-bold text-white transition-colors focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-yellow-400/50 w-full sm:w-auto"
+                className="mt-2 sm:mt-0 shrink-0 rounded-xl sm:rounded-full bg-[#15803D] hover:bg-[#166534] active:bg-green-500 px-7 py-3 sm:py-2.5 text-sm font-bold text-white transition-colors focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-yellow-400/50 w-full sm:w-auto cursor-pointer"
               >
                 Search
               </button>

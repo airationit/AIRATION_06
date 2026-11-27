@@ -1,4 +1,4 @@
-﻿"use client"
+"use client"
 
 import { useEffect, useRef, useState } from "react"
 import { usePathname, useSelectedLayoutSegment } from "next/navigation"
@@ -90,11 +90,13 @@ export function Navbar({ className }: NavbarProps) {
         transition={{ duration: 0.7, ease: [0.25, 0.1, 0.25, 1] }}
         className={cn(
           "w-full transition-all duration-300 ease-out",
-          "relative z-50 py-4 sm:py-5",
+          "sticky top-0 sm:relative z-50 py-4 sm:py-5",
           isHome
-            ? "border-b border-border/50 bg-transparent shadow-none dark:bg-transparent dark:border-slate-800"
+            ? scrolled
+              ? "border-b border-border/50 bg-white/95 backdrop-blur-md shadow-2xs sm:bg-transparent sm:backdrop-blur-none sm:shadow-none dark:bg-slate-950/95 sm:dark:bg-transparent dark:border-slate-800"
+              : "border-b border-border/50 bg-white/95 backdrop-blur-md shadow-none sm:bg-transparent sm:backdrop-blur-none dark:bg-slate-950/95 sm:dark:bg-transparent dark:border-slate-800"
             : "border-b border-border/50 bg-white shadow-2xs dark:border-slate-800 dark:bg-slate-950",
-          "px-6 sm:px-10 lg:px-16 xl:px-24",
+          "px-4 sm:px-10 lg:px-16 xl:px-24",
           className
         )}
       >
@@ -105,7 +107,7 @@ export function Navbar({ className }: NavbarProps) {
           <div className="flex min-w-0 items-center gap-6 lg:gap-10">
             <Link
               href="/"
-              className="group relative flex shrink-0 items-center gap-2 sm:gap-2.5 select-none focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-brand-500/40 focus-visible:ring-offset-2"
+              className="group relative flex shrink-0 items-center gap-1.5 sm:gap-2.5 select-none focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-brand-500/40 focus-visible:ring-offset-2"
               aria-label={`${siteConfig.name} home`}
               tabIndex={0}
             >
@@ -117,7 +119,7 @@ export function Navbar({ className }: NavbarProps) {
                 loading="eager"
                 fetchPriority="high"
                 priority
-                className="h-7 sm:h-6 w-auto object-contain transition-transform duration-300 group-hover:scale-[1.03]"
+                className="h-5.5 sm:h-6 w-auto object-contain transition-transform duration-300 group-hover:scale-[1.03]"
               />
               <Image
                 src="/images/wordmark-navy.png"
@@ -127,7 +129,7 @@ export function Navbar({ className }: NavbarProps) {
                 loading="eager"
                 fetchPriority="high"
                 priority
-                className="h-5 sm:h-5.5 w-auto object-contain transition-transform duration-300 group-hover:scale-[1.03]"
+                className="h-4 sm:h-5.5 w-auto object-contain transition-transform duration-300 group-hover:scale-[1.03]"
               />
             </Link>
 
@@ -364,7 +366,7 @@ export function Navbar({ className }: NavbarProps) {
         aria-expanded={menuOpen}
         tabIndex={0}
         className={cn(
-          "fixed top-3.5 right-6 z-[60] flex h-10 w-10 items-center justify-center rounded-full border text-foreground transition-all duration-300 ease-out sm:top-4 sm:right-10 lg:hidden",
+          "fixed top-4 right-4 z-[60] flex h-10 w-10 items-center justify-center rounded-full border text-foreground transition-all duration-300 ease-out sm:top-5 sm:right-10 lg:hidden",
           "focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-brand-500/40",
           scrolled || menuOpen
             ? "border-border/50 bg-white/95 shadow-[0_10px_36px_-18px_rgba(15,23,42,0.22)] backdrop-blur-md dark:bg-slate-900/95"
@@ -396,18 +398,19 @@ export function Navbar({ className }: NavbarProps) {
               exit={{ opacity: 0, y: -12, scale: 0.98 }}
               transition={{ duration: 0.25, ease: "easeOut" }}
               data-lenis-prevent
-              className="fixed inset-x-4 top-16 z-[65] max-h-[calc(100vh-5rem)] max-h-[calc(100dvh-5rem)] overflow-y-auto no-scrollbar overscroll-contain touch-pan-y rounded-2xl border border-border/50 bg-white dark:bg-slate-900 p-4 shadow-[0_20px_50px_-20px_rgba(15,23,42,0.3)] sm:inset-x-10 sm:top-20 lg:hidden [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+              className="fixed inset-x-4 top-16 z-[65] flex flex-col max-h-[calc(100dvh-5rem)] sm:max-h-[calc(100dvh-6.5rem)] overflow-hidden rounded-2xl border border-border/50 bg-white dark:bg-slate-900 p-4 shadow-[0_20px_50px_-20px_rgba(15,23,42,0.3)] sm:inset-x-10 sm:top-20 lg:hidden"
             >
-              <p className="px-3 pb-2 text-[11px] font-semibold tracking-[0.14em] text-muted-foreground uppercase">
-                Choose your path
-              </p>
+              <div className="flex-1 min-h-0 overflow-y-auto no-scrollbar overscroll-contain touch-pan-y [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                <p className="px-3 pb-2 text-[11px] font-semibold tracking-[0.14em] text-muted-foreground uppercase">
+                  Choose your path
+                </p>
 
               <div className="grid gap-2">
                 {siteConfig.audiences.map((audience) => {
                   const content = (
                     <>
                       <span className="flex flex-col gap-0.5">
-                        <span className="text-base font-semibold text-foreground">
+                        <span className="text-sm sm:text-base font-semibold text-foreground">
                           {audience.label}
                         </span>
                         <span className="text-xs text-muted-foreground">
@@ -464,7 +467,7 @@ export function Navbar({ className }: NavbarProps) {
                         <button
                           type="button"
                           onClick={() => setMobileJobsOpen((v) => !v)}
-                          className="flex items-center justify-between rounded-xl px-3.5 sm:px-4 py-2 sm:py-3 text-base font-medium text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+                          className="flex items-center justify-between rounded-xl px-3.5 sm:px-4 py-2 sm:py-3 text-sm sm:text-base font-medium text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
                         >
                           <span>{item.label}</span>
                           <ChevronDown
@@ -477,7 +480,7 @@ export function Navbar({ className }: NavbarProps) {
                         {mobileJobsOpen && (
                           <div
                             data-lenis-prevent
-                            className="pl-3 pb-2 flex flex-col gap-2 border-l-2 border-brand-500/20 ml-4 mt-1 max-h-[260px] xs:max-h-[290px] sm:max-h-[340px] overflow-y-auto no-scrollbar touch-pan-y overscroll-contain pr-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+                            className="pl-3 pb-2 flex flex-col gap-2 border-l-2 border-brand-500/20 ml-4 mt-1 max-h-[200px] sm:max-h-[220px] overflow-y-auto no-scrollbar touch-pan-y overscroll-contain pr-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
                           >
                             {item.subNav.leftSections ? (
                               item.subNav.leftSections.map((sec: any, secIdx: number) => (
@@ -523,7 +526,7 @@ export function Navbar({ className }: NavbarProps) {
                       key={item.href}
                       href={item.href}
                       onClick={handleMenuClose}
-                      className="rounded-xl px-3.5 sm:px-4 py-2 sm:py-3 text-base font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-brand-500/40"
+                      className="rounded-xl px-3.5 sm:px-4 py-2 sm:py-3 text-sm sm:text-base font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-brand-500/40"
                       tabIndex={0}
                     >
                       {item.label}
@@ -532,7 +535,9 @@ export function Navbar({ className }: NavbarProps) {
                 })}
               </div>
 
-              <div className="mt-1.5 sm:mt-3 border-t border-border/60 pt-2 sm:pt-4">
+              </div>
+
+              <div className="mt-2 sm:mt-3 shrink-0 border-t border-border/60 pt-2.5 sm:pt-3">
                 <GooglePlayButton className="w-full justify-center" />
               </div>
             </motion.div>

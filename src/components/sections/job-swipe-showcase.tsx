@@ -105,7 +105,7 @@ const CARDS_DATA: JobSwipeCardData[] = [
     },
   },
 
-  // 2. CENTER CARD (NimbusWorks Pvt Ltd - IN FOCUS)
+  // 2. CENTER CARD (NimbusWorks Pvt Ltd - Current)
   {
     id: "card-2",
     rotationClass: "lg:rotate-0 lg:-translate-y-3",
@@ -524,20 +524,22 @@ export function JobSwipeShowcase() {
   return (
     <section
       id="swipe-job-application"
-      className="relative w-full overflow-hidden pt-10 pb-4 sm:py-14 lg:py-12"
+      className="relative w-full overflow-hidden pt-3 pb-8 sm:py-14 lg:py-12"
       aria-label="Job Application Swipe Showcase"
     >
       <div className="mx-auto max-w-7xl px-3.5 sm:px-6 lg:px-8 w-full">
-        {/* SECTION HEADING - Guaranteed 1 Line Across All Screen Sizes */}
+        {/* SECTION HEADING - 2 Lines on Mobile, 1 Line on sm+ */}
         <motion.div
           initial={reducedMotion ? false : { opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-40px" }}
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          className="text-center w-full max-w-5xl mx-auto mb-8 sm:mb-12 lg:mb-16 overflow-hidden"
+          className="text-center w-full max-w-5xl mx-auto mb-4 sm:mb-12 lg:mb-16 overflow-hidden"
         >
-          <h2 className="text-[13.5px] xs:text-[14px] sm:text-2xl md:text-3xl lg:text-4xl xl:text-[3rem] font-semibold text-slate-900 dark:text-white tracking-tight leading-none whitespace-nowrap text-center">
-            Your Job Application Is Just One{" "}
+          <h2 className="text-[22px] xs:text-[26px] sm:text-2xl md:text-3xl lg:text-4xl xl:text-[3rem] font-semibold text-slate-900 dark:text-white tracking-tight leading-[1.2] sm:leading-none sm:whitespace-nowrap text-center">
+            Your Job Application{" "}
+            <br className="sm:hidden" />
+            Is Just One{" "}
             <span className="font-serif italic font-normal text-[#15803d] dark:text-emerald-400">
               Swipe
             </span>{" "}
@@ -617,9 +619,9 @@ export function JobSwipeShowcase() {
         </div>
 
         {/* MOBILE & TABLET RESPONSIVE CAROUSEL (< lg, below 1024px) */}
-        <div className="flex lg:hidden flex-col items-center w-full pt-4 pb-2">
+        <div className="flex lg:hidden flex-col items-center w-full pt-1 sm:pt-4 pb-2">
           {/* Card Status Switcher Pills */}
-          <div className="flex items-center justify-center gap-2 mb-6 max-w-sm w-full px-4">
+          <div className="flex items-center justify-center gap-2 mb-9 sm:mb-11 max-w-sm w-full px-4">
             {CARDS_DATA.map((c, i) => {
               const isActive = activeCardIndex === i;
               return (
@@ -638,7 +640,7 @@ export function JobSwipeShowcase() {
                       : "bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300 hover:bg-slate-200"
                   )}
                 >
-                  {c.badge ? c.badge.text : "In Focus"}
+                  {c.badge ? c.badge.text : "Current"}
                 </button>
               );
             })}

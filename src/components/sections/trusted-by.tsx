@@ -487,7 +487,7 @@ export function TrustedBy({ initialCompanies }: TrustedByProps) {
   return (
     <section
       id="partners"
-      className="relative w-full overflow-hidden py-8 sm:py-10 md:py-12 flex flex-col items-center justify-center bg-transparent"
+      className="relative w-full overflow-hidden pt-6 pb-3 sm:py-10 md:py-12 flex flex-col items-center justify-center bg-transparent"
       aria-labelledby="trusted-by-heading"
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full">

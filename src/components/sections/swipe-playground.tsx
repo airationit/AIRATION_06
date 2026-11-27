@@ -24,6 +24,7 @@ import {
   ArrowDown,
   Box,
   RotateCcw,
+  ChevronRight,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { siteConfig } from "@/config/site";
@@ -894,7 +895,7 @@ function DragCard({ job, onDecide, isTop }: DragCardProps) {
         </div>
 
         {/* Action Buttons: Skip, Bookmark, Apply (Tight margin eliminates gap 2) */}
-        <div className="mt-3.5 xs:mt-4 flex items-center gap-2 pt-1">
+        <div className="mt-2.5 lg:mt-4 flex items-center gap-2 pt-0 lg:pt-1">
           {/* Skip Button */}
           <button
             type="button"
@@ -958,47 +959,110 @@ interface SwipePlaygroundProps {
 interface SwipeAction {
   job: PlaygroundJob;
   direction: "left" | "right";
-  previousIndex: number;
+  fromIndex: number;
+  previousDecision?: "applied" | "skipped";
+}
+
+function findNextUnreviewedIndex(
+  fromIndex: number,
+  jobsList: PlaygroundJob[],
+  decisions: Record<string, "applied" | "skipped">
+): number | null {
+  for (let offset = 1; offset <= jobsList.length; offset++) {
+    const candidateIdx = (fromIndex + offset) % jobsList.length;
+    const cat = jobsList[candidateIdx].category;
+    if (cat && !decisions[cat]) {
+      return candidateIdx;
+    }
+  }
+  return null;
 }
 
 export function SwipePlayground({ initialJobs }: SwipePlaygroundProps = {}) {
   const reducedMotion = useReducedMotion();
   const [jobs, setJobs] = useState<PlaygroundJob[]>(PLAYGROUND_JOBS);
-  const [activeCategory, setActiveCategory] = useState<string>("Sales");
 
-  const [index, setIndex] = useState(0);
-  const [applied, setApplied] = useState<PlaygroundJob[]>([]);
-  const [skipped, setSkipped] = useState(0);
+  const [currentJobIndex, setCurrentJobIndex] = useState(0);
   const [swipeDecisions, setSwipeDecisions] = useState<Record<string, "applied" | "skipped">>({});
   const [history, setHistory] = useState<SwipeAction[]>([]);
-  const swipeCountRef = useRef(0);
+  const pillsRef = useRef<HTMLDivElement>(null);
+  const isDraggingPillsRef = useRef(false);
+  const dragStartXRef = useRef(0);
+  const dragStartScrollLeftRef = useRef(0);
+  const wasDraggedRef = useRef(false);
 
-  const isCompleted = index >= SWIPES_PER_ROUND;
+  const handleScrollPills = useCallback(() => {
+    const el = pillsRef.current;
+    if (!el) return;
+    if (el.scrollLeft + el.clientWidth >= el.scrollWidth - 4) {
+      el.scrollTo({ left: 0, behavior: "smooth" });
+    } else {
+      el.scrollBy({ left: 160, behavior: "smooth" });
+    }
+  }, []);
+
+  const handlePillsMouseDown = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    const el = pillsRef.current;
+    if (!el) return;
+    isDraggingPillsRef.current = true;
+    wasDraggedRef.current = false;
+    dragStartXRef.current = e.pageX;
+    dragStartScrollLeftRef.current = el.scrollLeft;
+  }, []);
+
+  const handlePillsMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    const el = pillsRef.current;
+    if (!isDraggingPillsRef.current || !el) return;
+    const deltaX = e.pageX - dragStartXRef.current;
+    if (Math.abs(deltaX) > 4) {
+      wasDraggedRef.current = true;
+      el.scrollLeft = dragStartScrollLeftRef.current - deltaX;
+    }
+  }, []);
+
+  const handlePillsMouseUpOrLeave = useCallback(() => {
+    isDraggingPillsRef.current = false;
+  }, []);
+
+  const totalRoundJobs = Math.min(jobs.length, SWIPES_PER_ROUND);
+  const reviewedCount = Object.keys(swipeDecisions).length;
+  const appliedJobs = jobs.filter((j) => j.category && swipeDecisions[j.category] === "applied");
+  const appliedCount = appliedJobs.length;
+  const skippedCount = Object.values(swipeDecisions).filter((d) => d === "skipped").length;
+
+  const isCompleted = reviewedCount >= totalRoundJobs;
 
   const handleDecide = useCallback(
     (dir: "left" | "right", job: PlaygroundJob) => {
-      if (swipeCountRef.current >= SWIPES_PER_ROUND) return;
-      if (job.id !== jobs[swipeCountRef.current % jobs.length]?.id) return;
+      const cat = job.category;
+      if (!cat) return;
 
-      const previousIndex = swipeCountRef.current;
-      setHistory((prev) => [...prev, { job, direction: dir, previousIndex }]);
+      const previousDecision = swipeDecisions[cat];
+      const newDecision: "applied" | "skipped" = dir === "right" ? "applied" : "skipped";
+      const updatedDecisions: Record<string, "applied" | "skipped"> = {
+        ...swipeDecisions,
+        [cat]: newDecision,
+      };
 
-      if (job.category) {
-        setSwipeDecisions((previous) => ({
-          ...previous,
-          [job.category!]: dir === "right" ? "applied" : "skipped",
-        }));
+      setSwipeDecisions(updatedDecisions);
+
+      setHistory((prev) => [
+        ...prev,
+        {
+          job,
+          direction: dir,
+          fromIndex: currentJobIndex,
+          previousDecision,
+        },
+      ]);
+
+      // Move to the next unreviewed job
+      const nextIdx = findNextUnreviewedIndex(currentJobIndex, jobs, updatedDecisions);
+      if (nextIdx !== null) {
+        setCurrentJobIndex(nextIdx);
       }
-
-      swipeCountRef.current += 1;
-      if (dir === "right") {
-        setApplied((previous) => [...previous, job]);
-      } else {
-        setSkipped((previous) => previous + 1);
-      }
-      setIndex(swipeCountRef.current);
     },
-    [jobs]
+    [currentJobIndex, jobs, swipeDecisions]
   );
 
   const handleUndo = useCallback(() => {
@@ -1007,53 +1071,52 @@ export function SwipePlayground({ initialJobs }: SwipePlaygroundProps = {}) {
     const lastAction = history[history.length - 1];
     setHistory((prev) => prev.slice(0, -1));
 
-    // Revert index to the card before that swipe
-    swipeCountRef.current = lastAction.previousIndex;
-    setIndex(lastAction.previousIndex);
-
-    // Revert applied/skipped count
-    if (lastAction.direction === "right") {
-      setApplied((prev) => prev.filter((j) => j.id !== lastAction.job.id));
-    } else {
-      setSkipped((prev) => Math.max(0, prev - 1));
-    }
-
     // Revert category decision
     if (lastAction.job.category) {
       setSwipeDecisions((prev) => {
         const next = { ...prev };
-        delete next[lastAction.job.category!];
+        if (lastAction.previousDecision) {
+          next[lastAction.job.category!] = lastAction.previousDecision;
+        } else {
+          delete next[lastAction.job.category!];
+        }
         return next;
       });
     }
+
+    // Return to the card that was swiped
+    setCurrentJobIndex(lastAction.fromIndex);
   }, [history]);
 
   const handleReset = useCallback(() => {
-    swipeCountRef.current = 0;
-    setIndex(0);
-    setApplied([]);
-    setSkipped(0);
+    setCurrentJobIndex(0);
     setSwipeDecisions({});
     setHistory([]);
   }, []);
 
   // Switch category and jump to relevant job
   const handleSelectCategory = (category: string) => {
-    setActiveCategory(category);
     const targetIdx = jobs.findIndex((j) => j.category === category);
-    const resolvedIdx = targetIdx !== -1 ? targetIdx : 0;
-    swipeCountRef.current = resolvedIdx;
-    setIndex(resolvedIdx);
+    if (targetIdx !== -1) {
+      setCurrentJobIndex(targetIdx);
+    }
   };
 
-  const reviewedCount = Math.min(index, SWIPES_PER_ROUND);
-  const currentJob = !isCompleted ? jobs[index % jobs.length] : null;
-  const nextJob = !isCompleted && index + 1 < SWIPES_PER_ROUND ? jobs[(index + 1) % jobs.length] : null;
+  const currentJob = !isCompleted ? jobs[currentJobIndex % jobs.length] : null;
+  const nextUnreviewedIdx = !isCompleted
+    ? findNextUnreviewedIndex(currentJobIndex, jobs, swipeDecisions)
+    : null;
+  const nextJob =
+    !isCompleted &&
+    nextUnreviewedIdx !== null &&
+    nextUnreviewedIdx !== currentJobIndex
+      ? jobs[nextUnreviewedIdx]
+      : null;
 
   return (
     <section
       id="playground"
-      className="relative w-full overflow-hidden pt-3 pb-10 sm:py-16 lg:py-10"
+      className="relative w-full overflow-hidden pt-8 pb-10 sm:py-16 lg:py-10"
       aria-labelledby="playground-heading"
     >
       <div className="mx-auto max-w-7xl px-3 xs:px-4 sm:px-6 lg:px-8 w-full">
@@ -1069,72 +1132,96 @@ export function SwipePlayground({ initialJobs }: SwipePlaygroundProps = {}) {
         </div>
 
         {/* Main White Rounded Container Card (Matching Image 1) */}
-        <div className="relative rounded-[22px] sm:rounded-[36px] lg:rounded-[40px] border border-slate-500/20 bg-[#fbfbfb] p-3.5 xs:p-5 sm:p-8 lg:p-12 pb-7 xs:pb-8 sm:pb-8 lg:pb-12 dark:bg-slate-900">
-          <div className="grid grid-cols-1 items-center gap-8 sm:gap-10 lg:grid-cols-12 lg:gap-10 xl:gap-12">
+        <div className="relative rounded-[22px] sm:rounded-[36px] lg:rounded-[40px] border border-slate-500/20 bg-[#fbfbfb] px-5 pt-5 pb-7 xs:px-6 xs:pt-5 xs:pb-8 sm:px-10 sm:py-8 lg:p-12 lg:pb-12 dark:bg-slate-900">
+          <div className="grid grid-cols-1 items-center gap-5 sm:gap-10 lg:grid-cols-12 lg:gap-10 xl:gap-12">
             {/* Left Column: Heading, Category Pills, 3 Stat Cards, Google Play CTA */}
             <motion.div
               initial={reducedMotion ? false : { opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-48px" }}
               transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-              className="flex flex-col items-start text-left lg:col-span-7 w-full max-w-xl mx-auto lg:mx-0"
+              className="contents sm:flex sm:flex-col sm:items-start sm:text-left lg:col-span-7 sm:w-full sm:max-w-xl sm:mx-auto lg:mx-0"
             >
               {/* Heading (Matching Image 1) */}
               <h2
                 id="playground-heading"
-                className="text-xl sm:text-4xl lg:text-[44px] font-semibold tracking-tight text-slate-900 dark:text-white leading-[1.15]"
+                className="order-1 sm:order-none text-xl sm:text-4xl lg:text-[44px] font-semibold tracking-tight text-slate-900 dark:text-white leading-[1.15] text-left"
               >
                 One <span className="text-[#16A34A] dark:text-[#22C55E]">Swipe.</span>
                 <br />
                 Every Kind of Job.
               </h2>
 
-              {/* Category Filter Pills (Dynamically colored: current card = blue, swiped = green/red, unvisited = neutral) */}
-              <div className="mt-4 sm:mt-8 flex flex-wrap gap-2 sm:gap-2.5 max-w-xl">
-                {CATEGORIES.map((cat) => {
-                  const isCurrent = !isCompleted && currentJob?.category === cat;
-                  const decision = swipeDecisions[cat];
+              {/* Category Filter Pills (Mobile: single scrollable row + arrow; sm+: wrapped multi-row) */}
+              <div className="order-2 sm:order-none w-full sm:mt-8 flex items-center gap-2 sm:block">
+                <div
+                  ref={pillsRef}
+                  data-lenis-prevent
+                  onMouseDown={handlePillsMouseDown}
+                  onMouseMove={handlePillsMouseMove}
+                  onMouseUp={handlePillsMouseUpOrLeave}
+                  onMouseLeave={handlePillsMouseUpOrLeave}
+                  className="flex flex-1 min-w-0 flex-nowrap sm:flex-wrap items-center gap-2 sm:gap-2.5 overflow-x-auto sm:overflow-visible touch-pan-x select-none no-scrollbar [scrollbar-width:none] [&::-webkit-scrollbar]:hidden max-w-xl"
+                >
+                  {CATEGORIES.map((cat) => {
+                    const isCurrent = !isCompleted && currentJob?.category === cat;
+                    const decision = swipeDecisions[cat];
 
-                  return (
-                    <button
-                      key={cat}
-                      type="button"
-                      onClick={() => handleSelectCategory(cat)}
-                      className={cn(
-                        "inline-flex items-center gap-2 rounded-full px-3.5 py-1 sm:px-4 sm:py-1.5 text-xs sm:text-[13px] font-medium transition-all active:scale-95 cursor-pointer border shadow-2xs",
-                        isCurrent
-                          ? "bg-[#2563EB] text-white border-[#2563EB] shadow-xs"
-                          : decision === "applied"
-                            ? "bg-[#ECFDF3] dark:bg-emerald-950/40 text-[#067647] dark:text-emerald-300 border-[#A6F4C5] dark:border-emerald-800/50"
-                            : decision === "skipped"
-                              ? "bg-[#FEF3F2] dark:bg-rose-950/40 text-[#B42318] dark:text-rose-300 border-[#FECDCA] dark:border-rose-800/50"
-                              : "bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-slate-200/90 dark:border-slate-800 hover:border-slate-300"
-                      )}
-                    >
-                      <span
+                    return (
+                      <button
+                        key={cat}
+                        type="button"
+                        onClick={() => {
+                          if (wasDraggedRef.current) {
+                            wasDraggedRef.current = false;
+                            return;
+                          }
+                          handleSelectCategory(cat);
+                        }}
                         className={cn(
-                          "h-2 w-2 rounded-full shrink-0",
+                          "inline-flex shrink-0 items-center gap-2 rounded-full px-3.5 py-1 sm:px-4 sm:py-1.5 text-xs sm:text-[13px] font-medium transition-all active:scale-95 cursor-pointer border shadow-2xs",
                           isCurrent
-                            ? "bg-white"
+                            ? "bg-[#2563EB] text-white border-[#2563EB] shadow-xs"
                             : decision === "applied"
-                              ? "bg-[#12B76A]"
+                              ? "bg-[#ECFDF3] dark:bg-emerald-950/40 text-[#067647] dark:text-emerald-300 border-[#A6F4C5] dark:border-emerald-800/50"
                               : decision === "skipped"
-                                ? "bg-[#F04438]"
-                                : "bg-slate-400 dark:bg-slate-500"
+                                ? "bg-[#FEF3F2] dark:bg-rose-950/40 text-[#B42318] dark:text-rose-300 border-[#FECDCA] dark:border-rose-800/50"
+                                : "bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-slate-200/90 dark:border-slate-800 hover:border-slate-300"
                         )}
-                      />
-                      <span>{cat}</span>
-                    </button>
-                  );
-                })}
+                      >
+                        <span
+                          className={cn(
+                            "h-2 w-2 rounded-full shrink-0",
+                            isCurrent
+                              ? "bg-white"
+                              : decision === "applied"
+                                ? "bg-[#12B76A]"
+                                : decision === "skipped"
+                                  ? "bg-[#F04438]"
+                                  : "bg-slate-400 dark:bg-slate-500"
+                          )}
+                        />
+                        <span>{cat}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+                <button
+                  type="button"
+                  onClick={handleScrollPills}
+                  aria-label="Scroll categories right"
+                  className="flex sm:hidden h-7 w-7 shrink-0 items-center justify-center rounded-full bg-slate-400/70 text-white active:scale-95 transition-transform cursor-pointer"
+                >
+                  <ChevronRight className="h-4 w-4 stroke-[2.5]" />
+                </button>
               </div>
 
               {/* 3 Stat Cards (Matching Image 1 - Medium Digit & Font Boldness) */}
-              <div className="mt-5 sm:mt-7 grid grid-cols-3 gap-2 sm:gap-3.5 w-full max-w-lg">
+              <div className="order-4 sm:order-none sm:mt-7 grid grid-cols-3 gap-2 sm:gap-3.5 w-full max-w-lg">
                 {/* Applied */}
                 <div className="rounded-2xl border border-slate-200/90 bg-white p-3 sm:p-4 dark:border-slate-800 dark:bg-slate-900 shadow-xs text-center sm:text-left transition-all hover:border-slate-300">
                   <p className="text-2xl xs:text-3xl sm:text-4xl font-medium text-[#16A34A] dark:text-[#22C55E] leading-none tracking-tight">
-                    {applied.length}
+                    {appliedCount}
                   </p>
                   <p className="mt-1.5 text-xs sm:text-[13px] font-medium text-slate-500 dark:text-slate-400 truncate">
                     Applied
@@ -1144,7 +1231,7 @@ export function SwipePlayground({ initialJobs }: SwipePlaygroundProps = {}) {
                 {/* Skipped */}
                 <div className="rounded-2xl border border-slate-200/90 bg-white p-3 sm:p-4 dark:border-slate-800 dark:bg-slate-900 shadow-xs text-center sm:text-left transition-all hover:border-slate-300">
                   <p className="text-2xl xs:text-3xl sm:text-4xl font-medium text-[#DC2626] dark:text-[#EF4444] leading-none tracking-tight">
-                    {skipped}
+                    {skippedCount}
                   </p>
                   <p className="mt-1.5 text-xs sm:text-[13px] font-medium text-slate-500 dark:text-slate-400 truncate">
                     Skipped
@@ -1162,14 +1249,17 @@ export function SwipePlayground({ initialJobs }: SwipePlaygroundProps = {}) {
                 </div>
               </div>
 
-              {/* Google Play Button + Undo Last Swipe Button Container (Responsive single/wrapped row without horizontal overflow) */}
-              <div className="mt-5 sm:mt-7 flex flex-wrap xs:flex-nowrap items-center justify-between gap-3 sm:gap-6 w-full max-w-lg">
+              {/* Google Play Button + Undo Last Swipe Button Container (Always single row; full-width CTA when no undo on < lg) */}
+              <div className="order-5 sm:order-none sm:mt-7 flex flex-nowrap items-center justify-between gap-2 xs:gap-3 sm:gap-6 w-full max-w-lg">
                 {/* 1. Google Play Store Badge */}
                 <a
                   href={siteConfig.links.playStore}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center gap-2 sm:gap-3 rounded-xl sm:rounded-2xl bg-[#15803D] hover:bg-[#166534] px-3.5 sm:px-6 py-2.5 sm:py-3 text-white shadow-md shadow-emerald-900/15 transition-all hover:scale-[1.01] active:scale-98 group cursor-pointer shrink-0 min-w-0"
+                  className={cn(
+                    "inline-flex items-center justify-center gap-2 sm:gap-3 rounded-xl sm:rounded-2xl bg-[#15803D] hover:bg-[#166534] px-3 sm:px-6 py-2.5 sm:py-3 text-white shadow-md shadow-emerald-900/15 transition-all hover:scale-[1.01] active:scale-98 group cursor-pointer min-w-0",
+                    history.length === 0 ? "w-full lg:w-auto" : "flex-1 lg:flex-none shrink"
+                  )}
                 >
                   <svg
                     className="h-4.5 w-4.5 sm:h-5.5 sm:w-5.5 fill-white shrink-0"
@@ -1179,10 +1269,10 @@ export function SwipePlayground({ initialJobs }: SwipePlaygroundProps = {}) {
                     <path d="M3.18 23.76a2.23 2.23 0 0 1-1.18-.34V.58A2.23 2.23 0 0 1 3.18.24L13.7 12 3.18 23.76zM14.9 13.2l2.5 2.5-9.8 5.56 7.3-8.06zm2.5-4.9L14.9 10.8 7.6 2.74l9.8 5.56zM19.06 9.8l2.87 1.63a1.4 1.4 0 0 1 0 2.44l-2.87 1.63-2.7-2.7 2.7-3z" />
                   </svg>
                   <div className="flex flex-col text-left leading-tight min-w-0">
-                    <span className="text-[8.5px] sm:text-[10px] font-medium uppercase tracking-wider text-emerald-100 truncate">
+                    <span className="text-[8px] xs:text-[8.5px] sm:text-[10px] font-medium uppercase tracking-wider text-emerald-100 truncate">
                       GET IT ON GOOGLE PLAY
                     </span>
-                    <span className="text-xs sm:text-base font-medium text-white tracking-tight whitespace-nowrap">
+                    <span className="text-[11px] xs:text-xs sm:text-base font-medium text-white tracking-tight whitespace-nowrap truncate">
                       Apply for real jobs
                     </span>
                   </div>
@@ -1198,7 +1288,7 @@ export function SwipePlayground({ initialJobs }: SwipePlaygroundProps = {}) {
                       transition={{ duration: 0.2 }}
                       type="button"
                       onClick={handleUndo}
-                      className="inline-flex items-center justify-center gap-1.5 rounded-xl sm:rounded-2xl border border-slate-200/90 bg-white hover:bg-slate-50 text-slate-800 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800 px-3 sm:px-5 py-2.5 sm:py-3 text-xs sm:text-sm font-medium transition-all shadow-2xs select-none shrink-0 whitespace-nowrap cursor-pointer active:scale-95"
+                      className="inline-flex items-center justify-center gap-1.5 rounded-xl sm:rounded-2xl border border-slate-200/90 bg-white hover:bg-slate-50 text-slate-800 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800 px-2.5 xs:px-3 sm:px-5 py-2.5 sm:py-3 text-[11px] xs:text-xs sm:text-sm font-medium transition-all shadow-2xs select-none shrink-0 whitespace-nowrap cursor-pointer active:scale-95"
                     >
                       <RotateCcw className="h-3.5 w-3.5 text-slate-500 dark:text-slate-400 shrink-0" />
                       <span>Undo last swipe</span>
@@ -1214,10 +1304,10 @@ export function SwipePlayground({ initialJobs }: SwipePlaygroundProps = {}) {
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true, margin: "-48px" }}
               transition={{ duration: 0.6, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
-              className="flex flex-col items-center justify-center lg:col-span-5 w-full pb-4 sm:pb-0"
+              className="order-3 sm:order-none flex flex-col items-center justify-center lg:col-span-5 w-full pb-2 sm:pb-0"
             >
               {/* Interactive Card Deck Container (Professional Spaced Height & Width) */}
-              <div className="relative w-full max-w-[290px] xs:max-w-[315px] sm:max-w-[335px] h-[465px] xs:h-[475px] sm:h-[450px] select-none mx-auto mb-5 sm:mb-2">
+              <div className="relative w-full max-w-[290px] xs:max-w-[315px] sm:max-w-[335px] h-[415px] xs:h-[425px] sm:h-[420px] lg:h-[450px] select-none mx-auto mb-3 sm:mb-2">
                 {/* Physical Stacked Deck Visual Effect (only when cards remain) */}
                 {!isCompleted && nextJob && (
                   <>
@@ -1266,11 +1356,11 @@ export function SwipePlayground({ initialJobs }: SwipePlaygroundProps = {}) {
                       {/* Stats Subtitle: X applied · Y skipped (Matching Image 1) */}
                       <p className="text-sm sm:text-base font-semibold mb-6 sm:mb-7 flex items-center justify-center gap-1.5">
                         <span className="text-[#15803D] dark:text-emerald-400 font-bold">
-                          {applied.length} applied
+                          {appliedCount} applied
                         </span>
                         <span className="text-slate-400 font-normal">·</span>
                         <span className="text-[#DC2626] dark:text-rose-500 font-bold">
-                          {skipped} skipped
+                          {skippedCount} skipped
                         </span>
                       </p>
 
@@ -1310,7 +1400,7 @@ export function SwipePlayground({ initialJobs }: SwipePlaygroundProps = {}) {
                   ) : (
                     currentJob && (
                       <DragCard
-                        key={currentJob.id + "-" + index}
+                        key={`${currentJob.id}-${history.length}`}
                         job={currentJob}
                         onDecide={handleDecide}
                         isTop={true}

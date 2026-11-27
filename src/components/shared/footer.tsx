@@ -113,14 +113,16 @@ export function Footer() {
       <div className="max-w-7xl mx-auto px-5 sm:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 pb-6 border-b border-white/10">
           {/* Brand & App Download Column */}
-          <div className="lg:col-span-5 flex flex-col justify-start">
-            <Logo dark />
-            <p className="mt-3.5 text-sm max-w-sm leading-relaxed text-slate-400">
-              Next-Gen Swipe-Based Hiring Platform. Fast, transparent, and direct matchmaking for candidates and employers.
-            </p>
+          <div className="order-2 lg:order-1 lg:col-span-5 flex flex-col md:flex-row md:items-center md:justify-between md:gap-8 lg:flex-col lg:items-start lg:justify-start lg:gap-0">
+            <div>
+              <Logo dark />
+              <p className="mt-3.5 text-sm max-w-sm leading-relaxed text-slate-400">
+                Next-Gen Swipe-Based Hiring Platform. Fast, transparent, and direct matchmaking for candidates and employers.
+              </p>
+            </div>
 
             {/* QR Code (Left) + Google Play & Socials Stack (Right) */}
-            <div className="mt-6 flex items-start gap-4">
+            <div className="mt-6 md:mt-0 lg:mt-6 flex items-start gap-4 shrink-0">
               {/* Left: QR Code Card */}
               <div className="shrink-0">
                 <div className="rounded-2xl bg-white p-2 w-[92px] shadow-sm">
@@ -187,7 +189,7 @@ export function Footer() {
 
           {/* Navigation Links Columns */}
           <nav
-            className="lg:col-span-7 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 gap-7 lg:gap-8"
+            className="order-1 lg:order-2 lg:col-span-7 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 gap-7 lg:gap-8"
             aria-label="Footer Quick Links"
           >
             {COLS.map((col) => (
@@ -232,13 +234,13 @@ export function Footer() {
         </div>
 
         {/* Bottom Copyright & Legal Links Bar */}
-        <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+        <div className="pt-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs text-slate-500">
           <p>© {currentYear} Hirance. All Rights Reserved.</p>
-          <div className="flex items-center flex-wrap justify-center gap-x-3 gap-y-2 text-xs text-slate-400">
+          <div className="grid grid-cols-2 w-full sm:w-auto sm:flex sm:items-center sm:flex-wrap sm:justify-center gap-x-6 gap-y-2.5 sm:gap-x-3 sm:gap-y-2 text-xs text-slate-400">
             {LEGAL_LINKS.map((link, index) => (
               <React.Fragment key={link.href}>
                 {index > 0 && (
-                  <span className="text-slate-600 font-light select-none px-0.5" aria-hidden="true">
+                  <span className="hidden sm:inline text-slate-600 font-light select-none px-0.5" aria-hidden="true">
                     |
                   </span>
                 )}
