@@ -986,6 +986,7 @@ export function SwipePlayground({ initialJobs }: SwipePlaygroundProps = {}) {
   const [swipeDecisions, setSwipeDecisions] = useState<Record<string, "applied" | "skipped">>({});
   const [history, setHistory] = useState<SwipeAction[]>([]);
   const pillsRef = useRef<HTMLDivElement>(null);
+  const pillRefs = useRef<Record<string, HTMLButtonElement | null>>({});
   const isDraggingPillsRef = useRef(false);
   const dragStartXRef = useRef(0);
   const dragStartScrollLeftRef = useRef(0);
@@ -1113,6 +1114,23 @@ export function SwipePlayground({ initialJobs }: SwipePlaygroundProps = {}) {
       ? jobs[nextUnreviewedIdx]
       : null;
 
+  useEffect(() => {
+    if (isCompleted) return;
+    const cat = currentJob?.category;
+    const container = pillsRef.current;
+    const activePill = cat ? pillRefs.current[cat] : null;
+    if (!container || !activePill) return;
+    if (container.scrollWidth <= container.clientWidth) return;
+
+    const targetLeft =
+      activePill.offsetLeft - container.clientWidth / 2 + activePill.offsetWidth / 2;
+
+    container.scrollTo({
+      left: Math.max(0, targetLeft),
+      behavior: reducedMotion ? "auto" : "smooth",
+    });
+  }, [currentJob?.category, isCompleted, reducedMotion]);
+
   return (
     <section
       id="playground"
@@ -1161,7 +1179,7 @@ export function SwipePlayground({ initialJobs }: SwipePlaygroundProps = {}) {
                   onMouseMove={handlePillsMouseMove}
                   onMouseUp={handlePillsMouseUpOrLeave}
                   onMouseLeave={handlePillsMouseUpOrLeave}
-                  className="flex flex-1 min-w-0 flex-nowrap sm:flex-wrap items-center gap-2 sm:gap-2.5 overflow-x-auto sm:overflow-visible touch-pan-x select-none no-scrollbar [scrollbar-width:none] [&::-webkit-scrollbar]:hidden max-w-xl"
+                  className="relative flex flex-1 min-w-0 flex-nowrap sm:flex-wrap items-center gap-2 sm:gap-2.5 overflow-x-auto sm:overflow-visible touch-pan-x select-none no-scrollbar [scrollbar-width:none] [&::-webkit-scrollbar]:hidden max-w-xl"
                 >
                   {CATEGORIES.map((cat) => {
                     const isCurrent = !isCompleted && currentJob?.category === cat;
@@ -1170,6 +1188,9 @@ export function SwipePlayground({ initialJobs }: SwipePlaygroundProps = {}) {
                     return (
                       <button
                         key={cat}
+                        ref={(el) => {
+                          pillRefs.current[cat] = el;
+                        }}
                         type="button"
                         onClick={() => {
                           if (wasDraggedRef.current) {
