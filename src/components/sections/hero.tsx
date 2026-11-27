@@ -99,7 +99,7 @@ export function Hero({ initialJobs }: HeroProps = {}) {
             transition={{ duration: 0.65, delay: reducedMotion ? 0 : 0.05, ease: [0.16, 1, 0.3, 1] }}
             className="max-w-4xl text-balance text-[2.75rem] sm:text-[3.3rem] lg:text-[3.96rem] font-semibold leading-[1.1] tracking-tight"
           >
-            <span className="text-slate-900 dark:text-white">Job Hunting in </span>
+            <span className="font-montserrat text-slate-900 dark:text-white">Job Hunting in </span>
             <span className="font-lora text-slate-900 dark:text-white font-normal">Seconds</span>
           </motion.h1>
 

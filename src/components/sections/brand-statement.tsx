@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React from "react";
 
@@ -26,7 +26,7 @@ export function BrandStatement() {
           {[...MARQUEE, ...MARQUEE].map((t, i) => (
             <span
               key={i}
-              className={`font-display text-4xl sm:text-7xl lg:text-8xl font-black tracking-tight ${
+              className={`font-display text-6xl font-black tracking-tight ${
                 i % 3 === 2 ? "text-gradient-blue" : "text-white/10"
               }`}
             >

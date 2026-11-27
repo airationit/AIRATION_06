@@ -536,8 +536,10 @@ export function JobSwipeShowcase() {
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
           className="text-center w-full max-w-6xl mx-auto mb-8 sm:mb-12 lg:mb-16"
         >
-          <h2 className="text-[13.5px] xs:text-[14px] sm:text-2xl md:text-3xl lg:text-4xl xl:text-[3rem] font-semibold text-slate-900 dark:text-white tracking-tight leading-tight text-center">
-            Your Job Application Is Just One{" "}
+          <h2 className="font-montserrat text-[22px] xs:text-[26px] sm:text-2xl md:text-3xl lg:text-[2.5rem] font-semibold text-slate-900 dark:text-white tracking-tight leading-[1.2] sm:leading-tight text-center">
+            Your Job Application{" "}
+            <br className="sm:hidden" />
+            Is Just One{" "}
             <span className="font-lora italic font-normal text-[#15803d] dark:text-emerald-400">
               Swipe
             </span>{" "}

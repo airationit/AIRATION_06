@@ -1108,8 +1108,8 @@ export function SwipePlayground({ initialJobs }: SwipePlaygroundProps = {}) {
     : null;
   const nextJob =
     !isCompleted &&
-    nextUnreviewedIdx !== null &&
-    nextUnreviewedIdx !== currentJobIndex
+      nextUnreviewedIdx !== null &&
+      nextUnreviewedIdx !== currentJobIndex
       ? jobs[nextUnreviewedIdx]
       : null;
 
@@ -1122,7 +1122,7 @@ export function SwipePlayground({ initialJobs }: SwipePlaygroundProps = {}) {
       <div className="mx-auto max-w-7xl px-3 xs:px-4 sm:px-6 lg:px-8 w-full">
         {/* Top Floating Badge Pill (Matching Image 1) */}
         <div className="mb-3.5 sm:mb-8 flex justify-center">
-          <div className="inline-flex items-center gap-2 rounded-full border border-slate-200/90 bg-white px-4 sm:px-6 py-1.5 sm:py-2.5 text-xs sm:text-xl font-medium text-slate-800 shadow-sm dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200">
+          <div className="inline-flex items-center gap-2 rounded-full border border-slate-200/90 bg-white px-4 sm:px-6 py-1.5 sm:py-2.5 text-xs sm:text-[1.2rem] font-medium text-slate-800 shadow-sm dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200">
             <span>Don&apos;t just look.</span>
             <span className="font-bold text-blue-600 dark:text-blue-400">Try it yourself.</span>
             <span className="flex h-5 w-5 sm:h-5.5 sm:w-5.5 items-center justify-center rounded-full bg-blue-600 text-white shadow-xs">
@@ -1145,11 +1145,11 @@ export function SwipePlayground({ initialJobs }: SwipePlaygroundProps = {}) {
               {/* Heading (Matching Image 1) */}
               <h2
                 id="playground-heading"
-                className="order-1 sm:order-none text-xl sm:text-4xl lg:text-[44px] font-semibold tracking-tight text-slate-900 dark:text-white leading-[1.15] text-left"
+                className="order-1 sm:order-none font-montserrat text-xl sm:text-4xl lg:text-[44px] font-semibold tracking-tight text-slate-900 dark:text-white leading-[1.15] text-center sm:text-left"
               >
-                One <span className="text-[#16A34A] dark:text-[#22C55E]">Swipe.</span>
+                One <span className="font-lora italic font-medium text-[#16A34A] dark:text-[#22C55E]">Swipe,</span>
                 <br />
-                Every Kind of Job.
+                Every Kind of Job
               </h2>
 
               {/* Category Filter Pills (Mobile: single scrollable row + arrow; sm+: wrapped multi-row) */}
@@ -1216,34 +1216,34 @@ export function SwipePlayground({ initialJobs }: SwipePlaygroundProps = {}) {
                 </button>
               </div>
 
-              {/* 3 Stat Cards (Matching Image 1 - Medium Digit & Font Boldness) */}
+              {/* 3 Stat Cards */}
               <div className="order-4 sm:order-none sm:mt-7 grid grid-cols-3 gap-2 sm:gap-3.5 w-full max-w-lg">
                 {/* Applied */}
                 <div className="rounded-2xl border border-slate-200/90 bg-white p-3 sm:p-4 dark:border-slate-800 dark:bg-slate-900 shadow-xs text-center sm:text-left transition-all hover:border-slate-300">
-                  <p className="text-2xl xs:text-3xl sm:text-4xl font-medium text-[#16A34A] dark:text-[#22C55E] leading-none tracking-tight">
+                  <p className="text-2xl xs:text-3xl sm:text-4xl font-semibold text-[#16A34A] dark:text-[#22C55E] leading-none tracking-tight">
                     {appliedCount}
                   </p>
-                  <p className="mt-1.5 text-xs sm:text-[13px] font-medium text-slate-500 dark:text-slate-400 truncate">
+                  <p className="mt-1.5 text-xs sm:text-[13px] font-medium text-muted-foreground truncate">
                     Applied
                   </p>
                 </div>
 
                 {/* Skipped */}
                 <div className="rounded-2xl border border-slate-200/90 bg-white p-3 sm:p-4 dark:border-slate-800 dark:bg-slate-900 shadow-xs text-center sm:text-left transition-all hover:border-slate-300">
-                  <p className="text-2xl xs:text-3xl sm:text-4xl font-medium text-[#DC2626] dark:text-[#EF4444] leading-none tracking-tight">
+                  <p className="text-2xl xs:text-3xl sm:text-4xl font-semibold text-[#DC2626] dark:text-[#EF4444] leading-none tracking-tight">
                     {skippedCount}
                   </p>
-                  <p className="mt-1.5 text-xs sm:text-[13px] font-medium text-slate-500 dark:text-slate-400 truncate">
+                  <p className="mt-1.5 text-xs sm:text-[13px] font-medium text-muted-foreground truncate">
                     Skipped
                   </p>
                 </div>
 
                 {/* Reviewed */}
                 <div className="rounded-2xl border border-slate-200/90 bg-white p-3 sm:p-4 dark:border-slate-800 dark:bg-slate-900 shadow-xs text-center sm:text-left transition-all hover:border-slate-300">
-                  <p className="text-2xl xs:text-3xl sm:text-4xl font-medium text-slate-800 dark:text-white leading-none tracking-tight">
+                  <p className="text-2xl xs:text-3xl sm:text-4xl font-semibold text-slate-800 dark:text-white leading-none tracking-wide">
                     {reviewedCount}/{SWIPES_PER_ROUND}
                   </p>
-                  <p className="mt-1.5 text-xs sm:text-[13px] font-medium text-slate-500 dark:text-slate-400 truncate">
+                  <p className="mt-1.5 text-xs sm:text-[13px] font-medium text-muted-foreground truncate">
                     Reviewed
                   </p>
                 </div>

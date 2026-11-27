@@ -125,6 +125,10 @@
   font-family: var(--font-lora), Georgia, serif;
 }
 
+.font-montserrat {
+  font-family: var(--font-montserrat), sans-serif;
+}
+
 :root {
   /* ─── Core palette ─── */
   --background: #F9F9F9;
